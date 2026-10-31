@@ -1,0 +1,14 @@
+nombre: Marvel
+orden: 1
+descripcion: Películas, series y animación basadas en los cómics de Marvel.
+subuniversos:
+  - id: mcu
+    nombre: Universo Cinematográfico de Marvel (MCU)
+  - id: sony
+    nombre: Universo Spider-Man de Sony
+  - id: fox-x-men
+    nombre: X-Men de Fox
+  - id: marvel-animacion
+    nombre: Animación Marvel
+  - id: otros-marvel
+    nombre: Otras producciones Marvel

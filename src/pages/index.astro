@@ -1,0 +1,40 @@
+---
+// Portada PROVISIONAL (Fase 1): sin diseño, solo para comprobar que los datos cargan.
+import { getCollection } from 'astro:content';
+import { SITE } from '../config/site';
+import { comprobarIntegridad } from '../lib/integridad';
+
+await comprobarIntegridad();
+const universos = (await getCollection('universos', (u) => u.data.activo)).sort((a, b) => a.data.orden - b.data.orden);
+const titulos = await getCollection('titulos');
+---
+
+<html lang={SITE.idioma}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{SITE.nombre} · {SITE.lema}</title>
+  </head>
+  <body>
+    <h1>{SITE.nombre}</h1>
+    <p>{SITE.lema}</p>
+    {
+      universos.map((u) => (
+        <section>
+          <h2>{u.data.nombre}</h2>
+          <ul>
+            {titulos
+              .filter((t) => t.data.universo.id === u.id)
+              .sort((a, b) => a.data.anio - b.data.anio)
+              .map((t) => (
+                <li>
+                  {t.data.titulo} ({t.data.anio}){t.data.tituloOriginal && <small> · {t.data.tituloOriginal}</small>}
+                </li>
+              ))}
+          </ul>
+        </section>
+      ))
+    }
+  </body>
+</html>

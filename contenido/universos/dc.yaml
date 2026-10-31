@@ -1,0 +1,14 @@
+nombre: DC
+orden: 2
+descripcion: Películas, series y animación basadas en los cómics de DC.
+subuniversos:
+  - id: dceu
+    nombre: Universo Extendido de DC (DCEU)
+  - id: dcu
+    nombre: Universo DC (DCU)
+  - id: arrowverse
+    nombre: Arrowverso
+  - id: dc-animated
+    nombre: Universo animado de DC
+  - id: otros-dc
+    nombre: Otras producciones DC
