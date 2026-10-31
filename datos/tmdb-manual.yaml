@@ -1,0 +1,92 @@
+# Correcciones manuales del emparejamiento con TMDB.
+# Clave = identificador de la entrada (ver documentos/extraido/marvel/revisar-tmdb.txt).
+#   buscar: "Título"   → busca con otro texto (p. ej. el título original en inglés)
+#   anio: 2023         → año para la búsqueda
+#   tipo: movie | tv   → fuerza película o serie
+#   aceptar: true      → el emparejamiento automático era correcto aunque tuviera poca confianza
+#   id: 12345          → id exacto de TMDB
+#   ninguno: true      → no está en TMDB
+
+# UMC
+umc-010: { buscar: "A Funny Thing Happened on the Way to Thor's Hammer" }
+umc-022: { aceptar: true }
+umc-028: { aceptar: true }
+umc-033: { aceptar: true }
+umc-036: { aceptar: true }
+umc-038: { aceptar: true }
+umc-050: { aceptar: true }
+umc-065: { aceptar: true }
+umc-066: { buscar: "Avengers: Endgame" }
+umc-068: { aceptar: true }
+umc-080: { aceptar: true }
+umc-081: { aceptar: true }
+umc-083: { buscar: "Ant-Man and the Wasp: Quantumania", anio: 2023 }
+umc-085: { buscar: "The Guardians of the Galaxy Holiday Special" }
+umc-093: { buscar: "Captain America: Brave New World" }
+
+# Pre-UMC
+pre-umc-006: { buscar: "Captain America II: Death Too Soon" }
+pre-umc-008: { buscar: "The Incredible Hulk Returns" }
+pre-umc-019: { buscar: "Night Man", tipo: tv }
+pre-umc-020: { aceptar: true }
+pre-umc-036: { buscar: "Ghost Rider", anio: 2007 }
+pre-umc-043: { id: 71676, tipo: movie }   # Ghost Rider: Espíritu de venganza
+pre-umc-048: { buscar: "The Amazing Spider-Man 2" }
+pre-umc-054: { buscar: "Deadpool: No Good Deed" }
+pre-umc-068: { buscar: "Kraven the Hunter", anio: 2024 }
+
+# Animación
+animacion-frankestein-1981: { buscar: "Kyôfu densetsu: Kaiki! Frankenstein" }
+animacion-hulk-vs-thor-and-wolverine-2009: { buscar: "Hulk Vs." }
+animacion-avengers-confidencial-black-widow-and-punisher-2014: { aceptar: true }
+animacion-iron-man-and-capitean-america-heroes-united-2014: { buscar: "Iron Man & Captain America: Heroes United" }
+animacion-the-thing-1979: { aceptar: true }
+animacion-marvel-superheroes-what-the-2009: { id: 212344, tipo: tv }
+animacion-marvel-anime-iron-man-2010: { aceptar: true }
+animacion-marvel-anime-x-men-2011: { aceptar: true }
+animacion-marvel-anime-blade-2011: { aceptar: true }
+animacion-avengers-assemble-2013: { id: 59427, tipo: tv }   # Los Vengadores unidos
+animacion-marvel-future-avengers-2017: { aceptar: true }
+animacion-lego-marvel-avengers-infinity-heist-2022: { ninguno: true }   # no aparece en TMDB
+
+# Falsos positivos detectados al revisar (ids comprobados en TMDB)
+umc-029: { id: 61889, tipo: tv }   # Marvel - Daredevil (no "Born Again")
+umc-059: { id: 67178, tipo: tv }   # Marvel - The Punisher
+umc-069: { id: 114695, tipo: tv }  # LEYENDAS de Marvel Studios
+umc-096: { id: 114471, tipo: tv }  # Ironheart ("Iron Heat" en la videoteca)
+pre-umc-024: { id: 557, tipo: movie }   # Spider-Man (2002), no "Spider-Mania"
+pre-umc-the-amazing-spider-man-1977: { id: 4552, tipo: tv }   # serie de imagen real 1977-1979
+pre-umc-spider-man-1978: { id: 2640, tipo: tv }   # Spider-Man japonés de Toei
+pre-umc-blade-2006: { id: 4619, tipo: tv }   # Blade: La serie (no "WitchBlade")
+pre-umc-capitan-america-1944: { ninguno: true, omitir: true, nota: "Duplicado del serial Pre-UMC 001 (aparece también en la columna de series de EL INDICE)" }
+animacion-ultimate-avengers-2006: { id: 14609, tipo: movie }
+animacion-dracula-1981: { id: 90450, tipo: movie }   # La tumba de Drácula (anime, 1980)
+animacion-solarman-1988: { aceptar: true }   # piloto de Marvel Productions (TMDB: 1986)
+animacion-fury-files-2012: { aceptar: true }
+
+# Notas y ajustes de temporada
+umc-094: { temporada: 1, nota: "En tus documentos es la temporada 4 de Daredevil (Born Again es su continuación)" }
+umc-099: { temporada: 2, nota: "En tus documentos es la temporada 5 de Daredevil (Born Again es su continuación)" }
+pre-umc-066: { aceptar: true, nota: "Oficialmente es un especial del UMC (Fase 4); en tus documentos está en Pre-UMC" }
+animacion-marvel-rising-secret-warrios-2018: { omitir: true, nota: "Duplicado: EL INDICE lo lista como película y como serie animada" }
+
+# Títulos revisados a mano: TMDB da el título latinoamericano o con otra puntuación
+umc-012: { titulo: "Los Vengadores" }
+umc-021: { titulo: "Guardianes de la Galaxia" }
+umc-041: { titulo: "Guardianes de la Galaxia Vol. 2" }
+pre-umc-011: { titulo: "La muerte del increíble Hulk" }
+pre-umc-025: { titulo: "Men in Black II" }
+pre-umc-027: { titulo: "X-Men 2" }
+pre-umc-031: { titulo: "Blade: Trinity" }
+pre-umc-035: { titulo: "X-Men: La decisión final" }
+animacion-x-men-1992: { titulo: "X-Men: La serie animada" }
+animacion-iron-man-1994: { titulo: "Iron Man: La serie animada" }
+animacion-spider-man-and-his-amazing-friends-1981: { titulo: "Spider-Man y sus sorprendentes amigos" }
+animacion-the-spectacular-spider-man-2008: { titulo: "El espectacular Spider-Man" }
+animacion-spider-man-the-new-animated-series-2003: { titulo: "Spider-Man: La nueva serie animada" }
+animacion-spider-man-unlimited-1999: { titulo: "Spider-Man Unlimited" }
+animacion-fantastic-four-world-s-greatest-heroes-2006: { titulo: "Los 4 Fantásticos" }
+animacion-the-avengers-earth-s-mightiest-heroes-2010: { titulo: "Los Vengadores: Los héroes más poderosos del planeta" }
+animacion-next-avengers-heroes-of-tomorrow-2008: { titulo: "Nuevos Vengadores: Héroes del mañana" }
+animacion-dr-strange-the-sorcerer-supreme-2007: { buscar: "Doctor Strange", anio: 2007, titulo: "Doctor Strange: El hechicero supremo" }
+animacion-marvel-s-rocket-and-groot-2017: { titulo: "Rocket y Groot" }

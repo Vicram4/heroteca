@@ -1,0 +1,174 @@
+# Qué fichas pertenecen a cada saga / "Relacionada" / fase.
+# Lo usa scripts/generar_contenido.py para rellenar el campo `sagas` de cada ficha.
+# Claves = identificador de la entrada (umc-001, pre-umc-022…, ver documentos/extraido/marvel/entradas.json).
+# Una vez generadas las fichas, para cambiar una saga basta con editar el campo `sagas` de la ficha.
+
+sagas:
+  # --- Relacionadas (WORD SAGA …) ---
+  spider-man:
+    nombre: Spider-Man
+    tipo: multiverso
+    orden: 1
+    descripcion: Multiverso relacionado con UMC.
+    fuente: "TODO WORD/WORD SAGA Spider-Man/MULTIverso Spider-Man.docx"
+    fichas: []   # se rellena con sus sub-sagas
+  spider-man-raimi:
+    nombre: Spider-Man (trilogía de Sam Raimi)
+    tipo: trilogia
+    padre: spider-man
+    orden: 1
+    fuente: "MULTIverso Spider-Man.docx (carátulas) + 001 Índices.pptx (-Trilogía-)"
+    fichas: [pre-umc-024, pre-umc-030, pre-umc-037]
+  the-amazing-spider-man:
+    nombre: The Amazing Spider-Man
+    tipo: trilogia
+    padre: spider-man
+    orden: 2
+    fuente: "MULTIverso Spider-Man.docx (carátulas) + 001 Índices.pptx (-Dulogía-)"
+    fichas: [pre-umc-045, pre-umc-048]
+  x-men:
+    nombre: X-Men
+    tipo: saga
+    orden: 2
+    descripcion: Películas por orden de estreno.
+    fuente: "TODO WORD/WORD SAGA X-MEN (carátulas) + 001 Índices.pptx (-SAGA-)"
+    fichas: [pre-umc-022, pre-umc-027, pre-umc-035, pre-umc-040, pre-umc-042, pre-umc-047, pre-umc-049,
+             pre-umc-053, pre-umc-055, pre-umc-060, pre-umc-062]
+  deadpool:
+    nombre: Deadpool
+    tipo: saga
+    padre: x-men
+    orden: 1
+    descripcion: Trilogía + corto + versión.
+    fuente: "001 Índices.pptx: DEADPOOL (Trilogía + corto + versión)"
+    fichas: [pre-umc-052, pre-umc-054, pre-umc-057, pre-umc-058, umc-091]
+  4-fantasticos:
+    nombre: 4 Fantásticos
+    tipo: multiverso
+    orden: 3
+    descripcion: Películas y series.
+    fuente: "TODO WORD/WORD SAGA 4 Fantásticos/MULTIverso 4 Fantásticos.docx (a medio hacer)"
+    fichas: [pre-umc-016, pre-umc-051, umc-097]
+    notas: "Propuesta: tu documento aún no tiene los títulos. Revisa si sobra o falta alguno."
+  4-fantasticos-2005:
+    nombre: Los 4 Fantásticos (2005-2007)
+    tipo: trilogia
+    padre: 4-fantasticos
+    orden: 1
+    fuente: "001 Índices.pptx (-Dulogía-)"
+    fichas: [pre-umc-034, pre-umc-038]
+
+  # --- Agrupaciones del índice Pre-UMC (-Trilogía-, -Cuatrilogía-, -Dulogía-) ---
+  hulk-telefilmes:
+    nombre: El increíble Hulk (telefilmes)
+    tipo: trilogia
+    orden: 10
+    descripcion: Cuatrilogía.
+    fuente: "001 Índices.pptx (-Cuatrilogía-)"
+    fichas: [pre-umc-003, pre-umc-008, pre-umc-009, pre-umc-011]
+  capitan-america-1979:
+    nombre: Capitán América (1979)
+    tipo: trilogia
+    orden: 11
+    descripcion: Dulogía.
+    fuente: "001 Índices.pptx (-Dulogía-)"
+    fichas: [pre-umc-005, pre-umc-006]
+  men-in-black:
+    nombre: Men in Black
+    tipo: trilogia
+    orden: 12
+    descripcion: Cuatrilogía.
+    fuente: "001 Índices.pptx (-Cuatrilogía-)"
+    fichas: [pre-umc-018, pre-umc-025, pre-umc-044, pre-umc-061]
+  blade:
+    nombre: Blade
+    tipo: trilogia
+    orden: 13
+    descripcion: Trilogía.
+    fuente: "001 Índices.pptx (-Trilogía-)"
+    fichas: [pre-umc-021, pre-umc-023, pre-umc-031]
+  ghost-rider:
+    nombre: Ghost Rider
+    tipo: trilogia
+    orden: 14
+    descripcion: Dulogía.
+    fuente: "001 Índices.pptx (-Dulogía-)"
+    fichas: [pre-umc-036, pre-umc-043]
+  kick-ass:
+    nombre: Kick-Ass
+    tipo: trilogia
+    orden: 15
+    descripcion: Dulogía.
+    fuente: "001 Índices.pptx (-Dulogía-)"
+    fichas: [pre-umc-041, pre-umc-046]
+  kingsman:
+    nombre: Kingsman
+    tipo: trilogia
+    orden: 16
+    descripcion: Trilogía.
+    fuente: "001 Índices.pptx (-Trilogía-)"
+    fichas: [pre-umc-050, pre-umc-056, pre-umc-064]
+  venom:
+    nombre: Venom
+    tipo: trilogia
+    orden: 17
+    descripcion: Trilogía.
+    fuente: "001 Índices.pptx (-Trilogía-)"
+    fichas: [pre-umc-059, pre-umc-063]
+  lego:
+    nombre: LEGO Marvel
+    tipo: saga
+    orden: 20
+    fuente: "EL INDICE.docx (columna LEGO)"
+    fichas: []   # se rellena sola con las entradas del grupo LEGO
+
+  # --- Fases y Sagas del UMC (dato extra, no está en tus documentos) ---
+  saga-infinito:
+    nombre: Saga del Infinito
+    tipo: saga
+    orden: 100
+    fichas: []
+  saga-multiverso:
+    nombre: Saga del Multiverso
+    tipo: saga
+    orden: 101
+    fichas: []
+  fase-1:
+    nombre: Fase 1
+    tipo: fase
+    padre: saga-infinito
+    orden: 1
+    fichas: [umc-001, umc-006, umc-007, umc-008, umc-009, umc-010, umc-011, umc-012, umc-013]
+  fase-2:
+    nombre: Fase 2
+    tipo: fase
+    padre: saga-infinito
+    orden: 2
+    fichas: [umc-004, umc-014, umc-016, umc-017, umc-019, umc-021, umc-024, umc-026]
+  fase-3:
+    nombre: Fase 3
+    tipo: fase
+    padre: saga-infinito
+    orden: 3
+    fichas: [umc-005, umc-031, umc-035, umc-037, umc-041, umc-045, umc-046, umc-062, umc-063, umc-066, umc-067]
+  fase-4:
+    nombre: Fase 4
+    tipo: fase
+    padre: saga-multiverso
+    orden: 4
+    fichas: [umc-042, umc-044, umc-070, umc-071, umc-072, umc-073, umc-074, umc-075, umc-076, umc-077,
+             umc-078, umc-079, umc-080, umc-081, umc-082, umc-085]
+  fase-5:
+    nombre: Fase 5
+    tipo: fase
+    padre: saga-multiverso
+    orden: 5
+    fichas: [umc-083, umc-086, umc-087, umc-088, umc-089, umc-090, umc-091, umc-092, umc-093, umc-094,
+             umc-095, umc-096]
+  fase-6:
+    nombre: Fase 6
+    tipo: fase
+    padre: saga-multiverso
+    orden: 6
+    fichas: [umc-097, umc-100]
+    notas: "Wonder Man (098) y Daredevil: Born Again T2 (099) pendientes de confirmar fase."

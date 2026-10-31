@@ -159,6 +159,10 @@ const titulos = defineCollection({
       /** Para temporadas: id común de la serie (agrupa sus temporadas) y número de temporada. */
       serie: slug.optional(),
       temporada: z.number().int().positive().optional(),
+      /** Para series en una sola ficha (sin desglose por temporadas): cuántas tiene. */
+      temporadas: z.number().int().positive().optional(),
+      /** false si el título está en tu índice o videoteca pero aún no tiene ficha en tus documentos. */
+      fichaPropia: z.boolean().default(true),
 
       sagas: z.array(reference('sagas')).default([]),
 

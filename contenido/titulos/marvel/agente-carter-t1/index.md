@@ -1,15 +1,16 @@
 ---
 titulo: Agente Carter
+tituloOriginal: Marvel's Agent Carter
 tipo: serie
 universo: marvel
 seccion: umc
 serie: agente-carter
 temporada: 1
 numero: 2
-anio: 2015
-nacionalidad: E.E.U.U.
 calidad:
 - 720p
+anio: 2015
+nacionalidad: E.E.U.U.
 argumento: En 1946, después de acabar la guerra y de perder a su amado Capitán América, la agente Peggy Carter, trabaja en la Reserva Científica Estratégica en Nueva York, siendo menospreciada por sus compañeros hombres. Howard Stark que se ha convertido en un fugitivo tras ser injustamente inculpado de vender algunos de sus peligrosos inventos en el mercado negro, contacta con ella para que le ayude en diversas misiones para recuperarlos extraoficialmente. Arriesgándose a ser acusada de traición si es descubierta, no podrá confiar en nadie más que en Edwin Jarvis, el formal mayordomo de Stark.
 reparto:
 - actor: Hayley Atwell
@@ -20,7 +21,7 @@ reparto:
   personaje: Edwin Jarvis
 - actor: Chad Michael Murray
   personaje: Jack Thompson
-- actor: Bridget Reagan
+- actor: Bridget Regan
   personaje: Dottie Underwood
 - actor: Shea Whigham
   personaje: Roger Dooley
@@ -68,7 +69,7 @@ capitulos:
 - codigo: 1x07
   titulo: Snafu
   argumento: Leviatán actúa contra Peggy justo cuando ella está en su momento más delicado; el SSR (Reserva Estratégica Científica) acecha a Howard Stark.
-  direccion: Vicent Misiano
+  direccion: Vincent Misiano
   guion: Chris Dingess
   duracion: 40
 - codigo: 1x08
@@ -80,7 +81,10 @@ capitulos:
   - Tara Butters
   duracion: 40
 duracion: 40
-fuente: 003 Fichas SERIES UMC.pptx · diapositiva 4
+tmdb:
+  id: 61550
+  tipo: tv
+fuente: 003 Fichas SERIES UMC.pptx · diapositiva 4; 001 Índices.pptx · diapositiva 5
 imagenes:
 - src: ./portada.jpg
   rol: portada

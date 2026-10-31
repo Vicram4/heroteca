@@ -1,0 +1,18 @@
+---
+titulo: 'Daredevil: Born Again'
+tipo: serie
+universo: marvel
+seccion: umc
+fichaPropia: false
+serie: daredevil-born-again
+temporada: 1
+numero: 94
+sagas:
+- fase-5
+anio: 2025
+tmdb:
+  id: 202555
+  tipo: tv
+notas: 'En tus documentos: temporada 4 · En tus documentos es la temporada 4 de Daredevil (Born Again es su continuación)'
+fuente: 001 Índices.pptx · diapositiva 12
+---

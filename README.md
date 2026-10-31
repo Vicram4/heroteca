@@ -113,15 +113,26 @@ Los datos de TMDB (reparto, carteles, sinopsis…) **solo rellenan los campos va
 
 ## Regenerar las fichas desde los documentos
 
-Los scripts de `scripts/` leen las copias de `documentos/originales/` (nunca las modifican):
+Los scripts de `scripts/` leen las copias de `documentos/originales/` (nunca las modifican).
+Necesitan Python con `python-docx`, `python-pptx` y `pyyaml` (en `.venv`) y la clave de TMDB en `.env`.
 
 ```bash
+# 1. Volcar los documentos a texto (solo para consultarlos)
 .venv/Scripts/python.exe scripts/inspeccionar.py documentos/originales/marvel documentos/extraido/marvel/texto
+# 2. Fichas de los PowerPoint → fichas.json
 .venv/Scripts/python.exe scripts/extraer_fichas.py "documentos/originales/marvel/UMC MARVEL/Los Power Point juntos" documentos/extraido/marvel
-.venv/Scripts/python.exe scripts/generar_contenido.py documentos/extraido/marvel contenido/titulos/marvel
+# 3. Catálogo completo (índice + videoteca + EL INDICE) → catalogo.json
+.venv/Scripts/python.exe scripts/catalogo.py documentos/originales/marvel documentos/extraido/marvel
+# 4. Unir y emparejar con TMDB → entradas.json y revisar-tmdb.txt
+.venv/Scripts/python.exe scripts/emparejar_tmdb.py documentos/extraido/marvel
+# 5. Escribir las fichas y las sagas en contenido/ → cambios.txt con todo lo corregido
+.venv/Scripts/python.exe scripts/generar_contenido.py documentos/extraido/marvel contenido
 ```
 
-`generar_contenido.py` **no sobrescribe** las fichas que ya existen, así no se pierden los cambios hechos a mano.
+- `datos/tmdb-manual.yaml`: correcciones a mano del emparejamiento con TMDB, títulos revisados y notas.
+- `datos/agrupaciones-marvel.yaml`: qué fichas forman cada saga, "Relacionada" o fase.
+- `generar_contenido.py` **no sobrescribe** las fichas que ya existen, así no se pierden los cambios hechos a mano
+  (con `--forzar` las regenera).
 
 ## Añadir un personaje
 
