@@ -7,8 +7,10 @@ interface Props {
   hueco: Hueco;
   /** Carga inmediata para las primeras filas visibles */
   prioridad?: boolean;
+  /** Ids de los personajes que aparecen (para el filtro) */
+  personajes?: string[];
 }
-const { hueco, prioridad = false } = Astro.props;
+const { hueco, prioridad = false, personajes = [] } = Astro.props;
 const t = hueco.titulo;
 const tramo = textoTramo(hueco);
 const decada = Math.floor(t.d.anio / 10) * 10;
@@ -26,6 +28,7 @@ const etiqueta = [hueco.numero !== undefined ? `Número ${numeroTexto(hueco.nume
   data-sagas={t.d.sagas.map((s) => s.id).join(' ')}
   data-repetido={hueco.repetido ? 'true' : undefined}
   data-titulo={t.id}
+  data-personajes={personajes.join(' ')}
 >
   <a href={t.url} class="caja" aria-label={etiqueta}>
     {hueco.numero !== undefined && <span class="num" aria-hidden="true">{numeroTexto(hueco.numero)}</span>}

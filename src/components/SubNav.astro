@@ -12,6 +12,7 @@ const enlaces = [
   { id: 'inicio', texto: 'Estanterías', url: `/${universo.id}/` },
   ...universo.data.secciones.map((s) => ({ id: s.id, texto: s.nombre, url: `/${universo.id}/${s.id}/` })),
   { id: 'sagas', texto: 'Relacionadas y sagas', url: `/${universo.id}/sagas/` },
+  { id: 'personajes', texto: 'Personajes', url: `/${universo.id}/personajes/` },
 ];
 ---
 

@@ -6,6 +6,7 @@
 import Caja from './Caja.astro';
 import { TIPOS } from '../config/tipos';
 import type { Hueco, Saga } from '../lib/datos';
+import { apariciones } from '../lib/personajes';
 
 interface Props {
   huecos: Hueco[];
@@ -21,6 +22,12 @@ const decadas = [...new Set(huecos.map((h) => Math.floor(h.titulo.d.anio / 10) *
 const idsSagas = new Set(huecos.flatMap((h) => h.titulo.d.sagas.map((s) => s.id)));
 const sagasPresentes = sagas.filter((s) => idsSagas.has(s.id));
 const total = huecos.filter((h) => !h.repetido).length;
+const { porTitulo, personajes } = await apariciones();
+const cuenta = new Map<string, number>();
+for (const t of new Set(huecos.map((h) => h.titulo.id))) for (const p of porTitulo.get(t) ?? []) cuenta.set(p, (cuenta.get(p) ?? 0) + 1);
+const personajesPresentes = personajes
+  .filter((p) => (cuenta.get(p.id) ?? 0) > 1)
+  .sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es'));
 ---
 
 <section class="estanteria" data-estanteria data-orden={cronologica ? 'historia' : 'estreno'} aria-label={etiqueta}>
@@ -73,6 +80,19 @@ const total = huecos.filter((h) => !h.repetido).length;
         )
       }
       {
+        personajesPresentes.length > 0 && (
+          <label>
+            <span class="solo-lectores">Personaje</span>
+            <select data-filtro-personaje>
+              <option value="">Todos los personajes</option>
+              {personajesPresentes.map((p) => (
+                <option value={p.id}>{p.data.nombre} ({cuenta.get(p.id)})</option>
+              ))}
+            </select>
+          </label>
+        )
+      }
+      {
         sagasPresentes.length > 0 && (
           <label>
             <span class="solo-lectores">Saga o fase</span>
@@ -90,7 +110,7 @@ const total = huecos.filter((h) => !h.repetido).length;
   </div>
 
   <ol class="estante">
-    {huecos.map((h, i) => <Caja hueco={h} prioridad={i < 6} />)}
+    {huecos.map((h, i) => <Caja hueco={h} prioridad={i < 6} personajes={[...(porTitulo.get(h.titulo.id) ?? [])]} />)}
   </ol>
   <p class="vacio" data-vacio hidden>Ningún título cumple estos filtros.</p>
 </section>
@@ -100,7 +120,7 @@ const total = huecos.filter((h) => !h.repetido).length;
     const celdas = [...est.querySelectorAll<HTMLLIElement>('.celda')];
     const cuenta = est.querySelector<HTMLElement>('[data-cuenta]')!;
     const vacio = est.querySelector<HTMLElement>('[data-vacio]')!;
-    const filtros = { tipo: '', animada: '', decada: '', saga: '' };
+    const filtros = { tipo: '', animada: '', decada: '', saga: '', personaje: '' };
 
     function aplicar() {
       const estreno = est.dataset.orden === 'estreno';
@@ -111,7 +131,8 @@ const total = huecos.filter((h) => !h.repetido).length;
           (!filtros.tipo || c.dataset.tipo === filtros.tipo) &&
           (!filtros.animada || c.dataset.animada === filtros.animada) &&
           (!filtros.decada || c.dataset.decada === filtros.decada) &&
-          (!filtros.saga || (c.dataset.sagas ?? '').split(' ').includes(filtros.saga));
+          (!filtros.saga || (c.dataset.sagas ?? '').split(' ').includes(filtros.saga)) &&
+          (!filtros.personaje || (c.dataset.personajes ?? '').split(' ').includes(filtros.personaje));
         c.hidden = !ok;
         if (ok) visibles.add(c.dataset.titulo ?? '');
       }
@@ -136,7 +157,7 @@ const total = huecos.filter((h) => !h.repetido).length;
         aplicar();
       }),
     );
-    for (const clave of ['animada', 'decada', 'saga'] as const) {
+    for (const clave of ['animada', 'decada', 'saga', 'personaje'] as const) {
       est.querySelector<HTMLSelectElement>(`[data-filtro-${clave}]`)?.addEventListener('change', (e) => {
         filtros[clave] = (e.target as HTMLSelectElement).value;
         aplicar();

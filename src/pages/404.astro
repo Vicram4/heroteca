@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import { universosActivos } from '../lib/datos';
+
+const universos = await universosActivos();
+---
+
+<Base titulo="Página no encontrada">
+  <section class="contenedor error">
+    <p class="codigo" aria-hidden="true">404</p>
+    <h1>Esta página se ha perdido en el multiverso</h1>
+    <p>Puede que la dirección esté mal escrita o que el título haya cambiado de sitio.</p>
+    <div class="acciones">
+      {universos.map((u) => <a class="pastilla" href={`/${u.id}/`}>Ir a {u.data.nombre}</a>)}
+      <a class="pastilla" href="/">Portada</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .error {
+    padding-block: clamp(48px, 10vw, 110px);
+    text-align: center;
+  }
+  .codigo {
+    font: 800 clamp(5rem, 18vw, 10rem) / 0.9 var(--f-titulo);
+    color: var(--acento-txt);
+    margin: 0;
+  }
+  .error > p {
+    color: var(--txt-2);
+    margin-top: 14px;
+  }
+  .acciones {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+  }
+</style>

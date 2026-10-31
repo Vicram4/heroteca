@@ -3,7 +3,8 @@
 import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Spoiler from './Spoiler.astro';
-import { numeroTexto, type Titulo, type Universo, type Saga } from '../lib/datos';
+import { numeroTexto, todosLosTitulos, type Titulo, type Universo, type Saga } from '../lib/datos';
+import { apariciones } from '../lib/personajes';
 
 interface Props {
   t: Titulo;
@@ -33,6 +34,16 @@ const tecnica = [
   ['Distribuidora', lista(d.distribuidora)],
   ['Temporadas', d.temporadas ? String(d.temporadas) : undefined],
 ].filter((f): f is [string, string] => Boolean(f[1]));
+const { enlaceReparto } = await apariciones();
+const todos = await todosLosTitulos();
+const buscarTitulo = (id: string) => todos.find((x) => x.id === id);
+const conexiones = [
+  ['Ver antes', d.conexiones.verAntes],
+  ['Ver después', d.conexiones.verDespues],
+  ['Relacionados', d.conexiones.relacionados],
+]
+  .map(([k, refs]) => [k, (refs as { id: string }[]).map((r) => buscarTitulo(r.id)).filter((x): x is Titulo => Boolean(x))] as const)
+  .filter(([, lista]) => lista.length > 0);
 const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' : 'ninguno';
 ---
 
@@ -117,12 +128,15 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
             <section class="panel">
               <h2 class="h-panel">Reparto</h2>
               <ul class="reparto">
-                {d.reparto.map((r) => (
-                  <li>
-                    <span>{r.actor}</span>
-                    <span>{r.personaje}</span>
-                  </li>
-                ))}
+                {d.reparto.map((r, i) => {
+                  const pid = enlaceReparto.get(`${t.id}|${i}`);
+                  return (
+                    <li>
+                      <span>{r.actor}</span>
+                      {pid ? <a href={`/${universo.id}/personajes/${pid}/`}>{r.personaje}</a> : <span>{r.personaje}</span>}
+                    </li>
+                  );
+                })}
               </ul>
             </section>
           )
@@ -169,6 +183,26 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
                 </li>
               ))}
             </ol>
+          </section>
+        )
+      }
+
+      {
+        conexiones.length > 0 && (
+          <section class="panel">
+            <h2 class="h-panel">Conexiones</h2>
+            <dl class="datos">
+              {conexiones.map(([k, lista]) => (
+                <>
+                  <dt>{k}</dt>
+                  <dd class="enlaces">
+                    {lista.map((o) => (
+                      <a class="chip" href={o.url}>{o.corto}</a>
+                    ))}
+                  </dd>
+                </>
+              ))}
+            </dl>
           </section>
         )
       }
@@ -379,6 +413,11 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     margin: 0;
     font-weight: 500;
   }
+  .enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
   .reparto {
     list-style: none;
     margin: 0;
@@ -394,9 +433,12 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
   .reparto li:last-child {
     border-bottom: 0;
   }
-  .reparto li span:last-child {
+  .reparto li > :last-child {
     color: var(--txt-2);
     text-align: right;
+  }
+  .reparto a:hover {
+    color: var(--acento-txt);
   }
   .ayuda {
     color: var(--txt-2);

@@ -9,9 +9,14 @@ Está hecha con [Astro](https://astro.build) (web 100 % estática) y se publica 
 
 ```bash
 npm install
-npm run dev      # servidor local en http://localhost:4321
+npm run dev      # servidor local en http://localhost:4321 (se actualiza al guardar)
 npm run build    # genera la web en dist/ y valida todos los datos
+npm run preview  # sirve la web ya generada, igual que en Vercel
+npm run check    # revisa los tipos del código
 ```
+
+Para ver la web en tu ordenador: abre una terminal en la carpeta del proyecto, escribe `npm run dev`
+y abre http://localhost:4321 en el navegador.
 
 ## Cambiar el nombre o el lema
 
@@ -150,6 +155,20 @@ Texto opcional sobre el personaje.
 
 La página del personaje muestra automáticamente todos los títulos en los que aparece.
 
+**Cómo se asigna un personaje a una ficha:** se compara cada línea del `reparto` de la ficha
+("Steve Rogers / Capitán América") con el `nombre`, la `identidad` y los `alias` de cada personaje.
+- Se compara cada parte completa (separadas por `/`): "She-Hulk" no cuenta como "Hulk".
+- Manda la identidad: "Miles Morales / Spider-Man" se asigna a Miles Morales, no a Peter Parker.
+- Si un personaje no aparece en una ficha donde sí sale, añade su nombre a `alias`, o escríbelo en la ficha:
+  `personajes: [thor, loki]`.
+
+## Spoilers
+
+- En el texto libre de una ficha (debajo de las líneas `---`), escribe `||texto||` y se mostrará
+  difuminado hasta que se pulse: `Al final ||muere alguien importante||.`
+- Las escenas post-créditos (`conexiones.postCreditos`) y los cameos se ocultan siempre como spoiler
+  (salvo que pongas `spoiler: false`).
+
 ## Añadir una saga o "Relacionada"
 
 `contenido/sagas/marvel/spider-man.yaml`:
@@ -173,4 +192,4 @@ La portada, la navegación y las rutas se generan solas.
 ## Aviso legal
 
 Proyecto de fans sin ánimo de lucro y no oficial. No tiene relación con Marvel, DC, Disney ni Warner Bros.
-This product uses the TMDB API but is not endorsed or certified by TMDB.
+This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.

@@ -4,6 +4,7 @@
  */
 import { getImage } from 'astro:assets';
 import { todosLosTitulos, universosActivos, numeroTexto } from '../lib/datos';
+import { personajesDe } from '../lib/personajes';
 
 export async function GET() {
   const activos = new Map((await universosActivos()).map((u) => [u.id, u]));
@@ -28,5 +29,23 @@ export async function GET() {
       };
     }),
   );
-  return new Response(JSON.stringify(items), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
+  const personajes = (
+    await Promise.all(
+      [...activos.values()].map(async (u) =>
+        (await personajesDe(u.id)).map(({ p, apariciones }) => ({
+          t: p.data.nombre,
+          o: p.data.identidad ?? '',
+          a: p.data.alias,
+          r: '',
+          u: `/${u.id}/personajes/${p.id}/`,
+          y: 0,
+          k: 'Personaje',
+          c: 'personaje',
+          n: '',
+          s: `${u.data.nombre} · ${apariciones.length} títulos`,
+        })),
+      ),
+    )
+  ).flat();
+  return new Response(JSON.stringify([...personajes, ...items]), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
 }

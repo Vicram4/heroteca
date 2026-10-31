@@ -9,10 +9,14 @@ import SubNav from '../../components/SubNav.astro';
 import Estanteria from '../../components/Estanteria.astro';
 import Ficha from '../../components/Ficha.astro';
 import { getImage } from 'astro:assets';
-import { universosActivos, titulosDe, huecosDeSeccion, sagasDe, type Titulo } from '../../lib/datos';
+import { universosActivos, titulosDe, huecosDeSeccion, sagasDe, type Titulo, type Universo, type Seccion, type Hueco, type Saga } from '../../lib/datos';
+
+type Props =
+  | { tipo: 'seccion'; universo: Universo; seccion: Seccion; huecos: Hueco[]; sagas: Saga[] }
+  | { tipo: 'ficha'; universo: Universo; t: Titulo; sagas: Saga[]; anterior?: Titulo; siguiente?: Titulo; temporadas: Titulo[] };
 
 export async function getStaticPaths() {
-  const rutas = [];
+  const rutas: { params: { universo: string; clave: string }; props: Props }[] = [];
   for (const universo of await universosActivos()) {
     const titulos = await titulosDe(universo.id);
     const sagas = await sagasDe(universo.id);
@@ -38,7 +42,7 @@ export async function getStaticPaths() {
   return rutas;
 }
 
-const p = Astro.props;
+const p = Astro.props as Props;
 const imagenSocial = p.tipo === 'ficha' && p.t.portada ? (await getImage({ src: p.t.portada, width: 600, format: 'jpg' })).src : undefined;
 ---
 

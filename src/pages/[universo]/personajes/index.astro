@@ -1,0 +1,146 @@
+---
+/** Todos los personajes de un universo, ordenados por número de apariciones. */
+import { Image } from 'astro:assets';
+import Base from '../../../layouts/Base.astro';
+import SubNav from '../../../components/SubNav.astro';
+import { universosActivos } from '../../../lib/datos';
+import { personajesDe } from '../../../lib/personajes';
+
+export async function getStaticPaths() {
+  return (await universosActivos()).map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
+}
+const { universo } = Astro.props;
+const lista = await personajesDe(universo.id);
+const conApariciones = lista.filter((x) => x.apariciones.length);
+const sin = lista.filter((x) => !x.apariciones.length);
+---
+
+<Base titulo={`Personajes · ${universo.data.nombre}`} universo={universo}>
+  <SubNav slot="subnav" universo={universo} activo="personajes" />
+  <div class="contenedor">
+    <header class="cab">
+      <h1>Personajes</h1>
+      <p>{conApariciones.length} personajes con apariciones en tus fichas. Pulsa uno para ver todos sus títulos.</p>
+    </header>
+    <ul class="rejilla">
+      {
+        conApariciones.map(({ p, apariciones }) => {
+          const tapas = apariciones.filter((a) => a.titulo.portada).slice(0, 3);
+          return (
+            <li>
+              <a class="tarjeta" href={`/${universo.id}/personajes/${p.id}/`}>
+                <span class="tapas" aria-hidden="true">
+                  {tapas.map((a) => <Image src={a.titulo.portada!} alt="" width={90} format="webp" loading="lazy" />)}
+                </span>
+                <span class="nombre">{p.data.nombre}</span>
+                {p.data.identidad && <span class="identidad">{p.data.identidad}</span>}
+                <span class="cuenta">{apariciones.length} {apariciones.length === 1 ? 'título' : 'títulos'}</span>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+    {
+      sin.length > 0 && (
+        <section class="sin">
+          <h2>Aún sin apariciones</h2>
+          <p>Están en la lista, pero ninguna ficha los nombra todavía en el reparto. Se completarán con los datos de TMDB.</p>
+          <ul>
+            {sin.map(({ p }) => (
+              <li>
+                <a class="chip" href={`/${universo.id}/personajes/${p.id}/`}>{p.data.nombre}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </div>
+</Base>
+
+<style>
+  .cab {
+    padding: clamp(22px, 4vw, 36px) 0 18px;
+  }
+  .cab p {
+    color: var(--txt-2);
+    margin: 10px 0 0;
+  }
+  .rejilla {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .tarjeta {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 2px;
+    min-height: 170px;
+    padding: 16px;
+    border-radius: var(--radio);
+    overflow: hidden;
+    text-decoration: none;
+    background: var(--sup);
+    border: 1px solid var(--borde);
+    transition: transform var(--transicion), border-color var(--transicion);
+  }
+  .tarjeta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, transparent 10%, var(--sup) 72%);
+  }
+  .tarjeta:hover,
+  .tarjeta:focus-visible {
+    transform: translateY(-4px);
+    border-color: var(--acento);
+  }
+  .tapas {
+    position: absolute;
+    inset: 0 0 auto auto;
+    z-index: -2;
+    display: flex;
+    gap: 4px;
+    transform: rotate(8deg) translate(18px, -14px);
+    opacity: 0.55;
+  }
+  .tapas :global(img) {
+    width: 64px;
+    border-radius: 6px;
+  }
+  .nombre {
+    font: 800 1.6rem/1 var(--f-titulo);
+  }
+  .identidad {
+    color: var(--txt-2);
+    font-size: 0.92rem;
+  }
+  .cuenta {
+    margin-top: 6px;
+    font: 700 0.95rem var(--f-titulo);
+    color: var(--acento-txt);
+  }
+  .sin {
+    margin-top: 40px;
+  }
+  .sin p {
+    color: var(--txt-2);
+    margin: 8px 0 14px;
+  }
+  .sin ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>

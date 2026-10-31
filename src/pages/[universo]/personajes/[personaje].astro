@@ -1,0 +1,151 @@
+---
+/** Página de personaje: todos los títulos donde aparece y quién lo ha interpretado. */
+import Base from '../../../layouts/Base.astro';
+import SubNav from '../../../components/SubNav.astro';
+import Estanteria from '../../../components/Estanteria.astro';
+import { universosActivos, sagasDe, huecosDeSeccion } from '../../../lib/datos';
+import { personajesDe } from '../../../lib/personajes';
+
+export async function getStaticPaths() {
+  const rutas = [];
+  for (const universo of await universosActivos()) {
+    const sagas = await sagasDe(universo.id);
+    for (const { p, apariciones } of await personajesDe(universo.id)) {
+      rutas.push({ params: { universo: universo.id, personaje: p.id }, props: { universo, p, apariciones, sagas } });
+    }
+  }
+  return rutas;
+}
+const { universo, p, apariciones, sagas } = Astro.props;
+const titulos = apariciones.map((a) => a.titulo);
+const huecos = huecosDeSeccion(titulos, { id: p.id, nombre: p.data.nombre, orden: 'estreno' });
+// Intérpretes: actor → títulos (en orden de estreno)
+const interpretes = new Map<string, string[]>();
+for (const a of [...apariciones].sort((x, y) => x.titulo.d.anio - y.titulo.d.anio)) {
+  if (!a.actor) continue;
+  if (!interpretes.has(a.actor)) interpretes.set(a.actor, []);
+  interpretes.get(a.actor)!.push(`${a.titulo.corto} (${a.titulo.d.anio})`);
+}
+const anios = titulos.map((t) => t.d.anio);
+---
+
+<Base titulo={`${p.data.nombre} · Personajes · ${universo.data.nombre}`} universo={universo}>
+  <SubNav slot="subnav" universo={universo} activo="personajes" />
+  <div class="contenedor">
+    <nav class="miga" aria-label="Estás en"><a href={`/${universo.id}/personajes/`}>Personajes</a></nav>
+    <header class="cab">
+      <div class="cartel">
+        <h1>{p.data.nombre}</h1>
+        {p.data.identidad && <p class="identidad">{p.data.identidad}</p>}
+        {p.data.alias.length > 0 && <p class="alias">También: {p.data.alias.join(' · ')}</p>}
+      </div>
+      <dl class="datos">
+        <div><dt>Títulos</dt><dd>{titulos.length}</dd></div>
+        {anios.length > 0 && <div><dt>Desde</dt><dd>{Math.min(...anios)}</dd></div>}
+        {interpretes.size > 0 && <div><dt>Intérpretes</dt><dd>{interpretes.size}</dd></div>}
+      </dl>
+    </header>
+
+    {
+      interpretes.size > 0 && (
+        <section class="panel interpretes">
+          <h2>Interpretado por</h2>
+          <ul>
+            {[...interpretes].map(([actor, lista]) => (
+              <li>
+                <strong>{actor}</strong>
+                <span>{lista.join(' · ')}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="titulos">
+      <h2>Dónde aparece</h2>
+      {titulos.length ? <Estanteria huecos={huecos} cronologica={false} sagas={sagas} etiqueta={`Títulos con ${p.data.nombre}`} /> : <p class="vacio">Todavía no aparece en ninguna ficha.</p>}
+    </section>
+  </div>
+</Base>
+
+<style>
+  .miga {
+    padding-top: clamp(18px, 3vw, 28px);
+    font-size: 0.92rem;
+    color: var(--txt-2);
+  }
+  .miga a {
+    text-decoration: none;
+  }
+  .cab {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 18px 40px;
+    padding: 10px 0 24px;
+  }
+  .cartel h1 {
+    box-shadow: inset 0 -0.12em 0 var(--acento);
+    display: inline;
+  }
+  .identidad {
+    font-size: 1.3rem;
+    color: var(--txt-2);
+    margin: 12px 0 0;
+  }
+  .alias {
+    color: var(--txt-2);
+    font-size: 0.92rem;
+    margin: 6px 0 0;
+  }
+  .datos {
+    display: flex;
+    gap: 28px;
+    margin: 0 0 0 auto;
+  }
+  .datos dt {
+    color: var(--txt-2);
+    font-size: 0.85rem;
+  }
+  .datos dd {
+    margin: 0;
+    font: 800 2.2rem/1 var(--f-titulo);
+    color: var(--acento-txt);
+  }
+  .interpretes h2,
+  .titulos h2 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+  }
+  .interpretes ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .interpretes li {
+    display: grid;
+    grid-template-columns: minmax(140px, 220px) 1fr;
+    gap: 12px;
+  }
+  .interpretes span {
+    color: var(--txt-2);
+  }
+  .titulos {
+    margin-top: 30px;
+  }
+  .vacio {
+    color: var(--txt-2);
+  }
+  @media (max-width: 600px) {
+    .interpretes li {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .datos {
+      margin-left: 0;
+    }
+  }
+</style>

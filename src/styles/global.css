@@ -193,6 +193,9 @@ button {
 .t-one-shot {
   --c: var(--oneshot);
 }
+.t-personaje {
+  --c: var(--acento);
+}
 .t-especial,
 .t-corto,
 .t-documental {
@@ -274,4 +277,19 @@ a.chip:hover {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Spoiler en línea dentro del texto libre (||texto|| en Markdown) */
+.spoiler-linea {
+  cursor: pointer;
+  border-radius: 4px;
+  background: var(--sup-2);
+  padding: 0 3px;
+}
+.spoiler-linea .sl-texto {
+  filter: blur(5px);
+  transition: filter var(--transicion);
+}
+.spoiler-linea[aria-pressed='true'] .sl-texto {
+  filter: none;
 }
