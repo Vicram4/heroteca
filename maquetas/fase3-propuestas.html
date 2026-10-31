@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es" data-dir="a" data-tema="oscuro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heroteca · Propuestas visuales (Fase 3)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&family=Archivo+Black&family=Archivo:wght@400;500;600&family=Saira+Condensed:wght@600;700;800&family=Saira:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===================== Tokens por dirección ===================== */
+:root{--radio:14px;--sombra:0 10px 30px rgb(0 0 0 / .18)}
+/* A · Estreno: sala de cine oscura, rojo Marvel, ámbar de tus insignias 1080p/4K */
+[data-dir=a]{--f-tit:'Barlow Condensed',sans-serif;--f-txt:'Barlow',sans-serif;--rojo:#E62429;--realce:#FFB000;
+  --peli:#2BD576;--serie:#22C3F3;--oneshot:#A779FF;--especial:#FF7A45}
+[data-dir=a][data-tema=oscuro]{--fondo:#0D0E12;--fondo2:#13151B;--sup:#1A1D25;--sup2:#232733;--txt:#F2F3F5;--txt2:#A6ABB8;--borde:#2C3140;
+  --balda:linear-gradient(#2a2f3c,#1a1d25);--luz:0 14px 26px -8px rgb(255 176 0 / .45)}
+[data-dir=a][data-tema=claro]{--fondo:#F3F4F7;--fondo2:#E9EBF0;--sup:#FFFFFF;--sup2:#F1F2F6;--txt:#14161B;--txt2:#5A6070;--borde:#DADDE5;
+  --balda:linear-gradient(#d9dce4,#c3c8d3);--luz:0 14px 22px -10px rgb(255 176 0 / .55)}
+/* B · Acero: el degradado plateado de tus fichas de series */
+[data-dir=b]{--f-tit:'Archivo Black',sans-serif;--f-txt:'Archivo',sans-serif;--rojo:#D7141A;--realce:#1E5FD8;
+  --peli:#11A35A;--serie:#0B8FC4;--oneshot:#7A3FD1;--especial:#D9531E}
+[data-dir=b][data-tema=claro]{--fondo:linear-gradient(160deg,#F1F3F7 0%,#D3D8E1 100%);--fondo2:#E4E7ED;--sup:#FFFFFF;--sup2:#F2F4F7;--txt:#1C1F26;--txt2:#5B6475;--borde:#C9CED8;
+  --balda:linear-gradient(#eef0f4,#aab1bf 60%,#8d95a5);--luz:0 10px 16px -8px rgb(28 31 38 / .35)}
+[data-dir=b][data-tema=oscuro]{--fondo:linear-gradient(160deg,#20242C 0%,#121418 100%);--fondo2:#1B1E24;--sup:#252932;--sup2:#2E333E;--txt:#ECEEF2;--txt2:#9AA2B2;--borde:#394050;
+  --balda:linear-gradient(#5b6475,#363c48 60%,#262a33);--luz:0 10px 16px -8px rgb(0 0 0 / .6)}
+/* C · Tormenta: el cielo de tus estanterías y el azul del menú de estanterías */
+[data-dir=c]{--f-tit:'Saira Condensed',sans-serif;--f-txt:'Saira',sans-serif;--rojo:#FF2E3A;--realce:#4DA3FF;
+  --peli:#3DDC84;--serie:#4FD1FF;--oneshot:#B48CFF;--especial:#FF9254}
+[data-dir=c][data-tema=oscuro]{--fondo:radial-gradient(1200px 500px at 20% -10%,#2a3d5c 0%,transparent 60%),radial-gradient(900px 400px at 90% 10%,#22324d 0%,transparent 55%),#0E1828;
+  --fondo2:#122036;--sup:rgb(255 255 255 / .06);--sup2:rgb(255 255 255 / .1);--txt:#EAF0F8;--txt2:#9DB0C8;--borde:rgb(255 255 255 / .12);
+  --balda:linear-gradient(rgb(255 255 255 / .22),rgb(255 255 255 / .05));--luz:0 16px 28px -10px rgb(77 163 255 / .55)}
+[data-dir=c][data-tema=claro]{--fondo:radial-gradient(1200px 500px at 20% -10%,#d6e4f7 0%,transparent 60%),#EEF3FA;--fondo2:#E2EAF5;--sup:#FFFFFF;--sup2:#F3F7FC;--txt:#0F1A2B;--txt2:#4F617A;--borde:#CBD7E6;
+  --balda:linear-gradient(#ffffff,#c9d6e8);--luz:0 14px 22px -10px rgb(77 163 255 / .5)}
+
+/* ===================== Base ===================== */
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);background-attachment:fixed;color:var(--txt);font:16px/1.55 var(--f-txt);transition:background .3s,color .3s}
+h1,h2,h3,.tit{font-family:var(--f-tit);letter-spacing:.01em;line-height:1.05;margin:0}
+a{color:inherit}
+.contenedor{max-width:1180px;margin:0 auto;padding:0 20px}
+.selector{position:sticky;top:0;z-index:10;background:#111;color:#fff;font:14px/1.3 system-ui,sans-serif;padding:10px 0;box-shadow:0 2px 10px rgb(0 0 0 / .3)}
+.selector .contenedor{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.selector button{font:inherit;border:1px solid #555;background:#222;color:#fff;padding:7px 12px;border-radius:8px;cursor:pointer}
+.selector button[aria-pressed=true]{background:#fff;color:#111;border-color:#fff;font-weight:700}
+.selector .nota{opacity:.75;margin-left:auto}
+.bloque{padding:46px 0;border-bottom:1px dashed var(--borde)}
+.etiqueta-bloque{font:600 12px/1 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--txt2);margin-bottom:14px}
+
+/* Cabecera del sitio */
+.cab{display:flex;align-items:center;gap:18px;padding:16px 0}
+.marca{font-family:var(--f-tit);font-size:30px;font-weight:800}
+.marca span{color:var(--rojo)}
+.lema{color:var(--txt2);font-size:14px}
+.cab nav{margin-left:auto;display:flex;gap:6px}
+.cab nav a{text-decoration:none;padding:8px 12px;border-radius:999px;font-weight:600;font-size:15px}
+.cab nav a.activo{background:var(--sup2);box-shadow:inset 0 0 0 1px var(--borde)}
+.buscar{display:flex;align-items:center;gap:8px;background:var(--sup);border:1px solid var(--borde);border-radius:999px;padding:8px 14px;color:var(--txt2);min-width:220px}
+
+/* Portada: elegir universo */
+.universos{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+.universo{position:relative;border-radius:calc(var(--radio) + 6px);overflow:hidden;min-height:320px;padding:26px;display:flex;flex-direction:column;justify-content:flex-end;
+  background:#111;color:#fff;box-shadow:var(--sombra)}
+.universo .mosaico{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:6px;opacity:.55;transform:skewX(-8deg) scale(1.15)}
+.universo .mosaico img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+.universo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 20%,rgb(0 0 0 / .85))}
+.universo>*{position:relative;z-index:1}
+.universo .nombre{font-family:var(--f-tit);font-size:64px;font-weight:800;text-transform:uppercase}
+.universo{text-decoration:none}
+.universo.marvel .nombre{align-self:flex-start;box-shadow:inset 0 -.14em 0 var(--rojo)}
+.universo.dc{background:linear-gradient(135deg,#0b2a6b,#061430)}
+.universo.dc .nombre{font-size:52px}
+.universo .datos{color:#d7dbe4;margin-top:8px}
+.pronto{display:inline-block;margin-top:10px;font-size:13px;font-weight:600;padding:4px 10px;border-radius:999px;background:rgb(255 255 255 / .15)}
+
+/* Estantería */
+.est-cab{display:flex;align-items:end;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.est-cab h2{font-size:40px}
+.est-cab h2 b{color:var(--rojo)}
+.vistas{display:flex;gap:6px;margin-left:auto}
+.vistas span{padding:7px 12px;border-radius:999px;border:1px solid var(--borde);font-weight:600;font-size:14px}
+.vistas span.activo{background:var(--txt);color:var(--fondo2);border-color:var(--txt)}
+.balda{position:relative;padding:18px 18px 0;margin-bottom:34px}
+.balda .libros{display:grid;grid-template-columns:110px repeat(6,1fr);gap:16px;align-items:end}
+.balda::after{content:"";display:block;height:14px;margin:0 -18px;border-radius:4px;background:var(--balda);box-shadow:var(--luz)}
+.pagina{font-family:var(--f-tit);text-align:center;color:var(--txt2);font-size:13px;text-transform:uppercase;letter-spacing:.06em;align-self:center}
+.pagina b{display:block;font-size:34px;color:var(--txt)}
+.caja{position:relative;text-decoration:none;display:block;transition:transform .25s}
+.caja:hover,.caja:focus-visible{transform:translateY(-8px)}
+.caja:focus-visible{outline:3px solid var(--realce);outline-offset:4px;border-radius:10px}
+.caja .tapa{aspect-ratio:3/4;border-radius:8px;overflow:hidden;background:var(--sup2);box-shadow:0 0 0 3px var(--c),0 12px 20px -10px rgb(0 0 0 / .6);display:grid;place-items:center}
+.caja .tapa img{width:100%;height:100%;object-fit:cover}
+.caja .tapa .sin{font-family:var(--f-tit);text-align:center;padding:10px;font-size:15px;color:var(--c)}
+.caja .num{position:absolute;top:-10px;left:-8px;background:var(--rojo);color:#fff;font:700 13px/1 var(--f-tit);padding:5px 7px;border-radius:6px}
+.caja .pie{font-size:12px;color:var(--txt2);margin-top:8px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-peli{--c:var(--peli)}.t-serie{--c:var(--serie)}.t-oneshot{--c:var(--oneshot)}
+.leyenda{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--txt2)}
+.leyenda i{display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--c);margin-right:6px;vertical-align:-1px}
+
+/* Ficha */
+.ficha{display:grid;grid-template-columns:300px 1fr;gap:34px}
+.carat{display:grid;gap:14px}
+.carat img{width:100%;border-radius:12px;box-shadow:var(--sombra)}
+.carat .girar{font-size:13px;color:var(--txt2);text-align:center}
+.miga{font-size:14px;color:var(--txt2);margin-bottom:10px}
+.miga b{color:var(--rojo);font-family:var(--f-tit);font-size:16px}
+.ficha h1{font-size:58px}
+.ficha .orig{color:var(--txt2);font-size:19px;margin:6px 0 16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.chip{font-size:13px;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--sup2);border:1px solid var(--borde)}
+.chip.tipo{background:var(--c);color:#06110b;border-color:transparent}
+.chip.calidad{background:var(--realce);color:#111;border-color:transparent}
+.rejilla{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.panel{background:var(--sup);border:1px solid var(--borde);border-radius:var(--radio);padding:18px 20px}
+.panel h3{font-size:22px;margin-bottom:10px}
+.panel dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0;font-size:15px}
+.panel dt{color:var(--txt2)}
+.panel dd{margin:0;font-weight:500}
+.reparto{list-style:none;margin:0;padding:0;font-size:15px}
+.reparto li{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--borde)}
+.reparto li span:last-child{color:var(--txt2);text-align:right}
+.argumento{grid-column:1/-1}
+.spoiler{position:relative;border-radius:10px;overflow:hidden;margin-top:12px}
+.spoiler p{filter:blur(6px);margin:0;padding:12px;background:var(--sup2);user-select:none}
+.spoiler button{position:absolute;inset:0;margin:auto;width:max-content;height:max-content;font:600 14px var(--f-txt);background:var(--txt);color:var(--fondo2);border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+.capitulos{list-style:none;margin:0;padding:6px 20px}
+.capitulos li{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--borde)}
+.capitulos .cod{font-family:var(--f-tit);color:var(--rojo);font-size:18px}
+.capitulos small{color:var(--txt2)}
+.columnas2{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+.analisis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.muestra{border-radius:12px;padding:14px;color:#111;font-size:13px;min-height:90px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:inset 0 0 0 1px rgb(0 0 0 / .08)}
+@media (max-width:820px){
+  .universos,.ficha,.rejilla,.columnas2{grid-template-columns:1fr}
+  .balda .libros{grid-template-columns:repeat(3,1fr)}.pagina{grid-column:1/-1}
+  .ficha h1{font-size:42px}.cab nav,.buscar{display:none}.analisis{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="selector"><div class="contenedor">
+  <strong>Dirección:</strong>
+  <button data-set-dir="a" aria-pressed="true">A · Estreno (recomendada)</button>
+  <button data-set-dir="b" aria-pressed="false">B · Acero</button>
+  <button data-set-dir="c" aria-pressed="false">C · Tormenta</button>
+  <strong style="margin-left:14px">Modo:</strong>
+  <button data-set-tema="oscuro" aria-pressed="true">Oscuro</button>
+  <button data-set-tema="claro" aria-pressed="false">Claro</button>
+  <span class="nota">Maqueta estática · no es la web final</span>
+</div></div>
+
+<div class="contenedor">
+  <!-- Análisis de tus documentos -->
+  <section class="bloque">
+    <div class="etiqueta-bloque">0 · Lo que he encontrado en tus documentos</div>
+    <div class="analisis">
+      <div class="muestra" style="background:linear-gradient(135deg,#E6DCAC,#E6D78A 50%,#C7AC4C)">Fondo dorado<br><b>fichas de películas e índice</b></div>
+      <div class="muestra" style="background:linear-gradient(135deg,#E6E6E6,#7D8496)">Fondo plateado<br><b>fichas de series</b></div>
+      <div class="muestra" style="background:radial-gradient(circle at 50% 40%,#5b7fd0,#1c2f73);color:#fff">Azul + cielo de tormenta<br><b>estanterías</b></div>
+      <div class="muestra" style="background:#000;color:#fff"><span style="background:#FF0000;padding:2px 6px;font-weight:800;align-self:flex-start">ROJO</span>Rojo puro sobre negro<br><b>cabecera de todas las páginas</b></div>
+      <div class="muestra" style="background:#fff">Texto de tipo:<br><b style="color:#00B050">PELÍCULA</b> <b style="color:#00B0F0">SERIE</b> <b style="color:#7030A0">One-Shot</b></div>
+      <div class="muestra" style="background:#fff;font-family:Arial">Arial · <b style="font-family:'Arial Black'">Arial Black</b><br>Cambria · Calibri<br><b>tipografías usadas</b></div>
+      <div class="muestra" style="background:linear-gradient(#FFC94A,#E8A400)"><b>1080P · 4K · HD 720P</b>insignias de calidad ámbar</div>
+      <div class="muestra" style="background:#fbf3df">Botones crema con borde azul y texto rojo; estanterías de madera con marcos de color por tipo</div>
+    </div>
+  </section>
+
+  <!-- Cabecera + portada -->
+  <section class="bloque">
+    <div class="etiqueta-bloque">1 · Cabecera y portada (elegir universo)</div>
+    <header class="cab">
+      <div><div class="marca">Hero<span>teca</span></div><div class="lema">Todo el multiverso, en un solo lugar</div></div>
+      <nav><a class="activo" href="#">Marvel</a><a href="#">Cronología</a><a href="#">Personajes</a></nav>
+      <div class="buscar">🔍 Buscar título o personaje…</div>
+    </header>
+    <div class="universos">
+      <a class="universo marvel" href="#">
+        <div class="mosaico">
+          <img src="../contenido/titulos/marvel/capitan-america-el-primer-vengador/portada.jpg" alt="">
+          <img src="../contenido/titulos/marvel/capitana-marvel/portada.jpg" alt="">
+          <img src="../contenido/titulos/marvel/thor/portada.jpg" alt="">
+          <img src="../contenido/titulos/marvel/los-vengadores/portada.png" alt="">
+          <img src="../contenido/titulos/marvel/iron-man-2/portada.jpg" alt="">
+          <img src="../contenido/titulos/marvel/el-increible-hulk-2008/portada.png" alt="">
+        </div>
+        <span class="nombre">Marvel</span>
+        <span class="datos">UMC · Pre-UMC · Relacionadas · Animación — 246 títulos</span>
+      </a>
+      <div class="universo dc">
+        <span class="nombre">DC</span>
+        <span class="datos">Su ambiente propio (azul, en esta maqueta).</span>
+        <span class="pronto">Próximamente</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Estantería -->
+  <section class="bloque">
+    <div class="etiqueta-bloque">2 · Navegación por estanterías (como tu 999 estanterias.pptx)</div>
+    <div class="est-cab">
+      <h2><b>UMC</b> · Orden cronológico</h2>
+      <div class="leyenda"><span class="t-peli"><i></i>Película</span><span class="t-serie"><i></i>Serie</span><span class="t-oneshot"><i></i>One-Shot</span></div>
+      <div class="vistas"><span class="activo">Películas y series</span><span>Películas</span><span>Series</span><span>Por estreno</span></div>
+    </div>
+    <div class="balda"><div class="libros">
+      <div class="pagina">Página<b>001</b>del archivo rojo</div>
+      <a class="caja t-peli" href="#"><span class="num">001</span><div class="tapa"><img src="../contenido/titulos/marvel/capitan-america-el-primer-vengador/portada.jpg" alt="Capitán América: El primer Vengador"></div><div class="pie">Capitán América</div></a>
+      <a class="caja t-serie" href="#"><span class="num">002</span><div class="tapa"><img src="../contenido/titulos/marvel/agente-carter-t1/portada.jpg" alt="Agente Carter, temporada 1"></div><div class="pie">Agente Carter · T1</div></a>
+      <a class="caja t-serie" href="#"><span class="num">003</span><div class="tapa"><img src="../contenido/titulos/marvel/agente-carter-t2/portada.jpg" alt="Agente Carter, temporada 2"></div><div class="pie">Agente Carter · T2</div></a>
+      <a class="caja t-oneshot" href="#"><span class="num">004</span><div class="tapa"><span class="sin">One-Shot<br>Agente Carter</span></div><div class="pie">Agente Carter</div></a>
+      <a class="caja t-peli" href="#"><span class="num">005</span><div class="tapa"><img src="../contenido/titulos/marvel/capitana-marvel/portada.jpg" alt="Capitana Marvel"></div><div class="pie">Capitana Marvel</div></a>
+      <a class="caja t-peli" href="#"><span class="num">007</span><div class="tapa"><img src="../contenido/titulos/marvel/el-increible-hulk-2008/portada.png" alt="El increíble Hulk"></div><div class="pie">El increíble Hulk</div></a>
+    </div></div>
+    <div class="balda"><div class="libros">
+      <div class="pagina">Página<b>002</b>del archivo rojo</div>
+      <a class="caja t-peli" href="#"><span class="num">008</span><div class="tapa"><img src="../contenido/titulos/marvel/iron-man-2/portada.jpg" alt="Iron Man 2"></div><div class="pie">Iron Man 2</div></a>
+      <a class="caja t-oneshot" href="#"><span class="num">009</span><div class="tapa"><span class="sin">One-Shot<br>El consultor</span></div><div class="pie">El consultor</div></a>
+      <a class="caja t-peli" href="#"><span class="num">011</span><div class="tapa"><img src="../contenido/titulos/marvel/thor/portada.jpg" alt="Thor"></div><div class="pie">Thor</div></a>
+      <a class="caja t-peli" href="#"><span class="num">012</span><div class="tapa"><img src="../contenido/titulos/marvel/los-vengadores/portada.png" alt="Los Vengadores"></div><div class="pie">Los Vengadores</div></a>
+      <a class="caja t-serie" href="#"><span class="num">015</span><div class="tapa"><img src="../contenido/titulos/marvel/agentes-de-shield-t1/portada.jpg" alt="Agentes de S.H.I.E.L.D., temporada 1"></div><div class="pie">Agentes de S.H.I.E.L.D. · T1</div></a>
+      <a class="caja t-oneshot" href="#"><span class="num">013</span><div class="tapa"><span class="sin">One-Shot<br>Artículo 47</span></div><div class="pie">Artículo 47</div></a>
+    </div></div>
+  </section>
+
+  <!-- Ficha película -->
+  <section class="bloque">
+    <div class="etiqueta-bloque">3 · Ficha de película (tu "Ficha Técnica", modernizada)</div>
+    <div class="ficha">
+      <div class="carat">
+        <img src="../contenido/titulos/marvel/capitan-america-el-primer-vengador/portada.jpg" alt="Portada de tu edición de Capitán América: El primer Vengador">
+        <img src="../contenido/titulos/marvel/capitan-america-el-primer-vengador/contraportada.jpg" alt="Contraportada">
+        <div class="girar">Portada y contraportada de tu edición</div>
+      </div>
+      <div>
+        <div class="miga">Marvel › UMC › <b>001</b> · Página 1 del archivo rojo</div>
+        <h1>Capitán América: El primer Vengador</h1>
+        <div class="orig">Captain America: The First Avenger · 2011</div>
+        <div class="chips"><span class="chip tipo t-peli" style="background:var(--peli)">Película</span><span class="chip">Fase 1</span><span class="chip">Saga del Infinito</span><span class="chip calidad">1080p</span><span class="chip calidad">4K</span><span class="chip">125 min</span></div>
+        <div class="rejilla">
+          <div class="panel"><h3>Ficha técnica</h3><dl>
+            <dt>Nacionalidad</dt><dd>EE. UU.</dd><dt>Dirección</dt><dd>Joe Johnston</dd><dt>Guion</dt><dd>Christopher Markus</dd>
+            <dt>Productora</dt><dd>Marvel Studios</dd><dt>Distribuidora</dt><dd>Paramount Pictures</dd></dl></div>
+          <div class="panel"><h3>Reparto</h3><ul class="reparto">
+            <li><span>Chris Evans</span><span>Steve Rogers / Capitán América</span></li>
+            <li><span>Hayley Atwell</span><span>Peggy Carter</span></li>
+            <li><span>Sebastian Stan</span><span>Bucky Barnes</span></li>
+            <li><span>Hugo Weaving</span><span>Red Skull</span></li></ul></div>
+          <div class="panel argumento"><h3>Argumento</h3>
+            <p style="margin:0">Nacido durante la Gran Depresión, Steve Rogers creció como un chico enclenque en una familia pobre. Horrorizado por las noticias que llegaban de Europa sobre los nazis, decidió enrolarse en el ejército…</p>
+            <div class="spoiler"><p>Escena post-créditos: Steve despierta en la actualidad y Nick Fury le habla de una misión que podría salvar el mundo.</p><button type="button">⚠ Spoiler · Mostrar escena post-créditos</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ficha temporada -->
+  <section class="bloque">
+    <div class="etiqueta-bloque">4 · Ficha de temporada con sus capítulos</div>
+    <div class="columnas2">
+      <div>
+        <div class="miga">Marvel › UMC › <b>002</b> · Serie</div>
+        <h1 style="font-size:48px">Agente Carter</h1>
+        <div class="orig">Temporada 1 · 2015 · 8 capítulos · HD 720p</div>
+        <p>En 1946, después de acabar la guerra y de perder a su amado Capitán América, la agente Peggy Carter trabaja en la Reserva Científica Estratégica en Nueva York…</p>
+      </div>
+      <ul class="capitulos panel">
+        <li><span class="cod">1x01</span><span>Ahora no es el final<br><small>Louis D’Esposito · 40 min</small></span><span>›</span></li>
+        <li><span class="cod">1x02</span><span>Puente y túnel<br><small>Joseph V. Russo · 40 min</small></span><span>›</span></li>
+        <li><span class="cod">1x03</span><span>Tiempo y marea<br><small>Scott Winant · 40 min</small></span><span>›</span></li>
+        <li><span class="cod">1x04</span><span>El botón Blitzkrieg<br><small>Stephen Cragg · 40 min</small></span><span>›</span></li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+const html = document.documentElement;
+const [d0, t0] = location.hash.slice(1).split('-');  // p. ej. #b-claro
+if (d0) html.dataset.dir = d0;
+if (t0) html.dataset.tema = t0;
+addEventListener('DOMContentLoaded', () => document.querySelectorAll('[data-set-dir],[data-set-tema]').forEach(x =>
+  x.setAttribute('aria-pressed', x.dataset.setDir ? x.dataset.setDir === html.dataset.dir : x.dataset.setTema === html.dataset.tema)));
+document.querySelectorAll('[data-set-dir]').forEach(b => b.onclick = () => {
+  html.dataset.dir = b.dataset.setDir;
+  document.querySelectorAll('[data-set-dir]').forEach(x => x.setAttribute('aria-pressed', x === b));
+});
+document.querySelectorAll('[data-set-tema]').forEach(b => b.onclick = () => {
+  html.dataset.tema = b.dataset.setTema;
+  document.querySelectorAll('[data-set-tema]').forEach(x => x.setAttribute('aria-pressed', x === b));
+});
+document.querySelectorAll('.spoiler button').forEach(b => b.onclick = () => {
+  b.previousElementSibling.style.filter = 'none'; b.remove();
+});
+</script>
+</body>
+</html>
