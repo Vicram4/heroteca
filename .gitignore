@@ -34,3 +34,6 @@ documentos/*
 .venv/
 # respuestas en bruto de TMDB (se regeneran con los scripts; en la Fase 5 se sube un resumen compacto)
 cache/
+
+# caché de Python
+__pycache__/
