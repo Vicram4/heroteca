@@ -180,6 +180,16 @@ del RESUMEN de carpetas UDC) y «animacion/Animación».
 - En la sección Series, cada ficha lleva `visionado: { carpeta, codigo, orden }` (tu código 2.3, 5.1…)
   y `numero` es el de la carpeta del disco (011 Smallville). `enEspera: true` la pone al final, en «En espera».
 
+## Carátulas con márgenes blancos
+
+Algunas carátulas de los documentos traen márgenes blancos alrededor de la caja. Para recortarlos
+(por ejemplo, después de añadir fichas nuevas):
+
+```bash
+.venv/Scripts/python.exe scripts/recortar_caratulas.py contenido/titulos            # solo muestra cuáles
+.venv/Scripts/python.exe scripts/recortar_caratulas.py contenido/titulos --aplicar  # las recorta
+```
+
 ## Añadir un personaje
 
 `contenido/personajes/marvel/thor.md`:
