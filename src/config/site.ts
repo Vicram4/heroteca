@@ -21,6 +21,15 @@ export const SITE = {
   github: 'https://github.com/Vicram4',
 } as const;
 
+/**
+ * Easter egg: código Konami (↑ ↑ ↓ ↓ ← → ← → B A) en ordenador,
+ * o 7 toques seguidos sobre la parte de color del nombre en el móvil.
+ */
+export const DEDICATORIA = {
+  mensaje: 'Dedicado a papá',
+  firma: SITE.nombre,
+} as const;
+
 /** Textos legales obligatorios del footer. */
 export const AVISOS = {
   fans:

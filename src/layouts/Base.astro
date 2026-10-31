@@ -5,6 +5,7 @@ import { universosActivos, estiloUniverso, type Universo } from '../lib/datos';
 import Marca from '../components/Marca.astro';
 import BotonTema from '../components/BotonTema.astro';
 import Buscador from '../components/Buscador.astro';
+import ArchivoRojo from '../components/ArchivoRojo.astro';
 
 interface Props {
   titulo?: string;
@@ -81,6 +82,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
         </p>
       </div>
     </footer>
+    <ArchivoRojo />
     <script>
       // Spoilers en línea (||texto|| en las fichas): se revelan con clic, Intro o espacio
       document.querySelectorAll<HTMLElement>('.spoiler-linea').forEach((s) => {

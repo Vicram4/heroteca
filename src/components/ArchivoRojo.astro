@@ -1,0 +1,186 @@
+---
+/**
+ * Easter egg. Se activa con el código Konami (↑ ↑ ↓ ↓ ← → ← → B A) o con 7 toques
+ * seguidos sobre la parte de color del nombre (.resalte en Marca.astro).
+ * El contenido llega de /archivo-rojo.json solo al activarlo.
+ */
+---
+
+<dialog class="archivo-rojo" data-archivo-rojo aria-labelledby="archivo-rojo-mensaje">
+  <div class="caratulas" aria-hidden="true" data-caratulas></div>
+  <div class="texto">
+    <p class="mensaje" id="archivo-rojo-mensaje" data-mensaje></p>
+    <p class="firma" data-firma></p>
+  </div>
+  <button type="button" class="cerrar" data-cerrar aria-label="Cerrar">✕</button>
+</dialog>
+
+<script>
+  const dialogo = document.querySelector<HTMLDialogElement>('[data-archivo-rojo]')!;
+  let cargado = false;
+
+  async function abrir() {
+    if (dialogo.open) return;
+    if (!cargado) {
+      try {
+        const datos: { mensaje: string; firma: string; caratulas: string[] } = await (await fetch('/archivo-rojo.json')).json();
+        dialogo.querySelector('[data-mensaje]')!.textContent = datos.mensaje;
+        dialogo.querySelector('[data-firma]')!.textContent = datos.firma;
+        const caja = dialogo.querySelector('[data-caratulas]')!;
+        datos.caratulas.forEach((src, i) => {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = '';
+          img.style.setProperty('--i', String(i));
+          img.style.setProperty('--x', `${(i * 37) % 100}%`);
+          caja.append(img);
+        });
+        cargado = true;
+      } catch {
+        return;
+      }
+    }
+    dialogo.showModal();
+    dialogo.querySelector<HTMLButtonElement>('[data-cerrar]')!.focus();
+  }
+
+  dialogo.querySelector('[data-cerrar]')!.addEventListener('click', () => dialogo.close());
+  dialogo.addEventListener('click', (e) => e.target === dialogo && dialogo.close());
+
+  // Código Konami
+  const KONAMI = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
+  let paso = 0;
+  addEventListener('keydown', (e) => {
+    if ((e.target as HTMLElement).closest('input, textarea, select, [contenteditable]')) return;
+    const tecla = e.key.toLowerCase();
+    paso = tecla === KONAMI[paso] ? paso + 1 : tecla === KONAMI[0] ? 1 : 0;
+    if (paso === KONAMI.length) {
+      paso = 0;
+      abrir();
+    }
+  });
+
+  // 7 toques seguidos sobre la parte de color del nombre (un toque normal sigue llevando a la portada)
+  const resalte = document.querySelector<HTMLElement>('.marca .resalte');
+  const enlace = resalte?.closest('a');
+  let toques = 0;
+  let reloj: number | undefined;
+  resalte?.addEventListener('click', (e) => {
+    e.preventDefault();
+    toques++;
+    clearTimeout(reloj);
+    if (toques >= 7) {
+      toques = 0;
+      abrir();
+      return;
+    }
+    reloj = window.setTimeout(() => {
+      if (toques < 3 && enlace) location.href = enlace.href;
+      toques = 0;
+    }, 450);
+  });
+</script>
+
+<style>
+  .archivo-rojo {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    color: #2b1f00;
+    /* El degradado dorado de tus fichas originales */
+    background: radial-gradient(ellipse at 50% 40%, #e6dcac 0%, #e6d78a 45%, #c7ac4c 100%);
+  }
+  .archivo-rojo[open] {
+    display: grid;
+    place-items: center;
+    animation: aparecer 0.8s ease both;
+  }
+  .archivo-rojo::backdrop {
+    background: #000;
+  }
+  .caratulas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .caratulas :global(img) {
+    position: absolute;
+    left: var(--x);
+    bottom: -40%;
+    width: clamp(70px, 11vw, 140px);
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgb(80 55 0 / 0.45);
+    opacity: 0;
+    animation: subir 14s linear infinite;
+    animation-delay: calc(var(--i) * -1s);
+  }
+  .texto {
+    position: relative;
+    text-align: center;
+    padding: 28px 40px;
+    border-radius: 22px;
+    background: rgb(255 248 220 / 0.55);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 20px 60px rgb(80 55 0 / 0.35);
+  }
+  .mensaje {
+    margin: 0;
+    font: 800 clamp(2.6rem, 9vw, 6rem) / 1 var(--f-titulo);
+    letter-spacing: 0.01em;
+  }
+  .firma {
+    margin: 14px 0 0;
+    font: 600 1rem var(--f-texto);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .cerrar {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 0;
+    background: rgb(43 31 0 / 0.12);
+    color: #2b1f00;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  .cerrar:focus-visible {
+    outline-color: #2b1f00;
+  }
+  @keyframes aparecer {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes subir {
+    0% {
+      transform: translateY(0) rotate(-6deg);
+      opacity: 0;
+    }
+    10%,
+    80% {
+      opacity: 0.9;
+    }
+    100% {
+      transform: translateY(-160vh) rotate(6deg);
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .caratulas :global(img) {
+      animation: none;
+      opacity: 0.35;
+      bottom: auto;
+      top: calc(var(--i) * 6%);
+    }
+  }
+</style>
