@@ -25,7 +25,7 @@ export const SITE = {
    * Token de Cloudflare Web Analytics (estadísticas sin cookies). Vacío = desactivadas.
    * Si se activan, la página de privacidad lo explica automáticamente.
    */
-  cloudflareAnalytics: '',
+  cloudflareAnalytics: '1a854bd5a89245afa7a452e8d3f75476',
   /** Código de verificación de Google Search Console (es público; no identifica a nadie). */
   googleVerificacion: 'd9udc0hSfl5WRRV432HhCeZPJ4Asyi5yJrZT4uV5kcM',
 } as const;

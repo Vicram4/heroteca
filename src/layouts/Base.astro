@@ -133,7 +133,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
       SITE.cloudflareAnalytics && (
         <script
           is:inline
-          defer
+          type="module"
           src="https://static.cloudflareinsights.com/beacon.min.js"
           data-cf-beacon={JSON.stringify({ token: SITE.cloudflareAnalytics })}
         />
