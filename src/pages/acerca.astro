@@ -1,0 +1,98 @@
+---
+/** Qué es Heroteca, cómo está organizada y de dónde salen los datos. */
+import Base from '../layouts/Base.astro';
+import { SITE, AVISOS } from '../config/site';
+import { universosActivos, titulosDe } from '../lib/datos';
+
+const universos = await universosActivos();
+const total = (await Promise.all(universos.map((u) => titulosDe(u.id)))).reduce((n, l) => n + l.length, 0);
+---
+
+<Base
+  titulo="Acerca de Heroteca"
+  descripcion="Qué es Heroteca, cómo se organizan sus películas y series de Marvel y DC (UMC, DCDU, carpetas de visionado) y de dónde salen sus datos."
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: 'Acerca de', url: '/acerca/' }]}
+>
+  <div class="contenedor texto-largo">
+    <h1>Acerca de {SITE.nombre}</h1>
+    <p class="entradilla">{SITE.nombre} es una enciclopedia de fans de las películas, series y animación de Marvel y DC: {total} títulos con sus fichas, personajes, sagas y órdenes para verlos.</p>
+
+    <h2>Un archivo de colección</h2>
+    <p>La web nace de un archivo personal: años de colección catalogada en documentos de Word y PowerPoint y organizada en un disco duro. {SITE.nombre} respeta esa organización en lugar de imponer una genérica. Por eso cada título lleva el <strong>número de la colección</strong> (001, 002…) y las secciones se llaman como en el archivo.</p>
+
+    <h2>Cómo está organizada</h2>
+    <h3>Marvel</h3>
+    <dl class="glosario">
+      <dt>UMC</dt>
+      <dd>Universo Marvel Cinematográfico (en inglés, <abbr title="Marvel Cinematic Universe">MCU</abbr>). Su numeración sigue el <strong>orden cronológico de la historia</strong>, no el de estreno. Una temporada puede ocupar varios números si sus capítulos transcurren en momentos distintos.</dd>
+      <dt>Pre-UMC</dt>
+      <dd>Películas y series de Marvel anteriores o ajenas al UMC, numeradas por orden de estreno.</dd>
+      <dt>Animación</dt>
+      <dd>Películas y series animadas, por orden de estreno.</dd>
+    </dl>
+    <h3>DC</h3>
+    <dl class="glosario">
+      <dt>UDC</dt>
+      <dd>Películas clásicas de DC (de Superman, 1978, a la trilogía de El caballero oscuro), numeradas por orden de estreno.</dd>
+      <dt>DCDU</dt>
+      <dd>Universo Extendido de DC (en inglés, <abbr title="DC Extended Universe">DCEU</abbr>), numerado en <strong>orden de la historia</strong>.</dd>
+      <dt>Series y carpetas</dt>
+      <dd>Las series se ven por <strong>carpetas de visionado</strong>, agrupadas en etapas: Pre-Crossover, Crossover, Entre-Crossover y Pos-Crossover. El código de cada temporada indica carpeta y posición: <em>2.3</em> es la tercera de la carpeta 2. En los bloques Crossover hay además un orden <strong>capítulo a capítulo</strong> para ver juntas varias series del Arrowverso. Lo marcado <em>En espera</em> está pendiente de colocar.</dd>
+    </dl>
+    <p>En todas las estanterías se puede alternar entre el orden propio de la sección y el orden de estreno.</p>
+
+    <h2>De dónde salen los datos</h2>
+    <ul>
+      <li><strong>El archivo de la colección manda:</strong> numeración, títulos, carátulas de sus ediciones, argumentos, repartos y listas de capítulos.</li>
+      <li>Lo que falta se completa con <a href="https://www.themoviedb.org/" rel="noopener">TMDB</a> (sinopsis, reparto, carteles y tráileres). En cada ficha, lo que viene de TMDB se indica con «de TMDB» o con una ᵀ.</li>
+      <li>Los títulos son los oficiales en España; los originales y alternativos también aparecen en la ficha y en el buscador.</li>
+      <li>Las escenas post-créditos y los cameos se ocultan como spoiler hasta que se pulsan.</li>
+    </ul>
+
+    <h2>Errores y sugerencias</h2>
+    <p>Si ves un dato incorrecto o echas en falta algo, puedes avisar en <a href={`${SITE.repositorio}/issues`} rel="noopener">GitHub</a>.</p>
+
+    <h2>Aviso legal</h2>
+    <p>{AVISOS.fans}</p>
+    <p lang="en">{AVISOS.tmdb}</p>
+    <p>Más detalles sobre qué datos se tratan al visitar la web en la <a href="/privacidad/">página de privacidad</a>.</p>
+  </div>
+</Base>
+
+<style>
+  .texto-largo {
+    max-width: 75ch;
+    padding-top: clamp(22px, 4vw, 36px);
+  }
+  .entradilla {
+    font-size: 1.15rem;
+    color: var(--txt);
+  }
+  h1 {
+    margin-bottom: 0.4em;
+  }
+  h2 {
+    margin: 1.6em 0 0.5em;
+  }
+  h3 {
+    margin: 1.4em 0 0.4em;
+    color: var(--acento-txt);
+  }
+  .glosario dt {
+    font: 700 1.05rem var(--f-titulo);
+    margin-top: 0.9em;
+  }
+  .glosario dd {
+    margin: 0.2em 0 0;
+    color: var(--txt-2);
+  }
+  ul {
+    padding-left: 1.2em;
+  }
+  li {
+    margin: 0.4em 0;
+  }
+  abbr {
+    text-decoration: none;
+  }
+</style>

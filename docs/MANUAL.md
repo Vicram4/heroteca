@@ -190,6 +190,18 @@ Algunas carátulas de los documentos traen márgenes blancos alrededor de la caj
 .venv/Scripts/python.exe scripts/recortar_caratulas.py contenido/titulos --aplicar  # las recorta
 ```
 
+## Guías de visionado
+
+Las guías (/marvel/guias/…, /dc/guias/…) se definen en [`src/config/guias.ts`](../src/config/guias.ts):
+título, textos de introducción y qué secciones o carpetas muestran. Las listas se generan solas a partir
+de las fichas, así que se actualizan al añadir títulos. Para crear una guía nueva basta con añadir un
+elemento a esa lista.
+
+## Textos para buscadores
+
+- Cada universo y cada sección de `contenido/universos/*.yaml` admite `tituloSeo` (el título que muestra Google).
+- Los grupos de la página «Relacionadas y sagas» se definen en `gruposSagas` del mismo archivo.
+
 ## Añadir un personaje
 
 `contenido/personajes/marvel/thor.md`:

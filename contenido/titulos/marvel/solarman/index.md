@@ -9,6 +9,6 @@ anio: 1986
 tmdb:
   id: 201685
   tipo: movie
-notas: En tus documentos el año era 1988
+notas: En los documentos de la colección el año era 1988
 fuente: EL INDICE.docx · series animadas
 ---

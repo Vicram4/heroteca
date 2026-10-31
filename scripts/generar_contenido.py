@@ -195,7 +195,7 @@ def construir(e, corrector, manual):
     temporada = m.get('temporada') or e.get('temporada')
     if base['tipo'] == 'serie' and temporada:
         if m.get('temporada') and m['temporada'] != e.get('temporada'):
-            notas.append(f"En tus documentos: temporada {e.get('temporada')}")
+            notas.append(f"En los documentos de la colección: temporada {e.get('temporada')}")
         datos['serie'] = slug(oficial)
         datos['temporada'] = temporada
     elif base['tipo'] == 'serie':
@@ -235,7 +235,7 @@ def construir(e, corrector, manual):
     anio_tmdb = int(fecha_tmdb[:4]) if fecha_tmdb[:4].isdigit() else None
     if anio and anio_tmdb and abs(anio - anio_tmdb) > 1 and e['tmdb']['tipo'] == 'movie':
         corrector.cambios.append((clave, 'anio', str(anio), str(anio_tmdb)))
-        notas.append(f'En tus documentos el año era {anio}')
+        notas.append(f'En los documentos de la colección el año era {anio}')
         anio = anio_tmdb
     datos['anio'] = anio or anio_tmdb
     anios = sorted({p['anio'] for p in partes if p.get('anio')} | {c['anioFin'] for c in catalogo if c.get('anioFin')})

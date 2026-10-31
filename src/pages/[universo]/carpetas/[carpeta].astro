@@ -65,7 +65,17 @@ const series = visionado ? [...new Set(visionado.data.orden.map((o) => o.titulo.
 const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
 ---
 
-<Base titulo={`Carpeta ${carpeta.numero} · ${seccion.nombre} · ${universo.data.nombre}`} descripcion={`${carpeta.etapa}. ${carpeta.descripcion ?? ''}`} universo={universo}>
+<Base
+  titulo={`Carpeta ${carpeta.numero} (${carpeta.etapa}) · ${seccion.nombre} de ${universo.data.nombre} en orden`}
+  descripcion={`Carpeta ${carpeta.numero} de las series de ${universo.data.nombre} (${carpeta.etapa}): ${huecos.map((h) => h.titulo.corto).join(', ')}${visionado ? ', con el orden para verlas capítulo a capítulo' : ''}.`}
+  universo={universo}
+  migas={[
+    { nombre: 'Heroteca', url: '/' },
+    { nombre: universo.data.nombre, url: `/${universo.id}/` },
+    { nombre: seccion.nombre, url: `/${universo.id}/${seccion.id}/` },
+    { nombre: `Carpeta ${carpeta.numero}`, url: urlCarpeta(universo.id, carpeta.numero) },
+  ]}
+>
   <SubNav slot="subnav" universo={universo} activo={seccion.id} />
   <div class="contenedor">
     <header class="cab">
@@ -89,8 +99,8 @@ const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
         <section class="orden" aria-labelledby="titulo-orden">
           <h2 id="titulo-orden">Orden capítulo a capítulo</h2>
           <p class="explica">
-            Tu orden para ver juntas las series de esta carpeta{visionado.data.codigo && <> (bloque {visionado.data.codigo})</>}.
-            {visionado.data.borrador && <strong> Esta página de tus documentos está a medio hacer.</strong>}
+            Orden para ver juntas las series de esta carpeta{visionado.data.codigo && <> (bloque {visionado.data.codigo})</>}.
+            {visionado.data.borrador && <strong> Esta página de los documentos de la colección está a medio hacer.</strong>}
           </p>
           <ol class="lista">
             {visionado.data.orden.map((o) => {

@@ -110,5 +110,5 @@ fuente: 003 Fichas SERIES UMC.pptx · diapositiva 111; 001 Índices.pptx · diap
 imagenes:
 - src: ./portada.jpg
   rol: portada
-notas: 'En tus documentos ponía «Joe Schwartz» (errata corregida: Josh Schwartz)'
+notas: 'En los documentos de la colección ponía «Joe Schwartz» (errata corregida: Josh Schwartz)'
 ---

@@ -116,7 +116,7 @@ duracion: 50
 tmdb:
   id: 67466
   tipo: tv
-notas: 'Capítulos con página pero no en la lista: 2x11, 2x12, 2x13 · En tus documentos ponía «Joe Schwartz» (errata corregida: Josh Schwartz)'
+notas: 'Capítulos con página pero no en la lista: 2x11, 2x12, 2x13 · En los documentos de la colección ponía «Joe Schwartz» (errata corregida: Josh Schwartz)'
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 165; 001 Índices.pptx · diapositiva 9
 imagenes:
 - src: ./portada.jpg

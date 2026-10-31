@@ -12,6 +12,6 @@ anio: 2020
 tmdb:
   id: 79501
   tipo: tv
-notas: Está en el disco pero aún no en tus carpetas de visionado.
+notas: Está en el disco pero aún no en las carpetas de visionado.
 fuente: 'Disco: UDC Series por orden'
 ---

@@ -107,7 +107,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     <div class="caratulas">
       {
         t.portada || m.posterTmdb ? (
-          <Caratula t={t} ancho={320} cargaInmediata alt={t.portada ? `Portada de tu edición de ${d.titulo}` : `Cartel de ${d.titulo}`} />
+          <Caratula t={t} ancho={320} cargaInmediata alt={t.portada ? `Portada de ${d.titulo} (edición de la colección)` : `Cartel de ${d.titulo}`} />
         ) : (
           <div class="sin-portada" aria-hidden="true">
             <span>{t.tipoNombre}</span>
@@ -115,8 +115,8 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           </div>
         )
       }
-      {t.contraportada && <Caratula t={t} contra ancho={320} alt={`Contraportada de tu edición de ${d.titulo}`} />}
-      {t.portada && <p class="nota-caratula">{t.contraportada ? 'Portada y contraportada de tu edición' : 'Carátula de tu edición'}</p>}
+      {t.contraportada && <Caratula t={t} contra ancho={320} alt={`Contraportada de ${d.titulo} (edición de la colección)`} />}
+      {t.portada && <p class="nota-caratula">{t.contraportada ? 'Portada y contraportada de la edición de la colección' : 'Carátula de la edición de la colección'}</p>}
       {!t.portada && m.posterTmdb && <p class="nota-caratula">Cartel de TMDB</p>}
     </div>
 
@@ -136,7 +136,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           {d.calidad.map((c) => <li><span class="chip calidad">{c === '4k' ? '4K' : c.toUpperCase()}</span></li>)}
           {misSagas.map((s) => <li><a class="chip" href={`/${universo.id}/sagas/${s.id}/`}>{s.data.nombre}</a></li>)}
         </ul>
-        {!d.fichaPropia && <p class="aviso-ficha">Este título está en tu índice, pero aún no tiene ficha propia en tu archivo.</p>}
+        {!d.fichaPropia && <p class="aviso-ficha">Este título figura en el índice de la colección, pero aún no tiene ficha técnica propia: los datos que faltan se completan con TMDB.</p>}
       </header>
 
       {
@@ -200,7 +200,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
         d.tramos.length > 1 && (
           <section class="panel">
             <h2 class="h-panel">En la cronología</h2>
-            <p class="ayuda">Esta temporada está repartida en varios puntos de tu orden cronológico:</p>
+            <p class="ayuda">Esta temporada está repartida en varios puntos del orden cronológico de la colección:</p>
             <ul class="tramos">
               {d.tramos.map((tr) => (
                 <li>
@@ -300,12 +300,12 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
         )
       }
 
-      {hayTmdb && <p class="leyenda-tmdb">Los datos marcados con ᵀ o «de TMDB» proceden de TMDB y solo completan lo que falta en tu archivo.</p>}
+      {hayTmdb && <p class="leyenda-tmdb">Los datos marcados con ᵀ o «de TMDB» proceden de TMDB y solo completan lo que falta en el archivo de la colección.</p>}
 
       {
         d.notas && (
           <details class="notas">
-            <summary>Notas de tu archivo</summary>
+            <summary>Notas del archivo</summary>
             <p>{d.notas}</p>
           </details>
         )

@@ -13,7 +13,7 @@ export type TituloEntrada = CollectionEntry<'titulos'>;
 export type Seccion = Universo['data']['secciones'][number];
 
 /** Ids de página reservados dentro de un universo (no pueden usarse como id de ficha). */
-export const RUTAS_RESERVADAS = ['sagas', 'personajes', 'cronologia', 'buscar', 'carpetas'];
+export const RUTAS_RESERVADAS = ['sagas', 'personajes', 'cronologia', 'buscar', 'carpetas', 'guias'];
 
 export interface Capitulo {
   codigo: string;

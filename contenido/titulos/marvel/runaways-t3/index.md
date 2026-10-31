@@ -106,5 +106,5 @@ fuente: 003 Fichas SERIES UMC.pptx · diapositiva 186; 001 Índices.pptx · diap
 imagenes:
 - src: ./portada.jpg
   rol: portada
-notas: 'En tus documentos ponía «Terry McMillan» (errata corregida: Tracy McMillan)'
+notas: 'En los documentos de la colección ponía «Terry McMillan» (errata corregida: Tracy McMillan)'
 ---

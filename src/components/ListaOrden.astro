@@ -1,0 +1,124 @@
+---
+/** Lista de títulos en orden (para las guías): número, título, año, tipo y, si se pide, fase. */
+import type { Titulo } from '../lib/datos';
+
+interface Fila {
+  /** Número o código que se muestra (001, 5.1…) */
+  num?: string;
+  t: Titulo;
+  /** Texto bajo el título (tramo de capítulos, fecha…) */
+  detalle?: string;
+  fase?: string;
+}
+interface Props {
+  filas: Fila[];
+  /** Encabezado de la columna del número */
+  cabeceraNum?: string;
+  conFases?: boolean;
+  etiqueta: string;
+}
+const { filas, cabeceraNum = 'Nº', conFases = false, etiqueta } = Astro.props;
+---
+
+<div class="tabla-desliza">
+  <table class="lista-orden" aria-label={etiqueta}>
+    <thead>
+      <tr>
+        <th scope="col" class="c-num">{cabeceraNum}</th>
+        <th scope="col">Título</th>
+        <th scope="col" class="c-anio">Año</th>
+        <th scope="col" class="c-tipo">Tipo</th>
+        {conFases && <th scope="col" class="c-fase">Fase</th>}
+      </tr>
+    </thead>
+    <tbody>
+      {
+        filas.map((f) => (
+          <tr class={`t-${f.t.tipo}`}>
+            <td class="c-num">{f.num}</td>
+            <td>
+              <a href={f.t.url}>{f.t.corto}</a>
+              {f.detalle && <span class="detalle">{f.detalle}</span>}
+            </td>
+            <td class="c-anio">{f.t.d.anio}</td>
+            <td class="c-tipo">
+              <span class="punto" aria-hidden="true" />
+              {f.t.tipoNombre}
+              {f.t.d.animada && ' animada'}
+            </td>
+            {conFases && <td class="c-fase">{f.fase}</td>}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .tabla-desliza {
+    overflow-x: auto;
+  }
+  .lista-orden {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  th {
+    text-align: left;
+    font: 700 0.85rem var(--f-titulo);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--txt-2);
+    padding: 8px 10px;
+    border-bottom: 2px solid var(--borde);
+  }
+  td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--borde);
+    vertical-align: baseline;
+  }
+  tr:hover td {
+    background: var(--sup);
+  }
+  .c-num {
+    font: 700 0.95rem var(--f-titulo);
+    color: var(--acento-txt);
+    white-space: nowrap;
+    width: 4.5em;
+  }
+  td a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+  td a:hover {
+    text-decoration: underline;
+  }
+  .detalle {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--txt-2);
+  }
+  .c-anio {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .c-tipo,
+  .c-fase {
+    white-space: nowrap;
+    color: var(--txt-2);
+  }
+  .punto {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    background: var(--c);
+    margin-right: 6px;
+  }
+  @media (max-width: 620px) {
+    .c-tipo,
+    .c-fase {
+      display: none;
+    }
+  }
+</style>

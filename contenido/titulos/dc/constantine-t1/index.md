@@ -43,7 +43,7 @@ capitulos:
 tmdb:
   id: 60743
   tipo: tv
-notas: En tus páginas de series aparece como 5.1; el RESUMEN de carpetas dice 4.4 (se sigue el RESUMEN).
+notas: En las páginas de series de la colección aparece como 5.1; el RESUMEN de carpetas dice 4.4 (se sigue el RESUMEN).
 fuente: Archivador AZUL/RESUMEN de carpetas UDC · series pagina 005
 imagenes:
 - src: ./portada.jpg

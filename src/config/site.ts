@@ -19,6 +19,13 @@ export const SITE = {
   /** URL pública en Vercel. Si cambia la dirección, actualízala aquí (enlaces canónicos y vista previa al compartir). */
   url: 'https://heroteca.vercel.app',
   github: 'https://github.com/Vicram4',
+  /** Repositorio del proyecto (para avisar de errores). */
+  repositorio: 'https://github.com/Vicram4/heroteca',
+  /**
+   * Token de Cloudflare Web Analytics (estadísticas sin cookies). Vacío = desactivadas.
+   * Si se activan, la página de privacidad lo explica automáticamente.
+   */
+  cloudflareAnalytics: '',
   /** Código de verificación de Google Search Console (es público; no identifica a nadie). */
   googleVerificacion: 'd9udc0hSfl5WRRV432HhCeZPJ4Asyi5yJrZT4uV5kcM',
 } as const;

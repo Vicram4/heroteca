@@ -25,8 +25,29 @@ interface Props {
   datos?: Record<string, unknown>;
   /** Pide a los buscadores que no la indexen (página de error) */
   noIndexar?: boolean;
+  /** Migas de pan (sin la página actual al final no hace falta: se añade sola) para los buscadores */
+  migas?: { nombre: string; url: string }[];
 }
-const { titulo, descripcion = SITE.descripcion, universo, imagen, tipoOg = 'website', datos, noIndexar = false } = Astro.props;
+const {
+  titulo,
+  descripcion = SITE.descripcion,
+  universo,
+  imagen = '/og-heroteca.jpg',
+  tipoOg = 'website',
+  datos,
+  noIndexar = false,
+  migas,
+} = Astro.props;
+// Migas de pan como datos estructurados (Google las muestra en los resultados)
+const datosMigas = migas?.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: migas.map((m, i) => ({ '@type': 'ListItem', position: i + 1, name: m.nombre, item: new URL(m.url, SITE.url).href })),
+    }
+  : undefined;
+// Fecha de la última actualización: la de la compilación
+const actualizado = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' });
 const tituloPagina = titulo ? `${titulo} · ${SITE.nombre}` : `${SITE.nombre} · ${SITE.lema}`;
 const universos = await universosActivos();
 const canonica = new URL(Astro.url.pathname, Astro.site);
@@ -53,6 +74,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     {imagen && <meta property="og:image" content={new URL(imagen, Astro.site)} />}
     <meta name="twitter:card" content={imagen ? 'summary_large_image' : 'summary'} />
     {datos && <script type="application/ld+json" set:html={JSON.stringify(datos)} />}
+    {datosMigas && <script type="application/ld+json" set:html={JSON.stringify(datosMigas)} />}
     <meta name="theme-color" content="#1a1d24" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#f3f4f7" media="(prefers-color-scheme: light)" />
     <!-- Aplica el tema guardado antes de pintar, para que no parpadee -->
@@ -92,6 +114,11 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     <footer class="pie">
       <div class="contenedor">
         <p class="pie-marca"><strong>{SITE.nombre}</strong> · {SITE.lema}</p>
+        <nav class="pie-enlaces" aria-label="Información">
+          <a href="/acerca/">Acerca de Heroteca</a>
+          <a href="/privacidad/">Privacidad</a>
+          <span>Actualizado el {actualizado}</span>
+        </nav>
         <p>{AVISOS.fans}</p>
         <p class="tmdb">
           <a href="https://www.themoviedb.org/" rel="noopener" class="logo-tmdb" aria-label="The Movie Database (TMDB)">
@@ -102,6 +129,16 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
       </div>
     </footer>
     <ArchivoRojo />
+    {
+      SITE.cloudflareAnalytics && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: SITE.cloudflareAnalytics })}
+        />
+      )
+    }
     <script>
       // Spoilers en línea (||texto|| en las fichas): se revelan con clic, Intro o espacio
       document.querySelectorAll<HTMLElement>('.spoiler-linea').forEach((s) => {
@@ -173,6 +210,15 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
   .pie-marca {
     color: var(--txt);
     font-size: 1rem;
+  }
+  .pie-enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin: -4px 0 14px;
+  }
+  .pie-enlaces a {
+    color: var(--txt);
   }
   .tmdb {
     display: flex;

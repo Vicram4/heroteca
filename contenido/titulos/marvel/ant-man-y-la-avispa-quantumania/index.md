@@ -39,7 +39,7 @@ reparto:
 tmdb:
   id: 640146
   tipo: movie
-notas: En tus documentos el año era 2018
+notas: En los documentos de la colección el año era 2018
 fuente: 002 Fichas PELÍCULAS UMC.pptx · diapositiva 32; 001 Índices.pptx · diapositiva 11
 imagenes:
 - src: ./portada.jpg

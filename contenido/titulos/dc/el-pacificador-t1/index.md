@@ -13,6 +13,6 @@ anio: 2022
 tmdb:
   id: 110492
   tipo: tv
-notas: Está en el disco pero aún no en tus carpetas de visionado.
+notas: Está en el disco pero aún no en las carpetas de visionado.
 fuente: 'Disco: UDC Series por orden'
 ---

@@ -13,6 +13,6 @@ anio: 2025
 tmdb:
   id: 202555
   tipo: tv
-notas: 'En tus documentos: temporada 4 · En tus documentos es la temporada 4 de Daredevil (Born Again es su continuación)'
+notas: 'En los documentos de la colección: temporada 4 · En los documentos de la colección es la temporada 4 de Daredevil (Born Again es su continuación)'
 fuente: 001 Índices.pptx · diapositiva 12
 ---

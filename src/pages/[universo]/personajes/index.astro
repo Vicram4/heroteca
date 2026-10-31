@@ -15,12 +15,17 @@ const conApariciones = lista.filter((x) => x.apariciones.length);
 const sin = lista.filter((x) => !x.apariciones.length);
 ---
 
-<Base titulo={`Personajes · ${universo.data.nombre}`} universo={universo}>
+<Base
+  titulo={`Personajes de ${universo.data.nombre} y sus películas y series`}
+  descripcion={`Los personajes de ${universo.data.nombre} y todas las películas y series en las que aparecen, en orden.`}
+  universo={universo}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: 'Personajes', url: `/${universo.id}/personajes/` }]}
+>
   <SubNav slot="subnav" universo={universo} activo="personajes" />
   <div class="contenedor">
     <header class="cab">
       <h1>Personajes</h1>
-      <p>{conApariciones.length} personajes con apariciones en tus fichas. Pulsa uno para ver todos sus títulos.</p>
+      <p>{conApariciones.length} personajes con apariciones en las fichas. Pulsa uno para ver todos sus títulos.</p>
     </header>
     <ul class="rejilla">
       {

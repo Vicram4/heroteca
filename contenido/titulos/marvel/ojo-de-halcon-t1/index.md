@@ -89,5 +89,5 @@ fuente: 003 Fichas SERIES UMC.pptx · diapositiva 221; 001 Índices.pptx · diap
 imagenes:
 - src: ./portada.jpg
   rol: portada
-notas: 'En tus documentos ponía «Katie Mathewson» (errata corregida: Katrina Mathewson)'
+notas: 'En los documentos de la colección ponía «Katie Mathewson» (errata corregida: Katrina Mathewson)'
 ---

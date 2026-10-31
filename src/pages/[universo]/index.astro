@@ -7,6 +7,7 @@ import Base from '../../layouts/Base.astro';
 import SubNav from '../../components/SubNav.astro';
 import Caja from '../../components/Caja.astro';
 import { universosActivos, titulosDe, huecosDeSeccion, sagasDe } from '../../lib/datos';
+import { guiasDe } from '../../config/guias';
 
 export async function getStaticPaths() {
   return (await universosActivos()).map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
@@ -20,13 +21,31 @@ const secciones = universo.data.secciones.map((s) => {
 const relacionadas = (await sagasDe(universo.id)).filter((s) => !s.data.padre && ['multiverso', 'saga'].includes(s.data.tipo) && s.data.orden < 100);
 ---
 
-<Base titulo={universo.data.nombre} descripcion={universo.data.descripcion} universo={universo}>
+<Base
+  titulo={universo.data.tituloSeo ?? universo.data.nombre}
+  descripcion={universo.data.descripcion}
+  universo={universo}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }]}
+>
   <SubNav slot="subnav" universo={universo} activo="inicio" />
   <div class="contenedor">
     <header class="cab">
       <h1><span class="nombre">{universo.data.nombre}</span></h1>
       <p>{universo.data.descripcion} {titulos.length} títulos en {secciones.length} secciones.</p>
     </header>
+
+    {
+      guiasDe(universo.id).length > 0 && (
+        <nav class="guias-rapidas" aria-label="Guías de visionado">
+          <span class="etiqueta">Guías:</span>
+          {guiasDe(universo.id).map((g) => (
+            <a class="pastilla" href={`/${universo.id}/guias/${g.id}/`}>
+              {g.titulo}
+            </a>
+          ))}
+        </nav>
+      )
+    }
 
     {
       secciones.map(({ s, huecos, total, muestra }) => (
@@ -140,5 +159,20 @@ const relacionadas = (await sagasDe(universo.id)).filter((s) => !s.data.padre &&
   .relacionadas .chip {
     font-size: 0.95rem;
     padding: 9px 14px;
+  }
+  .guias-rapidas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: -4px 0 12px;
+  }
+  .guias-rapidas .etiqueta {
+    font: 700 0.95rem var(--f-titulo);
+    color: var(--txt-2);
+    margin-right: 4px;
+  }
+  .guias-rapidas .pastilla {
+    text-decoration: none;
   }
 </style>

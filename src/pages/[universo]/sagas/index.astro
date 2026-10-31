@@ -20,15 +20,19 @@ const cuantos = (s: Saga): number => {
   recorrer(s);
   return ids.size;
 };
-const grupos = [
-  { titulo: 'Relacionadas', texto: 'Tus multiversos y sagas relacionadas con el UMC.', filtro: (s: Saga) => s.data.orden < 10 },
-  { titulo: 'Trilogías y colecciones', texto: 'Las agrupaciones de tu índice: -Trilogía-, -Dulogía-, -Cuatrilogía-…', filtro: (s: Saga) => s.data.orden >= 10 && s.data.orden < 100 },
-  { titulo: 'Fases y sagas del UMC', texto: 'Clasificación oficial de Marvel Studios (dato añadido, no está en tus documentos).', filtro: (s: Saga) => s.data.orden >= 100 },
-];
+// Grupos definidos en el archivo de cada universo (gruposSagas); sin ellos, un único grupo
+const grupos = (
+  universo.data.gruposSagas.length ? universo.data.gruposSagas : [{ titulo: 'Sagas', texto: undefined, desde: -Infinity, hasta: Infinity }]
+).map((g) => ({ ...g, filtro: (s: Saga) => s.data.orden >= g.desde && s.data.orden < g.hasta }));
 const raices = sagas.filter((s) => !s.data.padre);
 ---
 
-<Base titulo={`Relacionadas y sagas · ${universo.data.nombre}`} universo={universo}>
+<Base
+  titulo={`Sagas y colecciones de ${universo.data.nombre}`}
+  descripcion={`Sagas, trilogías y colecciones de ${universo.data.nombre}, con todas sus películas y series en orden.`}
+  universo={universo}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: 'Relacionadas y sagas', url: `/${universo.id}/sagas/` }]}
+>
   <SubNav slot="subnav" universo={universo} activo="sagas" />
   <div class="contenedor">
     <header class="cab"><h1>Relacionadas y sagas</h1></header>
@@ -38,7 +42,7 @@ const raices = sagas.filter((s) => !s.data.padre);
         return lista.length ? (
           <section class="grupo">
             <h2>{g.titulo}</h2>
-            <p class="texto">{g.texto}</p>
+            {g.texto && <p class="texto">{g.texto}</p>}
             <ul class="tarjetas">
               {lista.map((s) => (
                 <li class="panel">

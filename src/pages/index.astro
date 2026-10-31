@@ -21,7 +21,18 @@ const tarjetas = await Promise.all(
 );
 ---
 
-<Base>
+<Base
+  descripcion="Todas las películas y series de Marvel y DC en orden: el UMC (MCU) en orden cronológico, el Universo Extendido de DC, el Arrowverso capítulo a capítulo, animación, personajes y sagas."
+  datos={{
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE.nombre,
+    alternateName: SITE.lema,
+    url: SITE.url,
+    inLanguage: 'es',
+    description: SITE.descripcion,
+  }}
+>
   <section class="contenedor portada">
     <h1 class="solo-lectores">{SITE.nombre}</h1>
     <p class="intro">Elige universo</p>

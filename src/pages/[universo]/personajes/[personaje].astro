@@ -29,7 +29,17 @@ for (const a of [...apariciones].sort((x, y) => x.titulo.d.anio - y.titulo.d.ani
 const anios = titulos.map((t) => t.d.anio);
 ---
 
-<Base titulo={`${p.data.nombre} · Personajes · ${universo.data.nombre}`} universo={universo}>
+<Base
+  titulo={`${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}: películas y series de ${universo.data.nombre}`}
+  descripcion={`Todas las películas y series de ${universo.data.nombre} en las que aparece ${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}, en orden.`}
+  universo={universo}
+  migas={[
+    { nombre: 'Heroteca', url: '/' },
+    { nombre: universo.data.nombre, url: `/${universo.id}/` },
+    { nombre: 'Personajes', url: `/${universo.id}/personajes/` },
+    { nombre: p.data.nombre, url: `/${universo.id}/personajes/${p.id}/` },
+  ]}
+>
   <SubNav slot="subnav" universo={universo} activo="personajes" />
   <div class="contenedor">
     <nav class="miga" aria-label="Estás en"><a href={`/${universo.id}/personajes/`}>Personajes</a></nav>

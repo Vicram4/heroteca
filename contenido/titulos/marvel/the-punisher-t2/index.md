@@ -122,5 +122,5 @@ fuente: 003 Fichas SERIES UMC.pptx · diapositiva 172; 001 Índices.pptx · diap
 imagenes:
 - src: ./portada.jpg
   rol: portada
-notas: 'En tus documentos ponía «Jon Stewart» (errata corregida: Josh Stewart)'
+notas: 'En los documentos de la colección ponía «Jon Stewart» (errata corregida: Josh Stewart)'
 ---

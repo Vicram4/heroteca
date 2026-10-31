@@ -1,22 +1,26 @@
 nombre: DC
 orden: 2
-descripcion: Todas las películas y series del universo DC.
-# Secciones tal y como están en tu disco duro de DC:
+tituloSeo: DC en orden – películas, DCEU, Arrowverso y animación
+descripcion: Todas las películas y series de DC, de los clásicos de Superman y Batman al Universo Extendido (DCEU), el Arrowverso y la animación.
+# Secciones tal y como están en el disco duro de DC de la colección:
 #   TODO UDC/UDC Películas por orden/001 UDC y 002 DCDU · UDC Series por orden · animacion/Animación
-# "orden": cronologico (orden de la historia), estreno, o carpetas (tus carpetas de visionado de series).
+# "orden": cronologico (orden de la historia), estreno, o carpetas (las carpetas de visionado de series).
 secciones:
   - id: udc
     nombre: UDC
     orden: estreno
-    descripcion: Películas clásicas de DC (tu carpeta «001 UDC»; en tus Word, PRE-DCUE), por orden de estreno.
+    tituloSeo: Películas clásicas de DC – Superman, Batman y más, por orden de estreno
+    descripcion: Películas clásicas de DC, de Superman (1978) a la trilogía de El caballero oscuro, por orden de estreno.
   - id: dcdu
     nombre: DCDU
     orden: cronologico
-    descripcion: Universo extendido de DC (tu carpeta «002 DCDU»), por orden de la historia.
+    tituloSeo: Orden del Universo Extendido de DC (DCEU) – películas en orden cronológico
+    descripcion: Universo Extendido de DC (DCDU o DCEU), de El hombre de acero a Aquaman y el reino perdido, en orden de la historia.
   - id: series
     nombre: Series
     orden: carpetas
-    descripcion: Tus carpetas para ver todas las series en orden (RESUMEN de carpetas UDC). El número de cada serie es el de su carpeta en el disco.
+    tituloSeo: Series de DC en orden – Smallville, Gotham, Arrowverso y más
+    descripcion: Series de DC (Smallville, Gotham, el Arrowverso, Titans…) en carpetas de visionado para verlas en orden; en los bloques Crossover, capítulo a capítulo. El número de cada serie es el de su carpeta en el disco de la colección.
     carpetas:
       - { numero: 1, etapa: Pre-Crossover }
       - { numero: 2, etapa: Pre-Crossover }
@@ -34,7 +38,13 @@ secciones:
   - id: animacion
     nombre: Animación
     orden: estreno
-    descripcion: Películas y series animadas de DC (tu carpeta «animacion/Animación»), por orden de estreno.
+    tituloSeo: Películas y series de animación de DC
+    descripcion: Películas y series animadas de DC, por orden de estreno.
+# Grupos de la página «Relacionadas y sagas», por el campo `orden` de cada saga (desde ≤ orden < hasta).
+gruposSagas:
+  - { titulo: Héroes, texto: "Las películas de cada héroe, según las páginas «pelis solo» de la colección.", desde: 0, hasta: 10 }
+  - { titulo: Series y sellos, texto: El Arrowverso y los sellos editoriales Vertigo y Wildstorm., desde: 10, hasta: 100 }
+  - { titulo: Continuidades de animación, texto: Las continuidades que comparten las películas animadas de DC., desde: 100, hasta: 10000 }
 # Ambiente visual: acento (botones, marcas) y su versión para texto en modo claro y oscuro (contraste AA).
 tema:
   acento: "#0476F2"

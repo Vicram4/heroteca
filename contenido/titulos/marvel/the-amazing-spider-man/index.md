@@ -11,6 +11,6 @@ anio: 2012
 tmdb:
   id: 1930
   tipo: movie
-notas: En tus documentos el año era 2000
+notas: En los documentos de la colección el año era 2000
 fuente: 001 Índices.pptx · diapositiva 19
 ---

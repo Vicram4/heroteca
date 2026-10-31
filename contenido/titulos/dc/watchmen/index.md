@@ -13,7 +13,7 @@ anio: 2009
 tmdb:
   id: 13183
   tipo: movie
-notas: Tienes también otra versión (montaje alternativo).
+notas: La colección incluye también otra versión (montaje alternativo).
 fuente: 'Archivador AZUL/PRE-DCUE Página 003 impresa orden de estreno · Disco: 001 UDC · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg

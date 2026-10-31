@@ -144,7 +144,7 @@ def entradas_peliculas(cat):
             elif et.startswith('Trilog'):
                 sagas.append('trilogia-nolan')
             elif et.startswith('+ versi'):
-                notas.append('Tienes también otra versión (montaje alternativo).')
+                notas.append('La colección incluye también otra versión (montaje alternativo).')
             elif et == 'B.S.O.':
                 notas.append('Con la banda sonora (B.S.O.).')
         en_disco = e['numero'] in disco_udc or e['numero'] == 5  # Swamp Thing está suelta en la carpeta
@@ -165,7 +165,7 @@ def entradas_peliculas(cat):
         mejor = max(candidatos, key=lambda c: parecido(d['titulo'], unir_titulo(c)) + (0.3 if c.get('anio') == d['anio'] else 0))
         notas = []
         if mejor in cat['pre_dcue']:
-            notas.append(f"En tus Word está en PRE-DCUE (n.º {mejor['numero']:03d}); en el disco, en 002 DCDU. Se sigue el disco.")
+            notas.append(f"En los Word de la colección está en PRE-DCUE (n.º {mejor['numero']:03d}); en el disco, en 002 DCDU. Se sigue el disco.")
         salida.append({
             'clave': f"dcdu-{d['numero']:03d}", 'seccion': 'dcdu', 'tipo': 'pelicula', 'titulo': unir_titulo(mejor),
             'anio': d['anio'] or mejor.get('anio'), 'numero': d['numero'], 'calidad': mejor['calidad'],
@@ -176,7 +176,7 @@ def entradas_peliculas(cat):
     salida.append({
         'clave': 'dcdu-joker-2', 'seccion': 'dcdu', 'tipo': 'pelicula', 'titulo': unir_titulo(joker2), 'anio': joker2['anio'],
         'calidad': joker2['calidad'], 'portada': joker2.get('portada'), 'sagas': ['joker'],
-        'notas': ['No está en el disco. En tus Word es el n.º 027 de PRE-DCUE; va junto a Joker (2019), que el disco pone en 002 DCDU.'],
+        'notas': ['No está en el disco. En los Word de la colección es el n.º 027 de PRE-DCUE; va junto a Joker (2019), que el disco pone en 002 DCDU.'],
         'fuente': f"Archivador AZUL/{Path(joker2['pagina']).stem}",
     })
     return salida
@@ -264,7 +264,7 @@ def entradas_series(cat):
         if f['extra'] == '½':
             notas.append(f"Primera mitad de la temporada en la carpeta {f['carpeta']}.")
         if pag and pag['codigo'] != f['codigo']:
-            notas.append(f"En tus páginas de series aparece como {pag['codigo']}; el RESUMEN de carpetas dice {f['codigo']} (se sigue el RESUMEN).")
+            notas.append(f"En las páginas de series de la colección aparece como {pag['codigo']}; el RESUMEN de carpetas dice {f['codigo']} (se sigue el RESUMEN).")
         sagas = [s for s in ('arrowverso' if sid in ARROWVERSO else None, SELLOS.get(sid)) if s]
         e = {
             'clave': clave, 'seccion': 'series', 'tipo': 'serie', 'titulo': nombre, 'serie': sid, 'temporada': f['temporada'],
@@ -289,7 +289,7 @@ def entradas_series(cat):
             continue
         vistos.add(sid)
         en_lista = n in cat['en_espera']
-        nota = 'En la lista «EN ESPERA» del RESUMEN de carpetas.' if en_lista else 'Está en el disco pero aún no en tus carpetas de visionado.'
+        nota = 'En la lista «EN ESPERA» del RESUMEN de carpetas.' if en_lista else 'Está en el disco pero aún no en las carpetas de visionado.'
         for t in temporadas_disco.get(sid, [None]):
             clave = f'series-{sid}' + (f'-t{t}' if t else '')
             if clave in por_clave:
@@ -312,7 +312,7 @@ def entradas_animacion(cat):
         titulo, notas = a['titulo'], []
         if titulo == 'Próximas películas':
             titulo = 'Reign of the Supermen'
-            notas.append('Tu documento 032 se titula «Próximas películas» y habla de Reign of the Supermen (2019).')
+            notas.append('El documento 032 de la colección se titula «Próximas películas» y habla de Reign of the Supermen (2019).')
         salida.append({'clave': f"animacion-{a['numero']:03d}", 'seccion': 'animacion', 'tipo': 'pelicula', 'animada': True,
                        'titulo': titulo, 'anio': a['anio'], 'numero': a['numero'], 'calidad': [], 'notas': notas, 'sagas': [],
                        'fuente': f"animacion/Animación/{a['numero']:03d}/{a['archivo']}"})
@@ -447,7 +447,7 @@ def main(argv):
                 anio = anio_tmdb or e.get('anio')
         datos['anio'] = anio or e.get('anio') or anio_tmdb
         if e.get('anio') and anio_tmdb and e['tipo'] == 'pelicula' and abs(e['anio'] - anio_tmdb) > 1:
-            cambios.append(f"{e['clave']}: año {e['anio']} en tus documentos; TMDB dice {anio_tmdb} (se deja el tuyo)")
+            cambios.append(f"{e['clave']}: año {e['anio']} en los documentos de la colección; TMDB dice {anio_tmdb} (se deja el tuyo)")
         if e.get('capitulos'):
             datos['capitulos'] = e['capitulos']
         if res:

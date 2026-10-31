@@ -1,0 +1,59 @@
+---
+/** Qué datos se tratan al visitar la web (sin cookies ni registro). */
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config/site';
+---
+
+<Base
+  titulo="Privacidad"
+  descripcion="Heroteca no usa cookies ni pide datos personales. Qué información se trata al visitarla y con qué servicios."
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: 'Privacidad', url: '/privacidad/' }]}
+>
+  <div class="contenedor texto-largo">
+    <h1>Privacidad</h1>
+    <p class="entradilla">{SITE.nombre} es un proyecto de fans sin ánimo de lucro. <strong>No usa cookies, no tiene registro ni formularios y no pide datos personales.</strong></p>
+
+    <h2>Qué se guarda en tu navegador</h2>
+    <p>Solo tu elección de modo claro u oscuro, si la cambias con el botón de la cabecera. Se guarda en el propio navegador (<code>localStorage</code>) y no se envía a ningún sitio.</p>
+
+    {
+      SITE.cloudflareAnalytics && (
+        <>
+          <h2>Estadísticas de visitas</h2>
+          <p>Para saber cuántas personas visitan la web se usa <a href="https://www.cloudflare.com/web-analytics/" rel="noopener">Cloudflare Web Analytics</a>, que no usa cookies ni identifica a los visitantes: solo recoge datos agregados y anónimos (páginas vistas, país, tipo de dispositivo).</p>
+        </>
+      )
+    }
+
+    <h2>Servicios externos</h2>
+    <ul>
+      <li><strong>Alojamiento:</strong> la web está alojada en <a href="https://vercel.com/legal/privacy-policy" rel="noopener">Vercel</a>, que como cualquier servidor registra datos técnicos de las peticiones (como la dirección IP) por motivos de seguridad y funcionamiento.</li>
+      <li><strong>Carteles:</strong> algunas imágenes se cargan desde los servidores de <a href="https://www.themoviedb.org/privacy-policy" rel="noopener">TMDB</a>, que recibe la petición del navegador al mostrarlas.</li>
+      <li><strong>Tráileres:</strong> los vídeos de YouTube <em>solo se cargan si pulsas el botón de reproducir</em>, y lo hacen en el modo de privacidad mejorada (<code>youtube-nocookie.com</code>). A partir de ese momento se aplica la <a href="https://policies.google.com/privacy" rel="noopener">política de privacidad de Google</a>.</li>
+    </ul>
+    <p>Las tipografías están alojadas en la propia web: no se cargan desde Google Fonts ni otros servicios.</p>
+  </div>
+</Base>
+
+<style>
+  .texto-largo {
+    max-width: 75ch;
+    padding-top: clamp(22px, 4vw, 36px);
+  }
+  .entradilla {
+    font-size: 1.15rem;
+    color: var(--txt);
+  }
+  h1 {
+    margin-bottom: 0.4em;
+  }
+  h2 {
+    margin: 1.6em 0 0.5em;
+  }
+  ul {
+    padding-left: 1.2em;
+  }
+  li {
+    margin: 0.5em 0;
+  }
+</style>

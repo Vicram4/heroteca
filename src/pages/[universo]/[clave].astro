@@ -123,7 +123,16 @@ if (p.tipo === 'ficha') {
 
 {
   p.tipo === 'seccion' ? (
-    <Base titulo={`${p.seccion.nombre} · ${p.universo.data.nombre}`} descripcion={p.seccion.descripcion} universo={p.universo}>
+    <Base
+      titulo={p.seccion.tituloSeo ?? `${p.seccion.nombre} · ${p.universo.data.nombre}`}
+      descripcion={p.seccion.descripcion}
+      universo={p.universo}
+      migas={[
+        { nombre: 'Heroteca', url: '/' },
+        { nombre: p.universo.data.nombre, url: `/${p.universo.id}/` },
+        { nombre: p.seccion.nombre, url: `/${p.universo.id}/${p.seccion.id}/` },
+      ]}
+    >
       <SubNav slot="subnav" universo={p.universo} activo={p.seccion.id} />
       <div class="contenedor">
         <header class="cab-seccion">
@@ -151,6 +160,12 @@ if (p.tipo === 'ficha') {
       imagen={imagenSocial}
       tipoOg={p.t.d.tipo === 'serie' ? 'video.tv_show' : 'video.movie'}
       datos={datosFicha}
+      migas={[
+        { nombre: 'Heroteca', url: '/' },
+        { nombre: p.universo.data.nombre, url: `/${p.universo.id}/` },
+        ...((s) => (s ? [{ nombre: s.nombre, url: `/${p.universo.id}/${s.id}/` }] : []))(p.universo.data.secciones.find((s) => s.id === p.t.d.seccion)),
+        { nombre: p.t.corto, url: p.t.url },
+      ]}
     >
       <SubNav slot="subnav" universo={p.universo} activo={p.t.d.seccion} />
       <div class="contenedor">

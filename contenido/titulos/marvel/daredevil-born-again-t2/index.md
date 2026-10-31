@@ -13,6 +13,6 @@ anio: 2026
 tmdb:
   id: 202555
   tipo: tv
-notas: En tus documentos es la temporada 5 de Daredevil (Born Again es su continuación)
+notas: En los documentos de la colección es la temporada 5 de Daredevil (Born Again es su continuación)
 fuente: videoteca · 099 serie Daredevil born again (5) 2x completa (haciendo)
 ---

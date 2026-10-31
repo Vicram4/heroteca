@@ -56,6 +56,8 @@ const universos = defineCollection({
     /** Si no está activo pero es true, aparece en la portada como «Próximamente». */
     proximamente: z.boolean().default(false),
     descripcion: z.string().optional(),
+    /** Título para buscadores de la página del universo (si falta, se usa el nombre). */
+    tituloSeo: z.string().optional(),
     /**
      * Bloques en los que se organiza el universo (en Marvel: UMC, Pre-UMC, Animación).
      * `orden` indica qué significa el número de cada ficha en esa sección.
@@ -67,6 +69,8 @@ const universos = defineCollection({
           nombre: z.string(),
           orden: z.enum(ORDENES_SECCION),
           descripcion: z.string().optional(),
+          /** Título para buscadores de la estantería (si falta, se usa el nombre). */
+          tituloSeo: z.string().optional(),
           /** Solo con `orden: carpetas`: las carpetas de visionado y su etapa (Pre-Crossover, Crossover…). */
           carpetas: z
             .array(z.object({ numero: z.number().int(), etapa: z.string(), descripcion: z.string().optional() }))
@@ -74,7 +78,11 @@ const universos = defineCollection({
         }),
       )
       .default([]),
-    /** Ambiente visual. Los valores definitivos se decidirán en la Fase 3. */
+    /** Grupos de la página «Relacionadas y sagas», por el `orden` de cada saga (desde ≤ orden < hasta). */
+    gruposSagas: z
+      .array(z.object({ titulo: z.string(), texto: z.string().optional(), desde: z.number(), hasta: z.number() }))
+      .default([]),
+    /** Ambiente visual: acento y su versión para texto en modo claro y oscuro. */
     tema: z.record(z.string(), z.string()).default({}),
   }),
 });

@@ -1,0 +1,325 @@
+---
+/** Una guía de visionado: listas en orden generadas a partir de las fichas. */
+import Base from '../../../layouts/Base.astro';
+import SubNav from '../../../components/SubNav.astro';
+import ListaOrden from '../../../components/ListaOrden.astro';
+import { SITE } from '../../../config/site';
+import { GUIAS, type Guia } from '../../../config/guias';
+import {
+  universosActivos,
+  titulosDe,
+  sagasDe,
+  huecosDeSeccion,
+  huecosPorCarpetas,
+  visionadosDe,
+  urlCarpeta,
+  numeroTexto,
+  textoTramo,
+  type Titulo,
+  type Universo,
+} from '../../../lib/datos';
+
+export async function getStaticPaths() {
+  const activos = new Set((await universosActivos()).map((u) => u.id));
+  const universos = await universosActivos();
+  return GUIAS.filter((g) => activos.has(g.universo)).map((guia) => ({
+    params: { universo: guia.universo, guia: guia.id },
+    props: { guia, universo: universos.find((u) => u.id === guia.universo)! },
+  }));
+}
+
+const { guia, universo } = Astro.props as { guia: Guia; universo: Universo };
+const titulos = await titulosDe(universo.id);
+const sagas = await sagasDe(universo.id);
+const fases = sagas.filter((s) => s.data.tipo === 'fase');
+const faseDe = (t: Titulo) => fases.find((f) => t.d.sagas.some((r) => r.id === f.id))?.data.nombre;
+const fechaCorta = (t: Titulo) =>
+  t.m.fecha ? t.m.fecha.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) : undefined;
+
+type Fila = { num?: string; t: Titulo; detalle?: string; fase?: string };
+type Bloque = { id: string; titulo: string; texto?: string; filas: Fila[]; enlace?: { texto: string; url: string }; cabeceraNum?: string };
+const bloques: Bloque[] = [];
+
+// Carpetas de visionado (series)
+type BloqueCarpeta = {
+  id: string;
+  numero: number;
+  etapa: string;
+  filas: Fila[];
+  orden?: { n?: number; t?: Titulo; codigo?: string; capitulo?: string; mega: boolean; nota?: string }[];
+  borrador: boolean;
+};
+const carpetas: BloqueCarpeta[] = [];
+
+for (const id of guia.secciones) {
+  const seccion = universo.data.secciones.find((s) => s.id === id);
+  if (!seccion) continue;
+  const deSeccion = titulos.filter((t) => t.d.seccion === id);
+  if (guia.tipo === 'carpetas') {
+    const visionados = await visionadosDe(universo.id);
+    const { huecos } = huecosPorCarpetas(deSeccion, seccion);
+    const porId = new Map(titulos.map((t) => [t.id, t]));
+    for (const n of guia.carpetas ?? []) {
+      const def = seccion.carpetas.find((c) => c.numero === n);
+      const v = visionados.find((x) => x.data.carpeta === n && x.data.seccion === id);
+      carpetas.push({
+        id: `carpeta-${n}`,
+        numero: n,
+        etapa: def?.etapa ?? '',
+        filas: huecos.filter((h) => h.carpeta === n).map((h) => ({ num: h.codigo, t: h.titulo })),
+        orden: v?.data.orden.map((o) => ({
+          n: o.n,
+          t: porId.get(o.titulo.id),
+          codigo: o.codigo,
+          capitulo: o.capitulo,
+          mega: o.megacrossover,
+          nota: o.nota,
+        })),
+        borrador: v?.data.borrador ?? false,
+      });
+    }
+    continue;
+  }
+  const huecos = huecosDeSeccion(deSeccion, seccion);
+  const conTramo = (h: (typeof huecos)[number]) => (h.tramo ? `Capítulos ${textoTramo(h)}` : undefined);
+  if (seccion.orden === 'cronologico') {
+    bloques.push({
+      id: `${id}-historia`,
+      titulo: `${seccion.nombre}: orden cronológico`,
+      texto: 'Siguiendo la historia, con la numeración de la colección.',
+      filas: huecos.map((h) => ({ num: numeroTexto(h.numero), t: h.titulo, detalle: conTramo(h), fase: faseDe(h.titulo) })),
+      enlace: { texto: `Ver la estantería de ${seccion.nombre}`, url: `/${universo.id}/${id}/` },
+    });
+    const estreno = huecos.filter((h) => !h.repetido).sort((a, b) => a.ordenEstreno - b.ordenEstreno);
+    bloques.push({
+      id: `${id}-estreno`,
+      titulo: `${seccion.nombre}: orden de estreno`,
+      texto: 'Tal como se estrenaron, del más antiguo al más reciente.',
+      cabeceraNum: '#',
+      filas: estreno.map((h, i) => ({ num: String(i + 1), t: h.titulo, detalle: fechaCorta(h.titulo), fase: faseDe(h.titulo) })),
+    });
+  } else {
+    bloques.push({
+      id,
+      titulo: seccion.nombre,
+      texto: seccion.descripcion,
+      filas: huecos.map((h) => ({ num: h.numero !== undefined ? numeroTexto(h.numero) : '—', t: h.titulo, detalle: conTramo(h) })),
+      enlace: { texto: `Ver la estantería de ${seccion.nombre}`, url: `/${universo.id}/${id}/` },
+    });
+  }
+}
+
+// Datos estructurados: la primera lista como ItemList
+const primera = bloques[0]?.filas ?? carpetas.flatMap((c) => c.filas);
+const datos = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: guia.titulo,
+  description: guia.descripcion,
+  numberOfItems: primera.length,
+  itemListElement: primera.map((f, i) => ({ '@type': 'ListItem', position: i + 1, name: f.t.corto, url: new URL(f.t.url, SITE.url).href })),
+};
+const indice = [...bloques.map((b) => ({ id: b.id, texto: b.titulo })), ...carpetas.map((c) => ({ id: c.id, texto: `Carpeta ${c.numero} · ${c.etapa}` }))];
+const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t?.id))];
+---
+
+<Base
+  titulo={guia.tituloSeo}
+  descripcion={guia.descripcion}
+  universo={universo}
+  datos={datos}
+  migas={[
+    { nombre: 'Heroteca', url: '/' },
+    { nombre: universo.data.nombre, url: `/${universo.id}/` },
+    { nombre: 'Guías', url: `/${universo.id}/guias/` },
+    { nombre: guia.titulo, url: `/${universo.id}/guias/${guia.id}/` },
+  ]}
+>
+  <SubNav slot="subnav" universo={universo} activo="guias" />
+  <article class="contenedor guia">
+    <header class="cab">
+      <nav class="miga" aria-label="Estás en">
+        <a href={`/${universo.id}/guias/`}>Guías</a>
+      </nav>
+      <h1>{guia.titulo}</h1>
+      {guia.intro.map((p) => <p class="intro">{p}</p>)}
+    </header>
+
+    {
+      indice.length > 1 && (
+        <nav class="indice panel" aria-label="En esta guía">
+          <strong>En esta guía</strong>
+          <ol>
+            {indice.map((i) => (
+              <li>
+                <a href={`#${i.id}`}>{i.texto}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
+    {
+      bloques.map((b) => (
+        <section id={b.id} class="bloque" aria-labelledby={`h-${b.id}`}>
+          <h2 id={`h-${b.id}`}>{b.titulo}</h2>
+          {b.texto && <p class="texto">{b.texto}</p>}
+          <ListaOrden filas={b.filas} conFases={guia.conFases} cabeceraNum={b.cabeceraNum} etiqueta={b.titulo} />
+          {b.enlace && (
+            <p class="enlace">
+              <a href={b.enlace.url}>{b.enlace.texto} →</a>
+            </p>
+          )}
+        </section>
+      ))
+    }
+
+    {
+      carpetas.map((c) => (
+        <section id={c.id} class="bloque" aria-labelledby={`h-${c.id}`}>
+          <h2 id={`h-${c.id}`}>
+            Carpeta {c.numero} <span class="etapa">· {c.etapa}</span>
+          </h2>
+          <ListaOrden filas={c.filas} cabeceraNum="Código" etiqueta={`Temporadas de la carpeta ${c.numero}`} />
+          {c.orden && (
+            <details class="capitulos" open>
+              <summary>
+                Orden capítulo a capítulo ({c.orden.length} pasos){c.borrador && ' · borrador'}
+              </summary>
+              {c.borrador && <p class="texto">Esta parte de los documentos de la colección está a medio hacer: los títulos están en inglés y sin numerar.</p>}
+              <ol class="pasos">
+                {c.orden.map((o) => (
+                  <li class:list={{ mega: o.mega }} style={`--c-serie: var(--serie-${colores(c).indexOf(o.t?.id) % 6})`}>
+                    <span class="n">{o.n !== undefined ? String(o.n).padStart(2, '0') : '·'}</span>
+                    <a href={o.t?.url}>{o.t?.d.titulo}</a>
+                    <span class="cod">{o.codigo ?? (o.t?.d.temporada ? `T${o.t.d.temporada}` : '')}</span>
+                    <span class="cap">
+                      {o.capitulo ?? 'Temporada completa'}
+                      {o.mega && <span class="chip-mega">Megacrossover</span>}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          )}
+          <p class="enlace">
+            <a href={urlCarpeta(universo.id, c.numero)}>Ver la carpeta {c.numero} →</a>
+          </p>
+        </section>
+      ))
+    }
+  </article>
+</Base>
+
+<style>
+  .guia {
+    --serie-0: #e62429;
+    --serie-1: #ffb000;
+    --serie-2: #2bb3e6;
+    --serie-3: #2bd576;
+    --serie-4: #b08bff;
+    --serie-5: #ff8a5b;
+  }
+  .cab {
+    padding: clamp(22px, 4vw, 36px) 0 10px;
+    max-width: 78ch;
+  }
+  .miga {
+    font-size: 0.92rem;
+    margin-bottom: 10px;
+  }
+  .miga a {
+    text-decoration: none;
+    color: var(--txt-2);
+  }
+  .cab h1 {
+    margin-bottom: 0.4em;
+  }
+  .intro {
+    color: var(--txt-2);
+    font-size: 1.05rem;
+  }
+  .indice {
+    margin: 18px 0 8px;
+    max-width: 78ch;
+  }
+  .indice ol {
+    margin: 8px 0 0;
+    padding-left: 1.3em;
+  }
+  .bloque {
+    margin-top: 40px;
+    scroll-margin-top: 90px;
+  }
+  .etapa {
+    color: var(--acento-txt);
+  }
+  .texto {
+    color: var(--txt-2);
+    max-width: 78ch;
+  }
+  .enlace {
+    margin-top: 12px;
+    font-weight: 600;
+  }
+  .capitulos {
+    margin-top: 16px;
+  }
+  .capitulos summary {
+    cursor: pointer;
+    font: 700 1.05rem var(--f-titulo);
+    padding: 6px 0;
+  }
+  .pasos {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    columns: 2 380px;
+    column-gap: 28px;
+  }
+  .pasos li {
+    break-inside: avoid;
+    display: grid;
+    grid-template-columns: 2.2em 13.5em 3.4em 1fr;
+    gap: 2px 10px;
+    align-items: baseline;
+    padding: 5px 0 5px 10px;
+    border-left: 4px solid var(--c-serie);
+    border-bottom: 1px solid var(--borde);
+    font-size: 0.92rem;
+  }
+  .pasos li.mega {
+    background: color-mix(in srgb, var(--realce) 14%, transparent);
+  }
+  .pasos .n {
+    font: 700 0.9rem var(--f-titulo);
+    color: var(--txt-2);
+  }
+  .pasos a {
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .pasos .cod {
+    font: 600 0.88rem var(--f-titulo);
+  }
+  .chip-mega {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font: 700 0.72rem var(--f-titulo);
+    text-transform: uppercase;
+    background: var(--realce);
+    color: #1a1300;
+  }
+  @media (max-width: 620px) {
+    .pasos li {
+      grid-template-columns: 2em 1fr 3.2em;
+    }
+    .pasos .cap {
+      grid-column: 2 / -1;
+      color: var(--txt-2);
+    }
+  }
+</style>

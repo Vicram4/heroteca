@@ -45,7 +45,7 @@ async function ejecutar() {
   for (const p of personajes) existe(`personajes/${p.id}`, 'universos', p.data.universo);
 
   const numeros = new Map<string, { id: string; grupo: string }>();
-  const ocupadas = new Set(['sagas', 'personajes', 'cronologia', 'buscar', 'carpetas', ...universos.flatMap((u) => u.data.secciones.map((s) => s.id))]);
+  const ocupadas = new Set(['sagas', 'personajes', 'cronologia', 'buscar', 'carpetas', 'guias', ...universos.flatMap((u) => u.data.secciones.map((s) => s.id))]);
   for (const t of titulos) {
     const d = t.data;
     const donde = `titulos/${t.id}`;

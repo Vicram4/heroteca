@@ -32,7 +32,17 @@ const padre: Saga | undefined = saga.data.padre ? sagas.find((s) => s.id === sag
 const hijas = sagas.filter((s) => s.data.padre?.id === saga.id);
 ---
 
-<Base titulo={`${saga.data.nombre} · ${universo.data.nombre}`} descripcion={saga.data.descripcion} universo={universo}>
+<Base
+  titulo={`${saga.data.nombre}: películas y series en orden · ${universo.data.nombre}`}
+  descripcion={saga.data.descripcion ?? `${saga.data.nombre}: las ${suyos.length} películas y series de ${universo.data.nombre}, en orden.`}
+  universo={universo}
+  migas={[
+    { nombre: 'Heroteca', url: '/' },
+    { nombre: universo.data.nombre, url: `/${universo.id}/` },
+    { nombre: 'Relacionadas y sagas', url: `/${universo.id}/sagas/` },
+    { nombre: saga.data.nombre, url: `/${universo.id}/sagas/${saga.id}/` },
+  ]}
+>
   <SubNav slot="subnav" universo={universo} activo="sagas" />
   <div class="contenedor">
     <header class="cab">

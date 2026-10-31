@@ -12,6 +12,6 @@ anio: 2022
 tmdb:
   id: 894205
   tipo: movie
-notas: Oficialmente es un especial del UMC (Fase 4); en tus documentos está en Pre-UMC
+notas: Oficialmente es un especial del UMC (Fase 4); en los documentos de la colección está en Pre-UMC
 fuente: 001 Índices.pptx · diapositiva 21
 ---

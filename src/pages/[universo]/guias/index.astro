@@ -1,0 +1,72 @@
+---
+/** Guías de visionado de un universo. */
+import Base from '../../../layouts/Base.astro';
+import SubNav from '../../../components/SubNav.astro';
+import { guiasDe } from '../../../config/guias';
+import { universosActivos } from '../../../lib/datos';
+
+export async function getStaticPaths() {
+  return (await universosActivos())
+    .filter((u) => guiasDe(u.id).length > 0)
+    .map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
+}
+const { universo } = Astro.props;
+const guias = guiasDe(universo.id);
+---
+
+<Base
+  titulo={`Guías para ver ${universo.data.nombre} en orden`}
+  descripcion={`Guías de visionado de ${universo.data.nombre}: ${guias.map((g) => g.titulo.toLowerCase()).join(', ')}.`}
+  universo={universo}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: 'Guías', url: `/${universo.id}/guias/` }]}
+>
+  <SubNav slot="subnav" universo={universo} activo="guias" />
+  <div class="contenedor">
+    <header class="cab">
+      <h1>Guías de {universo.data.nombre}</h1>
+      <p>Cómo ver {universo.data.nombre} en orden, con listas completas que se actualizan con la colección.</p>
+    </header>
+    <ul class="guias">
+      {
+        guias.map((g) => (
+          <li class="panel">
+            <h2>
+              <a href={`/${universo.id}/guias/${g.id}/`}>{g.titulo}</a>
+            </h2>
+            <p>{g.descripcion}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .cab {
+    padding: clamp(22px, 4vw, 36px) 0 18px;
+  }
+  .cab p {
+    color: var(--txt-2);
+  }
+  .guias {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: 16px;
+  }
+  .guias h2 {
+    margin: 0 0 6px;
+    font-size: 1.35rem;
+  }
+  .guias h2 a {
+    text-decoration: none;
+  }
+  .guias h2 a:hover {
+    text-decoration: underline;
+  }
+  .guias p {
+    margin: 0;
+    color: var(--txt-2);
+  }
+</style>
