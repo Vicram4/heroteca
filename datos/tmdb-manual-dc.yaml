@@ -1,0 +1,22 @@
+# Correcciones a mano del emparejamiento de DC con TMDB.
+# Clave = identificador de la entrada (udc-001, dcdu-007, series-arrow-t1, animacion-015…; ver documentos/extraido/dc/revisar.txt).
+# Campos: id / tipo (movie|tv) · buscar / anio · aceptar: true (el resultado es correcto) · ninguno: true (no está en TMDB)
+#         titulo (título en España si el de TMDB es latinoamericano o confuso) · nota (se añade a las notas de la ficha)
+
+udc-marston: { aceptar: true }
+dcdu-007: { buscar: "Zack Snyder's Justice League", anio: 2021 }
+series-cronicas-de-cisco-t1: { aceptar: true, titulo: "Crónicas de Cisco" }
+series-pennyworth: { aceptar: true, titulo: Pennyworth }
+
+# Proyectos anunciados que nunca se rodaron (TMDB los confundía con otras series)
+series-secret-six: { ninguno: true }
+series-survivors-club: { ninguno: true }
+series-metropolis: { ninguno: true }
+series-astro-city: { ninguno: true }
+
+# Títulos en España (TMDB da el latinoamericano o uno que se confunde con otra ficha)
+series-titans-t1: { titulo: Titans }
+series-titans-t2: { titulo: Titans }
+series-swamp-thing-t1: { titulo: Swamp Thing }
+animacion-001: { titulo: "Superman: Doomsday", nota: "En España también se editó como «La muerte de Superman» (no confundir con la 031, de 2018)." }
+animacion-015: { titulo: "Batman: El regreso del Caballero Oscuro", nota: "Son dos partes (2012 y 2013); los datos de TMDB son de la primera." }

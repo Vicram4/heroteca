@@ -1,10 +1,41 @@
-# Las secciones de DC se definirán al analizar sus documentos.
 nombre: DC
 orden: 2
-activo: false
-proximamente: true
 descripcion: Todas las películas y series del universo DC.
-secciones: []
+# Secciones tal y como están en tu disco duro de DC:
+#   TODO UDC/UDC Películas por orden/001 UDC y 002 DCDU · UDC Series por orden · animacion/Animación
+# "orden": cronologico (orden de la historia), estreno, o carpetas (tus carpetas de visionado de series).
+secciones:
+  - id: udc
+    nombre: UDC
+    orden: estreno
+    descripcion: Películas clásicas de DC (tu carpeta «001 UDC»; en tus Word, PRE-DCUE), por orden de estreno.
+  - id: dcdu
+    nombre: DCDU
+    orden: cronologico
+    descripcion: Universo extendido de DC (tu carpeta «002 DCDU»), por orden de la historia.
+  - id: series
+    nombre: Series
+    orden: carpetas
+    descripcion: Tus carpetas para ver todas las series en orden (RESUMEN de carpetas UDC). El número de cada serie es el de su carpeta en el disco.
+    carpetas:
+      - { numero: 1, etapa: Pre-Crossover }
+      - { numero: 2, etapa: Pre-Crossover }
+      - { numero: 3, etapa: Pre-Crossover }
+      - { numero: 4, etapa: Crossover }
+      - { numero: 5, etapa: Crossover }
+      - { numero: 6, etapa: Crossover }
+      - { numero: 7, etapa: Película + Megacrossover }
+      - { numero: 8, etapa: Entre-Crossover }
+      - { numero: 9, etapa: Crossover }
+      - { numero: 10, etapa: Entre-Crossover }
+      - { numero: 11, etapa: Crossover }
+      - { numero: 12, etapa: Pos-Crossover }
+      - { numero: 13, etapa: Pos-Crossover }
+  - id: animacion
+    nombre: Animación
+    orden: estreno
+    descripcion: Películas y series animadas de DC (tu carpeta «animacion/Animación»), por orden de estreno.
+# Ambiente visual: acento (botones, marcas) y su versión para texto en modo claro y oscuro (contraste AA).
 tema:
   acento: "#0476F2"
   textoClaro: "#0A5FC2"

@@ -4,7 +4,7 @@ import Caratula from './Caratula.astro';
 import Trailer from './Trailer.astro';
 import { render } from 'astro:content';
 import Spoiler from './Spoiler.astro';
-import { numeroTexto, todosLosTitulos, type Titulo, type Universo, type Saga } from '../lib/datos';
+import { numeroTexto, todosLosTitulos, urlCarpeta, type Titulo, type Universo, type Saga } from '../lib/datos';
 import { apariciones } from '../lib/personajes';
 
 interface Props {
@@ -61,7 +61,17 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     <a href={`/${universo.id}/`}>{universo.data.nombre}</a>
     <span aria-hidden="true">›</span>
     {seccion && <a href={`/${universo.id}/${seccion.id}/`}>{seccion.nombre}</a>}
-    {numeros && <><span aria-hidden="true">›</span><span class="numero">{numeros}</span></>}
+    {
+      d.visionado && (
+        <>
+          <span aria-hidden="true">›</span>
+          <a href={urlCarpeta(universo.id, d.visionado.carpeta)}>Carpeta {d.visionado.carpeta}</a>
+          {d.visionado.codigo && <span class="numero">{d.visionado.codigo}</span>}
+        </>
+      )
+    }
+    {numeros && <><span aria-hidden="true">›</span><span class="numero">{d.visionado ? `Carpeta del disco ${numeros}` : numeros}</span></>}
+    {d.enEspera && <span class="archivo">En espera</span>}
     {d.paginaArchivador && <span class="archivo">Página {d.paginaArchivador} del archivo rojo</span>}
   </nav>
 

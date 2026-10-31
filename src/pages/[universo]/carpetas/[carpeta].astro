@@ -1,0 +1,230 @@
+---
+/**
+ * Una carpeta de visionado (series de DC): sus temporadas y, si la tiene,
+ * tu orden capítulo a capítulo entre series (los bloques Crossover).
+ */
+import Base from '../../../layouts/Base.astro';
+import SubNav from '../../../components/SubNav.astro';
+import Caja from '../../../components/Caja.astro';
+import {
+  universosActivos,
+  titulosDe,
+  huecosPorCarpetas,
+  visionadosDe,
+  urlCarpeta,
+  type Titulo,
+  type Universo,
+  type Seccion,
+  type Hueco,
+  type Visionado,
+} from '../../../lib/datos';
+
+interface Props {
+  universo: Universo;
+  seccion: Seccion;
+  carpeta: Seccion['carpetas'][number];
+  huecos: Hueco[];
+  visionado?: Visionado;
+  anterior?: number;
+  siguiente?: number;
+  titulos: Titulo[];
+}
+
+export async function getStaticPaths() {
+  const rutas: { params: { universo: string; carpeta: string }; props: Props }[] = [];
+  for (const universo of await universosActivos()) {
+    const titulos = await titulosDe(universo.id);
+    const visionados = await visionadosDe(universo.id);
+    for (const seccion of universo.data.secciones.filter((s) => s.orden === 'carpetas')) {
+      const { huecos } = huecosPorCarpetas(titulos.filter((t) => t.d.seccion === seccion.id), seccion);
+      const numeros = seccion.carpetas.map((c) => c.numero);
+      numeros.forEach((n, i) => {
+        rutas.push({
+          params: { universo: universo.id, carpeta: String(n) },
+          props: {
+            universo,
+            seccion,
+            carpeta: seccion.carpetas[i],
+            huecos: huecos.filter((h) => h.carpeta === n),
+            visionado: visionados.find((v) => v.data.carpeta === n && v.data.seccion === seccion.id),
+            anterior: numeros[i - 1],
+            siguiente: numeros[i + 1],
+            titulos,
+          },
+        });
+      });
+    }
+  }
+  return rutas;
+}
+
+const { universo, seccion, carpeta, huecos, visionado, anterior, siguiente, titulos } = Astro.props as Props;
+const porId = new Map<string, Titulo>(titulos.map((t) => [t.id, t]));
+// Un color por serie dentro del orden (en el orden en que aparecen)
+const series = visionado ? [...new Set(visionado.data.orden.map((o) => o.titulo.id))] : [];
+const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
+---
+
+<Base titulo={`Carpeta ${carpeta.numero} · ${seccion.nombre} · ${universo.data.nombre}`} descripcion={`${carpeta.etapa}. ${carpeta.descripcion ?? ''}`} universo={universo}>
+  <SubNav slot="subnav" universo={universo} activo={seccion.id} />
+  <div class="contenedor">
+    <header class="cab">
+      <nav class="miga" aria-label="Estás en">
+        <a href={`/${universo.id}/${seccion.id}/`}>{seccion.nombre}</a>
+        <span aria-hidden="true">›</span>
+        <span>Carpeta {carpeta.numero}</span>
+      </nav>
+      <h1>
+        Carpeta {carpeta.numero} <span class="etapa">· {carpeta.etapa}</span>
+      </h1>
+      {carpeta.descripcion && <p>{carpeta.descripcion}</p>}
+    </header>
+
+    <ol class="balda estanteria" data-orden="historia" style="--hueco-x: clamp(14px, 2.4vw, 26px)" aria-label={`Temporadas de la carpeta ${carpeta.numero}`}>
+      {huecos.map((h, i) => <Caja hueco={h} prioridad={i < 6} />)}
+    </ol>
+
+    {
+      visionado && (
+        <section class="orden" aria-labelledby="titulo-orden">
+          <h2 id="titulo-orden">Orden capítulo a capítulo</h2>
+          <p class="explica">
+            Tu orden para ver juntas las series de esta carpeta{visionado.data.codigo && <> (bloque {visionado.data.codigo})</>}.
+            {visionado.data.borrador && <strong> Esta página de tus documentos está a medio hacer.</strong>}
+          </p>
+          <ol class="lista">
+            {visionado.data.orden.map((o) => {
+              const t = porId.get(o.titulo.id);
+              return (
+                <li class:list={{ mega: o.megacrossover, entera: !o.codigo }} style={`--c-serie:${color(o.titulo.id)}`}>
+                  <span class="n">{o.n !== undefined ? String(o.n).padStart(2, '0') : '·'}</span>
+                  <a class="serie" href={t?.url}>
+                    {t?.d.titulo ?? o.titulo.id}
+                  </a>
+                  <span class="cod">{o.codigo ?? (t?.d.temporada ? `T${t.d.temporada}` : '')}</span>
+                  <span class="cap">
+                    {o.capitulo ?? (o.codigo ? '' : 'Temporada completa')}
+                    {o.megacrossover && <span class="chip-mega">Megacrossover</span>}
+                    {o.nota && <span class="nota"> {o.nota}</span>}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+          {visionado.data.notas && <p class="explica">{visionado.data.notas}</p>}
+        </section>
+      )
+    }
+
+    <nav class="pasos" aria-label="Otras carpetas">
+      {anterior !== undefined ? <a href={urlCarpeta(universo.id, anterior)}>← Carpeta {anterior}</a> : <span />}
+      {siguiente !== undefined && <a href={urlCarpeta(universo.id, siguiente)}>Carpeta {siguiente} →</a>}
+    </nav>
+  </div>
+</Base>
+
+<style>
+  .cab {
+    padding: clamp(22px, 4vw, 36px) 0 18px;
+  }
+  .cab p {
+    color: var(--txt-2);
+    margin: 10px 0 0;
+  }
+  .etapa {
+    color: var(--acento-txt);
+  }
+  .miga {
+    display: flex;
+    gap: 8px;
+    font-size: 0.92rem;
+    color: var(--txt-2);
+    margin-bottom: 10px;
+  }
+  .miga a {
+    text-decoration: none;
+  }
+  .balda {
+    list-style: none;
+    margin: 0;
+    padding: 0 calc(var(--hueco-x) / 2);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(clamp(92px, 26vw, 160px), 1fr));
+    column-gap: var(--hueco-x);
+    row-gap: 18px;
+  }
+  .orden {
+    margin-top: 40px;
+    /* Colores de serie: distinguibles en claro y oscuro */
+    --serie-0: #e62429;
+    --serie-1: #ffb000;
+    --serie-2: #2bb3e6;
+    --serie-3: #2bd576;
+    --serie-4: #b08bff;
+    --serie-5: #ff8a5b;
+  }
+  .explica {
+    color: var(--txt-2);
+    max-width: 70ch;
+  }
+  .lista {
+    list-style: none;
+    padding: 0;
+    margin: 18px 0 0;
+    columns: 2 380px;
+    column-gap: 28px;
+  }
+  .lista li {
+    break-inside: avoid;
+    display: grid;
+    grid-template-columns: 2.2em minmax(7em, auto) 3.6em 1fr;
+    gap: 2px 10px;
+    align-items: baseline;
+    padding: 6px 0 6px 10px;
+    border-left: 4px solid var(--c-serie);
+    border-bottom: 1px solid var(--borde);
+    font-size: 0.93rem;
+  }
+  .lista li.mega {
+    background: color-mix(in srgb, var(--realce) 14%, transparent);
+  }
+  .lista li.entera .cap {
+    font-style: italic;
+    color: var(--txt-2);
+  }
+  .n {
+    font: 700 0.9rem var(--f-titulo);
+    color: var(--txt-2);
+  }
+  .serie {
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .serie:hover {
+    text-decoration: underline;
+  }
+  .cod {
+    font: 600 0.88rem var(--f-titulo);
+    font-variant-numeric: tabular-nums;
+  }
+  .chip-mega {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font: 700 0.72rem var(--f-titulo);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--realce);
+    color: #1a1300;
+  }
+  .nota {
+    color: var(--txt-2);
+  }
+  .pasos {
+    display: flex;
+    justify-content: space-between;
+    margin: 36px 0 10px;
+    font-weight: 600;
+  }
+</style>

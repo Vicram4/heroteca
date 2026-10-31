@@ -1,0 +1,4 @@
+---
+nombre: Doomsday
+universo: dc
+---

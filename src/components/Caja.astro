@@ -14,7 +14,9 @@ const { hueco, prioridad = false, personajes = [] } = Astro.props;
 const t = hueco.titulo;
 const tramo = textoTramo(hueco);
 const decada = Math.floor(t.d.anio / 10) * 10;
-const etiqueta = [hueco.numero !== undefined ? `Número ${numeroTexto(hueco.numero)}.` : '', `${t.d.titulo}${t.d.temporada ? `, temporada ${t.d.temporada}` : ''}${tramo ? `, capítulos ${tramo}` : ''}.`, `${t.tipoNombre}, ${t.d.anio}.`]
+const porCarpetas = hueco.carpeta !== undefined;
+const enEspera = t.d.enEspera;
+const etiqueta = [hueco.codigo ? `Código ${hueco.codigo}.` : '', hueco.numero !== undefined ? `Número ${numeroTexto(hueco.numero)}.` : '', enEspera ? 'En espera.' : '', `${t.d.titulo}${t.d.temporada ? `, temporada ${t.d.temporada}` : ''}${tramo ? `, capítulos ${tramo}` : ''}.`, `${t.tipoNombre}, ${t.d.anio}.`]
   .filter(Boolean)
   .join(' ');
 ---
@@ -29,9 +31,19 @@ const etiqueta = [hueco.numero !== undefined ? `Número ${numeroTexto(hueco.nume
   data-repetido={hueco.repetido ? 'true' : undefined}
   data-titulo={t.id}
   data-personajes={personajes.join(' ')}
+  data-carpeta={hueco.carpeta}
 >
   <a href={t.url} class="caja" aria-label={etiqueta}>
-    {hueco.numero !== undefined && <span class="num" aria-hidden="true">{numeroTexto(hueco.numero)}</span>}
+    {
+      porCarpetas ? (
+        <>
+          {(hueco.codigo || enEspera) && <span class:list={['num', 'num-h', { espera: !hueco.codigo }]} aria-hidden="true">{hueco.codigo ?? 'En espera'}</span>}
+          {hueco.numero !== undefined && <span class="num num-e" aria-hidden="true">{numeroTexto(hueco.numero)}</span>}
+        </>
+      ) : (
+        hueco.numero !== undefined && <span class="num" aria-hidden="true">{numeroTexto(hueco.numero)}</span>
+      )
+    }
     <span class="tapa">
       {
         t.portada || t.m.posterTmdb ? (
@@ -99,6 +111,15 @@ const etiqueta = [hueco.numero !== undefined ? `Número ${numeroTexto(hueco.nume
     padding: 5px 7px;
     border-radius: 6px;
     box-shadow: 0 3px 8px rgb(0 0 0 / 0.35);
+  }
+  .num.espera {
+    background: var(--sup-2);
+    color: var(--txt);
+    border: 1px solid var(--borde);
+  }
+  :global(.estanteria[data-orden='estreno']) .num-h,
+  :global(.estanteria[data-orden='historia']) .num-e {
+    display: none;
   }
   .tapa {
     display: block;

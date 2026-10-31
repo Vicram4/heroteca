@@ -9,10 +9,24 @@ import SubNav from '../../components/SubNav.astro';
 import Estanteria from '../../components/Estanteria.astro';
 import Ficha from '../../components/Ficha.astro';
 import { getImage } from 'astro:assets';
-import { universosActivos, titulosDe, huecosDeSeccion, sagasDe, type Titulo, type Universo, type Seccion, type Hueco, type Saga } from '../../lib/datos';
+import {
+  universosActivos,
+  titulosDe,
+  huecosDeSeccion,
+  huecosPorCarpetas,
+  sagasDe,
+  visionadosDe,
+  urlCarpeta,
+  type Titulo,
+  type Universo,
+  type Seccion,
+  type Hueco,
+  type Saga,
+  type CabeceraCarpeta,
+} from '../../lib/datos';
 
 type Props =
-  | { tipo: 'seccion'; universo: Universo; seccion: Seccion; huecos: Hueco[]; sagas: Saga[] }
+  | { tipo: 'seccion'; universo: Universo; seccion: Seccion; huecos: Hueco[]; cabeceras: CabeceraCarpeta[]; sagas: Saga[] }
   | { tipo: 'ficha'; universo: Universo; t: Titulo; sagas: Saga[]; anterior?: Titulo; siguiente?: Titulo; temporadas: Titulo[] };
 
 export async function getStaticPaths() {
@@ -20,10 +34,14 @@ export async function getStaticPaths() {
   for (const universo of await universosActivos()) {
     const titulos = await titulosDe(universo.id);
     const sagas = await sagasDe(universo.id);
+    const visionados = (await visionadosDe(universo.id)).map((v) => ({ carpeta: v.data.carpeta, url: urlCarpeta(universo.id, v.data.carpeta) }));
     for (const seccion of universo.data.secciones) {
       const deSeccion = titulos.filter((t) => t.d.seccion === seccion.id);
-      const huecos = huecosDeSeccion(deSeccion, seccion);
-      rutas.push({ params: { universo: universo.id, clave: seccion.id }, props: { tipo: 'seccion' as const, universo, seccion, huecos, sagas } });
+      const { huecos, cabeceras } =
+        seccion.orden === 'carpetas'
+          ? huecosPorCarpetas(deSeccion, seccion, visionados)
+          : { huecos: huecosDeSeccion(deSeccion, seccion), cabeceras: [] };
+      rutas.push({ params: { universo: universo.id, clave: seccion.id }, props: { tipo: 'seccion' as const, universo, seccion, huecos, cabeceras, sagas } });
 
       // Orden de la estantería (sin repetir temporadas troceadas) para «anterior / siguiente»
       const orden: Titulo[] = [];
@@ -54,11 +72,18 @@ const imagenSocial = p.tipo === 'ficha' && p.t.portada ? (await getImage({ src: 
         <header class="cab-seccion">
           <h1>
             <span class="numero">{p.seccion.nombre}</span>
-            {p.seccion.orden === 'cronologico' ? ' · Orden cronológico' : ' · Por orden de estreno'}
+            {{ cronologico: ' · Orden cronológico', estreno: ' · Por orden de estreno', carpetas: ' · Por carpetas' }[p.seccion.orden]}
           </h1>
           {p.seccion.descripcion && <p>{p.seccion.descripcion}</p>}
         </header>
-        <Estanteria huecos={p.huecos} cronologica={p.seccion.orden === 'cronologico'} sagas={p.sagas} etiqueta={`Estantería de ${p.seccion.nombre}`} />
+        <Estanteria
+          huecos={p.huecos}
+          cronologica={p.seccion.orden !== 'estreno'}
+          nombreOrden={p.seccion.orden === 'carpetas' ? 'Por carpetas' : undefined}
+          cabeceras={p.cabeceras}
+          sagas={p.sagas}
+          etiqueta={`Estantería de ${p.seccion.nombre}`}
+        />
       </div>
     </Base>
   ) : (

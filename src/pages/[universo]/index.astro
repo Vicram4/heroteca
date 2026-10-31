@@ -40,7 +40,7 @@ const relacionadas = (await sagasDe(universo.id)).filter((s) => !s.data.padre &&
               Ver los {total} <span aria-hidden="true">→</span>
             </a>
           </div>
-          <ol class="balda-muestra" style="--hueco-x: clamp(14px, 2.4vw, 26px)">
+          <ol class="balda-muestra estanteria" data-orden="historia" style="--hueco-x: clamp(14px, 2.4vw, 26px)">
             {muestra.map((h, i) => (
               <Caja hueco={h} prioridad={i < 6 && s === secciones[0].s} />
             ))}

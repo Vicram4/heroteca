@@ -13,7 +13,7 @@ export type TituloEntrada = CollectionEntry<'titulos'>;
 export type Seccion = Universo['data']['secciones'][number];
 
 /** Ids de página reservados dentro de un universo (no pueden usarse como id de ficha). */
-export const RUTAS_RESERVADAS = ['sagas', 'personajes', 'cronologia', 'buscar'];
+export const RUTAS_RESERVADAS = ['sagas', 'personajes', 'cronologia', 'buscar', 'carpetas'];
 
 export interface Capitulo {
   codigo: string;
@@ -77,6 +77,20 @@ export interface Hueco {
   ordenEstreno: number;
   /** Es un tramo repetido: en orden de estreno se oculta (la temporada ya aparece una vez) */
   repetido: boolean;
+  /** Secciones por carpetas: carpeta de visionado y código ("2.3") que se muestra en orden de la historia */
+  carpeta?: number;
+  codigo?: string;
+}
+
+/** Cabecera de una carpeta de visionado en la estantería (solo en orden de la historia). */
+export interface CabeceraCarpeta {
+  carpeta: number;
+  etapa: string;
+  descripcion?: string;
+  /** Posición en orden de la historia (justo antes de su primera caja) */
+  ordenHistoria: number;
+  /** Página con el orden capítulo a capítulo, si la carpeta la tiene */
+  visionado?: string;
 }
 
 export const numeroTexto = (n?: number) => (n === undefined ? '' : String(n).padStart(3, '0'));
@@ -173,6 +187,12 @@ export async function titulosDe(universo: string) {
   return (await todosLosTitulos()).filter((t) => t.universo === universo);
 }
 
+export type Visionado = CollectionEntry<'visionados'>;
+export async function visionadosDe(universo: string) {
+  return (await getCollection('visionados', (v) => v.data.universo.id === universo)).sort((a, b) => a.data.carpeta - b.data.carpeta);
+}
+export const urlCarpeta = (universo: string, carpeta: number) => `/${universo}/carpetas/${carpeta}/`;
+
 export async function sagasDe(universo: string) {
   return (await getCollection('sagas', (s) => s.data.universo.id === universo)).sort((a, b) => a.data.orden - b.data.orden);
 }
@@ -188,6 +208,7 @@ const claveFecha = (t: Titulo) => (t.m.fecha ? t.m.fecha.getTime() : Date.UTC(t.
  *   sin número se intercalan por año.
  */
 export function huecosDeSeccion(titulos: Titulo[], seccion: Seccion): Hueco[] {
+  if (seccion.orden === 'carpetas') return huecosPorCarpetas(titulos).huecos;
   const huecos: Hueco[] = [];
   for (const t of titulos) {
     if (t.d.tramos.length > 1) {
@@ -209,6 +230,62 @@ export function huecosDeSeccion(titulos: Titulo[], seccion: Seccion): Hueco[] {
   porHistoria.forEach((h, i) => (h.ordenHistoria = i + 1));
   porEstreno.forEach((h, i) => (h.ordenEstreno = i + 1));
   return seccion.orden === 'cronologico' ? porHistoria : porEstreno;
+}
+
+/** Carpeta de las fichas «En espera» (van al final, tras todas las carpetas). */
+export const CARPETA_EN_ESPERA = 9999;
+
+/**
+ * Secciones ordenadas por carpetas (las series de DC):
+ * - Orden de la historia: carpeta → posición dentro de la carpeta; las «En espera», al final.
+ * - Orden de estreno: número de carpeta del disco (011 Smallville…) y temporada.
+ * Devuelve también una cabecera por carpeta para la estantería.
+ */
+export function huecosPorCarpetas(titulos: Titulo[], seccion?: Seccion, visionados: { carpeta: number; url: string }[] = []) {
+  const SIN = Number.MAX_SAFE_INTEGER;
+  const huecos: Hueco[] = titulos.map((t) => ({
+    clave: t.id,
+    titulo: t,
+    numero: t.d.numero,
+    carpeta: t.d.visionado?.carpeta ?? (t.d.enEspera ? CARPETA_EN_ESPERA : undefined),
+    codigo: t.d.visionado?.codigo,
+    ordenHistoria: 0,
+    ordenEstreno: 0,
+    repetido: false,
+  }));
+  const porHistoria = [...huecos].sort(
+    (a, b) =>
+      (a.carpeta ?? SIN) - (b.carpeta ?? SIN) ||
+      (a.titulo.d.visionado?.orden ?? SIN) - (b.titulo.d.visionado?.orden ?? SIN) ||
+      claveFecha(a.titulo) - claveFecha(b.titulo),
+  );
+  const porEstreno = [...huecos].sort(
+    (a, b) =>
+      (a.numero ?? SIN) - (b.numero ?? SIN) ||
+      (a.titulo.d.serie ?? '').localeCompare(b.titulo.d.serie ?? '') ||
+      (a.titulo.d.temporada ?? 0) - (b.titulo.d.temporada ?? 0) ||
+      claveFecha(a.titulo) - claveFecha(b.titulo),
+  );
+  // En orden de la historia, cada carpeta abre con su cabecera (que ocupa una posición)
+  const cabeceras: CabeceraCarpeta[] = [];
+  let pos = 0;
+  let actual: number | undefined;
+  for (const h of porHistoria) {
+    if (h.carpeta !== undefined && h.carpeta !== actual) {
+      actual = h.carpeta;
+      const def = seccion?.carpetas.find((c) => c.numero === h.carpeta);
+      cabeceras.push({
+        carpeta: h.carpeta,
+        etapa: h.carpeta === CARPETA_EN_ESPERA ? 'En espera' : (def?.etapa ?? ''),
+        descripcion: def?.descripcion,
+        ordenHistoria: ++pos,
+        visionado: visionados.find((v) => v.carpeta === h.carpeta)?.url,
+      });
+    }
+    h.ordenHistoria = ++pos;
+  }
+  porEstreno.forEach((h, i) => (h.ordenEstreno = i + 1));
+  return { huecos: porHistoria, cabeceras };
 }
 
 /** Título de la temporada/tramo para el pie de la caja: "1x01–1x07". */

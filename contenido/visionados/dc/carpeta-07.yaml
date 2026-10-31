@@ -1,0 +1,359 @@
+nombre: 'Carpeta 7: orden capítulo a capítulo'
+universo: dc
+seccion: series
+carpeta: 7
+codigo: "7.2"
+orden:
+- n: 1
+  titulo: supergirl-t3
+  codigo: 3x01
+  capitulo: La chica de acero
+- n: 2
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x01
+  capitulo: Convención en Aruba
+- n: 3
+  titulo: the-flash-t4
+  codigo: 4x01
+  capitulo: Flash renacido
+- n: 4
+  titulo: arrow-t6
+  codigo: 6x01
+  capitulo: Efectos colaterales
+- n: 5
+  titulo: supergirl-t3
+  codigo: 3x02
+  capitulo: Detonantes
+- n: 6
+  titulo: the-flash-t4
+  codigo: 4x02
+  capitulo: Señales mezcladas
+- n: 7
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x02
+  capitulo: Concurso de monstruos
+- n: 8
+  titulo: arrow-t6
+  codigo: 6x02
+  capitulo: Homenaje
+- n: 9
+  titulo: supergirl-t3
+  codigo: 3x03
+  capitulo: Lejos del árbol
+- n: 10
+  titulo: the-flash-t4
+  codigo: 4x03
+  capitulo: Una chica con suerte
+- n: 11
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x03
+  capitulo: Zari
+- n: 12
+  titulo: arrow-t6
+  codigo: 6x03
+  capitulo: Familia
+- n: 13
+  titulo: supergirl-t3
+  codigo: 3x04
+  capitulo: Los creyentes
+- n: 14
+  titulo: the-flash-t4
+  codigo: 4x04
+  capitulo: El alargado viaje hacia la noche
+- n: 15
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x04
+  capitulo: Teléfono, mi casa
+- n: 16
+  titulo: arrow-t6
+  codigo: 6x04
+  capitulo: Inversión
+- n: 17
+  titulo: supergirl-t3
+  codigo: 3x05
+  capitulo: Daño
+- n: 18
+  titulo: the-flash-t4
+  codigo: 4x05
+  capitulo: Noche de chicas
+- n: 19
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x05
+  capitulo: El regreso
+- n: 20
+  titulo: arrow-t6
+  codigo: 6x05
+  capitulo: El regreso de Deathstroke
+- n: 21
+  titulo: supergirl-t3
+  codigo: 3x06
+  capitulo: Midvale
+- n: 22
+  titulo: the-flash-t4
+  codigo: 4x06
+  capitulo: Cuando Harry conoció a Harry
+- n: 23
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x06
+  capitulo: La caza de Helena
+- n: 24
+  titulo: arrow-t6
+  codigo: 6x06
+  capitulo: Promesas cumplidas
+- n: 25
+  titulo: supergirl-t3
+  codigo: 3x07
+  capitulo: Despierta
+- n: 26
+  titulo: the-flash-t4
+  codigo: 4x07
+  capitulo: Luego existo
+- n: 27
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x07
+  capitulo: Bienvenidos a la jungla
+- n: 28
+  titulo: arrow-t6
+  codigo: 6x07
+  capitulo: Acción de Gracias
+- n: 29
+  titulo: supergirl-t3
+  codigo: 3x08
+  capitulo: Crisis en Tierra X - 1ª parte
+  megacrossover: true
+- n: 30
+  titulo: arrow-t6
+  codigo: 6x08
+  capitulo: Crisis en Tierra X - 2ª parte
+  megacrossover: true
+- n: 31
+  titulo: the-flash-t4
+  codigo: 4x08
+  capitulo: Crisis en Tierra X - 3ª parte
+  megacrossover: true
+- n: 32
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x08
+  capitulo: Crisis en Tierra X - 4ªparte
+  megacrossover: true
+- n: 33
+  titulo: supergirl-t3
+  codigo: 3x09
+  capitulo: Reign
+- n: 34
+  titulo: the-flash-t4
+  codigo: 4x09
+  capitulo: No corras
+- n: 35
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x09
+  capitulo: Beebo, el Dios de la Guerra
+- n: 36
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x10
+  capitulo: Oscurísimo papaíto
+- n: 37
+  titulo: arrow-t6
+  codigo: 6x09
+  capitulo: Diferencias irreconciliables
+- n: 38
+  titulo: supergirl-t3
+  codigo: 3x10
+  capitulo: Legión de superhéroes
+- n: 39
+  titulo: the-flash-t4
+  codigo: 4x10
+  capitulo: El juicio de Flash
+- n: 40
+  titulo: arrow-t6
+  codigo: 6x10
+  capitulo: Divididos
+- n: 41
+  titulo: supergirl-t3
+  codigo: 3x11
+  capitulo: Fort Rozz
+- n: 42
+  titulo: the-flash-t4
+  codigo: 4x11
+  capitulo: El resurgir del caballero alargado
+- n: 43
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x11
+  capitulo: Ya estoy otra vez
+- n: 44
+  titulo: arrow-t6
+  codigo: 6x11
+  capitulo: Caemos
+- n: 45
+  titulo: supergirl-t3
+  codigo: 3x12
+  capitulo: Para bien
+- n: 46
+  titulo: the-flash-t4
+  codigo: 4x12
+  capitulo: Cariño, he encogido al equipo Flash
+- n: 47
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x12
+  capitulo: La maldición del Tótem de la Tierra
+- n: 48
+  titulo: arrow-t6
+  codigo: 6x12
+  capitulo: Todo por nada
+- n: 49
+  titulo: supergirl-t3
+  codigo: 3x13
+  capitulo: En los dos bandos
+- n: 50
+  titulo: the-flash-t4
+  codigo: 4x13
+  capitulo: Lo que somos
+- n: 51
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x13
+  capitulo: No es país para padres viejos
+- n: 52
+  titulo: arrow-t6
+  codigo: 6x13
+  capitulo: El mayor truco del diablo
+- n: 53
+  titulo: supergirl-t3
+  codigo: 3x14
+  capitulo: Disparo al corazón de Schott
+- n: 54
+  titulo: the-flash-t4
+  codigo: 4x14
+  capitulo: Experimento 9
+- n: 55
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x14
+  capitulo: Amazing Grace
+- n: 56
+  titulo: arrow-t6
+  codigo: 6x14
+  capitulo: Rumbo de colisión
+- n: 57
+  titulo: supergirl-t3
+  codigo: 3x15
+  capitulo: En busca del tiempo perdido
+- n: 58
+  titulo: the-flash-t4
+  codigo: 4x15
+  capitulo: Tiempo Flash
+- n: 59
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x15
+  capitulo: Morir por la piedra
+- n: 60
+  titulo: arrow-t6
+  codigo: 6x15
+  capitulo: Doble
+- n: 61
+  titulo: supergirl-t3
+  codigo: 3x16
+  capitulo: Mente dividida
+- n: 62
+  titulo: the-flash-t4
+  codigo: 4x16
+  capitulo: Corre, Iris, corre
+- n: 63
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x16
+  capitulo: Yo, Ava
+- n: 64
+  titulo: arrow-t6
+  codigo: 6x16
+  capitulo: El gremio de Tátanos
+- n: 65
+  titulo: supergirl-t3
+  codigo: 3x17
+  capitulo: Trinidad
+- n: 66
+  titulo: the-flash-t4
+  codigo: 4x17
+  capitulo: Anuladora y estafada
+- n: 67
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x17
+  capitulo: 'Artista invitado: John Noble'
+- n: 68
+  titulo: arrow-t6
+  codigo: 6x17
+  capitulo: Hermanos de armas
+- n: 69
+  titulo: supergirl-t3
+  codigo: 3x18
+  capitulo: Al abrigo de la tormenta
+- n: 70
+  titulo: the-flash-t4
+  codigo: 4x18
+  capitulo: La perdición
+- n: 71
+  titulo: dc-s-legends-of-tomorrow-t3
+  codigo: 3x18
+  capitulo: El bueno, el malo y el peluche
+- n: 72
+  titulo: arrow-t6
+  codigo: 6x18
+  capitulo: Fundamentos
+- n: 73
+  titulo: supergirl-t3
+  codigo: 3x19
+  capitulo: Los fanáticos
+- n: 74
+  titulo: the-flash-t4
+  codigo: 4x19
+  capitulo: Furia roja
+- n: 75
+  titulo: arrow-t6
+  codigo: 6x19
+  capitulo: El Dragón
+- n: 76
+  titulo: supergirl-t3
+  codigo: 3x20
+  capitulo: La cara oculta de la luna
+- n: 77
+  titulo: the-flash-t4
+  codigo: 4x20
+  capitulo: Ella también existe
+- n: 78
+  titulo: arrow-t6
+  codigo: 6x20
+  capitulo: Lealtades cambiantes
+- n: 79
+  titulo: supergirl-t3
+  codigo: 3x21
+  capitulo: No es Kansas
+- n: 80
+  titulo: the-flash-t4
+  codigo: 4x21
+  capitulo: Harry y los Harrison
+- n: 81
+  titulo: arrow-t6
+  codigo: 6x21
+  capitulo: Caso Nº 11-19-41-73
+- n: 82
+  titulo: supergirl-t3
+  codigo: 3x22
+  capitulo: Reinar
+- n: 83
+  titulo: the-flash-t4
+  codigo: 4x22
+  capitulo: Piensa rápido
+- n: 84
+  titulo: arrow-t6
+  codigo: 6x22
+  capitulo: Lazos que atan
+- n: 85
+  titulo: supergirl-t3
+  codigo: 3x23
+  capitulo: Batallas perdidas y ganadas
+- n: 86
+  titulo: the-flash-t4
+  codigo: 4x23
+  capitulo: Nosotros somos Flash
+- n: 87
+  titulo: arrow-t6
+  codigo: 6x23
+  capitulo: Cadena perpetua
+fuente: Archivador AZUL/series pagina 007

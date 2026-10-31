@@ -1,0 +1,340 @@
+nombre: 'Carpeta 5: orden capítulo a capítulo'
+universo: dc
+seccion: series
+carpeta: 5
+codigo: "5.1"
+orden:
+- n: 1
+  titulo: the-flash-t2
+  codigo: 2x01
+  capitulo: El hombre que salvó Central City
+- n: 2
+  titulo: arrow-t4
+  codigo: 4x01
+  capitulo: Flecha verde
+- n: 3
+  titulo: the-flash-t2
+  codigo: 2x02
+  capitulo: Entre dos mundos
+- n: 4
+  titulo: arrow-t4
+  codigo: 4x02
+  capitulo: La candidata
+- n: 5
+  titulo: the-flash-t2
+  codigo: 2x03
+  capitulo: Familia de renegados
+- n: 6
+  titulo: arrow-t4
+  codigo: 4x03
+  capitulo: Restauración
+- n: 7
+  titulo: supergirl-t1
+  codigo: 1x01
+  capitulo: Piloto
+- n: 8
+  titulo: the-flash-t2
+  codigo: 2x04
+  capitulo: La furia de Firestorm
+- n: 9
+  titulo: arrow-t4
+  codigo: 4x04
+  capitulo: Sin redención
+- n: 10
+  titulo: supergirl-t1
+  codigo: 1x02
+  capitulo: Juntos más fuertes
+- n: 11
+  titulo: the-flash-t2
+  codigo: 2x05
+  capitulo: La oscuridad y la luz
+- n: 12
+  titulo: arrow-t4
+  codigo: 4x05
+  capitulo: Poseída
+- n: 13
+  titulo: supergirl-t1
+  codigo: 1x03
+  capitulo: Luchar o volar
+- n: 14
+  titulo: the-flash-t2
+  codigo: 2x06
+  capitulo: Presentando a Zoom
+- n: 15
+  titulo: arrow-t4
+  codigo: 4x06
+  capitulo: Almas perdidas
+- n: 16
+  titulo: supergirl-t1
+  codigo: 1x04
+  capitulo: Livewiew
+- n: 17
+  titulo: the-flash-t2
+  codigo: 2x07
+  capitulo: Guerra de gorilas
+- n: 18
+  titulo: arrow-t4
+  codigo: 4x07
+  capitulo: Fraternidad
+- n: 19
+  titulo: supergirl-t1
+  codigo: 1x05
+  capitulo: ¿Cómo lo hace?
+- n: 20
+  titulo: the-flash-t2
+  codigo: 2x08
+  capitulo: Leyendas de hoy
+- n: 21
+  titulo: arrow-t4
+  codigo: 4x08
+  capitulo: Leyendas de ayer
+- n: 22
+  titulo: supergirl-t1
+  codigo: 1x06
+  capitulo: Tornado rojo
+- n: 23
+  titulo: vixen-t2
+  nota: Temporada completa (animación).
+- n: 24
+  titulo: the-flash-t2
+  codigo: 2x09
+  capitulo: Correr para parar
+- n: 25
+  titulo: arrow-t4
+  codigo: 4x09
+  capitulo: Aguas turbias
+- n: 26
+  titulo: supergirl-t1
+  codigo: 1x07
+  capitulo: Humana por un día
+- n: 27
+  titulo: the-flash-t2
+  codigo: 2x10
+  capitulo: Energía potencial
+- n: 28
+  titulo: arrow-t4
+  codigo: 4x10
+  capitulo: Deudas de sangre
+- n: 29
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x01
+  capitulo: Piloto (1ª parte)
+- n: 30
+  titulo: supergirl-t1
+  codigo: 1x08
+  capitulo: OPA hostil
+- n: 31
+  titulo: the-flash-t2
+  codigo: 2x11
+  capitulo: El regreso del opuesto de Flash
+- n: 32
+  titulo: arrow-t4
+  codigo: 4x11
+  capitulo: Desaparecido
+- n: 33
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x02
+  capitulo: Piloto (2ª parte)
+- n: 34
+  titulo: supergirl-t1
+  codigo: 1x09
+  capitulo: Lazos de sangre
+- n: 35
+  titulo: the-flash-t2
+  codigo: 2x12
+  capitulo: Por la vía rápida
+- n: 36
+  titulo: arrow-t4
+  codigo: 4x12
+  capitulo: Desatado
+- n: 37
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x03
+  capitulo: Lazos de sangre
+- n: 38
+  titulo: supergirl-t1
+  codigo: 1x10
+  capitulo: Cosas de niños
+- n: 39
+  titulo: the-flash-t2
+  codigo: 2x13
+  capitulo: Bienvenidos a Tierra 2
+- n: 40
+  titulo: arrow-t4
+  codigo: 4x13
+  capitulo: Pecados del padre
+- n: 41
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x04
+  capitulo: Caballeros blancos
+- n: 42
+  titulo: supergirl-t1
+  codigo: 1x11
+  capitulo: Un visitante extraño de otro planeta
+- n: 43
+  titulo: the-flash-t2
+  codigo: 2x14
+  capitulo: Huida de Tierra 2
+- n: 44
+  titulo: arrow-t4
+  codigo: 4x14
+  capitulo: Código de silencio
+- n: 45
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x05
+  capitulo: Plan de emergencia
+- n: 46
+  titulo: supergirl-t1
+  codigo: 1x12
+  capitulo: Bizarro
+- n: 47
+  titulo: the-flash-t2
+  codigo: 2x15
+  capitulo: Rey tiburón
+- n: 48
+  titulo: arrow-t4
+  codigo: 4x15
+  capitulo: Secuestrado
+- n: 49
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x06
+  capitulo: Star City 2046
+- n: 50
+  titulo: supergirl-t1
+  codigo: 1x13
+  capitulo: Para la chica que tiene todo
+- n: 51
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x07
+  capitulo: Varados
+- n: 52
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x08
+  capitulo: La noche del halcón
+- n: 53
+  titulo: supergirl-t1
+  codigo: 1x14
+  capitulo: Verdad, justicia y el estilo americano
+- n: 54
+  titulo: the-flash-t2
+  codigo: 2x16
+  capitulo: Trayectoria
+- n: 55
+  titulo: arrow-t4
+  codigo: 4x16
+  capitulo: Corazones rotos
+- n: 56
+  titulo: supergirl-t1
+  codigo: 1x15
+  capitulo: Soledad
+- n: 57
+  titulo: the-flash-t2
+  codigo: 2x17
+  capitulo: Flashback
+- n: 58
+  titulo: the-flash-chronicles-of-cisco-t1
+- n: 59
+  titulo: arrow-t4
+  codigo: 4x17
+  capitulo: Faro de esperanza
+- n: 60
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x09
+  capitulo: Abandonados
+- n: 61
+  titulo: supergirl-t1
+  codigo: 1x16
+  capitulo: Caída
+- n: 62
+  titulo: arrow-t4
+  codigo: 4x18
+  capitulo: Once cincuenta y nueve
+- n: 63
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x10
+  capitulo: Progenie
+- n: 64
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x11
+  capitulo: Los ocho magníficos
+- n: 65
+  titulo: supergirl-t1
+  codigo: 1x17
+  capitulo: Cacería
+- n: 66
+  titulo: arrow-t4
+  codigo: 4x19
+  capitulo: El grito del canario
+- n: 67
+  titulo: supergirl-t1
+  codigo: 1x18
+  capitulo: Lo mejor del mundo
+- n: 68
+  titulo: the-flash-t2
+  codigo: 2x18
+  capitulo: Contra Zoom
+- n: 69
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x12
+  capitulo: El último refugio
+- n: 70
+  titulo: supergirl-t1
+  codigo: 1x19
+  capitulo: Miríada
+- n: 71
+  titulo: the-flash-t2
+  codigo: 2x19
+  capitulo: Vuelta a la normalidad
+- n: 72
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x13
+  capitulo: Leviatán
+- n: 73
+  titulo: supergirl-t1
+  codigo: 1x20
+  capitulo: Ángeles mejores
+- n: 74
+  titulo: the-flash-t2
+  codigo: 2x20
+  capitulo: Ruptura
+- n: 75
+  titulo: arrow-t4
+  codigo: 4x20
+  capitulo: Génesis
+- n: 76
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x14
+  capitulo: El río del tiempo
+- n: 77
+  titulo: the-flash-t2
+  codigo: 2x21
+  capitulo: Dinosaurio a la fuga
+- n: 78
+  titulo: arrow-t4
+  codigo: 4x21
+  capitulo: Monument Point
+- n: 79
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x15
+  capitulo: Destino
+- n: 80
+  titulo: the-flash-t2
+  codigo: 2x22
+  capitulo: Invencible
+- n: 81
+  titulo: arrow-t4
+  codigo: 4x22
+  capitulo: Perdidos en el diluvio
+- n: 82
+  titulo: dc-s-legends-of-tomorrow-t1
+  codigo: 1x16
+  capitulo: Legendarios
+- n: 83
+  titulo: arrow-t4
+  codigo: 4x23
+  capitulo: Cisma
+- n: 84
+  titulo: the-flash-t2
+  codigo: 2x23
+  capitulo: La carrera de su vida
+fuente: Archivador AZUL/series pagina 005

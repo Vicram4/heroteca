@@ -37,7 +37,6 @@
   --txt: #14161b;
   --txt-2: #555b6b;
   --borde: #d9dce4;
-  --acento-txt: var(--u-txt-claro, #c8161d);
   --peli: #0b8045;
   --serie: #0a73a0;
   --oneshot: #7440d0;
@@ -58,7 +57,6 @@
     --txt: #f2f3f5;
     --txt-2: #a9aebb;
     --borde: #3a4050;
-    --acento-txt: var(--u-txt-oscuro, #ff5a61);
     --peli: #2bd576;
     --serie: #3ccaf5;
     --oneshot: #b08bff;
@@ -77,7 +75,6 @@
   --txt: #f2f3f5;
   --txt-2: #a9aebb;
   --borde: #3a4050;
-  --acento-txt: var(--u-txt-oscuro, #ff5a61);
   --peli: #2bd576;
   --serie: #3ccaf5;
   --oneshot: #b08bff;
@@ -86,6 +83,22 @@
   --luz-balda: 0 16px 26px -10px rgb(255 176 0 / 0.42);
   --sombra: 0 12px 32px rgb(0 0 0 / 0.45);
 }
+
+/* Color de acento para texto. Se calcula en <body> (y en los enlaces con color propio), no en :root,
+   porque los colores de cada universo llegan en el atributo style de esos elementos. */
+body,
+[style*='--u-txt'] {
+  --acento-txt: var(--u-txt-claro, #c8161d);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) :is(body, [style*='--u-txt']) {
+    --acento-txt: var(--u-txt-oscuro, #ff5a61);
+  }
+}
+:root[data-tema='oscuro'] :is(body, [style*='--u-txt']) {
+  --acento-txt: var(--u-txt-oscuro, #ff5a61);
+}
+
 
 /* ---------- Base ---------- */
 *,
@@ -109,6 +122,8 @@ body {
 }
 main {
   flex: 1;
+  /* Recorta los adornos que se salen a los lados (el brillo de las fichas) sin crear barra horizontal */
+  overflow-x: clip;
 }
 h1,
 h2,

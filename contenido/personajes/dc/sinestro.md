@@ -1,0 +1,4 @@
+---
+nombre: Sinestro
+universo: dc
+---

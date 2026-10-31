@@ -1,0 +1,273 @@
+nombre: 'Carpeta 9: orden capítulo a capítulo'
+universo: dc
+seccion: series
+carpeta: 9
+codigo: "9.1"
+borrador: true
+notas: 'Página «series pagina 009 haciendo»: a medio hacer, con los títulos en inglés y sin numerar. Su cabecera es una copia de la plantilla.'
+orden:
+- titulo: the-flash-t5
+  codigo: 5x01
+  capitulo: Nora
+- titulo: the-flash-t5
+  codigo: 5x02
+  capitulo: Blocked
+- titulo: the-flash-t5
+  codigo: 5x03
+  capitulo: The Death of Vibe
+- titulo: the-flash-t5
+  codigo: 5x04
+  capitulo: News Flash
+- titulo: the-flash-t5
+  codigo: 5x05
+  capitulo: All Doll'd Up
+- titulo: supergirl-t4
+  codigo: 4x01
+  capitulo: American Alien
+- titulo: arrow-t7
+  codigo: 7x01
+  capitulo: Inmate 4857
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x01
+  capitulo: The Virgin Gary
+- titulo: supergirl-t4
+  codigo: 4x02
+  capitulo: Fallout
+- titulo: arrow-t7
+  codigo: 7x02
+  capitulo: The Longbow Hunters
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x02
+  capitulo: Witch Hunt
+- titulo: supergirl-t4
+  codigo: 4x03
+  capitulo: Man of Steel
+- titulo: arrow-t7
+  codigo: 7x03
+  capitulo: Crossing Lines
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x03
+  capitulo: Dancing Queen
+- titulo: supergirl-t4
+  codigo: 4x04
+  capitulo: Ahimsa
+- titulo: arrow-t7
+  codigo: 7x04
+  capitulo: Level Two
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x04
+  capitulo: Wet Hot American Bummer
+- titulo: supergirl-t4
+  codigo: 4x05
+  capitulo: Parasite Lost
+- titulo: arrow-t7
+  codigo: 7x05
+  capitulo: The Demon
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x05
+  capitulo: Tagumo Attacks!!
+- titulo: batwoman-t1
+  codigo: 1x01
+  capitulo: Pilot
+- titulo: supergirl-t4
+  codigo: 4x06
+  capitulo: Call To Action
+- titulo: arrow-t7
+  codigo: 7x06
+  capitulo: Due Process
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x06
+  capitulo: Tender is the Nate
+- titulo: the-flash-t5
+  codigo: 5x06
+  capitulo: The Icicle Cometh
+- titulo: batwoman-t1
+  codigo: 1x02
+  capitulo: The Rabbit Hole
+- titulo: supergirl-t4
+  codigo: 4x07
+  capitulo: Rather the Fallen Angel
+- titulo: arrow-t7
+  codigo: 7x07
+  capitulo: The Slabside Redemption
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x07
+  capitulo: Hell No, Dolly
+- titulo: the-flash-t5
+  codigo: 5x07
+  capitulo: O Come, All Ye Faithful
+- titulo: batwoman-t1
+  codigo: 1x03
+  capitulo: Bown, Down, Down
+- titulo: supergirl-t4
+  codigo: 4x08
+  capitulo: Bunker Hill
+- titulo: arrow-t7
+  codigo: 7x08
+  capitulo: Unmasked
+- titulo: the-flash-t5
+  codigo: 5x08
+  capitulo: What´s Past is Prologue
+- titulo: batwoman-t1
+  codigo: 1x04
+  capitulo: Who Are You?
+- titulo: the-flash-t5
+  codigo: 5x09
+  capitulo: 'Elseworlds: Part 1": El gran crossover de este año'
+- titulo: arrow-t7
+  codigo: 7x09
+  capitulo: 'Elseworlds: Part 2'
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x08
+  capitulo: Legends of To-Meow-Meow
+- titulo: supergirl-t4
+  codigo: 4x09
+  capitulo: 'Elseworlds: Part 3'
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x09
+  capitulo: Lucha de Apuestas
+- titulo: the-flash-t5
+  codigo: 5x10
+  capitulo: The Flash and the Furious
+- titulo: supergirl-t4
+  codigo: 4x10
+  capitulo: Suspicious Minds
+- titulo: arrow-t7
+  codigo: 7x10
+  capitulo: My Name is Emiko Queen
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x10
+  capitulo: The Getaway
+- titulo: the-flash-t5
+  codigo: 5x11
+  capitulo: Seeing Red
+- titulo: supergirl-t4
+  codigo: 4x11
+  capitulo: Blood Memory
+- titulo: arrow-t7
+  codigo: 7x11
+  capitulo: Past Sins
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x11
+  capitulo: Séance and Sensibility
+- titulo: batwoman-t1
+  codigo: 1x05
+  capitulo: Mine Is a Long and a Sad Tale
+- titulo: the-flash-t5
+  codigo: 5x12
+  capitulo: Memorabilia
+- titulo: supergirl-t4
+  codigo: 4x12
+  capitulo: Menagerie
+- titulo: arrow-t7
+  codigo: 7x12
+  capitulo: 'Esmerald Archer": La'
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x12
+  capitulo: The Eggplant, the Witch & the Wardrobe
+- titulo: the-flash-t5
+  codigo: 5x13
+  capitulo: Goldfaced
+- titulo: supergirl-t4
+  codigo: 4x13
+  capitulo: What´s So Funny About Truht, Justice and the American Way?
+- titulo: arrow-t7
+  codigo: 7x13
+  capitulo: Star City Slayer
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x13
+  capitulo: Egg MacGuffin
+- titulo: batwoman-t1
+  codigo: 1x06
+  capitulo: I´ll Be Judge, I´ll Be Jury
+- titulo: the-flash-t5
+  codigo: 5x14
+  capitulo: 'Cause and XS": En'
+- titulo: supergirl-t4
+  codigo: 4x14
+  capitulo: Stand and Deliver
+- titulo: arrow-t7
+  codigo: 7x14
+  capitulo: 'Brothers & Sisters": Cuando'
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x14
+  capitulo: Nip | Stuck
+- titulo: the-flash-t5
+  codigo: 5x15
+  capitulo: 'King Shark vs Gorilla Grodd": Para'
+- titulo: supergirl-t4
+  codigo: 4x15
+  capitulo: O Brother, Where Art Thou?
+- titulo: arrow-t7
+  codigo: 7x15
+  capitulo: Training Day
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x15
+  capitulo: Terms of Service
+- titulo: the-flash-t5
+  codigo: 5x16
+  capitulo: Failure Is an Orphan
+- titulo: supergirl-t4
+  codigo: 4x16
+  capitulo: The House of L
+- titulo: arrow-t7
+  codigo: 7x16
+  capitulo: Star City 2040
+- titulo: dc-s-legends-of-tomorrow-t4
+  codigo: 4x16
+  capitulo: Hey, Wold!
+- titulo: the-flash-t5
+  codigo: 5x17
+  capitulo: 'Time Bomb": En'
+- titulo: supergirl-t4
+  codigo: 4x17
+  capitulo: All About Eve
+- titulo: arrow-t7
+  codigo: 7x17
+  capitulo: Inheritance
+- titulo: the-flash-t5
+  codigo: 5x18
+  capitulo: 'Godspeed": El'
+- titulo: supergirl-t4
+  codigo: 4x18
+  capitulo: Crime and Punishment
+- titulo: arrow-t7
+  codigo: 7x18
+  capitulo: Lost Canary
+- titulo: the-flash-t5
+  codigo: 5x19
+  capitulo: Snow Pack
+- titulo: supergirl-t4
+  codigo: 4x19
+  capitulo: American Dreamer
+- titulo: arrow-t7
+  codigo: 7x19
+  capitulo: Spartan
+- titulo: the-flash-t5
+  codigo: 5x20
+  capitulo: 'Gone Rogue": Nora'
+- titulo: supergirl-t4
+  codigo: 4x20
+  capitulo: Will the Real Miss Tessmacher Please Stand Up?
+- titulo: arrow-t7
+  codigo: 7x20
+  capitulo: 'Confessions": Roy'
+- titulo: the-flash-t5
+  codigo: 5x21
+  capitulo: The Girl With The Red Lightning
+- titulo: supergirl-t4
+  codigo: 4x21
+  capitulo: Red Dawn
+- titulo: arrow-t7
+  codigo: 7x21
+  capitulo: Living Proof
+- titulo: the-flash-t5
+  codigo: 5x22
+  capitulo: 'Legacy": La'
+- titulo: supergirl-t4
+  codigo: 4x22
+  capitulo: The Quest for Peace
+- titulo: arrow-t7
+  codigo: 7x22
+  capitulo: You Have Saved This City
+fuente: Archivador AZUL/series pagina 009 haciendo

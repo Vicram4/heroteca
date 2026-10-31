@@ -159,6 +159,25 @@ Necesitan Python con `python-docx`, `python-pptx` y `pyyaml` (en `.venv`) y la c
 - `generar_contenido.py` **no sobrescribe** las fichas que ya existen, así no se pierden los cambios hechos a mano
   (con `--forzar` las regenera).
 
+### DC
+
+DC sigue la organización de tu disco duro: «001 UDC», «002 DCDU», «UDC Series por orden» (con las 13 carpetas
+del RESUMEN de carpetas UDC) y «animacion/Animación».
+
+```bash
+# 1. Catálogo de DC (Word del Archivador AZUL + árbol del disco) → catalogo.json y carátulas
+.venv/Scripts/python.exe scripts/dc_catalogo.py documentos/originales/dc documentos/extraido/dc
+# 2. Fichas, sagas y órdenes capítulo a capítulo → revisar.txt y cambios.txt
+.venv/Scripts/python.exe scripts/dc_generar.py documentos/extraido/dc contenido
+# 3. Datos de TMDB
+.venv/Scripts/python.exe scripts/sincronizar_tmdb.py dc
+```
+
+- `datos/tmdb-manual-dc.yaml`: correcciones a mano del emparejamiento con TMDB y títulos en España.
+- `contenido/visionados/dc/carpeta-NN.yaml`: tu orden capítulo a capítulo de cada bloque Crossover.
+- En la sección Series, cada ficha lleva `visionado: { carpeta, codigo, orden }` (tu código 2.3, 5.1…)
+  y `numero` es el de la carpeta del disco (011 Smallville). `enEspera: true` la pone al final, en «En espera».
+
 ## Añadir un personaje
 
 `contenido/personajes/marvel/thor.md`:

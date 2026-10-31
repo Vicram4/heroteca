@@ -6,6 +6,7 @@
  *   contenido/sagas/<universo>/<id>.yaml      → "Relacionadas": multiversos, sagas, trilogías…
  *   contenido/titulos/<universo>/<id>/index.md → una ficha (película, temporada, One-Shot…) con sus imágenes al lado
  *   contenido/personajes/<universo>/<id>.md
+ *   contenido/visionados/<universo>/<id>.yaml   → órdenes capítulo a capítulo entre series (Crossover de DC)
  *
  * El identificador de cada entrada es el nombre del archivo, o el de la carpeta
  * si el archivo se llama `index.md` (p. ej. `iron-man`). También es el final de su URL.
@@ -16,7 +17,7 @@
 import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { CLAVES_TIPO, ORDENES_SECCION, PAPELES, TIPOS_SAGA } from './config/tipos';
+import { CALIDADES, CLAVES_TIPO, ORDENES_SECCION, PAPELES, TIPOS_SAGA } from './config/tipos';
 
 /** El id es el nombre del archivo (o de su carpeta si es index.md), sin extensión. */
 const idPorNombreDeArchivo = ({ entry }: { entry: string }) => {
@@ -66,6 +67,10 @@ const universos = defineCollection({
           nombre: z.string(),
           orden: z.enum(ORDENES_SECCION),
           descripcion: z.string().optional(),
+          /** Solo con `orden: carpetas`: las carpetas de visionado y su etapa (Pre-Crossover, Crossover…). */
+          carpetas: z
+            .array(z.object({ numero: z.number().int(), etapa: z.string(), descripcion: z.string().optional() }))
+            .default([]),
         }),
       )
       .default([]),
@@ -156,7 +161,16 @@ const titulos = defineCollection({
       /** Página de tu Archivador ROJO donde está la ficha impresa. */
       paginaArchivador: z.number().int().optional(),
       /** Calidad de tu copia (las insignias de las fichas). */
-      calidad: z.array(z.enum(['720p', '1080p', '4k', 'webm'])).default([]),
+      calidad: z.array(z.enum(CALIDADES)).default([]),
+      /**
+       * En secciones ordenadas por carpetas: en qué carpeta va, su código de visionado ("2.3")
+       * y su posición dentro de la carpeta. En ellas, `numero` es el de la carpeta del disco (011 Smallville).
+       */
+      visionado: z
+        .object({ carpeta: z.number().int(), codigo: z.string().optional(), orden: z.number() })
+        .optional(),
+      /** Pendiente de ver o de colocar (la lista «EN ESPERA» de tus documentos). */
+      enEspera: z.boolean().default(false),
 
       /** Para temporadas: id común de la serie (agrupa sus temporadas) y número de temporada. */
       serie: slug.optional(),
@@ -240,4 +254,37 @@ const titulos = defineCollection({
     }),
 });
 
-export const collections = { universos, sagas, personajes, titulos };
+/* ------------------------------------------------------------------ */
+/* Visionados: orden capítulo a capítulo entre varias series           */
+/* ------------------------------------------------------------------ */
+const visionados = defineCollection({
+  loader: glob({ pattern: '**/*.{yaml,yml}', base: './contenido/visionados', generateId: idPorNombreDeArchivo }),
+  schema: z.object({
+    nombre: z.string(),
+    universo: reference('universos'),
+    seccion: slug,
+    /** Carpeta de visionado a la que pertenece (sección con `orden: carpetas`). */
+    carpeta: z.number().int(),
+    /** Código del bloque en tus documentos ("5.1", "7.2"). */
+    codigo: z.string().optional(),
+    /** Página de tus documentos todavía a medio hacer. */
+    borrador: z.boolean().default(false),
+    orden: z.array(
+      z.object({
+        /** Tu número de orden (01, 02…). */
+        n: z.number().int().optional(),
+        /** Ficha de la temporada. */
+        titulo: reference('titulos'),
+        /** Capítulo ("2x08"). Sin código: la temporada entera va en ese punto. */
+        codigo: codigoCapitulo.optional(),
+        capitulo: z.string().optional(),
+        megacrossover: z.boolean().default(false),
+        nota: z.string().optional(),
+      }),
+    ),
+    notas: z.string().optional(),
+    fuente: z.string().optional(),
+  }),
+});
+
+export const collections = { universos, sagas, personajes, titulos, visionados };

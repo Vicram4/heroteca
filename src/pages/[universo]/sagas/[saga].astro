@@ -27,7 +27,7 @@ export async function getStaticPaths() {
 const { universo, saga, sagas, suyos } = Astro.props;
 // Si todos sus títulos están en secciones con orden cronológico, se ofrece alternar orden
 const cronologica = suyos.length > 0 && suyos.every((t) => universo.data.secciones.find((s) => s.id === t.d.seccion)?.orden === 'cronologico');
-const huecos = huecosDeSeccion(suyos, { id: saga.id, nombre: saga.data.nombre, orden: cronologica ? 'cronologico' : 'estreno' });
+const huecos = huecosDeSeccion(suyos, { id: saga.id, nombre: saga.data.nombre, orden: cronologica ? 'cronologico' : 'estreno', carpetas: [] });
 const padre: Saga | undefined = saga.data.padre ? sagas.find((s) => s.id === saga.data.padre!.id) : undefined;
 const hijas = sagas.filter((s) => s.data.padre?.id === saga.id);
 ---

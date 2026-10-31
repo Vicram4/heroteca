@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 }
 const { universo, p, apariciones, sagas } = Astro.props;
 const titulos = apariciones.map((a) => a.titulo);
-const huecos = huecosDeSeccion(titulos, { id: p.id, nombre: p.data.nombre, orden: 'estreno' });
+const huecos = huecosDeSeccion(titulos, { id: p.id, nombre: p.data.nombre, orden: 'estreno', carpetas: [] });
 // Intérpretes: actor → títulos (en orden de estreno)
 const interpretes = new Map<string, string[]>();
 for (const a of [...apariciones].sort((x, y) => x.titulo.d.anio - y.titulo.d.anio)) {

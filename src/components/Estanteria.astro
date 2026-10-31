@@ -5,7 +5,7 @@
  */
 import Caja from './Caja.astro';
 import { TIPOS } from '../config/tipos';
-import type { Hueco, Saga } from '../lib/datos';
+import type { CabeceraCarpeta, Hueco, Saga } from '../lib/datos';
 import { apariciones } from '../lib/personajes';
 
 interface Props {
@@ -14,8 +14,12 @@ interface Props {
   cronologica: boolean;
   sagas?: Saga[];
   etiqueta: string;
+  /** Secciones por carpetas: una cabecera por carpeta (solo se ve en orden de la historia) */
+  cabeceras?: CabeceraCarpeta[];
+  /** Texto del botón del orden propio («Orden de la historia», «Por carpetas»…) */
+  nombreOrden?: string;
 }
-const { huecos, cronologica, sagas = [], etiqueta } = Astro.props;
+const { huecos, cronologica, sagas = [], etiqueta, cabeceras = [], nombreOrden = 'Orden de la historia' } = Astro.props;
 const tipos = [...new Set(huecos.map((h) => h.titulo.tipo))];
 const hayAnimadas = huecos.some((h) => h.titulo.d.animada) && huecos.some((h) => !h.titulo.d.animada);
 const decadas = [...new Set(huecos.map((h) => Math.floor(h.titulo.d.anio / 10) * 10))].sort();
@@ -35,7 +39,7 @@ const personajesPresentes = personajes
     {
       cronologica && (
         <div class="grupo" role="group" aria-label="Orden">
-          <button type="button" class="pastilla" data-poner-orden="historia" aria-pressed="true">Orden de la historia</button>
+          <button type="button" class="pastilla" data-poner-orden="historia" aria-pressed="true">{nombreOrden}</button>
           <button type="button" class="pastilla" data-poner-orden="estreno" aria-pressed="false">Orden de estreno</button>
         </div>
       )
@@ -110,6 +114,28 @@ const personajesPresentes = personajes
   </div>
 
   <ol class="estante">
+    {
+      cabeceras.map((c) => (
+        <li class="cabecera" style={`--o-h:${c.ordenHistoria}`} data-cabecera={c.carpeta}>
+          <h2>
+            {c.etapa === 'En espera' ? (
+              'En espera'
+            ) : (
+              <>
+                Carpeta {c.carpeta}
+                {c.etapa && <span class="etapa"> · {c.etapa}</span>}
+              </>
+            )}
+          </h2>
+          {c.descripcion && <p>{c.descripcion}</p>}
+          {c.visionado && (
+            <a href={c.visionado} class="ver-orden">
+              Ver el orden capítulo a capítulo →
+            </a>
+          )}
+        </li>
+      ))
+    }
     {huecos.map((h, i) => <Caja hueco={h} prioridad={i < 6} personajes={[...(porTitulo.get(h.titulo.id) ?? [])]} />)}
   </ol>
   <p class="vacio" data-vacio hidden>Ningún título cumple estos filtros.</p>
@@ -118,6 +144,7 @@ const personajesPresentes = personajes
 <script>
   document.querySelectorAll<HTMLElement>('[data-estanteria]').forEach((est) => {
     const celdas = [...est.querySelectorAll<HTMLLIElement>('.celda')];
+    const cabeceras = [...est.querySelectorAll<HTMLLIElement>('[data-cabecera]')];
     const cuenta = est.querySelector<HTMLElement>('[data-cuenta]')!;
     const vacio = est.querySelector<HTMLElement>('[data-vacio]')!;
     const filtros = { tipo: '', animada: '', decada: '', saga: '', personaje: '' };
@@ -136,6 +163,8 @@ const personajesPresentes = personajes
         c.hidden = !ok;
         if (ok) visibles.add(c.dataset.titulo ?? '');
       }
+      // Una carpeta sin cajas visibles oculta también su cabecera
+      for (const cab of cabeceras) cab.hidden = !celdas.some((c) => !c.hidden && c.dataset.carpeta === cab.dataset.cabecera);
       cuenta.textContent = `${visibles.size} ${visibles.size === 1 ? 'título' : 'títulos'}`;
       vacio.hidden = visibles.size > 0;
     }
@@ -216,6 +245,37 @@ const personajesPresentes = personajes
   }
   .estanteria[data-orden='estreno'] :global(.celda) {
     --orden: var(--o-e);
+  }
+  .cabecera {
+    grid-column: 1 / -1;
+    order: var(--orden, 0);
+    margin: 18px 0 -4px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 16px;
+  }
+  .cabecera h2 {
+    margin: 0;
+    font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  }
+  .cabecera .etapa {
+    color: var(--acento-txt);
+  }
+  .cabecera p {
+    margin: 0;
+    color: var(--txt-2);
+    font-size: 0.92rem;
+  }
+  .ver-orden {
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .estanteria[data-orden='historia'] .cabecera {
+    --orden: var(--o-h);
+  }
+  .estanteria[data-orden='estreno'] .cabecera {
+    display: none;
   }
   .vacio {
     color: var(--txt-2);

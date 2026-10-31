@@ -1,0 +1,194 @@
+nombre: 'Carpeta 4: orden capítulo a capítulo'
+universo: dc
+seccion: series
+carpeta: 4
+codigo: "4.3"
+orden:
+- n: 1
+  titulo: arrow-t3
+  codigo: 3x01
+  capitulo: La calma
+- n: 2
+  titulo: the-flash-t1
+  codigo: 1x01
+  capitulo: Piloto
+- n: 3
+  titulo: arrow-t3
+  codigo: 3x02
+  capitulo: Sara
+- n: 4
+  titulo: the-flash-t1
+  codigo: 1x02
+  capitulo: El hombre más rápido del mundo
+- n: 5
+  titulo: arrow-t3
+  codigo: 3x03
+  capitulo: Corto Maltés
+- n: 6
+  titulo: the-flash-t1
+  codigo: 1x03
+  capitulo: Cosas que no puedes dejar atrás
+- n: 7
+  titulo: arrow-t3
+  codigo: 3x04
+  capitulo: El mago
+- n: 8
+  titulo: the-flash-t1
+  codigo: 1x04
+  capitulo: Rebelde
+- n: 9
+  titulo: arrow-t3
+  codigo: 3x05
+  capitulo: El origen secreto de Felicity Smoak
+- n: 10
+  titulo: the-flash-t1
+  codigo: 1x05
+  capitulo: Plastique
+- n: 11
+  titulo: arrow-t3
+  codigo: 3x06
+  capitulo: Culpables
+- n: 12
+  titulo: the-flash-t1
+  codigo: 1x06
+  capitulo: Ha nacido Flash
+- n: 13
+  titulo: vixen-t1
+  nota: Temporada completa (animación).
+- n: 14
+  titulo: arrow-t3
+  codigo: 3x07
+  capitulo: Tensa tu arco
+- n: 15
+  titulo: the-flash-t1
+  codigo: 1x07
+  capitulo: Apagón
+- n: 16
+  titulo: the-flash-t1
+  codigo: 1x08
+  capitulo: Flash vs Arrow
+- n: 17
+  titulo: arrow-t3
+  codigo: 3x08
+  capitulo: Los valientes y los audaces
+- n: 18
+  titulo: the-flash-t1
+  codigo: 1x09
+  capitulo: El hombre del traje amarillo
+- n: 19
+  titulo: arrow-t3
+  codigo: 3x09
+  capitulo: El ascenso
+- n: 20
+  titulo: arrow-t3
+  codigo: 3x10
+  capitulo: Abandonado
+- n: 21
+  titulo: the-flash-t1
+  codigo: 1x10
+  capitulo: La venganza de los rebeldes
+- n: 22
+  titulo: arrow-t3
+  codigo: 3x11
+  capitulo: Ciudad de medianoche
+- n: 23
+  titulo: the-flash-t1
+  codigo: 1x11
+  capitulo: El sonido y la furia
+- n: 24
+  titulo: arrow-t3
+  codigo: 3x12
+  capitulo: Levantamiento
+- n: 25
+  titulo: the-flash-t1
+  codigo: 1x12
+  capitulo: Loco por ti
+- n: 26
+  titulo: arrow-t3
+  codigo: 3x13
+  capitulo: Canarios
+- n: 27
+  titulo: the-flash-t1
+  codigo: 1x13
+  capitulo: El hombre nuclear
+- n: 28
+  titulo: arrow-t3
+  codigo: 3x14
+  capitulo: El regreso
+- n: 29
+  titulo: the-flash-t1
+  codigo: 1x14
+  capitulo: Después de la explosión
+- n: 30
+  titulo: arrow-t3
+  codigo: 3x15
+  capitulo: Nanda Parbat
+- n: 31
+  titulo: the-flash-t1
+  codigo: 1x15
+  capitulo: Fuera de su tiempo
+- n: 32
+  titulo: arrow-t3
+  codigo: 3x16
+  capitulo: La oferta
+- n: 33
+  titulo: the-flash-t1
+  codigo: 1x16
+  capitulo: La hora de los renegados
+- n: 34
+  titulo: arrow-t3
+  codigo: 3x17
+  capitulo: Tendencias suicidas
+- n: 35
+  titulo: the-flash-t1
+  codigo: 1x17
+  capitulo: Los bromistas
+- n: 36
+  titulo: arrow-t3
+  codigo: 3x18
+  capitulo: Enemigo público
+- n: 37
+  titulo: the-flash-t1
+  codigo: 1x18
+  capitulo: Los mejores
+- n: 38
+  titulo: arrow-t3
+  codigo: 3x19
+  capitulo: Arrow destrozado
+- n: 39
+  titulo: the-flash-t1
+  codigo: 1x19
+  capitulo: ¿Quién es Harrison Wells?
+- n: 40
+  titulo: arrow-t3
+  codigo: 3x20
+  capitulo: Los vencidos
+- n: 41
+  titulo: the-flash-t1
+  codigo: 1x20
+  capitulo: La trampa
+- n: 42
+  titulo: arrow-t3
+  codigo: 3x21
+  capitulo: Al Sah Him
+- n: 43
+  titulo: the-flash-t1
+  codigo: 1x21
+  capitulo: Grodd vive
+- n: 44
+  titulo: arrow-t3
+  codigo: 3x22
+  capitulo: Esta es tu espada
+- n: 45
+  titulo: the-flash-t1
+  codigo: 1x22
+  capitulo: Rebeldes a la fuga
+- n: 46
+  titulo: arrow-t3
+  codigo: 3x23
+  capitulo: Mi nombre es Oliver Queen
+- n: 47
+  titulo: the-flash-t1
+  codigo: 1x23
+  capitulo: Lo bastante rápido
+fuente: Archivador AZUL/series pagina 004

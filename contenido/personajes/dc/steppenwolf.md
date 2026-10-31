@@ -1,0 +1,4 @@
+---
+nombre: Steppenwolf
+universo: dc
+---

@@ -1,0 +1,354 @@
+nombre: 'Carpeta 6: orden capítulo a capítulo'
+universo: dc
+seccion: series
+carpeta: 6
+codigo: "6.1"
+orden:
+- n: 1
+  titulo: the-flash-t3
+  codigo: 3x01
+  capitulo: Flashpoint
+- n: 2
+  titulo: arrow-t5
+  codigo: 5x01
+  capitulo: Legado
+- n: 3
+  titulo: supergirl-t2
+  codigo: 2x01
+  capitulo: Las aventuras de Supergirl
+- n: 4
+  titulo: the-flash-t3
+  codigo: 3x02
+  capitulo: Paradoja
+- n: 5
+  titulo: arrow-t5
+  codigo: 5x02
+  capitulo: Los reclutas
+- n: 6
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x01
+  capitulo: Fuera de tiempo
+- n: 7
+  titulo: supergirl-t2
+  codigo: 2x02
+  capitulo: Los últimos hijos de Krypton
+- n: 8
+  titulo: the-flash-t3
+  codigo: 3x03
+  capitulo: Magenta
+- n: 9
+  titulo: arrow-t5
+  codigo: 5x03
+  capitulo: Cuestión de confianza
+- n: 10
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x02
+  capitulo: La sociedad de la justicia de América
+- n: 11
+  titulo: supergirl-t2
+  codigo: 2x03
+  capitulo: Bienvenidos a la Tierra
+- n: 12
+  titulo: the-flash-t3
+  codigo: 3x04
+  capitulo: Los nuevos renegados
+- n: 13
+  titulo: arrow-t5
+  codigo: 5x04
+  capitulo: Penitencia
+- n: 14
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x03
+  capitulo: Shogun
+- n: 15
+  titulo: supergirl-t2
+  codigo: 2x04
+  capitulo: Supervivientes
+- n: 16
+  titulo: the-flash-t3
+  codigo: 3x05
+  capitulo: Monstruo
+- n: 17
+  titulo: arrow-t5
+  codigo: 5x05
+  capitulo: Blanco humano
+- n: 18
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x04
+  capitulo: Abominaciones
+- n: 19
+  titulo: supergirl-t2
+  codigo: 2x05
+  capitulo: Fuego cruzado
+- n: 20
+  titulo: the-flash-t3
+  codigo: 3x06
+  capitulo: Sombra
+- n: 21
+  titulo: arrow-t5
+  codigo: 5x06
+  capitulo: Así empieza
+- n: 22
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x05
+  capitulo: Descubiertos
+- n: 23
+  titulo: the-ray-t1
+  nota: Temporada completa (animación).
+- n: 24
+  titulo: supergirl-t2
+  codigo: 2x06
+  capitulo: Transformación
+- n: 25
+  titulo: supergirl-t2
+  codigo: 2x07
+  capitulo: El lugar más oscuro
+- n: 26
+  titulo: the-flash-t3
+  codigo: 3x07
+  capitulo: Killer Frost
+- n: 27
+  titulo: arrow-t5
+  codigo: 5x07
+  capitulo: Vigilante
+- n: 28
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x06
+  capitulo: Tierra sin ley
+- n: 29
+  titulo: supergirl-t2
+  codigo: 2x08
+  capitulo: Medusa
+  megacrossover: true
+- n: 30
+  titulo: the-flash-t3
+  codigo: 3x08
+  capitulo: ¡Invasión!
+  megacrossover: true
+- n: 31
+  titulo: arrow-t5
+  codigo: 5x08
+  capitulo: ¡Invasión!
+  megacrossover: true
+- n: 32
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x07
+  capitulo: ¡Invasión!
+  megacrossover: true
+- n: 33
+  titulo: the-flash-t3
+  codigo: 3x09
+  capitulo: El regalo
+- n: 34
+  titulo: arrow-t5
+  codigo: 5x09
+  capitulo: Lo que dejamos atrás
+- n: 35
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x08
+  capitulo: El estilo Chicago
+- n: 36
+  titulo: supergirl-t2
+  codigo: 2x09
+  capitulo: Supergirl vive
+- n: 37
+  titulo: the-flash-t3
+  codigo: 3x10
+  capitulo: Problemas del futuro
+- n: 38
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x09
+  capitulo: En busca del Arca Perdida
+- n: 39
+  titulo: arrow-t5
+  codigo: 5x10
+  capitulo: ¿Quién eres tú?
+- n: 40
+  titulo: supergirl-t2
+  codigo: 2x10
+  capitulo: Podemos ser héroes
+- n: 41
+  titulo: the-flash-t3
+  codigo: 3x11
+  capitulo: Vivo o muerto
+- n: 42
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x10
+  capitulo: La legión del mal
+- n: 43
+  titulo: arrow-t5
+  codigo: 5x11
+  capitulo: Segundas oportunidades
+- n: 44
+  titulo: supergirl-t2
+  codigo: 2x11
+  capitulo: Crónicas marcianas
+- n: 45
+  titulo: the-flash-t3
+  codigo: 3x12
+  capitulo: Intocable
+- n: 46
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x11
+  capitulo: Chaquetero
+- n: 47
+  titulo: arrow-t5
+  codigo: 5x12
+  capitulo: Bratva
+- n: 48
+  titulo: supergirl-t2
+  codigo: 2x12
+  capitulo: Los Luthor
+- n: 49
+  titulo: arrow-t5
+  codigo: 5x13
+  capitulo: El espectro de las armas
+- n: 50
+  titulo: supergirl-t2
+  codigo: 2x13
+  capitulo: Sr. y Sra. Mxyzptlk
+- n: 51
+  titulo: the-flash-t3
+  codigo: 3x13
+  capitulo: Ataque contra Gorila City
+- n: 52
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x12
+  capitulo: Camelot 3000
+- n: 53
+  titulo: arrow-t5
+  codigo: 5x14
+  capitulo: El devorador de pecados
+- n: 54
+  titulo: supergirl-t2
+  codigo: 2x14
+  capitulo: Regreso a casa
+- n: 55
+  titulo: the-flash-t3
+  codigo: 3x14
+  capitulo: Ataque contra Central City
+- n: 56
+  titulo: arrow-t5
+  codigo: 5x15
+  capitulo: Jugando con fuego
+- n: 57
+  titulo: supergirl-t2
+  codigo: 2x15
+  capitulo: Éxodo
+- n: 58
+  titulo: the-flash-t3
+  codigo: 3x15
+  capitulo: La ira de Savitar
+- n: 59
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x13
+  capitulo: El mundo de los perdidos
+- n: 60
+  titulo: the-flash-t3
+  codigo: 3x16
+  capitulo: Entrando en la Fuerza Veloz
+- n: 61
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x14
+  capitulo: Lanzamiento a la luna
+- n: 62
+  titulo: arrow-t5
+  codigo: 5x16
+  capitulo: Jaque mate
+- n: 63
+  titulo: supergirl-t2
+  codigo: 2x16
+  capitulo: Cruce de estrellas
+- n: 64
+  titulo: the-flash-t3
+  codigo: 3x17
+  capitulo: Dueto
+- n: 65
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x15
+  capitulo: La cofradía de la lanza
+- n: 66
+  titulo: arrow-t5
+  codigo: 5x17
+  capitulo: Encapuchado
+- n: 67
+  titulo: supergirl-t2
+  codigo: 2x17
+  capitulo: Sol distante
+- n: 68
+  titulo: the-flash-t3
+  codigo: 3x18
+  capitulo: Abra Kadabra
+- n: 69
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x16
+  capitulo: El mundo del mal
+- n: 70
+  titulo: dc-s-legends-of-tomorrow-t2
+  codigo: 2x17
+  capitulo: Aruba
+- n: 71
+  titulo: arrow-t5
+  codigo: 5x18
+  capitulo: Disueltos
+- n: 72
+  titulo: supergirl-t2
+  codigo: 2x18
+  capitulo: Superreportera
+- n: 73
+  titulo: the-flash-t3
+  codigo: 3x19
+  capitulo: El Flash del futuro
+- n: 74
+  titulo: arrow-t5
+  codigo: 5x19
+  capitulo: Relaciones peligrosas
+- n: 75
+  titulo: supergirl-t2
+  codigo: 2x19
+  capitulo: Alex
+- n: 76
+  titulo: the-flash-t3
+  codigo: 3x20
+  capitulo: Sé quién eres
+- n: 77
+  titulo: arrow-t5
+  codigo: 5x20
+  capitulo: Debajo
+- n: 78
+  titulo: supergirl-t2
+  codigo: 2x20
+  capitulo: La ciudad de los niños perdidos
+- n: 79
+  titulo: the-flash-t3
+  codigo: 3x21
+  capitulo: Causa y efecto
+- n: 80
+  titulo: arrow-t5
+  codigo: 5x21
+  capitulo: Honrarás a tu padre
+- n: 81
+  titulo: supergirl-t2
+  codigo: 2x21
+  capitulo: Resistir
+- n: 82
+  titulo: the-flash-t3
+  codigo: 3x22
+  capitulo: Calle Infantino
+- n: 83
+  titulo: arrow-t5
+  codigo: 5x22
+  capitulo: Perdidos
+- n: 84
+  titulo: supergirl-t2
+  codigo: 2x22
+  capitulo: Sin embargo, ella persistió
+- n: 85
+  titulo: the-flash-t3
+  codigo: 3x23
+  capitulo: En la línea de meta
+- n: 86
+  titulo: arrow-t5
+  codigo: 5x23
+  capitulo: Lian Yu
+fuente: Archivador AZUL/series pagina 006
