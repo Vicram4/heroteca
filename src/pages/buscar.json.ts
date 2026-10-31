@@ -5,6 +5,7 @@
 import { getImage } from 'astro:assets';
 import { todosLosTitulos, universosActivos, numeroTexto } from '../lib/datos';
 import { personajesDe } from '../lib/personajes';
+import { imagenTmdb } from '../lib/tmdb';
 
 export async function GET() {
   const activos = new Map((await universosActivos()).map((u) => [u.id, u]));
@@ -13,12 +14,16 @@ export async function GET() {
     titulos.map(async (t) => {
       const u = activos.get(t.universo)!;
       const seccion = u.data.secciones.find((s) => s.id === t.d.seccion)?.nombre ?? '';
-      const img = t.portada ? (await getImage({ src: t.portada, width: 64, format: 'webp' })).src : undefined;
+      const img = t.portada
+        ? (await getImage({ src: t.portada, width: 64, format: 'webp' })).src
+        : t.m.posterTmdb
+          ? imagenTmdb(t.m.posterTmdb, 'w92')
+          : undefined;
       return {
         t: t.d.titulo + (t.d.temporada ? ` · Temporada ${t.d.temporada}` : ''),
         o: t.d.tituloOriginal ?? '',
         a: t.d.otrosTitulos,
-        r: t.d.reparto.map((r) => [r.actor, r.personaje].filter(Boolean).join(' ')).join(' · '),
+        r: t.m.reparto.map((r) => [r.actor, r.personaje].filter(Boolean).join(' ')).join(' · '),
         u: t.url,
         y: t.d.anio,
         k: t.tipoNombre,

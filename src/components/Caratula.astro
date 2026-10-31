@@ -1,0 +1,43 @@
+---
+/**
+ * Carátula de un título: la de tu edición si la tienes (optimizada al compilar);
+ * si no, la de TMDB servida desde su CDN.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { imagenTmdb, srcsetPoster } from '../lib/tmdb';
+import type { Titulo } from '../lib/datos';
+
+interface Props {
+  t: Titulo;
+  /** Ancho aproximado en pantalla, en píxeles */
+  ancho: number;
+  alt?: string;
+  cargaInmediata?: boolean;
+  /** Mostrar la contraportada en lugar de la portada */
+  contra?: boolean;
+  class?: string;
+}
+const { t, ancho, alt = '', cargaInmediata = false, contra = false, class: clase } = Astro.props;
+const local: ImageMetadata | undefined = contra ? t.contraportada : t.portada;
+const remota = !contra && !local ? t.m.posterTmdb : undefined;
+const carga = cargaInmediata ? 'eager' : 'lazy';
+---
+
+{
+  local ? (
+    <Image src={local} alt={alt} width={ancho * 2} widths={[ancho, ancho * 2]} sizes={`${ancho}px`} format="webp" loading={carga} class={clase} />
+  ) : remota ? (
+    <img
+      src={imagenTmdb(remota, ancho > 200 ? 'w500' : 'w342')}
+      srcset={srcsetPoster(remota)}
+      sizes={`${ancho}px`}
+      alt={alt}
+      width="500"
+      height="750"
+      loading={carga}
+      decoding="async"
+      class:list={[clase, 'de-tmdb']}
+    />
+  ) : null
+}

@@ -1,6 +1,7 @@
 ---
 /** Ficha de un título: tu «Ficha Técnica» modernizada. */
-import { Image } from 'astro:assets';
+import Caratula from './Caratula.astro';
+import Trailer from './Trailer.astro';
 import { render } from 'astro:content';
 import Spoiler from './Spoiler.astro';
 import { numeroTexto, todosLosTitulos, type Titulo, type Universo, type Saga } from '../lib/datos';
@@ -22,18 +23,25 @@ const { Content } = await render(t.entrada);
 const tieneCuerpo = Boolean(t.entrada.body?.trim());
 const misSagas = d.sagas.map((r) => sagas.find((s) => s.id === r.id)).filter((s): s is Saga => Boolean(s));
 const numeros = d.tramos.length > 1 ? d.tramos.map((tr) => numeroTexto(tr.numero)).join(' · ') : numeroTexto(d.numero);
+const m = t.m;
 const lista = (v: string[]) => v.join(', ');
+const fechaLarga = (f?: Date) => f?.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const marca = (campo: string) => (m.deTmdb.has(campo) ? ' ·ᵀ' : '');
 const tecnica = [
   ['Año', d.anioFin ? `${d.anio}–${d.anioFin}` : String(d.anio)],
-  ['Estreno', d.fechaEstreno?.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })],
+  ['Estreno', fechaLarga(m.fecha)],
+  ['En España', m.fechaEspana && m.fechaEspana.getTime() !== m.fecha?.getTime() ? fechaLarga(m.fechaEspana) : undefined],
   ['Nacionalidad', d.nacionalidad],
-  ['Duración', d.duracion ? `${d.duracion} min${d.tipo === 'serie' ? ' por capítulo' : ''}` : undefined],
-  ['Dirección', lista(d.direccion)],
-  ['Guion', lista(d.guion)],
+  ['Duración', m.duracion ? `${m.duracion} min${d.tipo === 'serie' ? ' por capítulo' : ''}${marca('duracion')}` : undefined],
+  ['Creada por', d.tipo === 'serie' && m.creadores.length ? lista(m.creadores) : undefined],
+  ['Dirección', m.direccion.length ? lista(m.direccion) + marca('direccion') : undefined],
+  ['Guion', m.guion.length ? lista(m.guion) + marca('guion') : undefined],
   ['Productora', lista(d.productora)],
   ['Distribuidora', lista(d.distribuidora)],
-  ['Temporadas', d.temporadas ? String(d.temporadas) : undefined],
+  ['Temporadas', m.temporadas ? String(m.temporadas) : undefined],
+  ['Género', m.generos.length ? lista(m.generos) : undefined],
 ].filter((f): f is [string, string] => Boolean(f[1]));
+const hayTmdb = m.deTmdb.size > 0 || (!t.portada && Boolean(m.posterTmdb));
 const { enlaceReparto } = await apariciones();
 const todos = await todosLosTitulos();
 const buscarTitulo = (id: string) => todos.find((x) => x.id === id);
@@ -59,8 +67,8 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
   <div class="rejilla">
     <div class="caratulas">
       {
-        t.portada ? (
-          <Image src={t.portada} alt={`Portada de tu edición de ${d.titulo}`} width={420} format="webp" loading="eager" class="portada" />
+        t.portada || m.posterTmdb ? (
+          <Caratula t={t} ancho={320} cargaInmediata alt={t.portada ? `Portada de tu edición de ${d.titulo}` : `Cartel de ${d.titulo}`} />
         ) : (
           <div class="sin-portada" aria-hidden="true">
             <span>{t.tipoNombre}</span>
@@ -68,8 +76,9 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           </div>
         )
       }
-      {t.contraportada && <Image src={t.contraportada} alt={`Contraportada de tu edición de ${d.titulo}`} width={420} format="webp" />}
+      {t.contraportada && <Caratula t={t} contra ancho={320} alt={`Contraportada de tu edición de ${d.titulo}`} />}
       {t.portada && <p class="nota-caratula">{t.contraportada ? 'Portada y contraportada de tu edición' : 'Carátula de tu edición'}</p>}
+      {!t.portada && m.posterTmdb && <p class="nota-caratula">Cartel de TMDB</p>}
     </div>
 
     <div class="cuerpo">
@@ -83,7 +92,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
         <ul class="chips" aria-label="Datos rápidos">
           <li><span class="chip tipo">{t.subtitulo.split(' · ')[0]}</span></li>
           <li><span class="chip">{d.anioFin ? `${d.anio}–${d.anioFin}` : d.anio}</span></li>
-          {d.duracion && <li><span class="chip">{d.duracion} min</span></li>}
+          {m.duracion && <li><span class="chip">{m.duracion} min</span></li>}
           {d.calidad.map((c) => <li><span class="chip calidad">{c === '4k' ? '4K' : c.toUpperCase()}</span></li>)}
           {misSagas.map((s) => <li><a class="chip" href={`/${universo.id}/sagas/${s.id}/`}>{s.data.nombre}</a></li>)}
         </ul>
@@ -91,13 +100,16 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       </header>
 
       {
-        d.argumento && (
+        t.m.argumento && (
           <section class="panel">
-            <h2 class="h-panel">Argumento</h2>
-            {d.argumento.split(/\n\n+/).map((p) => <p>{p}</p>)}
+            <h2 class="h-panel">{t.m.deTmdb.has('argumento') ? 'Sinopsis' : 'Argumento'}</h2>
+            {t.m.argumento.split(/\n\n+/).map((p) => <p>{p}</p>)}
+            {t.m.deTmdb.has('argumento') && <p class="fuente-tmdb">Sinopsis de TMDB</p>}
           </section>
         )
       }
+
+      {t.m.trailer && <Trailer id={t.m.trailer} titulo={d.titulo} fondo={t.m.fondoTmdb} />}
 
       {
         tieneCuerpo && (
@@ -124,11 +136,11 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           )
         }
         {
-          d.reparto.length > 0 && (
+          m.reparto.length > 0 && (
             <section class="panel">
               <h2 class="h-panel">Reparto</h2>
               <ul class="reparto">
-                {d.reparto.map((r, i) => {
+                {m.reparto.map((r, i) => {
                   const pid = enlaceReparto.get(`${t.id}|${i}`);
                   return (
                     <li>
@@ -138,6 +150,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
                   );
                 })}
               </ul>
+              {m.deTmdb.has('reparto') && <p class="fuente-tmdb">Reparto de TMDB</p>}
             </section>
           )
         }
@@ -160,11 +173,11 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       }
 
       {
-        d.capitulos.length > 0 && (
+        m.capitulos.length > 0 && (
           <section class="panel">
-            <h2 class="h-panel">Capítulos <span class="cuantos">({d.capitulos.length})</span></h2>
+            <h2 class="h-panel">Capítulos <span class="cuantos">({m.capitulos.length})</span></h2>
             <ol class="capitulos">
-              {d.capitulos.map((c) => (
+              {m.capitulos.map((c) => (
                 <li>
                   <details>
                     <summary>
@@ -175,6 +188,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
                     <div class="det">
                       {c.argumento && <p>{c.argumento}</p>}
                       <p class="cred">
+                        {c.fecha && <span>Emisión: {fechaLarga(new Date(`${c.fecha}T00:00:00Z`))}</span>}
                         {c.direccion.length > 0 && <span>Dirección: {lista(c.direccion)}</span>}
                         {c.guion.length > 0 && <span>Guion: {lista(c.guion)}</span>}
                       </p>
@@ -183,6 +197,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
                 </li>
               ))}
             </ol>
+            {m.deTmdb.has('capitulos') && <p class="fuente-tmdb">Capítulos de TMDB</p>}
           </section>
         )
       }
@@ -236,6 +251,8 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           </section>
         )
       }
+
+      {hayTmdb && <p class="leyenda-tmdb">Los datos marcados con ᵀ o «de TMDB» proceden de TMDB y solo completan lo que falta en tu archivo.</p>}
 
       {
         d.notas && (
@@ -512,6 +529,12 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
   }
   .temporadas .chip[aria-current='page'] .numero {
     color: inherit;
+  }
+  .fuente-tmdb,
+  .leyenda-tmdb {
+    font-size: 0.8rem;
+    color: var(--txt-2);
+    margin: 10px 0 0;
   }
   .notas {
     font-size: 0.88rem;

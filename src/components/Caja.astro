@@ -1,6 +1,6 @@
 ---
 /** Una caja (carátula) en la estantería. El marco lleva el color del tipo, como en tus estanterías. */
-import { Image } from 'astro:assets';
+import Caratula from './Caratula.astro';
 import { numeroTexto, textoTramo, type Hueco } from '../lib/datos';
 
 interface Props {
@@ -34,8 +34,8 @@ const etiqueta = [hueco.numero !== undefined ? `Número ${numeroTexto(hueco.nume
     {hueco.numero !== undefined && <span class="num" aria-hidden="true">{numeroTexto(hueco.numero)}</span>}
     <span class="tapa">
       {
-        t.portada ? (
-          <Image src={t.portada} alt="" width={220} format="webp" loading={prioridad ? 'eager' : 'lazy'} />
+        t.portada || t.m.posterTmdb ? (
+          <Caratula t={t} ancho={160} cargaInmediata={prioridad} />
         ) : (
           <span class="sin-tapa" aria-hidden="true">
             <span class="tipo">{t.tipoNombre}</span>

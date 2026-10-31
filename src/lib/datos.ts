@@ -5,6 +5,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
 import { TIPOS, type TipoTitulo } from '../config/tipos';
+import { datosTmdb, type DatosTmdb } from './tmdb';
 
 export type Universo = CollectionEntry<'universos'>;
 export type Saga = CollectionEntry<'sagas'>;
@@ -13,6 +14,38 @@ export type Seccion = Universo['data']['secciones'][number];
 
 /** Ids de página reservados dentro de un universo (no pueden usarse como id de ficha). */
 export const RUTAS_RESERVADAS = ['sagas', 'personajes', 'cronologia', 'buscar'];
+
+export interface Capitulo {
+  codigo: string;
+  titulo: string;
+  argumento?: string;
+  duracion?: number;
+  direccion: string[];
+  guion: string[];
+  fecha?: string;
+}
+
+/**
+ * Vista combinada de un título: lo de tus documentos manda; TMDB solo rellena lo que falta.
+ * `deTmdb` lista los campos que vienen de TMDB (para indicarlo en la ficha).
+ */
+export interface Mezcla {
+  argumento?: string;
+  reparto: { actor: string; personaje?: string }[];
+  duracion?: number;
+  direccion: string[];
+  guion: string[];
+  creadores: string[];
+  fecha?: Date;
+  fechaEspana?: Date;
+  capitulos: Capitulo[];
+  trailer?: string;
+  posterTmdb?: string;
+  fondoTmdb?: string;
+  temporadas?: number;
+  generos: string[];
+  deTmdb: Set<string>;
+}
 
 export interface Titulo {
   id: string;
@@ -28,6 +61,9 @@ export interface Titulo {
   subtitulo: string;
   /** Nombre corto para la estantería: "Agente Carter · T1" */
   corto: string;
+  /** Datos combinados (tuyos + TMDB) */
+  m: Mezcla;
+  tmdb?: DatosTmdb;
 }
 
 /** Un hueco en la estantería. Una temporada repartida en varios tramos ocupa varios huecos. */
@@ -56,8 +92,58 @@ export async function todosLosUniversos() {
 
 const urlTitulo = (universo: string, id: string) => `/${universo}/${id}/`;
 
+function mezclar(d: TituloEntrada['data'], x?: DatosTmdb): Mezcla {
+  const deTmdb = new Set<string>();
+  const elegir = <T,>(campo: string, tuyo: T | undefined, suyo: T | undefined, vacio = (v: T) => v === undefined || (Array.isArray(v) && v.length === 0)) => {
+    if (tuyo !== undefined && !vacio(tuyo)) return tuyo;
+    if (suyo !== undefined && !vacio(suyo)) deTmdb.add(campo);
+    return suyo;
+  };
+  const fecha = (s?: string) => (s ? new Date(`${s}T00:00:00Z`) : undefined);
+  const capsTuyos: Capitulo[] = d.capitulos.map((c) => ({ ...c }));
+  const capsSuyos: Capitulo[] = (x?.capitulos ?? []).map((c) => ({
+    codigo: c.codigo,
+    titulo: c.titulo ?? '',
+    argumento: c.sinopsis,
+    duracion: c.duracion,
+    direccion: c.direccion ?? [],
+    guion: c.guion ?? [],
+    fecha: c.fecha,
+  }));
+  // Capítulos: los tuyos mandan; TMDB añade fecha y rellena argumento/duración de los que no lo tengan
+  let capitulos = capsTuyos;
+  if (capsTuyos.length && capsSuyos.length) {
+    const suyo = new Map(capsSuyos.map((c) => [c.codigo, c]));
+    capitulos = capsTuyos.map((c) => {
+      const s = suyo.get(c.codigo);
+      return s ? { ...c, argumento: c.argumento ?? s.argumento, duracion: c.duracion ?? s.duracion, fecha: s.fecha } : c;
+    });
+  } else if (!capsTuyos.length && capsSuyos.length) {
+    capitulos = capsSuyos;
+    deTmdb.add('capitulos');
+  }
+  return {
+    argumento: elegir('argumento', d.argumento, x?.sinopsis),
+    reparto: elegir('reparto', d.reparto, x?.reparto) ?? [],
+    duracion: elegir('duracion', d.duracion, x?.duracion),
+    direccion: elegir('direccion', d.direccion, x?.direccion) ?? [],
+    guion: elegir('guion', d.guion, x?.guion) ?? [],
+    creadores: x?.creadores ?? [],
+    fecha: d.fechaEstreno ?? fecha(x?.fecha),
+    fechaEspana: d.fechaEstrenoEspana ?? fecha(x?.fechaES),
+    capitulos,
+    trailer: elegir('trailer', d.trailer, x?.trailer),
+    posterTmdb: x?.poster,
+    fondoTmdb: x?.fondo,
+    temporadas: d.temporadas ?? x?.temporadas,
+    generos: x?.generos ?? [],
+    deTmdb,
+  };
+}
+
 function preparar(t: TituloEntrada): Titulo {
   const d = t.data;
+  const tmdb = datosTmdb(d.universo.id, t.id);
   const portada = d.imagenes.find((i) => i.rol === 'portada')?.src ?? d.imagenes[0]?.src;
   const contraportada = d.imagenes.find((i) => i.rol === 'contraportada')?.src;
   const temporada = d.temporada ? `Temporada ${d.temporada}` : '';
@@ -73,6 +159,8 @@ function preparar(t: TituloEntrada): Titulo {
     contraportada,
     subtitulo: [TIPOS[d.tipo].nombre + (d.animada ? ' de animación' : ''), temporada].filter(Boolean).join(' · '),
     corto: d.temporada ? `${d.titulo} · T${d.temporada}` : d.titulo,
+    m: mezclar(d, tmdb),
+    tmdb,
   };
 }
 
@@ -90,7 +178,7 @@ export async function sagasDe(universo: string) {
 }
 
 /** Fecha comparable: fecha de estreno si la hay; si no, el año. */
-const claveFecha = (t: Titulo) => (t.d.fechaEstreno ? t.d.fechaEstreno.getTime() : Date.UTC(t.d.anio, 0, 1));
+const claveFecha = (t: Titulo) => (t.m.fecha ? t.m.fecha.getTime() : Date.UTC(t.d.anio, 0, 1));
 
 /**
  * Huecos de una sección, con su posición en los dos órdenes.

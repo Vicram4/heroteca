@@ -1,6 +1,6 @@
 ---
 /** Todos los personajes de un universo, ordenados por número de apariciones. */
-import { Image } from 'astro:assets';
+import Caratula from '../../../components/Caratula.astro';
 import Base from '../../../layouts/Base.astro';
 import SubNav from '../../../components/SubNav.astro';
 import { universosActivos } from '../../../lib/datos';
@@ -25,12 +25,12 @@ const sin = lista.filter((x) => !x.apariciones.length);
     <ul class="rejilla">
       {
         conApariciones.map(({ p, apariciones }) => {
-          const tapas = apariciones.filter((a) => a.titulo.portada).slice(0, 3);
+          const tapas = apariciones.filter((a) => a.titulo.portada || a.titulo.m.posterTmdb).slice(0, 3);
           return (
             <li>
               <a class="tarjeta" href={`/${universo.id}/personajes/${p.id}/`}>
                 <span class="tapas" aria-hidden="true">
-                  {tapas.map((a) => <Image src={a.titulo.portada!} alt="" width={90} format="webp" loading="lazy" />)}
+                  {tapas.map((a) => <Caratula t={a.titulo} ancho={64} />)}
                 </span>
                 <span class="nombre">{p.data.nombre}</span>
                 {p.data.identidad && <span class="identidad">{p.data.identidad}</span>}

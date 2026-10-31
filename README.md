@@ -116,6 +116,26 @@ capitulos:
 
 Los datos de TMDB (reparto, carteles, sinopsis…) **solo rellenan los campos vacíos**. Lo que venga de tus documentos o escribas tú siempre tiene prioridad.
 
+## Datos de TMDB (carátulas, sinopsis, reparto, tráileres)
+
+TMDB **solo rellena lo que falta**: si tu ficha tiene argumento, reparto o carátula, se usa lo tuyo.
+En la ficha, lo que viene de TMDB se indica con «de TMDB» o con una ᵀ.
+
+Los datos se guardan en `datos/tmdb/marvel.json`, que **sí se sube** a GitHub: la web lo lee al compilar
+y nunca contacta con TMDB al publicarse (Vercel no necesita la clave).
+
+Para actualizarlos (por ejemplo, tras añadir fichas nuevas), en tu ordenador:
+
+```bash
+.venv/Scripts/python.exe scripts/sincronizar_tmdb.py marvel             # usa lo ya descargado
+.venv/Scripts/python.exe scripts/sincronizar_tmdb.py marvel --refrescar # vuelve a pedirlo todo a TMDB
+```
+
+Para que una ficha nueva reciba datos de TMDB, añade su id: `tmdb: { id: 12345, tipo: movie }`
+(`tipo: tv` para series). El id es el número de la dirección de la ficha en themoviedb.org.
+
+La clave de TMDB va en el archivo `.env` (no se sube a GitHub): `TMDB_API_TOKEN=…`
+
 ## Regenerar las fichas desde los documentos
 
 Los scripts de `scripts/` leen las copias de `documentos/originales/` (nunca las modifican).

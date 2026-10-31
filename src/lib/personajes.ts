@@ -106,12 +106,19 @@ async function calcular(): Promise<Resultado> {
   for (const t of titulos) {
     const indice = indices.get(t.universo);
     if (indice) {
-      t.d.reparto.forEach((r, i) => {
+      // Reparto que se muestra en la ficha (el tuyo, o el de TMDB si no tienes): enlazado
+      t.m.reparto.forEach((r, i) => {
         if (!r.personaje) return;
         const ids = deTexto(r.personaje, indice);
         ids.forEach((pid) => anotar(pid, { titulo: t, actor: r.actor, como: r.personaje }));
         if (ids.length === 1) enlaceReparto.set(`${t.id}|${i}`, ids[0]);
       });
+      // Si la ficha tiene tu reparto, el de TMDB solo ayuda a encontrar más apariciones
+      if (!t.m.deTmdb.has('reparto')) {
+        (t.tmdb?.reparto ?? []).forEach((r) => {
+          if (r.personaje) deTexto(r.personaje, indice).forEach((pid) => anotar(pid, { titulo: t, actor: r.actor, como: r.personaje }));
+        });
+      }
     }
     // Apariciones escritas a mano en la ficha
     t.d.personajes.forEach((a) => anotar(a.personaje.id, { titulo: t, actor: a.actor }));
