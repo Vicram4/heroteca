@@ -6,6 +6,12 @@ import Marca from '../components/Marca.astro';
 import BotonTema from '../components/BotonTema.astro';
 import Buscador from '../components/Buscador.astro';
 import ArchivoRojo from '../components/ArchivoRojo.astro';
+// Tipografías principales: se precargan para que el texto no cambie de tamaño al llegar la fuente
+import barlow400 from '@fontsource/barlow/files/barlow-latin-400-normal.woff2?url';
+import barlow600 from '@fontsource/barlow/files/barlow-latin-600-normal.woff2?url';
+import condensada700 from '@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2?url';
+import condensada800 from '@fontsource/barlow-condensed/files/barlow-condensed-latin-800-normal.woff2?url';
+const fuentes = [barlow400, barlow600, condensada700, condensada800];
 
 interface Props {
   titulo?: string;
@@ -31,6 +37,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {fuentes.map((f) => <link rel="preload" href={f} as="font" type="font/woff2" crossorigin />)}
     <title>{tituloPagina}</title>
     <meta name="description" content={descripcion} />
     {noIndexar ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonica} />}
