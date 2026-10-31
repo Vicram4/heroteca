@@ -9,6 +9,8 @@ import SubNav from '../../components/SubNav.astro';
 import Estanteria from '../../components/Estanteria.astro';
 import Ficha from '../../components/Ficha.astro';
 import { getImage } from 'astro:assets';
+import { SITE } from '../../config/site';
+import { imagenTmdb } from '../../lib/tmdb';
 import {
   universosActivos,
   titulosDe,
@@ -61,7 +63,62 @@ export async function getStaticPaths() {
 }
 
 const p = Astro.props as Props;
-const imagenSocial = p.tipo === 'ficha' && p.t.portada ? (await getImage({ src: p.t.portada, width: 600, format: 'jpg' })).src : undefined;
+
+/** Recorta un texto a ~155 caracteres sin partir palabras (para la descripción de buscadores). */
+const resumen = (texto: string, max = 155) => {
+  const t = texto.replace(/\s+/g, ' ').trim();
+  return t.length <= max ? t : `${t.slice(0, max).replace(/\s+\S*$/, '')}…`;
+};
+
+// Ficha: descripción, imagen para compartir y datos estructurados (schema.org) para buscadores
+let descripcionFicha: string | undefined;
+let imagenSocial: string | undefined;
+let datosFicha: Record<string, unknown> | undefined;
+if (p.tipo === 'ficha') {
+  const { t, universo } = p;
+  const d = t.d;
+  const nombre = d.temporada ? `${d.titulo} (temporada ${d.temporada})` : d.titulo;
+  const base = `${t.subtitulo} de ${universo.data.nombre}, ${d.anioFin ? `${d.anio}–${d.anioFin}` : d.anio}.`;
+  descripcionFicha = resumen(t.m.argumento ? `${nombre}: ${t.m.argumento}` : `${nombre}. ${base}`);
+  imagenSocial = t.portada
+    ? (await getImage({ src: t.portada, width: 600, format: 'jpg' })).src
+    : t.m.posterTmdb
+      ? imagenTmdb(t.m.posterTmdb, 'w500')
+      : undefined;
+  const url = new URL(t.url, SITE.url).href;
+  const persona = (n: string) => ({ '@type': 'Person', name: n });
+  const comun = {
+    url,
+    inLanguage: 'es',
+    ...(imagenSocial && { image: new URL(imagenSocial, SITE.url).href }),
+    ...(t.m.argumento && { description: resumen(t.m.argumento, 500) }),
+    ...(t.m.generos.length && { genre: t.m.generos }),
+    ...(t.m.reparto.length && { actor: t.m.reparto.slice(0, 10).map((r) => persona(r.actor)) }),
+  };
+  const fecha = t.m.fecha ? t.m.fecha.toISOString().slice(0, 10) : String(d.anio);
+  datosFicha =
+    d.tipo === 'serie' && d.temporada
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'TVSeason',
+          name: nombre,
+          seasonNumber: d.temporada,
+          startDate: fecha,
+          partOfSeries: { '@type': 'TVSeries', name: d.titulo, ...(d.tituloOriginal && { alternateName: d.tituloOriginal }) },
+          ...(t.m.capitulos.length && { numberOfEpisodes: t.m.capitulos.length }),
+          ...comun,
+        }
+      : {
+          '@context': 'https://schema.org',
+          '@type': d.tipo === 'serie' ? 'TVSeries' : 'Movie',
+          name: d.titulo,
+          ...(d.tituloOriginal && { alternateName: d.tituloOriginal }),
+          [d.tipo === 'serie' ? 'startDate' : 'datePublished']: fecha,
+          ...(t.m.direccion.length && { director: t.m.direccion.map(persona) }),
+          ...(t.m.duracion && d.tipo !== 'serie' && { duration: `PT${t.m.duracion}M` }),
+          ...comun,
+        };
+}
 ---
 
 {
@@ -89,9 +146,11 @@ const imagenSocial = p.tipo === 'ficha' && p.t.portada ? (await getImage({ src: 
   ) : (
     <Base
       titulo={p.t.d.temporada ? `${p.t.d.titulo} (temporada ${p.t.d.temporada})` : `${p.t.d.titulo} (${p.t.d.anio})`}
-      descripcion={p.t.d.argumento?.slice(0, 160) ?? `${p.t.subtitulo} · ${p.t.d.anio}`}
+      descripcion={descripcionFicha}
       universo={p.universo}
       imagen={imagenSocial}
+      tipoOg={p.t.d.tipo === 'serie' ? 'video.tv_show' : 'video.movie'}
+      datos={datosFicha}
     >
       <SubNav slot="subnav" universo={p.universo} activo={p.t.d.seccion} />
       <div class="contenedor">

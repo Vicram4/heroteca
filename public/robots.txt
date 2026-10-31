@@ -1,0 +1,5 @@
+# Heroteca: se permite indexar todo el sitio.
+User-agent: *
+Allow: /
+
+Sitemap: https://heroteca.vercel.app/sitemap-index.xml

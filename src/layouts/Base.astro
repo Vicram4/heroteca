@@ -11,10 +11,16 @@ interface Props {
   titulo?: string;
   descripcion?: string;
   universo?: Universo;
-  /** Imagen para compartir en redes (ruta ya optimizada) */
+  /** Imagen para compartir en redes (ruta ya optimizada o dirección completa) */
   imagen?: string;
+  /** Tipo de página para Open Graph */
+  tipoOg?: 'website' | 'video.movie' | 'video.tv_show';
+  /** Datos estructurados (schema.org) para buscadores */
+  datos?: Record<string, unknown>;
+  /** Pide a los buscadores que no la indexen (página de error) */
+  noIndexar?: boolean;
 }
-const { titulo, descripcion = SITE.descripcion, universo, imagen } = Astro.props;
+const { titulo, descripcion = SITE.descripcion, universo, imagen, tipoOg = 'website', datos, noIndexar = false } = Astro.props;
 const tituloPagina = titulo ? `${titulo} · ${SITE.nombre}` : `${SITE.nombre} · ${SITE.lema}`;
 const universos = await universosActivos();
 const canonica = new URL(Astro.url.pathname, Astro.site);
@@ -27,13 +33,18 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{tituloPagina}</title>
     <meta name="description" content={descripcion} />
-    <link rel="canonical" href={canonica} />
+    {noIndexar ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonica} />}
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta property="og:title" content={tituloPagina} />
     <meta property="og:description" content={descripcion} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={tipoOg} />
+    <meta property="og:url" content={canonica} />
+    <meta property="og:site_name" content={SITE.nombre} />
     <meta property="og:locale" content="es_ES" />
     {imagen && <meta property="og:image" content={new URL(imagen, Astro.site)} />}
+    <meta name="twitter:card" content={imagen ? 'summary_large_image' : 'summary'} />
+    {datos && <script type="application/ld+json" set:html={JSON.stringify(datos)} />}
     <meta name="theme-color" content="#1a1d24" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#f3f4f7" media="(prefers-color-scheme: light)" />
     <!-- Aplica el tema guardado antes de pintar, para que no parpadee -->
