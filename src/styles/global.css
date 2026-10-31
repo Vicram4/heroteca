@@ -175,6 +175,10 @@ button {
   margin-inline: auto;
   padding-inline: clamp(16px, 4vw, 28px);
 }
+/* El atributo hidden oculta siempre, aunque el elemento tenga display: flex o grid (filtros de las estanterías) */
+[hidden] {
+  display: none !important;
+}
 .solo-lectores {
   position: absolute !important;
   width: 1px;
