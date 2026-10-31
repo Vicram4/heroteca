@@ -209,6 +209,15 @@ orden: 1
 
 La portada, la navegación y las rutas se generan solas.
 
+## Publicar en Vercel
+
+La web está en **https://heroteca.vercel.app** (plan Hobby, gratuito).
+
+- Cada `git push` a la rama `main` vuelve a publicarla sola en 1-2 minutos.
+- Vercel no necesita ninguna variable de entorno: los datos de TMDB ya van en `datos/tmdb/marvel.json`.
+  No subas el `.env` a Vercel.
+- Si algún día cambias la dirección, actualiza `url` en [`src/config/site.ts`](src/config/site.ts).
+
 ## Aviso legal
 
 Proyecto de fans sin ánimo de lucro y no oficial. No tiene relación con Marvel, DC, Disney ni Warner Bros.

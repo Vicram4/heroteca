@@ -16,7 +16,7 @@ export const SITE = {
   descripcion:
     'Enciclopedia personal de películas, series, animación y especiales de superhéroes.',
   idioma: 'es-ES',
-  /** URL pública. Se rellenará al publicar en Vercel (Fase 7). */
+  /** URL pública en Vercel. Si cambia la dirección, actualízala aquí (enlaces canónicos y vista previa al compartir). */
   url: 'https://heroteca.vercel.app',
   github: 'https://github.com/Vicram4',
 } as const;
