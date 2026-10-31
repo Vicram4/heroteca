@@ -21,60 +21,107 @@ Edita [`src/config/site.ts`](src/config/site.ts). Se actualizan en toda la web.
 
 ```
 contenido/
-  universos/<id>.yaml          Marvel, DC, Otros… (con sus subuniversos)
-  sagas/<universo>/<id>.yaml   sagas, fases, trilogías
+  universos/<id>.yaml               Marvel, DC, Otros… con sus secciones (UMC, Pre-UMC, Animación…)
+  sagas/<universo>/<id>.yaml        "Relacionadas": Spider-Man, X-Men, 4 Fantásticos…
   personajes/<universo>/<id>.md
-  titulos/<universo>/<id>.md   una película o serie por archivo
+  titulos/<universo>/<id>/index.md  una ficha (película, temporada, One-Shot…) con sus imágenes al lado
 ```
 
-- El **id** de cada entrada es el **nombre del archivo** sin extensión (`vengadores-endgame.md` → `vengadores-endgame`).
-  Usa solo minúsculas, números y guiones. El id también forma la URL: `/marvel/vengadores-endgame`.
-- Las subcarpetas (`marvel/`, `dc/`) solo sirven para ordenar los archivos. Lo que cuenta es el campo `universo`.
-- Para hacer referencia a otra entrada (una saga, un personaje, otro título), escribe su id.
+- El **id** de cada ficha es el **nombre de su carpeta** (`capitan-america-el-primer-vengador`).
+  Usa solo minúsculas, números y guiones. El id también forma la URL.
+- También vale un archivo suelto (`titulos/marvel/mi-pelicula.md`) si la ficha no tiene imágenes.
+- Las subcarpetas `marvel/` y `dc/` solo sirven para ordenar. Lo que cuenta es el campo `universo`.
+- Para hacer referencia a otra entrada (una saga, un personaje, otra ficha), escribe su id.
 
-## Añadir o editar un título
+## Añadir o editar una ficha
 
-1. Crea `contenido/titulos/marvel/mi-pelicula.md` (puedes copiar uno existente).
-2. Rellena los datos entre las líneas `---`. Debajo, escribe tu texto libre en Markdown.
-3. Ejecuta `npm run build`. Si algo está mal, el error te dirá qué archivo y qué campo revisar.
+1. Crea la carpeta `contenido/titulos/marvel/mi-pelicula/` con un `index.md` dentro (puedes copiar uno existente).
+2. Pon las imágenes en la misma carpeta (`portada.jpg`, `contraportada.jpg`…).
+3. Rellena los datos entre las líneas `---`. Debajo puedes escribir texto libre en Markdown.
+4. Ejecuta `npm run build`. Si algo está mal, el error te dirá qué archivo y qué campo revisar.
+
+### Película
 
 ```yaml
 ---
-titulo: "Vengadores: Endgame"        # título en España (obligatorio)
-tituloOriginal: "Avengers: Endgame"
-otrosTitulos: []                      # otros títulos que también encontrará el buscador
-tipo: pelicula                        # pelicula | serie | documental | especial
-animada: false                        # true si es de animación (película o serie animada)
+titulo: "Capitán América: El primer Vengador"   # título en España (obligatorio)
+tituloOriginal: "Captain America: The First Avenger"
+otrosTitulos: []               # otros títulos que también encontrará el buscador
+tipo: pelicula                 # pelicula | serie | one-shot | especial | corto | documental
+animada: false                 # true si es de animación
 universo: marvel
-subuniverso: mcu                      # uno de los definidos en contenido/universos/marvel.yaml
-sagas: [mcu-fase-3, saga-infinito]
-anio: 2019                            # obligatorio
-fechaEstreno: 2019-04-26
-ordenCronologico: 22                  # orden dentro de la historia; admite decimales (22.5)
-epoca: "2018–2023"
-duracion: 181                         # minutos
-personajes:
-  - iron-man                          # forma corta
-  - { personaje: capitan-america, actor: Chris Evans, papel: protagonista }
-trailer: TcMBFSGVi1c                  # id de YouTube
+seccion: umc                   # umc | pre-umc | animacion (las de contenido/universos/marvel.yaml)
+numero: 1                      # tu número: en UMC el cronológico, en Pre-UMC el de estreno
+paginaArchivador: 1            # página de tu Archivador ROJO
+calidad: [1080p, 4k]           # 720p | 1080p | 4k | webm
+anio: 2011                     # obligatorio
+nacionalidad: E.E.U.U.
+duracion: 125                  # minutos
+direccion: Joe Johnston        # uno o varios: [Nombre 1, Nombre 2]
+guion: Christopher Markus
+productora: MARVEL Studios
+distribuidora: Paramount Pictures
+argumento: |
+  Texto del argumento. Deja una línea en blanco
+  para separar párrafos.
+reparto:
+  - { actor: Chris Evans, personaje: Steve Rogers / Capitán América }
+sagas: []                      # ids de "Relacionadas"
+imagenes:
+  - { src: ./portada.jpg, rol: portada }
+  - { src: ./contraportada.jpg, rol: contraportada }
+trailer: JerVrbLldXw           # id de YouTube
 conexiones:
-  verAntes: [vengadores-infinity-war]
+  verAntes: []
   verDespues: []
-  relacionados: []
   postCreditos:
     - "Texto de la escena (se oculta como spoiler)"
-  cameos:
-    - { descripcion: "Aparición de…", personaje: iron-man }
 notas: "Cualquier cosa que no encaje en otro campo"
 ---
-
-Tu información sobre la película, en **Markdown**.
 ```
 
-Para series, añade `anioFin`, `temporadas` y `episodios`. Los valores de `papel` son:
-`protagonista`, `principal`, `secundario`, `cameo`, `voz` y `mencion`.
+### Temporada de una serie
 
-Los datos de TMDB (pósters, reparto, sinopsis…) **solo rellenan los campos vacíos**. Lo que escribas tú siempre tiene prioridad.
+Cada temporada es una ficha propia. `serie` agrupa las temporadas de la misma serie.
+
+```yaml
+---
+titulo: Agentes SHIELD
+tipo: serie
+universo: marvel
+seccion: umc
+serie: agentes-shield
+temporada: 1
+numero: 15
+tramos:                        # solo si la temporada está repartida en la cronología
+  - { numero: 15, desde: 1x01, hasta: 1x07 }
+  - { numero: 18, desde: 1x08, hasta: 1x15 }
+  - { numero: 20, desde: 1x16, hasta: 1x22 }
+anio: 2013
+anioFin: 2014
+capitulos:
+  - codigo: 1x01
+    titulo: Piloto
+    argumento: "…"
+    direccion: Joss Whedon
+    guion: [Joss Whedon, Jed Whedon]
+    duracion: 40
+---
+```
+
+Los datos de TMDB (reparto, carteles, sinopsis…) **solo rellenan los campos vacíos**. Lo que venga de tus documentos o escribas tú siempre tiene prioridad.
+
+## Regenerar las fichas desde los documentos
+
+Los scripts de `scripts/` leen las copias de `documentos/originales/` (nunca las modifican):
+
+```bash
+.venv/Scripts/python.exe scripts/inspeccionar.py documentos/originales/marvel documentos/extraido/marvel/texto
+.venv/Scripts/python.exe scripts/extraer_fichas.py "documentos/originales/marvel/UMC MARVEL/Los Power Point juntos" documentos/extraido/marvel
+.venv/Scripts/python.exe scripts/generar_contenido.py documentos/extraido/marvel contenido/titulos/marvel
+```
+
+`generar_contenido.py` **no sobrescribe** las fichas que ya existen, así no se pierden los cambios hechos a mano.
 
 ## Añadir un personaje
 
@@ -92,24 +139,22 @@ Texto opcional sobre el personaje.
 
 La página del personaje muestra automáticamente todos los títulos en los que aparece.
 
-## Añadir una saga o fase
+## Añadir una saga o "Relacionada"
 
-`contenido/sagas/marvel/mcu-fase-4.yaml`:
+`contenido/sagas/marvel/spider-man.yaml`:
 
 ```yaml
-nombre: Fase 4
+nombre: Spider-Man
 universo: marvel
-subuniverso: mcu
-tipo: fase            # saga | fase | trilogia | continuidad | otro
-padre: saga-multiverso
-orden: 4
+tipo: multiverso      # multiverso | saga | fase | trilogia | otro
+orden: 1
 ```
 
 ## Añadir un universo nuevo (p. ej. "Otros")
 
 `contenido/universos/otros.yaml` ya existe con `activo: false`. Para mostrarlo:
 
-1. Cambia `activo: true` y añade sus `subuniversos`.
+1. Cambia `activo: true` y añade sus `secciones`.
 2. Crea las carpetas `contenido/titulos/otros/`, `contenido/personajes/otros/`, etc.
 
 La portada, la navegación y las rutas se generan solas.

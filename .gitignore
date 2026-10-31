@@ -29,3 +29,6 @@ documentos/*
 
 # cachÃ© local de herramientas
 .vercel/
+
+# entorno de Python para los scripts de extracción
+.venv/

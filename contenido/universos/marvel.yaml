@@ -1,14 +1,18 @@
 nombre: Marvel
 orden: 1
-descripcion: Películas, series y animación basadas en los cómics de Marvel.
-subuniversos:
-  - id: mcu
-    nombre: Universo Cinematográfico de Marvel (MCU)
-  - id: sony
-    nombre: Universo Spider-Man de Sony
-  - id: fox-x-men
-    nombre: X-Men de Fox
-  - id: marvel-animacion
-    nombre: Animación Marvel
-  - id: otros-marvel
-    nombre: Otras producciones Marvel
+descripcion: Todas las películas y series del universo Marvel.
+# Secciones tal y como están en tus documentos. "orden" indica qué significa
+# el número de cada ficha: cronologico (orden de la historia) o estreno.
+secciones:
+  - id: umc
+    nombre: UMC
+    orden: cronologico
+    descripcion: Universo Marvel Cinematográfico, por orden cronológico.
+  - id: pre-umc
+    nombre: Pre-UMC
+    orden: estreno
+    descripcion: Películas y series de Marvel fuera del UMC, por orden de estreno.
+  - id: animacion
+    nombre: Animación
+    orden: estreno
+    descripcion: Películas y series animadas de Marvel.
