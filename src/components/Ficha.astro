@@ -4,6 +4,7 @@ import Caratula from './Caratula.astro';
 import Trailer from './Trailer.astro';
 import { render } from 'astro:content';
 import Spoiler from './Spoiler.astro';
+import DondeVer from './DondeVer.astro';
 import { numeroTexto, todosLosTitulos, urlCarpeta, type Titulo, type Universo, type Saga } from '../lib/datos';
 import { apariciones } from '../lib/personajes';
 
@@ -150,6 +151,8 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       }
 
       {t.m.trailer && <Trailer id={t.m.trailer} titulo={d.titulo} fondo={t.m.fondoTmdb} />}
+
+      <DondeVer id={t.id} titulo={t.corto} />
 
       {
         tieneCuerpo && (

@@ -2,6 +2,7 @@
 /** Una caja (carátula) en la estantería. El marco lleva el color del tipo, como en tus estanterías. */
 import Caratula from './Caratula.astro';
 import { numeroTexto, textoTramo, type Hueco } from '../lib/datos';
+import { clavePlataforma, plataformasIncluidas } from '../lib/dondever';
 
 interface Props {
   hueco: Hueco;
@@ -29,6 +30,7 @@ const enEspera = t.d.enEspera;
   data-titulo={t.id}
   data-personajes={personajes.join(' ')}
   data-carpeta={hueco.carpeta}
+  data-plataformas={plataformasIncluidas(t.id).map(clavePlataforma).join(' ')}
 >
   <a href={t.url} class="caja">
     {

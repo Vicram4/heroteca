@@ -1,0 +1,115 @@
+---
+/** «Dónde ver en España»: plataformas de suscripción, gratis, alquiler y compra (datos de JustWatch). */
+import { dondeVer, fechaDondeVer } from '../lib/dondever';
+import { imagenTmdb } from '../lib/tmdb';
+
+interface Props {
+  id: string;
+  titulo: string;
+}
+const { id, titulo } = Astro.props;
+const d = dondeVer(id);
+const grupos = d
+  ? ([
+      ['Incluida en la suscripción', d.suscripcion],
+      ['Gratis', d.gratis],
+      ['Alquiler', d.alquiler],
+      ['Compra', d.compra],
+    ].filter(([, lista]) => lista && lista.length) as [string, NonNullable<typeof d.suscripcion>][])
+  : [];
+const fecha = fechaDondeVer?.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+---
+
+{
+  grupos.length > 0 && (
+    <section class="panel donde-ver" aria-labelledby="titulo-donde-ver">
+      <h2 class="h-panel" id="titulo-donde-ver">
+        Dónde ver en España
+      </h2>
+      {grupos.map(([nombre, lista]) => (
+        <div class="grupo">
+          <h3>{nombre}</h3>
+          <ul>
+            {lista.map((p) => (
+              <li>
+                {p.logo ? (
+                  <img src={imagenTmdb(p.logo, 'w92')} alt="" width="40" height="40" loading="lazy" decoding="async" />
+                ) : (
+                  <span class="sin-logo" aria-hidden="true">
+                    {p.nombre.slice(0, 1)}
+                  </span>
+                )}
+                <span>{p.nombre}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      <p class="fuente">
+        Datos de <a href="https://www.justwatch.com/es" rel="noopener">JustWatch</a>
+        {fecha && ` del ${fecha}`}. La disponibilidad cambia con frecuencia.
+        {d?.enlace && (
+          <>
+            {' '}
+            <a href={d.enlace} rel="noopener">
+              Ver todas las opciones para {titulo}
+            </a>
+          </>
+        )}
+      </p>
+    </section>
+  )
+}
+
+<style>
+  .h-panel + .grupo {
+    margin-top: 12px;
+  }
+  .grupo + .grupo {
+    margin-top: 14px;
+  }
+  h3 {
+    margin: 0 0 8px;
+    font: 700 0.85rem var(--f-titulo);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--txt-2);
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px 4px 4px;
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    background: var(--sup-2);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  img,
+  .sin-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .sin-logo {
+    display: grid;
+    place-items: center;
+    background: var(--borde);
+    font-weight: 700;
+  }
+  .fuente {
+    margin: 14px 0 0;
+    font-size: 0.82rem;
+    color: var(--txt-2);
+  }
+</style>

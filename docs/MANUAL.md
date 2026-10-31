@@ -190,6 +190,17 @@ Algunas carátulas de los documentos traen márgenes blancos alrededor de la caj
 .venv/Scripts/python.exe scripts/recortar_caratulas.py contenido/titulos --aplicar  # las recorta
 ```
 
+## Dónde ver (plataformas)
+
+Las fichas muestran dónde ver cada título en España (suscripción, gratis, alquiler y compra), con datos de
+JustWatch que da TMDB. Se guardan en `datos/donde-ver.json`.
+
+- **Se actualizan solos cada lunes** con GitHub Actions (`.github/workflows/donde-ver.yml`), que sube el archivo
+  nuevo y hace que Vercel vuelva a publicar la web. Necesita el secreto `TMDB_API_TOKEN` en GitHub
+  (Settings → Secrets and variables → Actions).
+- Para lanzarlo a mano: pestaña **Actions** del repositorio → «Actualizar «Dónde ver»» → **Run workflow**.
+- En local: `.venv/Scripts/python.exe scripts/sincronizar_donde_ver.py`
+
 ## Guías de visionado
 
 Las guías (/marvel/guias/…, /dc/guias/…) se definen en [`src/config/guias.ts`](../src/config/guias.ts):
