@@ -1,5 +1,5 @@
 ---
-titulo: Batman vs Superman. El amanecer de la justicia
+titulo: "Batman v Superman: El amanecer de la Justicia"
 tituloOriginal: 'Batman v Superman: Dawn of Justice'
 otrosTitulos:
 - 'Batman vs. Superman: Dawn of justice'

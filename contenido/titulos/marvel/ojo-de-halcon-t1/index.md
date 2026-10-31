@@ -56,7 +56,7 @@ capitulos:
   argumento: Tras escapar de los Deportistas y de su intimidante líder, Maya López, Clint y Kate trabajan juntos para hallar respuestas. Sin embargo, con cada paso que dan, se van hundiendo cada vez más en una conspiración criminal.
   direccion: Bert & Bertie
   guion:
-  - Katie Mathewson
+  - Katrina Mathewson
   - Tanner Bean
   duracion: 40
 - codigo: 1x04
@@ -89,4 +89,5 @@ fuente: 003 Fichas SERIES UMC.pptx · diapositiva 221; 001 Índices.pptx · diap
 imagenes:
 - src: ./portada.jpg
   rol: portada
+notas: 'En tus documentos ponía «Katie Mathewson» (errata corregida: Katrina Mathewson)'
 ---

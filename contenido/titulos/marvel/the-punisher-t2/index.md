@@ -27,7 +27,7 @@ reparto:
   personaje: Amy Bendyx
 - actor: Deborah Ann Woll
   personaje: Karen Page
-- actor: Jon Stewart
+- actor: Josh Stewart
   personaje: John Pilgrim
 - actor: Floriana Lima
   personaje: Krista Dumont
@@ -122,4 +122,5 @@ fuente: 003 Fichas SERIES UMC.pptx · diapositiva 172; 001 Índices.pptx · diap
 imagenes:
 - src: ./portada.jpg
   rol: portada
+notas: 'En tus documentos ponía «Jon Stewart» (errata corregida: Josh Stewart)'
 ---

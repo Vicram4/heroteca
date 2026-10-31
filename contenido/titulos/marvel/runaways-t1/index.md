@@ -37,7 +37,7 @@ capitulos:
   argumento: Seis adolescentes de Los Ángeles, unidos por la pertenencia de sus padres a una organización benéfica llamada "Orgullo", se habían separado tras una tragedia. Cuando se vuelven a reunir, descubren que sus padres ocultan secretos.
   direccion: Brett Morgen
   guion:
-  - Joe Schwartz
+  - Josh Schwartz
   - Stephanie Savage
   duracion: 50
 - codigo: 1x02
@@ -45,7 +45,7 @@ capitulos:
   argumento: Se vuelven a contar los sucesos de las últimas 24 horas, pero esta vez los vemos desde la perspectiva de los padres mientras se preparan para la noche. Todos están tensos. Pero al menos, después de esta noche, no tendrán que preocuparse.
   direccion: Roxann Dawson
   guion:
-  - Joe Schwartz
+  - Josh Schwartz
   - Stephanie Savage
   duracion: 50
 - codigo: 1x03
@@ -110,4 +110,5 @@ fuente: 003 Fichas SERIES UMC.pptx · diapositiva 111; 001 Índices.pptx · diap
 imagenes:
 - src: ./portada.jpg
   rol: portada
+notas: 'En tus documentos ponía «Joe Schwartz» (errata corregida: Josh Schwartz)'
 ---

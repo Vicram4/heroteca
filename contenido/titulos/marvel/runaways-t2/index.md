@@ -37,7 +37,7 @@ capitulos:
   argumento: Mientras los Runaways intentan sobrevivir en las calles, un indigente roba los Fistigons. Graciela amenaza a Pride en las noticias, pero los chicos llegan a su casa demasiado tarde, Tina ya la ha asesinado.
   direccion: Allison Liddi-Brown
   guion:
-  - Joe Schwartz
+  - Josh Schwartz
   - Stephanie Savage
   duracion: 50
 - codigo: 2x02
@@ -116,7 +116,7 @@ duracion: 50
 tmdb:
   id: 67466
   tipo: tv
-notas: 'Capítulos con página pero no en la lista: 2x11, 2x12, 2x13'
+notas: 'Capítulos con página pero no en la lista: 2x11, 2x12, 2x13 · En tus documentos ponía «Joe Schwartz» (errata corregida: Josh Schwartz)'
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 165; 001 Índices.pptx · diapositiva 9
 imagenes:
 - src: ./portada.jpg

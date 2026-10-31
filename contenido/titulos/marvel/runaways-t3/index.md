@@ -36,7 +36,7 @@ capitulos:
   titulo: Humo y espejos
   argumento: Con el equipo dividido y Jonah y su familia en el camino a la guerra, los Runaways deben reagruparse.
   direccion: Larry Teng
-  guion: Terry McMillan
+  guion: Tracy McMillan
   duracion: 50
 - codigo: 3x02
   titulo: La gran evasión
@@ -106,4 +106,5 @@ fuente: 003 Fichas SERIES UMC.pptx · diapositiva 186; 001 Índices.pptx · diap
 imagenes:
 - src: ./portada.jpg
   rol: portada
+notas: 'En tus documentos ponía «Terry McMillan» (errata corregida: Tracy McMillan)'
 ---
