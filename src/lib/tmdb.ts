@@ -28,6 +28,8 @@ export interface DatosTmdb {
   generos?: string[];
   temporadas?: number;
   capitulos?: CapituloTmdb[];
+  /** Escenas durante / después de los créditos (palabras clave de TMDB) */
+  escenasCreditos?: ('durante' | 'despues')[];
 }
 
 const archivos = import.meta.glob<Record<string, DatosTmdb>>('../../datos/tmdb/*.json', { eager: true, import: 'default' });

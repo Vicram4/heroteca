@@ -12,5 +12,10 @@ anio: 1974
 tmdb:
   id: 161620
   tipo: movie
-fuente: word pelis solo Wonder Woman pag 1
+fuente: 'word pelis solo Wonder Woman pag 1 · Carátulas: complementos/Carátulas UDC'
+imagenes:
+- src: ./portada.jpg
+  rol: portada
+- src: ./contraportada.jpg
+  rol: contraportada
 ---

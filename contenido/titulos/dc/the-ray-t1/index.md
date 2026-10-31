@@ -17,5 +17,8 @@ anio: 2024
 tmdb:
   id: 1559625
   tipo: movie
-fuente: Archivador AZUL/RESUMEN de carpetas UDC
+fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · Carátulas: complementos/Carátulas UDC'
+imagenes:
+- src: ./portada.jpg
+  rol: portada
 ---

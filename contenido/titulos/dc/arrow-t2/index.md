@@ -64,7 +64,7 @@ capitulos:
 tmdb:
   id: 1412
   tipo: tv
-fuente: Archivador AZUL/RESUMEN de carpetas UDC · series pagina 004
+fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · series pagina 004 · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada

@@ -14,5 +14,10 @@ anio: 1992
 tmdb:
   id: 410780
   tipo: movie
-fuente: word pelis solo Flash pag 1
+fuente: 'word pelis solo Flash pag 1 · Carátulas: complementos/Carátulas UDC'
+imagenes:
+- src: ./portada.jpg
+  rol: portada
+- src: ./contraportada.jpg
+  rol: contraportada
 ---

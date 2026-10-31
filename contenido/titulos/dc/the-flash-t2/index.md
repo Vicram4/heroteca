@@ -64,7 +64,7 @@ capitulos:
 tmdb:
   id: 60735
   tipo: tv
-fuente: Archivador AZUL/RESUMEN de carpetas UDC · series pagina 005
+fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · series pagina 005 · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada

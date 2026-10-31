@@ -56,7 +56,7 @@ capitulos:
 tmdb:
   id: 62643
   tipo: tv
-fuente: Archivador AZUL/RESUMEN de carpetas UDC · series pagina 007
+fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · series pagina 007 · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada

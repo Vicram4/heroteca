@@ -15,8 +15,10 @@ anio: 1966
 tmdb:
   id: 2661
   tipo: movie
-fuente: 'Archivador AZUL/PRE-DCUE Página 001 impresa orden de estreno · Disco: 001 UDC'
+fuente: 'Archivador AZUL/PRE-DCUE Página 001 impresa orden de estreno · Disco: 001 UDC · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada
+- src: ./contraportada.jpg
+  rol: contraportada
 ---

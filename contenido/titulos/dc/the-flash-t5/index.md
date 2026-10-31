@@ -17,5 +17,8 @@ anio: 2018
 tmdb:
   id: 60735
   tipo: tv
-fuente: Archivador AZUL/RESUMEN de carpetas UDC
+fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · Carátulas: complementos/Carátulas UDC'
+imagenes:
+- src: ./portada.jpg
+  rol: portada
 ---

@@ -169,7 +169,9 @@ del RESUMEN de carpetas UDC) y «animacion/Animación».
 .venv/Scripts/python.exe scripts/dc_catalogo.py documentos/originales/dc documentos/extraido/dc
 # 2. Fichas, sagas y órdenes capítulo a capítulo → revisar.txt y cambios.txt
 .venv/Scripts/python.exe scripts/dc_generar.py documentos/extraido/dc contenido
-# 3. Datos de TMDB
+# 3. Carátulas de «complementos» (portadas de más calidad y contraportadas)
+.venv/Scripts/python.exe scripts/dc_caratulas.py documentos/originales/dc/complementos contenido/titulos/dc
+# 4. Datos de TMDB
 .venv/Scripts/python.exe scripts/sincronizar_tmdb.py dc
 ```
 
@@ -207,6 +209,8 @@ La página del personaje muestra automáticamente todos los títulos en los que 
   difuminado hasta que se pulse: `Al final ||muere alguien importante||.`
 - Las escenas post-créditos (`conexiones.postCreditos`) y los cameos se ocultan siempre como spoiler
   (salvo que pongas `spoiler: false`).
+- Si no has escrito la escena, la ficha avisa de que la hay (sin contar nada) cuando TMDB la marca.
+- «Ver antes / ver después»: si la ficha no los tiene, se ponen solos con sus vecinas en tus trilogías y dulogías.
 
 ## Añadir una saga o "Relacionada"
 

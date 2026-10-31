@@ -12,5 +12,8 @@ anio: 1990
 tmdb:
   id: 232842
   tipo: movie
-fuente: word pelis solo Flash pag 1
+fuente: 'word pelis solo Flash pag 1 · Carátulas: complementos/Carátulas UDC'
+imagenes:
+- src: ./portada.jpg
+  rol: portada
 ---

@@ -14,8 +14,10 @@ tmdb:
   id: 9651
   tipo: movie
 notas: Con la banda sonora (B.S.O.).
-fuente: 'Archivador AZUL/PRE-DCUE Página 001 impresa orden de estreno · Disco: 001 UDC'
+fuente: 'Archivador AZUL/PRE-DCUE Página 001 impresa orden de estreno · Disco: 001 UDC · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada
+- src: ./contraportada.jpg
+  rol: contraportada
 ---

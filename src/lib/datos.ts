@@ -44,6 +44,8 @@ export interface Mezcla {
   fondoTmdb?: string;
   temporadas?: number;
   generos: string[];
+  /** Escenas durante / después de los créditos según TMDB */
+  escenasCreditos: ('durante' | 'despues')[];
   deTmdb: Set<string>;
 }
 
@@ -151,6 +153,7 @@ function mezclar(d: TituloEntrada['data'], x?: DatosTmdb): Mezcla {
     fondoTmdb: x?.fondo,
     temporadas: d.temporadas ?? x?.temporadas,
     generos: x?.generos ?? [],
+    escenasCreditos: x?.escenasCreditos ?? [],
     deTmdb,
   };
 }

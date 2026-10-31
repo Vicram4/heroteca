@@ -49,9 +49,20 @@ def fecha_espana(d):
     return None
 
 
+# Palabras clave de TMDB que marcan escenas durante / después de los créditos
+ESCENAS_CREDITOS = {'duringcreditsstinger': 'durante', 'aftercreditsstinger': 'despues'}
+
+
+def escenas_creditos(id_, refrescar):
+    claves = (tmdb.get(f'/movie/{id_}/keywords', refrescar=refrescar) or {}).get('keywords', [])
+    nombres_kw = {k.get('name') for k in claves}
+    return [v for k, v in ESCENAS_CREDITOS.items() if k in nombres_kw]
+
+
 def datos_pelicula(d, refrescar):
     cred = d.get('credits') or {}
     return {
+        'escenasCreditos': escenas_creditos(d['id'], refrescar),
         'poster': d.get('poster_path'),
         'fondo': d.get('backdrop_path'),
         'fecha': d.get('release_date') or None,

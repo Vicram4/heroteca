@@ -16,7 +16,7 @@ anio: 1995
 tmdb:
   id: 414
   tipo: movie
-fuente: 'Archivador AZUL/PRE-DCUE Página 002 impresa orden de estreno · Disco: 001 UDC'
+fuente: 'Archivador AZUL/PRE-DCUE Página 002 impresa orden de estreno · Disco: 001 UDC · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada

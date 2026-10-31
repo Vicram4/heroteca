@@ -42,17 +42,45 @@ const tecnica = [
   ['Género', m.generos.length ? lista(m.generos) : undefined],
 ].filter((f): f is [string, string] => Boolean(f[1]));
 // La leyenda solo hace falta si hay marcas visibles (el tráiler no lleva marca)
-const hayTmdb = [...m.deTmdb].some((c) => c !== 'trailer') || (!t.portada && Boolean(m.posterTmdb));
+const hayTmdb =
+  [...m.deTmdb].some((c) => c !== 'trailer') ||
+  (!t.portada && Boolean(m.posterTmdb)) ||
+  (d.conexiones.postCreditos.length === 0 && m.escenasCreditos.length > 0);
 const { enlaceReparto } = await apariciones();
 const todos = await todosLosTitulos();
 const buscarTitulo = (id: string) => todos.find((x) => x.id === id);
+// «Ver antes / después»: los tuyos; si no hay, los vecinos en tus trilogías y dulogías (por fecha)
+const fechaDe = (x: Titulo) => (x.m.fecha ? x.m.fecha.getTime() : Date.UTC(x.d.anio, 0, 1));
+const vecinos = { antes: [] as Titulo[], despues: [] as Titulo[] };
+const sagasVecinas: string[] = [];
+for (const s of misSagas.filter((s) => s.data.tipo === 'trilogia')) {
+  const miembros = todos.filter((x) => x.d.sagas.some((r) => r.id === s.id)).sort((a, b) => fechaDe(a) - fechaDe(b));
+  const i = miembros.findIndex((x) => x.id === t.id);
+  const antes = miembros[i - 1];
+  const despues = miembros[i + 1];
+  if (antes && !vecinos.antes.includes(antes)) vecinos.antes.push(antes);
+  if (despues && !vecinos.despues.includes(despues)) vecinos.despues.push(despues);
+  if (antes || despues) sagasVecinas.push(s.data.nombre);
+}
+const refs = (lista: { id: string }[]) => lista.map((r) => buscarTitulo(r.id)).filter((x): x is Titulo => Boolean(x));
+const verAntes = refs(d.conexiones.verAntes);
+const verDespues = refs(d.conexiones.verDespues);
+const automaticas = !verAntes.length && !verDespues.length && sagasVecinas.length > 0;
 const conexiones = [
-  ['Ver antes', d.conexiones.verAntes],
-  ['Ver después', d.conexiones.verDespues],
-  ['Relacionados', d.conexiones.relacionados],
-]
-  .map(([k, refs]) => [k, (refs as { id: string }[]).map((r) => buscarTitulo(r.id)).filter((x): x is Titulo => Boolean(x))] as const)
-  .filter(([, lista]) => lista.length > 0);
+  ['Ver antes', automaticas ? vecinos.antes : verAntes],
+  ['Ver después', automaticas ? vecinos.despues : verDespues],
+  ['Relacionados', refs(d.conexiones.relacionados)],
+].filter(([, lista]) => (lista as Titulo[]).length > 0) as [string, Titulo[]][];
+// Escenas de los créditos: si no has escrito la tuya, el aviso de TMDB (sin contar nada)
+const avisoCreditos =
+  d.conexiones.postCreditos.length === 0 && m.escenasCreditos.length > 0
+    ? m.escenasCreditos.length === 2
+      ? 'Tiene una escena durante los créditos y otra al final.'
+      : m.escenasCreditos[0] === 'durante'
+        ? 'Tiene una escena durante los créditos.'
+        : 'Tiene una escena al final de los créditos.'
+    : undefined;
+const tienePostCreditos = d.conexiones.postCreditos.length > 0 || m.escenasCreditos.length > 0;
 const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' : 'ninguno';
 ---
 
@@ -104,6 +132,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           <li><span class="chip tipo">{t.subtitulo.split(' · ')[0]}</span></li>
           <li><span class="chip">{d.anioFin ? `${d.anio}–${d.anioFin}` : d.anio}</span></li>
           {m.duracion && <li><span class="chip">{m.duracion} min</span></li>}
+          {tienePostCreditos && <li><span class="chip postcreditos">Post-créditos</span></li>}
           {d.calidad.map((c) => <li><span class="chip calidad">{c === '4k' ? '4K' : c.toUpperCase()}</span></li>)}
           {misSagas.map((s) => <li><a class="chip" href={`/${universo.id}/sagas/${s.id}/`}>{s.data.nombre}</a></li>)}
         </ul>
@@ -217,6 +246,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
         conexiones.length > 0 && (
           <section class="panel">
             <h2 class="h-panel">Conexiones</h2>
+            {automaticas && <p class="fuente-tmdb">Según el orden de {sagasVecinas.join(' y ')}</p>}
             <dl class="datos">
               {conexiones.map(([k, lista]) => (
                 <>
@@ -234,9 +264,16 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       }
 
       {
-        (d.conexiones.postCreditos.length > 0 || d.conexiones.cameos.length > 0) && (
+        (d.conexiones.postCreditos.length > 0 || d.conexiones.cameos.length > 0 || avisoCreditos) && (
           <section class="panel">
             <h2 class="h-panel">Escenas post-créditos y cameos</h2>
+            {
+              avisoCreditos && (
+                <p>
+                  {avisoCreditos} Quédate hasta el final. ·ᵀ
+                </p>
+              )
+            }
             {d.conexiones.postCreditos.map((p) =>
               p.spoiler ? <Spoiler que="escena post-créditos"><p>{p.texto}</p></Spoiler> : <p>{p.texto}</p>,
             )}

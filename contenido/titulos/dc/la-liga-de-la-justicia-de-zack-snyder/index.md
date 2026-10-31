@@ -15,8 +15,10 @@ anio: 2021
 tmdb:
   id: 791373
   tipo: movie
-fuente: 'Disco: 002 DCDU/007 Justice League- Zach Snyder´s 2021 · Archivador AZUL/DCUE Página 002 impresa orden de estreno'
+fuente: 'Disco: 002 DCDU/007 Justice League- Zach Snyder´s 2021 · Archivador AZUL/DCUE Página 002 impresa orden de estreno · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada
+- src: ./contraportada.jpg
+  rol: contraportada
 ---

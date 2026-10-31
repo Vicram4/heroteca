@@ -17,8 +17,10 @@ anio: 2019
 tmdb:
   id: 287947
   tipo: movie
-fuente: 'Disco: 002 DCDU/009 Shazam 2019 · Archivador AZUL/DCUE Página 002 impresa orden de estreno'
+fuente: 'Disco: 002 DCDU/009 Shazam 2019 · Archivador AZUL/DCUE Página 002 impresa orden de estreno · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada
+- src: ./contraportada.jpg
+  rol: contraportada
 ---

@@ -60,7 +60,7 @@ capitulos:
 tmdb:
   id: 60708
   tipo: tv
-fuente: Archivador AZUL/RESUMEN de carpetas UDC · series pagina 002
+fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · series pagina 002 · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada

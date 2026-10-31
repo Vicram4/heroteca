@@ -18,5 +18,8 @@ anio: 2018
 tmdb:
   id: 539517
   tipo: movie
-fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · Disco: animacion/7.1 Constantine- City of Demons'
+fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · Disco: animacion/7.1 Constantine- City of Demons · Carátulas: complementos/Carátulas UDC'
+imagenes:
+- src: ./portada.jpg
+  rol: portada
 ---

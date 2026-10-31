@@ -17,5 +17,8 @@ anio: 2019
 tmdb:
   id: 71663
   tipo: tv
-fuente: Archivador AZUL/RESUMEN de carpetas UDC
+fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · Carátulas: complementos/Carátulas UDC'
+imagenes:
+- src: ./portada.jpg
+  rol: portada
 ---

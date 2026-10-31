@@ -14,7 +14,7 @@ const { id, titulo, fondo } = Astro.props;
 ---
 
 <div class="trailer" data-trailer={id}>
-  <button type="button" class="reproducir" aria-label={`Reproducir el tráiler de ${titulo} (se carga desde YouTube)`}>
+  <button type="button" class="reproducir" aria-label={`Ver tráiler de ${titulo} (se carga desde YouTube)`}>
     {fondo && <img src={imagenTmdb(fondo, 'w780')} alt="" loading="lazy" decoding="async" width="780" height="439" />}
     <span class="icono" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M8 5.5v13l11-6.5-11-6.5Z"></path></svg>
@@ -29,7 +29,7 @@ const { id, titulo, fondo } = Astro.props;
     caja.querySelector('button')!.addEventListener('click', () => {
       const iframe = document.createElement('iframe');
       iframe.src = `https://www.youtube-nocookie.com/embed/${caja.dataset.trailer}?autoplay=1&rel=0`;
-      iframe.title = caja.querySelector('button')!.getAttribute('aria-label')!.replace('Reproducir el', 'Tráiler:').replace(' (se carga desde YouTube)', '');
+      iframe.title = caja.querySelector('button')!.getAttribute('aria-label')!.replace('Ver tráiler de', 'Tráiler de').replace(' (se carga desde YouTube)', '');
       iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
       iframe.allowFullscreen = true;
       iframe.referrerPolicy = 'strict-origin-when-cross-origin';

@@ -13,8 +13,10 @@ anio: 2022
 tmdb:
   id: 436270
   tipo: movie
-fuente: 'Disco: 002 DCDU/014 Black Adams 2022 · Archivador AZUL/DCUE Página 002 impresa orden de estreno'
+fuente: 'Disco: 002 DCDU/014 Black Adams 2022 · Archivador AZUL/DCUE Página 002 impresa orden de estreno · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada
+- src: ./contraportada.jpg
+  rol: contraportada
 ---

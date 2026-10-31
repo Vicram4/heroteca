@@ -15,8 +15,10 @@ anio: 2020
 tmdb:
   id: 495764
   tipo: movie
-fuente: 'Disco: 002 DCDU/010 Birds of Prey 2020 · Archivador AZUL/DCUE Página 002 impresa orden de estreno'
+fuente: 'Disco: 002 DCDU/010 Birds of Prey 2020 · Archivador AZUL/DCUE Página 002 impresa orden de estreno · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada
+- src: ./contraportada.jpg
+  rol: contraportada
 ---

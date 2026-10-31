@@ -245,6 +245,12 @@ a.chip:hover {
   border-color: transparent;
   color: #1a1300;
 }
+/* Tiene escena post-créditos: borde de acento, sin destripar nada */
+.chip.postcreditos {
+  background: transparent;
+  border: 1px solid var(--acento);
+  color: var(--txt);
+}
 .numero {
   font-family: var(--f-titulo);
   font-weight: 700;

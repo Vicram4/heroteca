@@ -42,7 +42,7 @@ capitulos:
 tmdb:
   id: 75450
   tipo: tv
-fuente: Archivador AZUL/RESUMEN de carpetas UDC · series pagina 008
+fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · series pagina 008 · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada

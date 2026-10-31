@@ -16,9 +16,6 @@ const tramo = textoTramo(hueco);
 const decada = Math.floor(t.d.anio / 10) * 10;
 const porCarpetas = hueco.carpeta !== undefined;
 const enEspera = t.d.enEspera;
-const etiqueta = [hueco.codigo ? `Código ${hueco.codigo}.` : '', hueco.numero !== undefined ? `Número ${numeroTexto(hueco.numero)}.` : '', enEspera ? 'En espera.' : '', `${t.d.titulo}${t.d.temporada ? `, temporada ${t.d.temporada}` : ''}${tramo ? `, capítulos ${tramo}` : ''}.`, `${t.tipoNombre}, ${t.d.anio}.`]
-  .filter(Boolean)
-  .join(' ');
 ---
 
 <li
@@ -33,15 +30,15 @@ const etiqueta = [hueco.codigo ? `Código ${hueco.codigo}.` : '', hueco.numero !
   data-personajes={personajes.join(' ')}
   data-carpeta={hueco.carpeta}
 >
-  <a href={t.url} class="caja" aria-label={etiqueta}>
+  <a href={t.url} class="caja">
     {
       porCarpetas ? (
         <>
-          {(hueco.codigo || enEspera) && <span class:list={['num', 'num-h', { espera: !hueco.codigo }]} aria-hidden="true">{hueco.codigo ?? 'En espera'}</span>}
-          {hueco.numero !== undefined && <span class="num num-e" aria-hidden="true">{numeroTexto(hueco.numero)}</span>}
+          {(hueco.codigo || enEspera) && <span class:list={['num', 'num-h', { espera: !hueco.codigo }]}>{hueco.codigo ?? 'En espera'}</span>}
+          {hueco.numero !== undefined && <span class="num num-e">{numeroTexto(hueco.numero)}</span>}
         </>
       ) : (
-        hueco.numero !== undefined && <span class="num" aria-hidden="true">{numeroTexto(hueco.numero)}</span>
+        hueco.numero !== undefined && <span class="num">{numeroTexto(hueco.numero)}</span>
       )
     }
     <span class="tapa">
@@ -57,9 +54,12 @@ const etiqueta = [hueco.codigo ? `Código ${hueco.codigo}.` : '', hueco.numero !
         )
       }
     </span>
-    <span class="pie" aria-hidden="true">
+    <span class="pie">
       <span class="nombre-pie">{t.corto}</span>
-      <span class="extra">{tramo || t.d.anio}</span>
+      <span class="extra">
+        {tramo ? <><span class="solo-lectores">capítulos </span>{tramo}</> : t.d.anio}
+      </span>
+      <span class="solo-lectores">, {t.tipoNombre.toLowerCase()}{enEspera ? ', en espera' : ''}</span>
     </span>
   </a>
 </li>

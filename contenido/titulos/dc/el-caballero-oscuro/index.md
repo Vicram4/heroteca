@@ -15,7 +15,7 @@ anio: 2008
 tmdb:
   id: 155
   tipo: movie
-fuente: 'Archivador AZUL/PRE-DCUE Página 003 impresa orden de estreno · Disco: 001 UDC'
+fuente: 'Archivador AZUL/PRE-DCUE Página 003 impresa orden de estreno · Disco: 001 UDC · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg
   rol: portada

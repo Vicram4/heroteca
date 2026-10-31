@@ -12,5 +12,10 @@ anio: 1975
 tmdb:
   id: 1610155
   tipo: movie
-fuente: word pelis solo Wonder Woman pag 1
+fuente: 'word pelis solo Wonder Woman pag 1 · Carátulas: complementos/Carátulas UDC'
+imagenes:
+- src: ./portada.jpg
+  rol: portada
+- src: ./contraportada.jpg
+  rol: contraportada
 ---
