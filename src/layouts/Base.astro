@@ -1,0 +1,160 @@
+---
+import '../styles/global.css';
+import { SITE, AVISOS } from '../config/site';
+import { universosActivos, estiloUniverso, type Universo } from '../lib/datos';
+import Marca from '../components/Marca.astro';
+import BotonTema from '../components/BotonTema.astro';
+import Buscador from '../components/Buscador.astro';
+
+interface Props {
+  titulo?: string;
+  descripcion?: string;
+  universo?: Universo;
+  /** Imagen para compartir en redes (ruta ya optimizada) */
+  imagen?: string;
+}
+const { titulo, descripcion = SITE.descripcion, universo, imagen } = Astro.props;
+const tituloPagina = titulo ? `${titulo} · ${SITE.nombre}` : `${SITE.nombre} · ${SITE.lema}`;
+const universos = await universosActivos();
+const canonica = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={SITE.idioma} data-universo={universo?.id}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloPagina}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonica} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:title" content={tituloPagina} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    {imagen && <meta property="og:image" content={new URL(imagen, Astro.site)} />}
+    <meta name="theme-color" content="#0d0e12" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f3f4f7" media="(prefers-color-scheme: light)" />
+    <!-- Aplica el tema guardado antes de pintar, para que no parpadee -->
+    <script is:inline>
+      try {
+        const t = localStorage.getItem('tema');
+        if (t === 'claro' || t === 'oscuro') document.documentElement.dataset.tema = t;
+      } catch {}
+    </script>
+  </head>
+  <body style={estiloUniverso(universo)}>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <header class="cabecera">
+      <div class="contenedor fila">
+        <Marca />
+        <nav class="universos" aria-label="Universos">
+          {
+            universos.map((u) => (
+              <a href={`/${u.id}/`} aria-current={universo?.id === u.id ? 'true' : undefined} style={estiloUniverso(u)}>
+                {u.data.nombre}
+              </a>
+            ))
+          }
+        </nav>
+        <div class="acciones">
+          <Buscador />
+          <BotonTema />
+        </div>
+      </div>
+      <slot name="subnav" />
+    </header>
+
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+
+    <footer class="pie">
+      <div class="contenedor">
+        <p class="pie-marca"><strong>{SITE.nombre}</strong> · {SITE.lema}</p>
+        <p>{AVISOS.fans}</p>
+        <p class="tmdb">
+          <a href="https://www.themoviedb.org/" rel="noopener" class="logo-tmdb" aria-label="The Movie Database (TMDB)">
+            <img src="/tmdb.svg" alt="TMDB" width="110" height="14" loading="lazy" />
+          </a>
+          <span>{AVISOS.tmdb}</span>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .cabecera {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--fondo) 88%, transparent);
+    backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid var(--borde);
+  }
+  .fila {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 3vw, 28px);
+    min-height: 72px;
+  }
+  .universos {
+    display: flex;
+    gap: 4px;
+  }
+  .universos a {
+    font: 700 1.15rem var(--f-titulo);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: var(--radio-s);
+    color: var(--txt-2);
+  }
+  .universos a:hover {
+    color: var(--txt);
+  }
+  .universos a[aria-current] {
+    color: var(--txt);
+    box-shadow: inset 0 -3px 0 var(--acento);
+  }
+  .acciones {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .pie {
+    margin-top: 64px;
+    border-top: 1px solid var(--borde);
+    background: var(--fondo-2);
+    color: var(--txt-2);
+    font-size: 0.88rem;
+    padding: 28px 0 34px;
+  }
+  .pie p {
+    max-width: 75ch;
+  }
+  .pie-marca {
+    color: var(--txt);
+    font-size: 1rem;
+  }
+  .tmdb {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+  .logo-tmdb img {
+    height: 14px;
+    width: auto;
+  }
+  @media (max-width: 560px) {
+    .universos a {
+      font-size: 1rem;
+      padding: 6px;
+    }
+  }
+</style>

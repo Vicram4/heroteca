@@ -38,22 +38,22 @@ capitulos:
   direccion: Paul McGuigan
   guion: Cheo Hodari Coker
   duracion: 50
+- codigo: 1x02
+  titulo: El código de la calle
 - codigo: 2x02
   titulo: El código de la calle
   argumento: 'Luke tiene que implicarse en la defensa de su barrio cuando un viejo amigo le pide un favor: que ayude a un chico a quien persigue Cottonmouth.'
   direccion: Paul McGuigan
   guion: Cheo Hodari Coker
   duracion: 50
-- codigo: 1x02
-  titulo: El código de la calle
-- codigo: 1x03
-  titulo: ¿Quién va a llevar la carga?
 - codigo: 2x03
   titulo: ¿Quién va a llevar la carga?
   argumento: 'Después de lo sucedido en el Harlem''s Paradise, Luke decide pasar a la acción y trama un plan: atacar a Cottonmouth ahí donde más le duele.'
   direccion: Guillermo Navarro
   guion: Matt Owens
   duracion: 50
+- codigo: 1x03
+  titulo: ¿Quién va a llevar la carga?
 - codigo: 1x04
   titulo: Paso en la arena
 - codigo: 2x04

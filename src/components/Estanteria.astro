@@ -1,0 +1,204 @@
+---
+/**
+ * Estantería con filtros. El orden (historia / estreno) y los filtros se aplican en el navegador
+ * sin recargar: las cajas se reordenan con CSS y se ocultan las que no encajan.
+ */
+import Caja from './Caja.astro';
+import { TIPOS } from '../config/tipos';
+import type { Hueco, Saga } from '../lib/datos';
+
+interface Props {
+  huecos: Hueco[];
+  /** Si la sección tiene orden de la historia, se ofrece alternar con el de estreno */
+  cronologica: boolean;
+  sagas?: Saga[];
+  etiqueta: string;
+}
+const { huecos, cronologica, sagas = [], etiqueta } = Astro.props;
+const tipos = [...new Set(huecos.map((h) => h.titulo.tipo))];
+const hayAnimadas = huecos.some((h) => h.titulo.d.animada) && huecos.some((h) => !h.titulo.d.animada);
+const decadas = [...new Set(huecos.map((h) => Math.floor(h.titulo.d.anio / 10) * 10))].sort();
+const idsSagas = new Set(huecos.flatMap((h) => h.titulo.d.sagas.map((s) => s.id)));
+const sagasPresentes = sagas.filter((s) => idsSagas.has(s.id));
+const total = huecos.filter((h) => !h.repetido).length;
+---
+
+<section class="estanteria" data-estanteria data-orden={cronologica ? 'historia' : 'estreno'} aria-label={etiqueta}>
+  <div class="herramientas">
+    {
+      cronologica && (
+        <div class="grupo" role="group" aria-label="Orden">
+          <button type="button" class="pastilla" data-poner-orden="historia" aria-pressed="true">Orden de la historia</button>
+          <button type="button" class="pastilla" data-poner-orden="estreno" aria-pressed="false">Orden de estreno</button>
+        </div>
+      )
+    }
+    {
+      tipos.length > 1 && (
+        <div class="grupo" role="group" aria-label="Tipo">
+          <button type="button" class="pastilla" data-filtro-tipo="" aria-pressed="true">Todo</button>
+          {tipos.map((t) => (
+            <button type="button" class:list={['pastilla', `t-${t}`]} data-filtro-tipo={t} aria-pressed="false">
+              <i class="punto" aria-hidden="true" />
+              {TIPOS[t].plural}
+            </button>
+          ))}
+        </div>
+      )
+    }
+    <div class="grupo selects">
+      {
+        hayAnimadas && (
+          <label>
+            <span class="solo-lectores">Animación</span>
+            <select data-filtro-animada>
+              <option value="">Imagen real y animación</option>
+              <option value="false">Solo imagen real</option>
+              <option value="true">Solo animación</option>
+            </select>
+          </label>
+        )
+      }
+      {
+        decadas.length > 1 && (
+          <label>
+            <span class="solo-lectores">Década</span>
+            <select data-filtro-decada>
+              <option value="">Todas las décadas</option>
+              {decadas.map((d) => (
+                <option value={d}>Años {String(d).slice(2)} ({d})</option>
+              ))}
+            </select>
+          </label>
+        )
+      }
+      {
+        sagasPresentes.length > 0 && (
+          <label>
+            <span class="solo-lectores">Saga o fase</span>
+            <select data-filtro-saga>
+              <option value="">Todas las sagas y fases</option>
+              {sagasPresentes.map((s) => (
+                <option value={s.id}>{s.data.nombre}</option>
+              ))}
+            </select>
+          </label>
+        )
+      }
+    </div>
+    <p class="cuenta" aria-live="polite" data-cuenta>{total} títulos</p>
+  </div>
+
+  <ol class="estante">
+    {huecos.map((h, i) => <Caja hueco={h} prioridad={i < 6} />)}
+  </ol>
+  <p class="vacio" data-vacio hidden>Ningún título cumple estos filtros.</p>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-estanteria]').forEach((est) => {
+    const celdas = [...est.querySelectorAll<HTMLLIElement>('.celda')];
+    const cuenta = est.querySelector<HTMLElement>('[data-cuenta]')!;
+    const vacio = est.querySelector<HTMLElement>('[data-vacio]')!;
+    const filtros = { tipo: '', animada: '', decada: '', saga: '' };
+
+    function aplicar() {
+      const estreno = est.dataset.orden === 'estreno';
+      const visibles = new Set<string>();
+      for (const c of celdas) {
+        const ok =
+          !(estreno && c.dataset.repetido) &&
+          (!filtros.tipo || c.dataset.tipo === filtros.tipo) &&
+          (!filtros.animada || c.dataset.animada === filtros.animada) &&
+          (!filtros.decada || c.dataset.decada === filtros.decada) &&
+          (!filtros.saga || (c.dataset.sagas ?? '').split(' ').includes(filtros.saga));
+        c.hidden = !ok;
+        if (ok) visibles.add(c.dataset.titulo ?? '');
+      }
+      cuenta.textContent = `${visibles.size} ${visibles.size === 1 ? 'título' : 'títulos'}`;
+      vacio.hidden = visibles.size > 0;
+    }
+
+    const pulsar = (grupo: string, boton: HTMLButtonElement) =>
+      est.querySelectorAll(`[${grupo}]`).forEach((b) => b.setAttribute('aria-pressed', String(b === boton)));
+
+    est.querySelectorAll<HTMLButtonElement>('[data-poner-orden]').forEach((b) =>
+      b.addEventListener('click', () => {
+        est.dataset.orden = b.dataset.ponerOrden;
+        pulsar('data-poner-orden', b);
+        aplicar();
+      }),
+    );
+    est.querySelectorAll<HTMLButtonElement>('[data-filtro-tipo]').forEach((b) =>
+      b.addEventListener('click', () => {
+        filtros.tipo = b.dataset.filtroTipo ?? '';
+        pulsar('data-filtro-tipo', b);
+        aplicar();
+      }),
+    );
+    for (const clave of ['animada', 'decada', 'saga'] as const) {
+      est.querySelector<HTMLSelectElement>(`[data-filtro-${clave}]`)?.addEventListener('change', (e) => {
+        filtros[clave] = (e.target as HTMLSelectElement).value;
+        aplicar();
+      });
+    }
+    aplicar();
+  });
+</script>
+
+<style>
+  .estanteria {
+    --hueco-x: clamp(12px, 2.4vw, 26px);
+  }
+  .herramientas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .grupo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .punto {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--c);
+  }
+  select {
+    font: 500 0.92rem var(--f-texto);
+    color: var(--txt);
+    background: var(--sup);
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    padding: 8px 12px;
+  }
+  .cuenta {
+    margin: 0 0 0 auto;
+    color: var(--txt-2);
+    font-size: 0.9rem;
+  }
+  .estante {
+    list-style: none;
+    margin: 0;
+    padding: 0 calc(var(--hueco-x) / 2);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(clamp(92px, 26vw, 160px), 1fr));
+    column-gap: var(--hueco-x);
+    row-gap: 18px;
+  }
+  .estanteria[data-orden='historia'] :global(.celda) {
+    --orden: var(--o-h);
+  }
+  .estanteria[data-orden='estreno'] :global(.celda) {
+    --orden: var(--o-e);
+  }
+  .vacio {
+    color: var(--txt-2);
+    padding: 30px 0;
+    text-align: center;
+  }
+</style>

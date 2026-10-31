@@ -168,16 +168,14 @@ capitulos:
   duracion: 40
 - codigo: 4x17
   titulo: Identidad y cambio
+- codigo: 4x18
+  titulo: Sin arrepentimientos
 - codigo: 1x18
   titulo: Sin arrepentimientos
   argumento: La verdad sobre Fitz se hace pública y se convierte en una amenaza contra la estabilidad de SHIELD. Además, Coulson y Jeffrey deben rescatar a un prisionero que posee una valiosa información.
   direccion: Eric Laneuville
   guion: Paul Zbyszewski
   duracion: 40
-- codigo: 4x18
-  titulo: Sin arrepentimientos
-- codigo: 4x19
-  titulo: Todos los hombres de la señora
 - codigo: 1x19
   titulo: Todos los hombres de la señora
   argumento: Daisy forma equipo con un compañero inesperado, mientras que Aida se prepara para poner en práctica el juego final.
@@ -186,6 +184,8 @@ capitulos:
   - James C. Oliver
   - Sharla Oliver
   duracion: 40
+- codigo: 4x19
+  titulo: Todos los hombres de la señora
 - codigo: 4x20
   titulo: ¡Adiós, mundo cruel!
   argumento: Daisy y Simmons trabajan contra reloj para sacar al equipo del Framework, pero no todo el mundo está listo para salir.

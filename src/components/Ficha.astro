@@ -1,0 +1,539 @@
+---
+/** Ficha de un título: tu «Ficha Técnica» modernizada. */
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Spoiler from './Spoiler.astro';
+import { numeroTexto, type Titulo, type Universo, type Saga } from '../lib/datos';
+
+interface Props {
+  t: Titulo;
+  universo: Universo;
+  sagas: Saga[];
+  anterior?: Titulo;
+  siguiente?: Titulo;
+  /** Otras temporadas de la misma serie */
+  temporadas: Titulo[];
+}
+const { t, universo, sagas, anterior, siguiente, temporadas } = Astro.props;
+const d = t.d;
+const seccion = universo.data.secciones.find((s) => s.id === d.seccion);
+const { Content } = await render(t.entrada);
+const tieneCuerpo = Boolean(t.entrada.body?.trim());
+const misSagas = d.sagas.map((r) => sagas.find((s) => s.id === r.id)).filter((s): s is Saga => Boolean(s));
+const numeros = d.tramos.length > 1 ? d.tramos.map((tr) => numeroTexto(tr.numero)).join(' · ') : numeroTexto(d.numero);
+const lista = (v: string[]) => v.join(', ');
+const tecnica = [
+  ['Año', d.anioFin ? `${d.anio}–${d.anioFin}` : String(d.anio)],
+  ['Estreno', d.fechaEstreno?.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })],
+  ['Nacionalidad', d.nacionalidad],
+  ['Duración', d.duracion ? `${d.duracion} min${d.tipo === 'serie' ? ' por capítulo' : ''}` : undefined],
+  ['Dirección', lista(d.direccion)],
+  ['Guion', lista(d.guion)],
+  ['Productora', lista(d.productora)],
+  ['Distribuidora', lista(d.distribuidora)],
+  ['Temporadas', d.temporadas ? String(d.temporadas) : undefined],
+].filter((f): f is [string, string] => Boolean(f[1]));
+const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' : 'ninguno';
+---
+
+<article class:list={['ficha', `t-${t.tipo}`, `brillo-${acentoTipo}`]}>
+  <nav class="miga" aria-label="Estás en">
+    <a href={`/${universo.id}/`}>{universo.data.nombre}</a>
+    <span aria-hidden="true">›</span>
+    {seccion && <a href={`/${universo.id}/${seccion.id}/`}>{seccion.nombre}</a>}
+    {numeros && <><span aria-hidden="true">›</span><span class="numero">{numeros}</span></>}
+    {d.paginaArchivador && <span class="archivo">Página {d.paginaArchivador} del archivo rojo</span>}
+  </nav>
+
+  <div class="rejilla">
+    <div class="caratulas">
+      {
+        t.portada ? (
+          <Image src={t.portada} alt={`Portada de tu edición de ${d.titulo}`} width={420} format="webp" loading="eager" class="portada" />
+        ) : (
+          <div class="sin-portada" aria-hidden="true">
+            <span>{t.tipoNombre}</span>
+            <strong>{d.titulo}</strong>
+          </div>
+        )
+      }
+      {t.contraportada && <Image src={t.contraportada} alt={`Contraportada de tu edición de ${d.titulo}`} width={420} format="webp" />}
+      {t.portada && <p class="nota-caratula">{t.contraportada ? 'Portada y contraportada de tu edición' : 'Carátula de tu edición'}</p>}
+    </div>
+
+    <div class="cuerpo">
+      <header class="cab">
+        <h1>{d.titulo}</h1>
+        {(d.tituloOriginal || d.temporada) && (
+          <p class="original">
+            {[d.temporada && `Temporada ${d.temporada}`, d.tituloOriginal].filter(Boolean).join(' · ')}
+          </p>
+        )}
+        <ul class="chips" aria-label="Datos rápidos">
+          <li><span class="chip tipo">{t.subtitulo.split(' · ')[0]}</span></li>
+          <li><span class="chip">{d.anioFin ? `${d.anio}–${d.anioFin}` : d.anio}</span></li>
+          {d.duracion && <li><span class="chip">{d.duracion} min</span></li>}
+          {d.calidad.map((c) => <li><span class="chip calidad">{c === '4k' ? '4K' : c.toUpperCase()}</span></li>)}
+          {misSagas.map((s) => <li><a class="chip" href={`/${universo.id}/sagas/${s.id}/`}>{s.data.nombre}</a></li>)}
+        </ul>
+        {!d.fichaPropia && <p class="aviso-ficha">Este título está en tu índice, pero aún no tiene ficha propia en tu archivo.</p>}
+      </header>
+
+      {
+        d.argumento && (
+          <section class="panel">
+            <h2 class="h-panel">Argumento</h2>
+            {d.argumento.split(/\n\n+/).map((p) => <p>{p}</p>)}
+          </section>
+        )
+      }
+
+      {
+        tieneCuerpo && (
+          <section class="panel texto-libre">
+            <Content />
+          </section>
+        )
+      }
+
+      <div class="dos">
+        {
+          tecnica.length > 0 && (
+            <section class="panel">
+              <h2 class="h-panel">Ficha técnica</h2>
+              <dl class="datos">
+                {tecnica.map(([k, v]) => (
+                  <>
+                    <dt>{k}</dt>
+                    <dd>{v}</dd>
+                  </>
+                ))}
+              </dl>
+            </section>
+          )
+        }
+        {
+          d.reparto.length > 0 && (
+            <section class="panel">
+              <h2 class="h-panel">Reparto</h2>
+              <ul class="reparto">
+                {d.reparto.map((r) => (
+                  <li>
+                    <span>{r.actor}</span>
+                    <span>{r.personaje}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+      </div>
+
+      {
+        d.tramos.length > 1 && (
+          <section class="panel">
+            <h2 class="h-panel">En la cronología</h2>
+            <p class="ayuda">Esta temporada está repartida en varios puntos de tu orden cronológico:</p>
+            <ul class="tramos">
+              {d.tramos.map((tr) => (
+                <li>
+                  <span class="numero">{numeroTexto(tr.numero)}</span> Capítulos {tr.desde} a {tr.hasta}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        d.capitulos.length > 0 && (
+          <section class="panel">
+            <h2 class="h-panel">Capítulos <span class="cuantos">({d.capitulos.length})</span></h2>
+            <ol class="capitulos">
+              {d.capitulos.map((c) => (
+                <li>
+                  <details>
+                    <summary>
+                      <span class="cod">{c.codigo}</span>
+                      <span class="tit">{c.titulo}</span>
+                      {c.duracion && <span class="dur">{c.duracion} min</span>}
+                    </summary>
+                    <div class="det">
+                      {c.argumento && <p>{c.argumento}</p>}
+                      <p class="cred">
+                        {c.direccion.length > 0 && <span>Dirección: {lista(c.direccion)}</span>}
+                        {c.guion.length > 0 && <span>Guion: {lista(c.guion)}</span>}
+                      </p>
+                    </div>
+                  </details>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
+
+      {
+        (d.conexiones.postCreditos.length > 0 || d.conexiones.cameos.length > 0) && (
+          <section class="panel">
+            <h2 class="h-panel">Escenas post-créditos y cameos</h2>
+            {d.conexiones.postCreditos.map((p) =>
+              p.spoiler ? <Spoiler que="escena post-créditos"><p>{p.texto}</p></Spoiler> : <p>{p.texto}</p>,
+            )}
+            {d.conexiones.cameos.map((c) => (c.spoiler ? <Spoiler que="cameo"><p>{c.descripcion}</p></Spoiler> : <p>{c.descripcion}</p>))}
+          </section>
+        )
+      }
+
+      {
+        temporadas.length > 1 && (
+          <section class="panel">
+            <h2 class="h-panel">Todas las temporadas</h2>
+            <ul class="temporadas">
+              {temporadas.map((o) => (
+                <li>
+                  <a class="chip" href={o.url} aria-current={o.id === t.id ? 'page' : undefined}>
+                    Temporada {o.d.temporada}
+                    {o.d.numero !== undefined && <span class="numero">{numeroTexto(o.d.numero)}</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        d.notas && (
+          <details class="notas">
+            <summary>Notas de tu archivo</summary>
+            <p>{d.notas}</p>
+          </details>
+        )
+      }
+    </div>
+  </div>
+
+  <nav class="pasar" aria-label="Siguiente y anterior en la estantería">
+    {
+      anterior ? (
+        <a href={anterior.url} rel="prev" class="pasar-a">
+          <span class="flecha" aria-hidden="true">←</span>
+          <span><small>Anterior{anterior.d.numero !== undefined && ` · ${numeroTexto(anterior.d.numero)}`}</small>{anterior.corto}</span>
+        </a>
+      ) : <span />
+    }
+    {
+      siguiente && (
+        <a href={siguiente.url} rel="next" class="pasar-a sig">
+          <span><small>Siguiente{siguiente.d.numero !== undefined && ` · ${numeroTexto(siguiente.d.numero)}`}</small>{siguiente.corto}</span>
+          <span class="flecha" aria-hidden="true">→</span>
+        </a>
+      )
+    }
+  </nav>
+</article>
+
+<style>
+  .ficha {
+    position: relative;
+    padding-top: clamp(18px, 3vw, 30px);
+  }
+  /* Guiño a tus fichas: brillo ámbar en películas, plateado en series */
+  .ficha::before {
+    content: '';
+    position: absolute;
+    inset: 0 -50vw auto;
+    height: 260px;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.16;
+  }
+  .brillo-oro::before {
+    background: radial-gradient(60% 100% at 30% 0%, var(--dorado-peli), transparent 70%);
+  }
+  .brillo-plata::before {
+    background: radial-gradient(60% 100% at 30% 0%, var(--plata-serie), transparent 70%);
+    opacity: 0.22;
+  }
+  .miga {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    align-items: baseline;
+    font-size: 0.92rem;
+    color: var(--txt-2);
+    margin-bottom: 18px;
+  }
+  .miga a {
+    text-decoration: none;
+  }
+  .miga a:hover {
+    color: var(--txt);
+    text-decoration: underline;
+  }
+  .miga .numero {
+    font-size: 1.05rem;
+  }
+  .archivo {
+    margin-left: auto;
+  }
+  .rejilla {
+    display: grid;
+    grid-template-columns: minmax(220px, 320px) 1fr;
+    gap: clamp(20px, 4vw, 40px);
+    align-items: start;
+  }
+  .caratulas {
+    display: grid;
+    gap: 14px;
+    position: sticky;
+    top: 140px;
+  }
+  .caratulas :global(img) {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow:
+      0 0 0 3px var(--c),
+      var(--sombra);
+    background: var(--sup);
+  }
+  .sin-portada {
+    aspect-ratio: 3 / 4;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 0 3px var(--c);
+    background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--c) 20%, var(--sup)), var(--sup-2));
+  }
+  .sin-portada span {
+    font: 700 0.85rem var(--f-titulo);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c);
+  }
+  .sin-portada strong {
+    font: 800 1.8rem/1.05 var(--f-titulo);
+  }
+  .nota-caratula {
+    font-size: 0.82rem;
+    color: var(--txt-2);
+    text-align: center;
+    margin: 0;
+  }
+  .cuerpo {
+    display: grid;
+    gap: 18px;
+    min-width: 0;
+  }
+  .original {
+    color: var(--txt-2);
+    font-size: 1.15rem;
+    margin: 8px 0 0;
+  }
+  .chips {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .aviso-ficha {
+    margin: 14px 0 0;
+    font-size: 0.9rem;
+    color: var(--txt-2);
+    border-left: 3px solid var(--realce);
+    padding-left: 10px;
+  }
+  .h-panel {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+  }
+  .cuantos {
+    color: var(--txt-2);
+    font-weight: 600;
+  }
+  .panel p:last-child {
+    margin-bottom: 0;
+  }
+  .dos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .datos {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 7px 16px;
+    margin: 0;
+  }
+  .datos dt {
+    color: var(--txt-2);
+  }
+  .datos dd {
+    margin: 0;
+    font-weight: 500;
+  }
+  .reparto {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .reparto li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--borde);
+  }
+  .reparto li:last-child {
+    border-bottom: 0;
+  }
+  .reparto li span:last-child {
+    color: var(--txt-2);
+    text-align: right;
+  }
+  .ayuda {
+    color: var(--txt-2);
+  }
+  .tramos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+  .tramos .numero {
+    margin-right: 8px;
+  }
+  .capitulos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .capitulos li {
+    border-bottom: 1px solid var(--borde);
+  }
+  .capitulos li:last-child {
+    border-bottom: 0;
+  }
+  .capitulos summary {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 12px;
+    align-items: baseline;
+    padding: 10px 2px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .capitulos summary::-webkit-details-marker {
+    display: none;
+  }
+  .capitulos .cod {
+    font: 700 1.05rem var(--f-titulo);
+    color: var(--acento-txt);
+  }
+  .capitulos .tit {
+    font-weight: 600;
+  }
+  .capitulos .dur {
+    color: var(--txt-2);
+    font-size: 0.85rem;
+  }
+  .capitulos .det {
+    padding: 0 2px 12px 68px;
+    color: var(--txt-2);
+  }
+  .cred {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    font-size: 0.88rem;
+  }
+  .temporadas {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .temporadas .chip[aria-current='page'] {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
+  }
+  .temporadas .chip[aria-current='page'] .numero {
+    color: inherit;
+  }
+  .notas {
+    font-size: 0.88rem;
+    color: var(--txt-2);
+  }
+  .notas summary {
+    cursor: pointer;
+  }
+  .pasar {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 40px;
+    padding-top: 22px;
+    border-top: 1px solid var(--borde);
+  }
+  .pasar-a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    max-width: 48%;
+  }
+  .pasar-a small {
+    display: block;
+    color: var(--txt-2);
+    font-weight: 500;
+  }
+  .pasar-a.sig {
+    text-align: right;
+    margin-left: auto;
+  }
+  .flecha {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--realce);
+    color: #1a1300;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .pasar-a:hover .flecha {
+    filter: brightness(1.1);
+  }
+  @media (max-width: 860px) {
+    .rejilla,
+    .dos {
+      grid-template-columns: 1fr;
+    }
+    .caratulas {
+      position: static;
+      grid-template-columns: 1fr 1fr;
+      max-width: 480px;
+    }
+    .nota-caratula {
+      grid-column: 1 / -1;
+    }
+    .archivo {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+</style>

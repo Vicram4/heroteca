@@ -52,6 +52,8 @@ const universos = defineCollection({
     orden: z.number().int(),
     /** Si es false, el universo no aparece en la web (útil para preparar "Otros"). */
     activo: z.boolean().default(true),
+    /** Si no está activo pero es true, aparece en la portada como «Próximamente». */
+    proximamente: z.boolean().default(false),
     descripcion: z.string().optional(),
     /**
      * Bloques en los que se organiza el universo (en Marvel: UMC, Pre-UMC, Animación).

@@ -1,0 +1,81 @@
+---
+/** Texto oculto con aviso de spoiler: difuminado hasta que se pulsa. */
+interface Props {
+  /** Qué se va a revelar: "escena post-créditos", "final"… */
+  que?: string;
+}
+const { que = 'spoiler' } = Astro.props;
+---
+
+<div class="spoiler" data-spoiler>
+  <button type="button" class="revelar" aria-expanded="false">
+    <span aria-hidden="true">⚠</span> <span class="txt" data-cerrado={`Contiene spoilers · Mostrar ${que}`}>Contiene spoilers · Mostrar {que}</span>
+  </button>
+  <div class="contenido" aria-hidden="true" inert>
+    <slot />
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-spoiler]').forEach((s) => {
+    const boton = s.querySelector('button')!;
+    const contenido = s.querySelector<HTMLElement>('.contenido')!;
+    boton.addEventListener('click', () => {
+      const abierto = s.toggleAttribute('data-abierto');
+      boton.setAttribute('aria-expanded', String(abierto));
+      const txt = boton.querySelector<HTMLElement>('.txt')!;
+      txt.textContent = abierto ? 'Ocultar de nuevo' : txt.dataset.cerrado!;
+      contenido.toggleAttribute('inert', !abierto);
+      contenido.setAttribute('aria-hidden', String(!abierto));
+    });
+  });
+</script>
+
+<style>
+  .spoiler {
+    position: relative;
+    border-radius: var(--radio-s);
+    background: var(--sup-2);
+    border: 1px dashed var(--borde);
+    padding: 12px 14px;
+    margin: 10px 0;
+  }
+  .contenido {
+    filter: blur(7px);
+    user-select: none;
+    transition: filter var(--transicion);
+  }
+  .spoiler[data-abierto] .contenido {
+    filter: none;
+    user-select: auto;
+  }
+  .contenido :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .revelar {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: max-content;
+    height: max-content;
+    z-index: 1;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background: var(--txt);
+    color: var(--fondo);
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 14px;
+    cursor: pointer;
+  }
+  .spoiler[data-abierto] .revelar {
+    position: static;
+    display: block;
+    margin: 0 0 8px auto;
+    background: transparent;
+    color: var(--txt-2);
+    border: 1px solid var(--borde);
+    padding: 4px 10px;
+    font-size: 0.8rem;
+  }
+</style>

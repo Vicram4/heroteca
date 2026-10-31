@@ -1,5 +1,6 @@
 ---
-titulo: The Gifted
+titulo: 'The Gifted: Los elegidos'
+tituloOriginal: The Gifted
 tipo: serie
 universo: marvel
 seccion: pre-umc

@@ -1,0 +1,86 @@
+---
+/**
+ * Dos tipos de página bajo /<universo>/<clave>/:
+ *  - una sección (UMC, Pre-UMC…): su estantería completa con filtros;
+ *  - una ficha de título.
+ */
+import Base from '../../layouts/Base.astro';
+import SubNav from '../../components/SubNav.astro';
+import Estanteria from '../../components/Estanteria.astro';
+import Ficha from '../../components/Ficha.astro';
+import { getImage } from 'astro:assets';
+import { universosActivos, titulosDe, huecosDeSeccion, sagasDe, type Titulo } from '../../lib/datos';
+
+export async function getStaticPaths() {
+  const rutas = [];
+  for (const universo of await universosActivos()) {
+    const titulos = await titulosDe(universo.id);
+    const sagas = await sagasDe(universo.id);
+    for (const seccion of universo.data.secciones) {
+      const deSeccion = titulos.filter((t) => t.d.seccion === seccion.id);
+      const huecos = huecosDeSeccion(deSeccion, seccion);
+      rutas.push({ params: { universo: universo.id, clave: seccion.id }, props: { tipo: 'seccion' as const, universo, seccion, huecos, sagas } });
+
+      // Orden de la estantería (sin repetir temporadas troceadas) para «anterior / siguiente»
+      const orden: Titulo[] = [];
+      for (const h of huecos) if (!orden.includes(h.titulo)) orden.push(h.titulo);
+      orden.forEach((t, i) => {
+        const temporadas = t.d.serie
+          ? titulos.filter((o) => o.d.serie === t.d.serie).sort((a, b) => (a.d.temporada ?? 0) - (b.d.temporada ?? 0))
+          : [];
+        rutas.push({
+          params: { universo: universo.id, clave: t.id },
+          props: { tipo: 'ficha' as const, universo, t, sagas, anterior: orden[i - 1], siguiente: orden[i + 1], temporadas },
+        });
+      });
+    }
+  }
+  return rutas;
+}
+
+const p = Astro.props;
+const imagenSocial = p.tipo === 'ficha' && p.t.portada ? (await getImage({ src: p.t.portada, width: 600, format: 'jpg' })).src : undefined;
+---
+
+{
+  p.tipo === 'seccion' ? (
+    <Base titulo={`${p.seccion.nombre} · ${p.universo.data.nombre}`} descripcion={p.seccion.descripcion} universo={p.universo}>
+      <SubNav slot="subnav" universo={p.universo} activo={p.seccion.id} />
+      <div class="contenedor">
+        <header class="cab-seccion">
+          <h1>
+            <span class="numero">{p.seccion.nombre}</span>
+            {p.seccion.orden === 'cronologico' ? ' · Orden cronológico' : ' · Por orden de estreno'}
+          </h1>
+          {p.seccion.descripcion && <p>{p.seccion.descripcion}</p>}
+        </header>
+        <Estanteria huecos={p.huecos} cronologica={p.seccion.orden === 'cronologico'} sagas={p.sagas} etiqueta={`Estantería de ${p.seccion.nombre}`} />
+      </div>
+    </Base>
+  ) : (
+    <Base
+      titulo={p.t.d.temporada ? `${p.t.d.titulo} (temporada ${p.t.d.temporada})` : `${p.t.d.titulo} (${p.t.d.anio})`}
+      descripcion={p.t.d.argumento?.slice(0, 160) ?? `${p.t.subtitulo} · ${p.t.d.anio}`}
+      universo={p.universo}
+      imagen={imagenSocial}
+    >
+      <SubNav slot="subnav" universo={p.universo} activo={p.t.d.seccion} />
+      <div class="contenedor">
+        <Ficha t={p.t} universo={p.universo} sagas={p.sagas} anterior={p.anterior} siguiente={p.siguiente} temporadas={p.temporadas} />
+      </div>
+    </Base>
+  )
+}
+
+<style>
+  .cab-seccion {
+    padding: clamp(22px, 4vw, 36px) 0 18px;
+  }
+  .cab-seccion h1 .numero {
+    color: var(--acento-txt);
+  }
+  .cab-seccion p {
+    color: var(--txt-2);
+    margin: 10px 0 0;
+  }
+</style>

@@ -2,5 +2,10 @@
 nombre: DC
 orden: 2
 activo: false
+proximamente: true
 descripcion: Todas las películas y series del universo DC.
 secciones: []
+tema:
+  acento: "#0476F2"
+  textoClaro: "#0A5FC2"
+  textoOscuro: "#5AA9FF"

@@ -7,6 +7,11 @@
  */
 export const SITE = {
   nombre: 'Heroteca',
+  /**
+   * Cómo se pinta el nombre en la cabecera: la segunda parte va en color de acento.
+   * Si cambias `nombre`, cambia también esto (si no coinciden, se muestra el nombre sin partir).
+   */
+  marca: ['Hero', 'teca'],
   lema: 'Todo el multiverso, en un solo lugar',
   descripcion:
     'Enciclopedia personal de películas, series, animación y especiales de superhéroes.',
@@ -20,5 +25,6 @@ export const SITE = {
 export const AVISOS = {
   fans:
     'Proyecto de fans sin ánimo de lucro y no oficial. No tiene relación con Marvel, DC, Disney ni Warner Bros. Todos los personajes y marcas pertenecen a sus respectivos propietarios.',
-  tmdb: 'This product uses the TMDB API but is not endorsed or certified by TMDB.',
+  /** Texto exigido por las condiciones de uso de la API de TMDB (apartado 3, versión de octubre de 2023). */
+  tmdb: 'This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.',
 } as const;

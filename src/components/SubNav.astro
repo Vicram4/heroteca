@@ -1,0 +1,64 @@
+---
+/** Navegación dentro de un universo: sus secciones (de su archivo de datos) y Relacionadas. */
+import type { Universo } from '../lib/datos';
+
+interface Props {
+  universo: Universo;
+  /** Id de la sección o página activa: "umc", "sagas"… */
+  activo?: string;
+}
+const { universo, activo } = Astro.props;
+const enlaces = [
+  { id: 'inicio', texto: 'Estanterías', url: `/${universo.id}/` },
+  ...universo.data.secciones.map((s) => ({ id: s.id, texto: s.nombre, url: `/${universo.id}/${s.id}/` })),
+  { id: 'sagas', texto: 'Relacionadas y sagas', url: `/${universo.id}/sagas/` },
+];
+---
+
+<nav class="subnav" aria-label={`Secciones de ${universo.data.nombre}`}>
+  <div class="contenedor">
+    <ul>
+      {
+        enlaces.map((e) => (
+          <li>
+            <a href={e.url} aria-current={e.id === activo ? 'page' : undefined}>
+              {e.texto}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .subnav {
+    border-top: 1px solid var(--borde);
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  a {
+    display: block;
+    white-space: nowrap;
+    padding: 11px 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--txt-2);
+    border-bottom: 3px solid transparent;
+  }
+  a:hover {
+    color: var(--txt);
+  }
+  a[aria-current='page'] {
+    color: var(--txt);
+    border-bottom-color: var(--acento);
+  }
+</style>

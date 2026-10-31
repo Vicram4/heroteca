@@ -1,0 +1,114 @@
+---
+/** Relacionadas, sagas, trilogías y fases de un universo, en árbol. */
+import Base from '../../../layouts/Base.astro';
+import SubNav from '../../../components/SubNav.astro';
+import { universosActivos, sagasDe, titulosDe, type Saga } from '../../../lib/datos';
+
+export async function getStaticPaths() {
+  return (await universosActivos()).map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
+}
+const { universo } = Astro.props;
+const sagas = await sagasDe(universo.id);
+const titulos = await titulosDe(universo.id);
+const hijas = (id?: string) => sagas.filter((s) => s.data.padre?.id === id);
+const cuantos = (s: Saga): number => {
+  const ids = new Set<string>();
+  const recorrer = (x: Saga) => {
+    titulos.filter((t) => t.d.sagas.some((r) => r.id === x.id)).forEach((t) => ids.add(t.id));
+    hijas(x.id).forEach(recorrer);
+  };
+  recorrer(s);
+  return ids.size;
+};
+const grupos = [
+  { titulo: 'Relacionadas', texto: 'Tus multiversos y sagas relacionadas con el UMC.', filtro: (s: Saga) => s.data.orden < 10 },
+  { titulo: 'Trilogías y colecciones', texto: 'Las agrupaciones de tu índice: -Trilogía-, -Dulogía-, -Cuatrilogía-…', filtro: (s: Saga) => s.data.orden >= 10 && s.data.orden < 100 },
+  { titulo: 'Fases y sagas del UMC', texto: 'Clasificación oficial de Marvel Studios (dato añadido, no está en tus documentos).', filtro: (s: Saga) => s.data.orden >= 100 },
+];
+const raices = sagas.filter((s) => !s.data.padre);
+---
+
+<Base titulo={`Relacionadas y sagas · ${universo.data.nombre}`} universo={universo}>
+  <SubNav slot="subnav" universo={universo} activo="sagas" />
+  <div class="contenedor">
+    <header class="cab"><h1>Relacionadas y sagas</h1></header>
+    {
+      grupos.map((g) => {
+        const lista = raices.filter(g.filtro);
+        return lista.length ? (
+          <section class="grupo">
+            <h2>{g.titulo}</h2>
+            <p class="texto">{g.texto}</p>
+            <ul class="tarjetas">
+              {lista.map((s) => (
+                <li class="panel">
+                  <a href={`/${universo.id}/sagas/${s.id}/`} class="nombre">{s.data.nombre}</a>
+                  <span class="meta">{cuantos(s)} títulos{s.data.descripcion && ` · ${s.data.descripcion}`}</span>
+                  {hijas(s.id).length > 0 && (
+                    <ul class="hijas">
+                      {hijas(s.id).map((h) => (
+                        <li>
+                          <a class="chip" href={`/${universo.id}/sagas/${h.id}/`}>
+                            {h.data.nombre} <span class="n">{cuantos(h)}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null;
+      })
+    }
+  </div>
+</Base>
+
+<style>
+  .cab {
+    padding: clamp(22px, 4vw, 36px) 0 6px;
+  }
+  .grupo {
+    margin-top: 34px;
+  }
+  .texto {
+    color: var(--txt-2);
+    margin: 8px 0 16px;
+  }
+  .tarjetas {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .tarjetas > li {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .nombre {
+    font: 700 1.5rem var(--f-titulo);
+    text-decoration: none;
+  }
+  .nombre:hover {
+    color: var(--acento-txt);
+  }
+  .meta {
+    color: var(--txt-2);
+    font-size: 0.9rem;
+  }
+  .hijas {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .n {
+    color: var(--txt-2);
+  }
+</style>

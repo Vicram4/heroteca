@@ -1,5 +1,5 @@
 ---
-titulo: Legion
+titulo: Legión
 tipo: serie
 universo: marvel
 seccion: pre-umc

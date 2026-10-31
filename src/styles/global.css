@@ -1,0 +1,277 @@
+/*
+ * Sistema de diseño de Heroteca · Dirección «Estreno»
+ * Colores pensados para contraste AA en modo claro y oscuro.
+ * El color de acento de cada universo llega desde contenido/universos/<id>.yaml (campo `tema`).
+ */
+@import '@fontsource/barlow/400.css';
+@import '@fontsource/barlow/500.css';
+@import '@fontsource/barlow/600.css';
+@import '@fontsource/barlow/700.css';
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/barlow-condensed/700.css';
+@import '@fontsource/barlow-condensed/800.css';
+
+/* ---------- Tokens comunes ---------- */
+:root {
+  --f-titulo: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --f-texto: 'Barlow', system-ui, sans-serif;
+  --radio: 14px;
+  --radio-s: 8px;
+  --ancho: 1200px;
+  --transicion: 0.25s ease;
+
+  /* Acento por universo (se sobrescribe con el tema del universo) */
+  --acento: #e62429;
+  --realce: #ffb000; /* ámbar de tus insignias 1080p / 4K */
+  --dorado-peli: #ffb000;
+  --plata-serie: #b8c0cf;
+}
+
+/* ---------- Modo claro (por defecto) ---------- */
+:root {
+  color-scheme: light;
+  --fondo: #f3f4f7;
+  --fondo-2: #e9ebf0;
+  --sup: #ffffff;
+  --sup-2: #f1f2f6;
+  --txt: #14161b;
+  --txt-2: #555b6b;
+  --borde: #d9dce4;
+  --acento-txt: var(--u-txt-claro, #c8161d);
+  --peli: #0b8045;
+  --serie: #0a73a0;
+  --oneshot: #7440d0;
+  --especial: #b94a12;
+  --balda: linear-gradient(#e2e5ec, #c3c8d3);
+  --luz-balda: 0 16px 22px -12px rgb(255 176 0 / 0.6);
+  --sombra: 0 10px 30px rgb(20 22 27 / 0.12);
+}
+
+/* ---------- Modo oscuro: sistema o elección guardada ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    color-scheme: dark;
+    --fondo: #0d0e12;
+    --fondo-2: #13151b;
+    --sup: #1a1d25;
+    --sup-2: #232733;
+    --txt: #f2f3f5;
+    --txt-2: #a9aebb;
+    --borde: #2c3140;
+    --acento-txt: var(--u-txt-oscuro, #ff5a61);
+    --peli: #2bd576;
+    --serie: #3ccaf5;
+    --oneshot: #b08bff;
+    --especial: #ff8a5b;
+    --balda: linear-gradient(#2c313e, #1a1d25);
+    --luz-balda: 0 16px 26px -10px rgb(255 176 0 / 0.42);
+    --sombra: 0 12px 32px rgb(0 0 0 / 0.45);
+  }
+}
+:root[data-tema='oscuro'] {
+  color-scheme: dark;
+  --fondo: #0d0e12;
+  --fondo-2: #13151b;
+  --sup: #1a1d25;
+  --sup-2: #232733;
+  --txt: #f2f3f5;
+  --txt-2: #a9aebb;
+  --borde: #2c3140;
+  --acento-txt: var(--u-txt-oscuro, #ff5a61);
+  --peli: #2bd576;
+  --serie: #3ccaf5;
+  --oneshot: #b08bff;
+  --especial: #ff8a5b;
+  --balda: linear-gradient(#2c313e, #1a1d25);
+  --luz-balda: 0 16px 26px -10px rgb(255 176 0 / 0.42);
+  --sombra: 0 12px 32px rgb(0 0 0 / 0.45);
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 90px;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--fondo);
+  color: var(--txt);
+  font: 400 1rem/1.6 var(--f-texto);
+  transition: background-color var(--transicion), color var(--transicion);
+}
+main {
+  flex: 1;
+}
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--f-titulo);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.005em;
+  margin: 0;
+  text-wrap: balance;
+}
+h1 {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 800;
+}
+h2 {
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+}
+h3 {
+  font-size: 1.35rem;
+}
+p {
+  margin: 0 0 1em;
+}
+a {
+  color: inherit;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* Foco siempre visible al navegar con teclado */
+:focus-visible {
+  outline: 3px solid var(--realce);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.contenedor {
+  width: 100%;
+  max-width: var(--ancho);
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 28px);
+}
+.solo-lectores {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.saltar {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  background: var(--txt);
+  color: var(--fondo);
+  padding: 10px 14px;
+  border-radius: var(--radio-s);
+  font-weight: 600;
+}
+.saltar:focus {
+  top: 12px;
+}
+
+/* Colores por tipo (tus PELÍCULA verde, SERIE azul, One-Shot morado) */
+.t-pelicula {
+  --c: var(--peli);
+}
+.t-serie {
+  --c: var(--serie);
+}
+.t-one-shot {
+  --c: var(--oneshot);
+}
+.t-especial,
+.t-corto,
+.t-documental {
+  --c: var(--especial);
+}
+
+/* Etiquetas pequeñas */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: var(--sup-2);
+  border: 1px solid var(--borde);
+  text-decoration: none;
+  white-space: nowrap;
+}
+a.chip:hover {
+  border-color: var(--txt-2);
+}
+.chip.tipo {
+  color: var(--c);
+  border-color: currentColor;
+  background: transparent;
+}
+.chip.calidad {
+  background: var(--realce);
+  border-color: transparent;
+  color: #1a1300;
+}
+.numero {
+  font-family: var(--f-titulo);
+  font-weight: 700;
+  color: var(--acento-txt);
+}
+
+/* Paneles */
+.panel {
+  background: var(--sup);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: clamp(16px, 2.5vw, 22px);
+}
+
+/* Botón con aspecto de pastilla */
+.pastilla {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--borde);
+  background: var(--sup);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--transicion), border-color var(--transicion);
+}
+.pastilla:hover {
+  border-color: var(--txt-2);
+}
+.pastilla[aria-pressed='true'],
+.pastilla[aria-current='page'] {
+  background: var(--txt);
+  color: var(--fondo);
+  border-color: var(--txt);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

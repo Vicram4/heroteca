@@ -1,5 +1,6 @@
 ---
-titulo: Mutant X
+titulo: Mutante-X
+tituloOriginal: Mutant X
 tipo: serie
 universo: marvel
 seccion: pre-umc

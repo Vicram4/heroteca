@@ -1,0 +1,89 @@
+---
+/** Estantería de una saga, fase o «Relacionada», incluyendo sus subsagas. */
+import Base from '../../../layouts/Base.astro';
+import SubNav from '../../../components/SubNav.astro';
+import Estanteria from '../../../components/Estanteria.astro';
+import { universosActivos, sagasDe, titulosDe, huecosDeSeccion, type Saga } from '../../../lib/datos';
+
+export async function getStaticPaths() {
+  const rutas = [];
+  for (const universo of await universosActivos()) {
+    const sagas = await sagasDe(universo.id);
+    const titulos = await titulosDe(universo.id);
+    for (const saga of sagas) {
+      const ids = new Set<string>([saga.id]);
+      const añadirHijas = (id: string) =>
+        sagas.filter((s) => s.data.padre?.id === id).forEach((s) => {
+          ids.add(s.id);
+          añadirHijas(s.id);
+        });
+      añadirHijas(saga.id);
+      const suyos = titulos.filter((t) => t.d.sagas.some((r) => ids.has(r.id)));
+      rutas.push({ params: { universo: universo.id, saga: saga.id }, props: { universo, saga, sagas, suyos } });
+    }
+  }
+  return rutas;
+}
+const { universo, saga, sagas, suyos } = Astro.props;
+// Si todos sus títulos están en secciones con orden cronológico, se ofrece alternar orden
+const cronologica = suyos.length > 0 && suyos.every((t) => universo.data.secciones.find((s) => s.id === t.d.seccion)?.orden === 'cronologico');
+const huecos = huecosDeSeccion(suyos, { id: saga.id, nombre: saga.data.nombre, orden: cronologica ? 'cronologico' : 'estreno' });
+const padre: Saga | undefined = saga.data.padre ? sagas.find((s) => s.id === saga.data.padre!.id) : undefined;
+const hijas = sagas.filter((s) => s.data.padre?.id === saga.id);
+---
+
+<Base titulo={`${saga.data.nombre} · ${universo.data.nombre}`} descripcion={saga.data.descripcion} universo={universo}>
+  <SubNav slot="subnav" universo={universo} activo="sagas" />
+  <div class="contenedor">
+    <header class="cab">
+      <nav class="miga" aria-label="Estás en">
+        <a href={`/${universo.id}/sagas/`}>Relacionadas y sagas</a>
+        {padre && <><span aria-hidden="true">›</span><a href={`/${universo.id}/sagas/${padre.id}/`}>{padre.data.nombre}</a></>}
+      </nav>
+      <h1>{saga.data.nombre}</h1>
+      {saga.data.descripcion && <p>{saga.data.descripcion}</p>}
+      {
+        hijas.length > 0 && (
+          <ul class="hijas">
+            {hijas.map((h) => <li><a class="chip" href={`/${universo.id}/sagas/${h.id}/`}>{h.data.nombre}</a></li>)}
+          </ul>
+        )
+      }
+      {saga.data.notas && <p class="nota">{saga.data.notas}</p>}
+    </header>
+    {suyos.length ? <Estanteria huecos={huecos} cronologica={cronologica} etiqueta={`Estantería de ${saga.data.nombre}`} /> : <p>Aún no hay títulos en esta saga.</p>}
+  </div>
+</Base>
+
+<style>
+  .cab {
+    padding: clamp(22px, 4vw, 36px) 0 18px;
+  }
+  .cab p {
+    color: var(--txt-2);
+    margin: 10px 0 0;
+  }
+  .miga {
+    display: flex;
+    gap: 8px;
+    font-size: 0.92rem;
+    color: var(--txt-2);
+    margin-bottom: 10px;
+  }
+  .miga a {
+    text-decoration: none;
+  }
+  .hijas {
+    list-style: none;
+    padding: 0;
+    margin: 14px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .nota {
+    border-left: 3px solid var(--realce);
+    padding-left: 10px;
+    font-size: 0.9rem;
+  }
+</style>

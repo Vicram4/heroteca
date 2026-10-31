@@ -170,7 +170,8 @@ def construir(e, corrector, manual):
         oficial = tu_titulo
     # En España muchas se estrenan con el título original (WandaVision, Men in Black): si el tuyo
     # coincide con el original, se queda el tuyo. En Animación no, porque allí copiaste los títulos en inglés.
-    elif e['seccion'] != 'animacion' and original and norm(tu_titulo) == norm(titulo_oficial(original)):
+    elif (e['seccion'] != 'animacion' and not base.get('fuente', '').startswith('EL INDICE')
+          and original and norm(tu_titulo) == norm(titulo_oficial(original))):
         oficial = titulo_oficial(original)
     if m.get('titulo'):  # revisado a mano
         oficial = m['titulo']

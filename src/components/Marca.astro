@@ -1,0 +1,38 @@
+---
+import { SITE } from '../config/site';
+
+const [normal, resalte] = SITE.marca.join('') === SITE.nombre ? SITE.marca : [SITE.nombre, ''];
+---
+
+<a href="/" class="marca" aria-label={`${SITE.nombre}, inicio`}>
+  <span class="nombre">{normal}<span class="resalte">{resalte}</span></span>
+  <span class="lema">{SITE.lema}</span>
+</a>
+
+<style>
+  .marca {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    line-height: 1;
+  }
+  .nombre {
+    font-family: var(--f-titulo);
+    font-weight: 800;
+    font-size: 1.85rem;
+    letter-spacing: 0.01em;
+  }
+  .resalte {
+    color: var(--acento-txt);
+  }
+  .lema {
+    color: var(--txt-2);
+    font-size: 0.8rem;
+    margin-top: 4px;
+  }
+  @media (max-width: 560px) {
+    .lema {
+      display: none;
+    }
+  }
+</style>

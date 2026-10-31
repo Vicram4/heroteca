@@ -1,0 +1,160 @@
+---
+/** Una caja (carátula) en la estantería. El marco lleva el color del tipo, como en tus estanterías. */
+import { Image } from 'astro:assets';
+import { numeroTexto, textoTramo, type Hueco } from '../lib/datos';
+
+interface Props {
+  hueco: Hueco;
+  /** Carga inmediata para las primeras filas visibles */
+  prioridad?: boolean;
+}
+const { hueco, prioridad = false } = Astro.props;
+const t = hueco.titulo;
+const tramo = textoTramo(hueco);
+const decada = Math.floor(t.d.anio / 10) * 10;
+const etiqueta = [hueco.numero !== undefined ? `Número ${numeroTexto(hueco.numero)}.` : '', `${t.d.titulo}${t.d.temporada ? `, temporada ${t.d.temporada}` : ''}${tramo ? `, capítulos ${tramo}` : ''}.`, `${t.tipoNombre}, ${t.d.anio}.`]
+  .filter(Boolean)
+  .join(' ');
+---
+
+<li
+  class:list={['celda', `t-${t.tipo}`]}
+  style={`--o-h:${hueco.ordenHistoria};--o-e:${hueco.ordenEstreno}`}
+  data-tipo={t.tipo}
+  data-animada={String(t.d.animada)}
+  data-decada={decada}
+  data-sagas={t.d.sagas.map((s) => s.id).join(' ')}
+  data-repetido={hueco.repetido ? 'true' : undefined}
+  data-titulo={t.id}
+>
+  <a href={t.url} class="caja" aria-label={etiqueta}>
+    {hueco.numero !== undefined && <span class="num" aria-hidden="true">{numeroTexto(hueco.numero)}</span>}
+    <span class="tapa">
+      {
+        t.portada ? (
+          <Image src={t.portada} alt="" width={220} format="webp" loading={prioridad ? 'eager' : 'lazy'} />
+        ) : (
+          <span class="sin-tapa" aria-hidden="true">
+            <span class="tipo">{t.tipoNombre}</span>
+            <span class="nombre">{t.d.titulo}</span>
+            {t.d.temporada && <span class="temp">Temporada {t.d.temporada}</span>}
+          </span>
+        )
+      }
+    </span>
+    <span class="pie" aria-hidden="true">
+      <span class="nombre-pie">{t.corto}</span>
+      <span class="extra">{tramo || t.d.anio}</span>
+    </span>
+  </a>
+</li>
+
+<style>
+  .celda {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 18px 0 22px;
+    order: var(--orden, 0);
+  }
+  /* El tramo de balda bajo cada caja: juntos forman la balda completa */
+  .celda::after {
+    content: '';
+    position: absolute;
+    left: calc(var(--hueco-x) / -2);
+    right: calc(var(--hueco-x) / -2);
+    bottom: 0;
+    height: 14px;
+    background: var(--balda);
+    box-shadow: var(--luz-balda);
+    border-radius: 2px;
+  }
+  .caja {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    transition: transform var(--transicion);
+  }
+  .caja:hover,
+  .caja:focus-visible {
+    transform: translateY(-8px);
+  }
+  .caja:focus-visible {
+    outline-offset: 6px;
+    border-radius: 10px;
+  }
+  .num {
+    position: absolute;
+    z-index: 1;
+    top: -10px;
+    left: -6px;
+    background: var(--acento);
+    color: #fff;
+    font: 700 0.85rem/1 var(--f-titulo);
+    letter-spacing: 0.03em;
+    padding: 5px 7px;
+    border-radius: 6px;
+    box-shadow: 0 3px 8px rgb(0 0 0 / 0.35);
+  }
+  .tapa {
+    display: block;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--radio-s);
+    overflow: hidden;
+    background: var(--sup-2);
+    box-shadow:
+      0 0 0 3px var(--c),
+      0 14px 22px -12px rgb(0 0 0 / 0.65);
+  }
+  .tapa :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sin-tapa {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px;
+    text-align: center;
+    background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--c) 18%, var(--sup)), var(--sup-2));
+  }
+  .sin-tapa .tipo {
+    font: 700 0.78rem var(--f-titulo);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c);
+  }
+  .sin-tapa .nombre {
+    font: 700 1.1rem/1.1 var(--f-titulo);
+  }
+  .sin-tapa .temp {
+    font-size: 0.8rem;
+    color: var(--txt-2);
+  }
+  .pie {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 3.6em; /* dos líneas de título + año: alinea las carátulas de la fila */
+    margin-top: 10px;
+    font-size: 0.82rem;
+    line-height: 1.25;
+    text-align: center;
+  }
+  .nombre-pie {
+    font-weight: 600;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .extra {
+    color: var(--txt-2);
+    font-size: 0.78rem;
+  }
+</style>

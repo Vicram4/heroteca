@@ -43,9 +43,11 @@ async function ejecutar() {
   for (const p of personajes) existe(`personajes/${p.id}`, 'universos', p.data.universo);
 
   const numeros = new Map<string, string>();
+  const ocupadas = new Set(['sagas', 'personajes', 'cronologia', 'buscar', ...universos.flatMap((u) => u.data.secciones.map((s) => s.id))]);
   for (const t of titulos) {
     const d = t.data;
     const donde = `titulos/${t.id}`;
+    if (ocupadas.has(t.id)) errores.push(`${donde}: el id "${t.id}" coincide con una sección o página reservada; renombra la carpeta`);
     existe(donde, 'universos', d.universo);
     if (!secciones.get(d.universo.id)?.has(d.seccion))
       errores.push(`${donde}: la sección "${d.seccion}" no está definida en contenido/universos/${d.universo.id}.yaml`);

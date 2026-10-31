@@ -16,3 +16,8 @@ secciones:
     nombre: Animación
     orden: estreno
     descripcion: Películas y series animadas de Marvel.
+# Ambiente visual: acento (botones, marcas) y su versión para texto en modo claro y oscuro (contraste AA).
+tema:
+  acento: "#E62429"
+  textoClaro: "#C8161D"
+  textoOscuro: "#FF5A61"

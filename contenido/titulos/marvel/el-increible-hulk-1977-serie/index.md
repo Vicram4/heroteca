@@ -1,14 +1,15 @@
 ---
-titulo: The Amazing Spider-Man
+titulo: El increíble Hulk
+tituloOriginal: The Incredible Hulk
 tipo: serie
 universo: marvel
 seccion: pre-umc
 fichaPropia: false
-temporadas: 2
+temporadas: 5
 anio: 1977
-anioFin: 1979
+anioFin: 1982
 tmdb:
-  id: 4552
+  id: 648
   tipo: tv
 fuente: EL INDICE.docx · series Pre-UMC
 ---
