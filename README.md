@@ -43,7 +43,8 @@ contenido/
 titulo: "Vengadores: Endgame"        # título en España (obligatorio)
 tituloOriginal: "Avengers: Endgame"
 otrosTitulos: []                      # otros títulos que también encontrará el buscador
-tipo: pelicula                        # pelicula | serie | animacion | documental | especial
+tipo: pelicula                        # pelicula | serie | documental | especial
+animada: false                        # true si es de animación (película o serie animada)
 universo: marvel
 subuniverso: mcu                      # uno de los definidos en contenido/universos/marvel.yaml
 sagas: [mcu-fase-3, saga-infinito]

@@ -119,6 +119,8 @@ const titulos = defineCollection({
     otrosTitulos: z.array(z.string()).default([]),
 
     tipo: z.enum(CLAVES_TIPO),
+    /** Si es de animación (película animada, serie animada…). Se filtra aparte del tipo. */
+    animada: z.boolean().default(false),
     universo: reference('universos'),
     /** Id de un subuniverso definido en el archivo del universo (mcu, sony, dceu…). */
     subuniverso: slug.optional(),

@@ -5,7 +5,6 @@
 export const TIPOS = {
   pelicula: { nombre: 'Película', plural: 'Películas' },
   serie: { nombre: 'Serie', plural: 'Series' },
-  animacion: { nombre: 'Animación', plural: 'Animación' },
   documental: { nombre: 'Documental', plural: 'Documentales' },
   especial: { nombre: 'Especial', plural: 'Especiales' },
 } as const;
