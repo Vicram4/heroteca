@@ -177,7 +177,8 @@ const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
   .lista li {
     break-inside: avoid;
     display: grid;
-    grid-template-columns: 2.2em minmax(7em, auto) 3.6em 1fr;
+    /* Columnas fijas: todas las filas alinean el código y el título aunque el nombre de la serie sea largo */
+    grid-template-columns: 2.2em 13.5em 3.4em 1fr;
     gap: 2px 10px;
     align-items: baseline;
     padding: 6px 0 6px 10px;
@@ -199,6 +200,7 @@ const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
   .serie {
     font-weight: 700;
     text-decoration: none;
+    line-height: 1.25;
   }
   .serie:hover {
     text-decoration: underline;
