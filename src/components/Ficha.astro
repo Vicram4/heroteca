@@ -41,7 +41,8 @@ const tecnica = [
   ['Temporadas', m.temporadas ? String(m.temporadas) : undefined],
   ['Género', m.generos.length ? lista(m.generos) : undefined],
 ].filter((f): f is [string, string] => Boolean(f[1]));
-const hayTmdb = m.deTmdb.size > 0 || (!t.portada && Boolean(m.posterTmdb));
+// La leyenda solo hace falta si hay marcas visibles (el tráiler no lleva marca)
+const hayTmdb = [...m.deTmdb].some((c) => c !== 'trailer') || (!t.portada && Boolean(m.posterTmdb));
 const { enlaceReparto } = await apariciones();
 const todos = await todosLosTitulos();
 const buscarTitulo = (id: string) => todos.find((x) => x.id === id);
@@ -454,8 +455,13 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     color: var(--txt-2);
     text-align: right;
   }
-  .reparto a:hover {
+  .reparto a {
+    text-decoration: none;
+  }
+  .reparto a:hover,
+  .reparto a:focus-visible {
     color: var(--acento-txt);
+    text-decoration: underline;
   }
   .ayuda {
     color: var(--txt-2);
