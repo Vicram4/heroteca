@@ -26,6 +26,11 @@ export const SITE = {
    * Si se activan, la página de privacidad lo explica automáticamente.
    */
   cloudflareAnalytics: '1a854bd5a89245afa7a452e8d3f75476',
+  /**
+   * Versión en inglés (/en/…). Mientras sea false, sus páginas existen pero no se muestran en buscadores
+   * (noindex, fuera del mapa del sitio) ni aparece el botón de idioma en las páginas en español.
+   */
+  inglesPublicado: false,
   /** Código de verificación de Google Search Console (es público; no identifica a nadie). */
   googleVerificacion: 'd9udc0hSfl5WRRV432HhCeZPJ4Asyi5yJrZT4uV5kcM',
 } as const;

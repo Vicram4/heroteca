@@ -7,6 +7,7 @@ import Spoiler from './Spoiler.astro';
 import DondeVer from './DondeVer.astro';
 import { numeroTexto, todosLosTitulos, urlCarpeta, type Titulo, type Universo, type Saga } from '../lib/datos';
 import { apariciones } from '../lib/personajes';
+import { textos, idiomaDe, nombreTipo, LOCALE } from '../i18n';
 
 interface Props {
   t: Titulo;
@@ -19,6 +20,10 @@ interface Props {
 }
 const { t, universo, sagas, anterior, siguiente, temporadas } = Astro.props;
 const d = t.d;
+const tx = textos(Astro.url);
+const f = tx.ficha;
+const idioma = idiomaDe(Astro.url);
+const tipoTexto = d.animada ? tx.general.animado(nombreTipo(d.tipo, idioma)) : nombreTipo(d.tipo, idioma);
 const seccion = universo.data.secciones.find((s) => s.id === d.seccion);
 const { Content } = await render(t.entrada);
 const tieneCuerpo = Boolean(t.entrada.body?.trim());
@@ -26,21 +31,21 @@ const misSagas = d.sagas.map((r) => sagas.find((s) => s.id === r.id)).filter((s)
 const numeros = d.tramos.length > 1 ? d.tramos.map((tr) => numeroTexto(tr.numero)).join(' · ') : numeroTexto(d.numero);
 const m = t.m;
 const lista = (v: string[]) => v.join(', ');
-const fechaLarga = (f?: Date) => f?.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const fechaLarga = (x?: Date) => x?.toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 const marca = (campo: string) => (m.deTmdb.has(campo) ? ' ·ᵀ' : '');
 const tecnica = [
-  ['Año', d.anioFin ? `${d.anio}–${d.anioFin}` : String(d.anio)],
-  ['Estreno', fechaLarga(m.fecha)],
-  ['En España', m.fechaEspana && m.fechaEspana.getTime() !== m.fecha?.getTime() ? fechaLarga(m.fechaEspana) : undefined],
-  ['Nacionalidad', d.nacionalidad],
-  ['Duración', m.duracion ? `${m.duracion} min${d.tipo === 'serie' ? ' por capítulo' : ''}${marca('duracion')}` : undefined],
-  ['Creada por', d.tipo === 'serie' && m.creadores.length ? lista(m.creadores) : undefined],
-  ['Dirección', m.direccion.length ? lista(m.direccion) + marca('direccion') : undefined],
-  ['Guion', m.guion.length ? lista(m.guion) + marca('guion') : undefined],
-  ['Productora', lista(d.productora)],
-  ['Distribuidora', lista(d.distribuidora)],
-  ['Temporadas', m.temporadas ? String(m.temporadas) : undefined],
-  ['Género', m.generos.length ? lista(m.generos) : undefined],
+  [f.anio, d.anioFin ? `${d.anio}–${d.anioFin}` : String(d.anio)],
+  [f.estrenoCampo, fechaLarga(m.fecha)],
+  [f.enEspana, m.fechaEspana && m.fechaEspana.getTime() !== m.fecha?.getTime() ? fechaLarga(m.fechaEspana) : undefined],
+  [f.nacionalidad, d.nacionalidad],
+  [f.duracion, m.duracion ? `${m.duracion} min${d.tipo === 'serie' ? f.porCapitulo : ''}${marca('duracion')}` : undefined],
+  [f.creadaPor, d.tipo === 'serie' && m.creadores.length ? lista(m.creadores) : undefined],
+  [f.direccion, m.direccion.length ? lista(m.direccion) + marca('direccion') : undefined],
+  [f.guion, m.guion.length ? lista(m.guion) + marca('guion') : undefined],
+  [f.productora, lista(d.productora)],
+  [f.distribuidora, lista(d.distribuidora)],
+  [f.temporadas, m.temporadas ? String(m.temporadas) : undefined],
+  [f.genero, m.generos.length ? lista(m.generos) : undefined],
 ].filter((f): f is [string, string] => Boolean(f[1]));
 // La leyenda solo hace falta si hay marcas visibles (el tráiler no lleva marca)
 const hayTmdb =
@@ -68,25 +73,25 @@ const verAntes = refs(d.conexiones.verAntes);
 const verDespues = refs(d.conexiones.verDespues);
 const automaticas = !verAntes.length && !verDespues.length && sagasVecinas.length > 0;
 const conexiones = [
-  ['Ver antes', automaticas ? vecinos.antes : verAntes],
-  ['Ver después', automaticas ? vecinos.despues : verDespues],
-  ['Relacionados', refs(d.conexiones.relacionados)],
+  [f.verAntes, automaticas ? vecinos.antes : verAntes],
+  [f.verDespues, automaticas ? vecinos.despues : verDespues],
+  [f.relacionados, refs(d.conexiones.relacionados)],
 ].filter(([, lista]) => (lista as Titulo[]).length > 0) as [string, Titulo[]][];
 // Escenas de los créditos: si no has escrito la tuya, el aviso de TMDB (sin contar nada)
 const avisoCreditos =
   d.conexiones.postCreditos.length === 0 && m.escenasCreditos.length > 0
     ? m.escenasCreditos.length === 2
-      ? 'Tiene una escena durante los créditos y otra al final.'
+      ? f.creditosAmbas
       : m.escenasCreditos[0] === 'durante'
-        ? 'Tiene una escena durante los créditos.'
-        : 'Tiene una escena al final de los créditos.'
+        ? f.creditosDurante
+        : f.creditosFinal
     : undefined;
 const tienePostCreditos = d.conexiones.postCreditos.length > 0 || m.escenasCreditos.length > 0;
 const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' : 'ninguno';
 ---
 
 <article class:list={['ficha', `t-${t.tipo}`, `brillo-${acentoTipo}`]}>
-  <nav class="miga" aria-label="Estás en">
+  <nav class="miga" aria-label={tx.general.estasEn}>
     <a href={`/${universo.id}/`}>{universo.data.nombre}</a>
     <span aria-hidden="true">›</span>
     {seccion && <a href={`/${universo.id}/${seccion.id}/`}>{seccion.nombre}</a>}
@@ -94,31 +99,31 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       d.visionado && (
         <>
           <span aria-hidden="true">›</span>
-          <a href={urlCarpeta(universo.id, d.visionado.carpeta)}>Carpeta {d.visionado.carpeta}</a>
+          <a href={urlCarpeta(universo.id, d.visionado.carpeta)}>{tx.general.carpeta(d.visionado.carpeta)}</a>
           {d.visionado.codigo && <span class="numero">{d.visionado.codigo}</span>}
         </>
       )
     }
-    {numeros && <><span aria-hidden="true">›</span><span class="numero">{d.visionado ? `Carpeta del disco ${numeros}` : numeros}</span></>}
-    {d.enEspera && <span class="archivo">En espera</span>}
-    {d.paginaArchivador && <span class="archivo">Página {d.paginaArchivador} del archivo rojo</span>}
+    {numeros && <><span aria-hidden="true">›</span><span class="numero">{d.visionado ? f.carpetaDisco(numeros) : numeros}</span></>}
+    {d.enEspera && <span class="archivo">{tx.general.enEspera}</span>}
+    {d.paginaArchivador && <span class="archivo">{f.paginaArchivo(d.paginaArchivador)}</span>}
   </nav>
 
   <div class="rejilla">
     <div class="caratulas">
       {
         t.portada || m.posterTmdb ? (
-          <Caratula t={t} ancho={320} cargaInmediata alt={t.portada ? `Portada de ${d.titulo} (edición de la colección)` : `Cartel de ${d.titulo}`} />
+          <Caratula t={t} ancho={320} cargaInmediata alt={t.portada ? f.portadaColeccion(d.titulo) : f.cartel(d.titulo)} />
         ) : (
           <div class="sin-portada" aria-hidden="true">
-            <span>{t.tipoNombre}</span>
+            <span>{tipoTexto}</span>
             <strong>{d.titulo}</strong>
           </div>
         )
       }
-      {t.contraportada && <Caratula t={t} contra ancho={320} alt={`Contraportada de ${d.titulo} (edición de la colección)`} />}
-      {t.portada && <p class="nota-caratula">{t.contraportada ? 'Portada y contraportada de la edición de la colección' : 'Carátula de la edición de la colección'}</p>}
-      {!t.portada && m.posterTmdb && <p class="nota-caratula">Cartel de TMDB</p>}
+      {t.contraportada && <Caratula t={t} contra ancho={320} alt={f.contraColeccion(d.titulo)} />}
+      {t.portada && <p class="nota-caratula">{t.contraportada ? f.notaPortadaYContra : f.notaPortada}</p>}
+      {!t.portada && m.posterTmdb && <p class="nota-caratula">{f.cartelTmdb}</p>}
     </div>
 
     <div class="cuerpo">
@@ -126,26 +131,26 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
         <h1>{d.titulo}</h1>
         {(d.tituloOriginal || d.temporada) && (
           <p class="original">
-            {[d.temporada && `Temporada ${d.temporada}`, d.tituloOriginal].filter(Boolean).join(' · ')}
+            {[d.temporada && tx.general.temporada(d.temporada), d.tituloOriginal].filter(Boolean).join(' · ')}
           </p>
         )}
-        <ul class="chips" aria-label="Datos rápidos">
-          <li><span class="chip tipo">{t.subtitulo.split(' · ')[0]}</span></li>
+        <ul class="chips" aria-label={f.datosRapidos}>
+          <li><span class="chip tipo">{tipoTexto}</span></li>
           <li><span class="chip">{d.anioFin ? `${d.anio}–${d.anioFin}` : d.anio}</span></li>
           {m.duracion && <li><span class="chip">{m.duracion} min</span></li>}
-          {tienePostCreditos && <li><span class="chip postcreditos">Post-créditos</span></li>}
+          {tienePostCreditos && <li><span class="chip postcreditos">{f.postCreditos}</span></li>}
           {d.calidad.map((c) => <li><span class="chip calidad">{c === '4k' ? '4K' : c.toUpperCase()}</span></li>)}
           {misSagas.map((s) => <li><a class="chip" href={`/${universo.id}/sagas/${s.id}/`}>{s.data.nombre}</a></li>)}
         </ul>
-        {!d.fichaPropia && <p class="aviso-ficha">Este título figura en el índice de la colección, pero aún no tiene ficha técnica propia: los datos que faltan se completan con TMDB.</p>}
+        {!d.fichaPropia && <p class="aviso-ficha">{f.sinFicha}</p>}
       </header>
 
       {
         t.m.argumento && (
           <section class="panel">
-            <h2 class="h-panel">{t.m.deTmdb.has('argumento') ? 'Sinopsis' : 'Argumento'}</h2>
+            <h2 class="h-panel">{t.m.deTmdb.has('argumento') ? f.sinopsis : f.argumento}</h2>
             {t.m.argumento.split(/\n\n+/).map((p) => <p>{p}</p>)}
-            {t.m.deTmdb.has('argumento') && <p class="fuente-tmdb">Sinopsis de TMDB</p>}
+            {t.m.deTmdb.has('argumento') && <p class="fuente-tmdb">{f.sinopsisTmdb}</p>}
           </section>
         )
       }
@@ -166,7 +171,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
         {
           tecnica.length > 0 && (
             <section class="panel">
-              <h2 class="h-panel">Ficha técnica</h2>
+              <h2 class="h-panel">{f.fichaTecnica}</h2>
               <dl class="datos">
                 {tecnica.map(([k, v]) => (
                   <>
@@ -181,7 +186,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
         {
           m.reparto.length > 0 && (
             <section class="panel">
-              <h2 class="h-panel">Reparto</h2>
+              <h2 class="h-panel">{f.reparto}</h2>
               <ul class="reparto">
                 {m.reparto.map((r, i) => {
                   const pid = enlaceReparto.get(`${t.id}|${i}`);
@@ -193,7 +198,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
                   );
                 })}
               </ul>
-              {m.deTmdb.has('reparto') && <p class="fuente-tmdb">Reparto de TMDB</p>}
+              {m.deTmdb.has('reparto') && <p class="fuente-tmdb">{f.repartoTmdb}</p>}
             </section>
           )
         }
@@ -202,12 +207,12 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       {
         d.tramos.length > 1 && (
           <section class="panel">
-            <h2 class="h-panel">En la cronología</h2>
-            <p class="ayuda">Esta temporada está repartida en varios puntos del orden cronológico de la colección:</p>
+            <h2 class="h-panel">{f.cronologia}</h2>
+            <p class="ayuda">{f.repartida}</p>
             <ul class="tramos">
               {d.tramos.map((tr) => (
                 <li>
-                  <span class="numero">{numeroTexto(tr.numero)}</span> Capítulos {tr.desde} a {tr.hasta}
+                  <span class="numero">{numeroTexto(tr.numero)}</span> {f.capitulosDe(tr.desde, tr.hasta)}
                 </li>
               ))}
             </ul>
@@ -218,7 +223,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       {
         m.capitulos.length > 0 && (
           <section class="panel">
-            <h2 class="h-panel">Capítulos <span class="cuantos">({m.capitulos.length})</span></h2>
+            <h2 class="h-panel">{f.capitulos} <span class="cuantos">({m.capitulos.length})</span></h2>
             <ol class="capitulos">
               {m.capitulos.map((c) => (
                 <li>
@@ -231,16 +236,16 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
                     <div class="det">
                       {c.argumento && <p>{c.argumento}</p>}
                       <p class="cred">
-                        {c.fecha && <span>Emisión: {fechaLarga(new Date(`${c.fecha}T00:00:00Z`))}</span>}
-                        {c.direccion.length > 0 && <span>Dirección: {lista(c.direccion)}</span>}
-                        {c.guion.length > 0 && <span>Guion: {lista(c.guion)}</span>}
+                        {c.fecha && <span>{f.emision}: {fechaLarga(new Date(`${c.fecha}T00:00:00Z`))}</span>}
+                        {c.direccion.length > 0 && <span>{f.direccion}: {lista(c.direccion)}</span>}
+                        {c.guion.length > 0 && <span>{f.guion}: {lista(c.guion)}</span>}
                       </p>
                     </div>
                   </details>
                 </li>
               ))}
             </ol>
-            {m.deTmdb.has('capitulos') && <p class="fuente-tmdb">Capítulos de TMDB</p>}
+            {m.deTmdb.has('capitulos') && <p class="fuente-tmdb">{f.capitulosTmdb}</p>}
           </section>
         )
       }
@@ -248,8 +253,8 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       {
         conexiones.length > 0 && (
           <section class="panel">
-            <h2 class="h-panel">Conexiones</h2>
-            {automaticas && <p class="fuente-tmdb">Según el orden de {sagasVecinas.join(' y ')}</p>}
+            <h2 class="h-panel">{f.conexiones}</h2>
+            {automaticas && <p class="fuente-tmdb">{f.segunOrden(sagasVecinas.join(f.y))}</p>}
             <dl class="datos">
               {conexiones.map(([k, lista]) => (
                 <>
@@ -269,18 +274,18 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       {
         (d.conexiones.postCreditos.length > 0 || d.conexiones.cameos.length > 0 || avisoCreditos) && (
           <section class="panel">
-            <h2 class="h-panel">Escenas post-créditos y cameos</h2>
+            <h2 class="h-panel">{f.escenas}</h2>
             {
               avisoCreditos && (
                 <p>
-                  {avisoCreditos} Quédate hasta el final. ·ᵀ
+                  {avisoCreditos} {f.quedate} ·ᵀ
                 </p>
               )
             }
             {d.conexiones.postCreditos.map((p) =>
-              p.spoiler ? <Spoiler que="escena post-créditos"><p>{p.texto}</p></Spoiler> : <p>{p.texto}</p>,
+              p.spoiler ? <Spoiler que={f.spoilerEscena}><p>{p.texto}</p></Spoiler> : <p>{p.texto}</p>,
             )}
-            {d.conexiones.cameos.map((c) => (c.spoiler ? <Spoiler que="cameo"><p>{c.descripcion}</p></Spoiler> : <p>{c.descripcion}</p>))}
+            {d.conexiones.cameos.map((c) => (c.spoiler ? <Spoiler que={f.spoilerCameo}><p>{c.descripcion}</p></Spoiler> : <p>{c.descripcion}</p>))}
           </section>
         )
       }
@@ -288,12 +293,12 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       {
         temporadas.length > 1 && (
           <section class="panel">
-            <h2 class="h-panel">Todas las temporadas</h2>
+            <h2 class="h-panel">{f.todasTemporadas}</h2>
             <ul class="temporadas">
               {temporadas.map((o) => (
                 <li>
                   <a class="chip" href={o.url} aria-current={o.id === t.id ? 'page' : undefined}>
-                    Temporada {o.d.temporada}
+                    {tx.general.temporada(o.d.temporada ?? '')}
                     {o.d.numero !== undefined && <span class="numero">{numeroTexto(o.d.numero)}</span>}
                   </a>
                 </li>
@@ -303,12 +308,12 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
         )
       }
 
-      {hayTmdb && <p class="leyenda-tmdb">Los datos marcados con ᵀ o «de TMDB» proceden de TMDB y solo completan lo que falta en el archivo de la colección.</p>}
+      {hayTmdb && <p class="leyenda-tmdb">{f.leyendaTmdb}</p>}
 
       {
         d.notas && (
           <details class="notas">
-            <summary>Notas del archivo</summary>
+            <summary>{f.notas}</summary>
             <p>{d.notas}</p>
           </details>
         )
@@ -316,19 +321,19 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     </div>
   </div>
 
-  <nav class="pasar" aria-label="Siguiente y anterior en la estantería">
+  <nav class="pasar" aria-label={f.pasarAria}>
     {
       anterior ? (
         <a href={anterior.url} rel="prev" class="pasar-a">
           <span class="flecha" aria-hidden="true">←</span>
-          <span><small>Anterior{anterior.d.numero !== undefined && ` · ${numeroTexto(anterior.d.numero)}`}</small>{anterior.corto}</span>
+          <span><small>{f.anterior}{anterior.d.numero !== undefined && ` · ${numeroTexto(anterior.d.numero)}`}</small>{anterior.corto}</span>
         </a>
       ) : <span />
     }
     {
       siguiente && (
         <a href={siguiente.url} rel="next" class="pasar-a sig">
-          <span><small>Siguiente{siguiente.d.numero !== undefined && ` · ${numeroTexto(siguiente.d.numero)}`}</small>{siguiente.corto}</span>
+          <span><small>{f.siguiente}{siguiente.d.numero !== undefined && ` · ${numeroTexto(siguiente.d.numero)}`}</small>{siguiente.corto}</span>
           <span class="flecha" aria-hidden="true">→</span>
         </a>
       )

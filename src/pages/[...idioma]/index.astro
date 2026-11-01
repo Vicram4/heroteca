@@ -1,10 +1,16 @@
 ---
+import { conIdiomas } from '../../i18n';
+export function getStaticPaths() {
+  return conIdiomas([{ params: {} }]);
+}
 /** Portada: elegir universo. Se genera sola a partir de contenido/universos/. */
 import { Image } from 'astro:assets';
-import Base from '../layouts/Base.astro';
-import { SITE } from '../config/site';
-import { comprobarIntegridad } from '../lib/integridad';
-import { todosLosUniversos, titulosDe, estiloUniverso } from '../lib/datos';
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../config/site';
+import { comprobarIntegridad } from '../../lib/integridad';
+import { todosLosUniversos, titulosDe, estiloUniverso } from '../../lib/datos';
+import { textos } from '../../i18n';
+const tx = textos(Astro.url);
 
 await comprobarIntegridad();
 const universos = (await todosLosUniversos()).filter((u) => u.data.activo || u.data.proximamente);
@@ -22,20 +28,20 @@ const tarjetas = await Promise.all(
 ---
 
 <Base
-  descripcion="Todas las películas y series de Marvel y DC en orden: el UMC (MCU) en orden cronológico, el Universo Extendido de DC, el Arrowverso capítulo a capítulo, animación, personajes y sagas."
+  descripcion={tx.portada.descripcion}
   datos={{
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: SITE.nombre,
-    alternateName: SITE.lema,
+    alternateName: tx.lema,
     url: SITE.url,
-    inLanguage: 'es',
-    description: SITE.descripcion,
+    inLanguage: tx.idioma,
+    description: tx.descripcion,
   }}
 >
   <section class="contenedor portada">
     <h1 class="solo-lectores">{SITE.nombre}</h1>
-    <p class="intro">Elige universo</p>
+    <p class="intro">{tx.general.eligeUniverso}</p>
     <div class="universos" style={`--n:${tarjetas.length}`}>
       {
         tarjetas.map(({ u, total, mosaico }, i) =>
@@ -49,7 +55,7 @@ const tarjetas = await Promise.all(
               <span class="texto">
                 <span class="nombre">{u.data.nombre}</span>
                 <span class="secciones">{u.data.secciones.map((s) => s.nombre).join(' · ')}</span>
-                <span class="total">{total} títulos</span>
+                <span class="total">{tx.general.titulos(total)}</span>
               </span>
             </a>
           ) : (
@@ -57,7 +63,7 @@ const tarjetas = await Promise.all(
               <span class="texto">
                 <span class="nombre">{u.data.nombre}</span>
                 <span class="secciones">{u.data.descripcion}</span>
-                <span class="etiqueta-pronto">Próximamente</span>
+                <span class="etiqueta-pronto">{tx.general.proximamente}</span>
               </span>
             </div>
           ),

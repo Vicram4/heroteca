@@ -2,6 +2,8 @@
 /** Navegación dentro de un universo: sus secciones (de su archivo de datos) y Relacionadas. */
 import type { Universo } from '../lib/datos';
 import { guiasDe } from '../config/guias';
+import { textos } from '../i18n';
+const tx = textos(Astro.url);
 
 interface Props {
   universo: Universo;
@@ -10,15 +12,15 @@ interface Props {
 }
 const { universo, activo } = Astro.props;
 const enlaces = [
-  { id: 'inicio', texto: 'Estanterías', url: `/${universo.id}/` },
+  { id: 'inicio', texto: tx.subnav.estanterias, url: `/${universo.id}/` },
   ...universo.data.secciones.map((s) => ({ id: s.id, texto: s.nombre, url: `/${universo.id}/${s.id}/` })),
-  { id: 'sagas', texto: 'Relacionadas y sagas', url: `/${universo.id}/sagas/` },
-  { id: 'personajes', texto: 'Personajes', url: `/${universo.id}/personajes/` },
-  ...(guiasDe(universo.id).length ? [{ id: 'guias', texto: 'Guías', url: `/${universo.id}/guias/` }] : []),
+  { id: 'sagas', texto: tx.subnav.sagas, url: `/${universo.id}/sagas/` },
+  { id: 'personajes', texto: tx.subnav.personajes, url: `/${universo.id}/personajes/` },
+  ...(guiasDe(universo.id).length ? [{ id: 'guias', texto: tx.subnav.guias, url: `/${universo.id}/guias/` }] : []),
 ];
 ---
 
-<nav class="subnav" aria-label={`Secciones de ${universo.data.nombre}`}>
+<nav class="subnav" aria-label={tx.subnav.aria(universo.data.nombre)}>
   <div class="contenedor">
     <ul>
       {

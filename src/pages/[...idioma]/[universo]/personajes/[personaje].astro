@@ -1,12 +1,14 @@
 ---
+import { conIdiomas } from '../../../../i18n';
 /** Página de personaje: todos los títulos donde aparece y quién lo ha interpretado. */
-import Base from '../../../layouts/Base.astro';
-import SubNav from '../../../components/SubNav.astro';
-import Estanteria from '../../../components/Estanteria.astro';
-import { universosActivos, sagasDe, huecosDeSeccion } from '../../../lib/datos';
-import { personajesDe } from '../../../lib/personajes';
+import Base from '../../../../layouts/Base.astro';
+import SubNav from '../../../../components/SubNav.astro';
+import Estanteria from '../../../../components/Estanteria.astro';
+import { universosActivos, sagasDe, huecosDeSeccion } from '../../../../lib/datos';
+import { personajesDe } from '../../../../lib/personajes';
 
 export async function getStaticPaths() {
+  return conIdiomas(await (async () => {
   const rutas = [];
   for (const universo of await universosActivos()) {
     const sagas = await sagasDe(universo.id);
@@ -15,7 +17,10 @@ export async function getStaticPaths() {
     }
   }
   return rutas;
+})());
 }
+import { textos } from '../../../../i18n';
+const tx = textos(Astro.url);
 const { universo, p, apariciones, sagas } = Astro.props;
 const titulos = apariciones.map((a) => a.titulo);
 const huecos = huecosDeSeccion(titulos, { id: p.id, nombre: p.data.nombre, orden: 'estreno', carpetas: [] });
@@ -30,19 +35,19 @@ const anios = titulos.map((t) => t.d.anio);
 ---
 
 <Base
-  titulo={`${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}: películas y series de ${universo.data.nombre}`}
-  descripcion={`Todas las películas y series de ${universo.data.nombre} en las que aparece ${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}, en orden.`}
+  titulo={tx.personajes.fichaSeo(`${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}`, universo.data.nombre)}
+  descripcion={tx.personajes.fichaDescripcion(`${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}`, universo.data.nombre)}
   universo={universo}
   migas={[
     { nombre: 'Heroteca', url: '/' },
     { nombre: universo.data.nombre, url: `/${universo.id}/` },
-    { nombre: 'Personajes', url: `/${universo.id}/personajes/` },
+    { nombre: tx.personajes.titulo, url: `/${universo.id}/personajes/` },
     { nombre: p.data.nombre, url: `/${universo.id}/personajes/${p.id}/` },
   ]}
 >
   <SubNav slot="subnav" universo={universo} activo="personajes" />
   <div class="contenedor">
-    <nav class="miga" aria-label="Estás en"><a href={`/${universo.id}/personajes/`}>Personajes</a></nav>
+    <nav class="miga" aria-label={tx.general.estasEn}><a href={`/${universo.id}/personajes/`}>{tx.personajes.titulo}</a></nav>
     <header class="cab">
       <div class="cartel">
         <h1>{p.data.nombre}</h1>
@@ -50,16 +55,16 @@ const anios = titulos.map((t) => t.d.anio);
         {p.data.alias.length > 0 && <p class="alias">También: {p.data.alias.join(' · ')}</p>}
       </div>
       <dl class="datos">
-        <div><dt>Títulos</dt><dd>{titulos.length}</dd></div>
-        {anios.length > 0 && <div><dt>Desde</dt><dd>{Math.min(...anios)}</dd></div>}
-        {interpretes.size > 0 && <div><dt>Intérpretes</dt><dd>{interpretes.size}</dd></div>}
+        <div><dt>{tx.personajes.titulos}</dt><dd>{titulos.length}</dd></div>
+        {anios.length > 0 && <div><dt>{tx.personajes.desde}</dt><dd>{Math.min(...anios)}</dd></div>}
+        {interpretes.size > 0 && <div><dt>{tx.personajes.interpretes}</dt><dd>{interpretes.size}</dd></div>}
       </dl>
     </header>
 
     {
       interpretes.size > 0 && (
         <section class="panel interpretes">
-          <h2>Interpretado por</h2>
+          <h2>{tx.personajes.interpretadoPor}</h2>
           <ul>
             {[...interpretes].map(([actor, lista]) => (
               <li>
@@ -73,8 +78,8 @@ const anios = titulos.map((t) => t.d.anio);
     }
 
     <section class="titulos">
-      <h2>Dónde aparece</h2>
-      {titulos.length ? <Estanteria huecos={huecos} cronologica={false} sagas={sagas} etiqueta={`Títulos con ${p.data.nombre}`} /> : <p class="vacio">Todavía no aparece en ninguna ficha.</p>}
+      <h2>{tx.personajes.dondeAparece}</h2>
+      {titulos.length ? <Estanteria huecos={huecos} cronologica={false} sagas={sagas} etiqueta={tx.personajes.titulosCon(p.data.nombre)} /> : <p class="vacio">{tx.personajes.todavia}</p>}
     </section>
   </div>
 </Base>

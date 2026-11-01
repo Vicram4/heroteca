@@ -1,6 +1,8 @@
 /**
- * «Dónde ver» en España (datos de JustWatch vía TMDB), leídos de datos/donde-ver.json.
- * Lo genera scripts/sincronizar_donde_ver.py; GitHub Actions lo actualiza cada semana.
+ * «Dónde ver» (datos de JustWatch vía TMDB), por país:
+ *   datos/donde-ver.json → España (versión en español)
+ *   datos/donde-ver-us.json → Estados Unidos (versión en inglés)
+ * Los genera scripts/sincronizar_donde_ver.py; GitHub Actions los actualiza cada semana.
  */
 export interface Plataforma {
   nombre: string;
@@ -19,23 +21,30 @@ interface Archivo {
   fuente: string;
   titulos: Record<string, DondeVer>;
 }
+export type Pais = 'ES' | 'US';
 
-const archivos = import.meta.glob<Archivo>('../../datos/donde-ver.json', { eager: true, import: 'default' });
-const datos: Archivo | undefined = Object.values(archivos)[0];
+const archivos = import.meta.glob<Archivo>('../../datos/donde-ver*.json', { eager: true, import: 'default' });
+const porPais = new Map<string, Archivo>(Object.values(archivos).map((a) => [a.pais, a]));
 
-export const fechaDondeVer = datos ? new Date(`${datos.fecha}T00:00:00Z`) : undefined;
+export const fechaDondeVer = (pais: Pais = 'ES') => {
+  const a = porPais.get(pais);
+  return a ? new Date(`${a.fecha}T00:00:00Z`) : undefined;
+};
 
-export function dondeVer(id: string): DondeVer | undefined {
-  return datos?.titulos[id];
+export function dondeVer(id: string, pais: Pais = 'ES'): DondeVer | undefined {
+  return porPais.get(pais)?.titulos[id];
 }
 
 /** Plataformas donde se puede ver sin pagar aparte (suscripción o gratis): las del filtro. */
-export function plataformasIncluidas(id: string): string[] {
-  const d = dondeVer(id);
+export function plataformasIncluidas(id: string, pais: Pais = 'ES'): string[] {
+  const d = dondeVer(id, pais);
   return [...new Set([...(d?.suscripcion ?? []), ...(d?.gratis ?? [])].map((p) => p.nombre))];
 }
 
-/** Valor para atributos HTML: «Disney+» → «disney»; «Movistar Plus+ Ficción Total» → «movistar-plus-ficcion-total». */
+/** País de los datos según el idioma de la página. */
+export const paisDe = (idioma: 'es' | 'en'): Pais => (idioma === 'en' ? 'US' : 'ES');
+
+/** Valor para atributos HTML: «Disney+» → «disney-plus»; «Movistar Plus+ Ficción Total» → «movistar-plus-plus-ficcion-total». */
 export const clavePlataforma = (nombre: string) =>
   nombre
     .normalize('NFKD')

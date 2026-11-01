@@ -4,12 +4,12 @@
  * Los nombres siguen los de las fichas originales ("PELÍCULA", "SERIE", "One-Shot"…).
  */
 export const TIPOS = {
-  pelicula: { nombre: 'Película', plural: 'Películas' },
-  serie: { nombre: 'Serie', plural: 'Series' },
-  'one-shot': { nombre: 'One-Shot', plural: 'One-Shots' },
-  especial: { nombre: 'Especial', plural: 'Especiales' },
-  corto: { nombre: 'Corto', plural: 'Cortos' },
-  documental: { nombre: 'Documental', plural: 'Documentales' },
+  pelicula: { nombre: 'Película', plural: 'Películas', nombreEn: 'Film', pluralEn: 'Films' },
+  serie: { nombre: 'Serie', plural: 'Series', nombreEn: 'Series', pluralEn: 'Series' },
+  'one-shot': { nombre: 'One-Shot', plural: 'One-Shots', nombreEn: 'One-Shot', pluralEn: 'One-Shots' },
+  especial: { nombre: 'Especial', plural: 'Especiales', nombreEn: 'Special', pluralEn: 'Specials' },
+  corto: { nombre: 'Corto', plural: 'Cortos', nombreEn: 'Short', pluralEn: 'Shorts' },
+  documental: { nombre: 'Documental', plural: 'Documentales', nombreEn: 'Documentary', pluralEn: 'Documentaries' },
 } as const;
 
 export type TipoTitulo = keyof typeof TIPOS;

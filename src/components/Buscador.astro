@@ -3,25 +3,37 @@
  * Buscador instantáneo de títulos (y, más adelante, personajes).
  * Se abre con el botón, con "/" o con Ctrl+K. Navegable con teclado.
  */
+import { textos, idiomaDe, enIdioma } from '../i18n';
+const tx = textos(Astro.url);
+const indice = enIdioma(idiomaDe(Astro.url), '/buscar.json');
 ---
 
 <button type="button" class="abrir-buscar pastilla" data-abrir-buscar aria-haspopup="dialog">
   <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
     <circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.6-3.6"></path>
   </svg>
-  <span class="texto">Buscar…</span>
+  <span class="texto">{tx.buscador.boton}</span>
   <kbd>/</kbd>
 </button>
 
-<dialog class="buscador" data-buscador aria-label="Buscar en la web">
+<dialog
+  class="buscador"
+  data-buscador
+  aria-label={tx.buscador.dialogo}
+  data-indice={indice}
+  data-escribe={tx.buscador.escribe}
+  data-cargando={tx.buscador.cargando}
+  data-sin={tx.buscador.sinResultados}
+  data-resultados-txt={tx.buscador.resultados}
+>
   <form method="dialog" class="caja-busqueda" role="search" onsubmit="return false">
-    <label for="campo-buscar" class="solo-lectores">Buscar título, actor o personaje</label>
+    <label for="campo-buscar" class="solo-lectores">{tx.buscador.etiqueta}</label>
     <input id="campo-buscar" type="search" autocomplete="off" spellcheck="false"
-      placeholder="Título (España u original), actor, personaje…"
+      placeholder={tx.buscador.placeholder}
       role="combobox" aria-expanded="true" aria-controls="resultados-buscar" aria-autocomplete="list" />
-    <button type="button" class="cerrar" data-cerrar-buscar aria-label="Cerrar búsqueda">Esc</button>
+    <button type="button" class="cerrar" data-cerrar-buscar aria-label={tx.buscador.cerrar}>Esc</button>
   </form>
-  <p class="estado" aria-live="polite" data-estado>Escribe para buscar.</p>
+  <p class="estado" aria-live="polite" data-estado>{tx.buscador.escribe}</p>
   <ul id="resultados-buscar" class="resultados" role="listbox" data-resultados></ul>
 </dialog>
 
@@ -40,10 +52,10 @@
 
   async function cargar() {
     if (indice) return;
-    estado.textContent = 'Cargando…';
-    const datos: Item[] = await (await fetch('/buscar.json')).json();
+    estado.textContent = dialogo.dataset.cargando!;
+    const datos: Item[] = await (await fetch(dialogo.dataset.indice!)).json();
     indice = datos.map((d) => ({ ...d, _t: normal([d.t, ...d.a].join(' ')), _o: normal(d.o), _r: normal(d.r) }));
-    estado.textContent = 'Escribe para buscar.';
+    estado.textContent = dialogo.dataset.escribe!;
   }
 
   function puntuar(d: NonNullable<typeof indice>[number], q: string, palabras: string[]) {
@@ -62,7 +74,7 @@
     lista.innerHTML = '';
     activo = -1;
     if (!q) {
-      estado.textContent = 'Escribe para buscar.';
+      estado.textContent = dialogo.dataset.escribe!;
       return;
     }
     const palabras = q.split(' ');
@@ -71,7 +83,7 @@
       .filter((x) => x.s > 0)
       .sort((a, b) => b.s - a.s || a.d.y - b.d.y)
       .slice(0, 30);
-    estado.textContent = resultados.length ? `${resultados.length}${resultados.length === 30 ? '+' : ''} resultados` : 'Sin resultados.';
+    estado.textContent = resultados.length ? `${resultados.length}${resultados.length === 30 ? '+' : ''} ${dialogo.dataset.resultadosTxt}` : dialogo.dataset.sin!;
     for (const [i, { d }] of resultados.entries()) {
       const li = document.createElement('li');
       li.setAttribute('role', 'option');
@@ -81,7 +93,7 @@
         <span class="txt"><strong></strong><small></small></span>
         <span class="num"></span></a>`;
       li.querySelector('strong')!.textContent = d.t;
-      li.querySelector('small')!.textContent = [d.o && d.o !== d.t ? d.o : '', `${d.k} · ${d.y}`, d.s].filter(Boolean).join(' · ');
+      li.querySelector('small')!.textContent = [d.o && d.o !== d.t ? d.o : '', [d.k, d.y || ""].filter(Boolean).join(" · "), d.s].filter(Boolean).join(' · ');
       li.querySelector('.num')!.textContent = d.n;
       lista.append(li);
     }

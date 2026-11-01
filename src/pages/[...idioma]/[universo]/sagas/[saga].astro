@@ -1,11 +1,13 @@
 ---
+import { conIdiomas } from '../../../../i18n';
 /** Estantería de una saga, fase o «Relacionada», incluyendo sus subsagas. */
-import Base from '../../../layouts/Base.astro';
-import SubNav from '../../../components/SubNav.astro';
-import Estanteria from '../../../components/Estanteria.astro';
-import { universosActivos, sagasDe, titulosDe, huecosDeSeccion, type Saga } from '../../../lib/datos';
+import Base from '../../../../layouts/Base.astro';
+import SubNav from '../../../../components/SubNav.astro';
+import Estanteria from '../../../../components/Estanteria.astro';
+import { universosActivos, sagasDe, titulosDe, huecosDeSeccion, type Saga } from '../../../../lib/datos';
 
 export async function getStaticPaths() {
+  return conIdiomas(await (async () => {
   const rutas = [];
   for (const universo of await universosActivos()) {
     const sagas = await sagasDe(universo.id);
@@ -23,7 +25,10 @@ export async function getStaticPaths() {
     }
   }
   return rutas;
+})());
 }
+import { textos } from '../../../../i18n';
+const tx = textos(Astro.url);
 const { universo, saga, sagas, suyos } = Astro.props;
 // Si todos sus títulos están en secciones con orden cronológico, se ofrece alternar orden
 const cronologica = suyos.length > 0 && suyos.every((t) => universo.data.secciones.find((s) => s.id === t.d.seccion)?.orden === 'cronologico');
@@ -33,21 +38,21 @@ const hijas = sagas.filter((s) => s.data.padre?.id === saga.id);
 ---
 
 <Base
-  titulo={`${saga.data.nombre}: películas y series en orden · ${universo.data.nombre}`}
-  descripcion={saga.data.descripcion ?? `${saga.data.nombre}: las ${suyos.length} películas y series de ${universo.data.nombre}, en orden.`}
+  titulo={tx.sagas.sagaSeo(saga.data.nombre, universo.data.nombre)}
+  descripcion={saga.data.descripcion ?? tx.sagas.sagaDescripcion(saga.data.nombre, suyos.length, universo.data.nombre)}
   universo={universo}
   migas={[
     { nombre: 'Heroteca', url: '/' },
     { nombre: universo.data.nombre, url: `/${universo.id}/` },
-    { nombre: 'Relacionadas y sagas', url: `/${universo.id}/sagas/` },
+    { nombre: tx.sagas.titulo, url: `/${universo.id}/sagas/` },
     { nombre: saga.data.nombre, url: `/${universo.id}/sagas/${saga.id}/` },
   ]}
 >
   <SubNav slot="subnav" universo={universo} activo="sagas" />
   <div class="contenedor">
     <header class="cab">
-      <nav class="miga" aria-label="Estás en">
-        <a href={`/${universo.id}/sagas/`}>Relacionadas y sagas</a>
+      <nav class="miga" aria-label={tx.general.estasEn}>
+        <a href={`/${universo.id}/sagas/`}>{tx.sagas.titulo}</a>
         {padre && <><span aria-hidden="true">›</span><a href={`/${universo.id}/sagas/${padre.id}/`}>{padre.data.nombre}</a></>}
       </nav>
       <h1>{saga.data.nombre}</h1>
@@ -61,7 +66,7 @@ const hijas = sagas.filter((s) => s.data.padre?.id === saga.id);
       }
       {saga.data.notas && <p class="nota">{saga.data.notas}</p>}
     </header>
-    {suyos.length ? <Estanteria huecos={huecos} cronologica={cronologica} etiqueta={`Estantería de ${saga.data.nombre}`} /> : <p>Aún no hay títulos en esta saga.</p>}
+    {suyos.length ? <Estanteria huecos={huecos} cronologica={cronologica} etiqueta={tx.estanteria.deSeccion(saga.data.nombre)} /> : <p>{tx.sagas.vacia}</p>}
   </div>
 </Base>
 

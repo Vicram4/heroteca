@@ -1,30 +1,35 @@
 ---
+import { conIdiomas } from '../../../../i18n';
 /** Guías de visionado de un universo. */
-import Base from '../../../layouts/Base.astro';
-import SubNav from '../../../components/SubNav.astro';
-import { guiasDe } from '../../../config/guias';
-import { universosActivos } from '../../../lib/datos';
+import Base from '../../../../layouts/Base.astro';
+import SubNav from '../../../../components/SubNav.astro';
+import { guiasDe } from '../../../../config/guias';
+import { universosActivos } from '../../../../lib/datos';
 
 export async function getStaticPaths() {
+  return conIdiomas(await (async () => {
   return (await universosActivos())
     .filter((u) => guiasDe(u.id).length > 0)
     .map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
+})());
 }
+import { textos } from '../../../../i18n';
+const tx = textos(Astro.url);
 const { universo } = Astro.props;
 const guias = guiasDe(universo.id);
 ---
 
 <Base
-  titulo={`Guías para ver ${universo.data.nombre} en orden`}
-  descripcion={`Guías de visionado de ${universo.data.nombre}: ${guias.map((g) => g.titulo.toLowerCase()).join(', ')}.`}
+  titulo={tx.guias.tituloSeo(universo.data.nombre)}
+  descripcion={tx.guias.descripcion(universo.data.nombre, guias.map((g) => g.titulo.toLowerCase()).join(', '))}
   universo={universo}
-  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: 'Guías', url: `/${universo.id}/guias/` }]}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: tx.guias.titulo, url: `/${universo.id}/guias/` }]}
 >
   <SubNav slot="subnav" universo={universo} activo="guias" />
   <div class="contenedor">
     <header class="cab">
-      <h1>Guías de {universo.data.nombre}</h1>
-      <p>Cómo ver {universo.data.nombre} en orden, con listas completas que se actualizan con la colección.</p>
+      <h1>{tx.guias.de(universo.data.nombre)}</h1>
+      <p>{tx.guias.intro(universo.data.nombre)}</p>
     </header>
     <ul class="guias">
       {

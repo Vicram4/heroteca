@@ -4,12 +4,14 @@ interface Props {
   /** Qué se va a revelar: "escena post-créditos", "final"… */
   que?: string;
 }
+import { textos } from '../i18n';
+const tx = textos(Astro.url);
 const { que = 'spoiler' } = Astro.props;
 ---
 
 <div class="spoiler" data-spoiler>
   <button type="button" class="revelar" aria-expanded="false">
-    <span aria-hidden="true">⚠</span> <span class="txt" data-cerrado={`Contiene spoilers · Mostrar ${que}`}>Contiene spoilers · Mostrar {que}</span>
+    <span aria-hidden="true">⚠</span> <span class="txt" data-cerrado={tx.spoiler.mostrar(que)} data-abierto={tx.spoiler.ocultar}>{tx.spoiler.mostrar(que)}</span>
   </button>
   <div class="contenido" aria-hidden="true" inert>
     <slot />
@@ -24,7 +26,7 @@ const { que = 'spoiler' } = Astro.props;
       const abierto = s.toggleAttribute('data-abierto');
       boton.setAttribute('aria-expanded', String(abierto));
       const txt = boton.querySelector<HTMLElement>('.txt')!;
-      txt.textContent = abierto ? 'Ocultar de nuevo' : txt.dataset.cerrado!;
+      txt.textContent = (abierto ? txt.dataset.abierto : txt.dataset.cerrado) ?? '';
       contenido.toggleAttribute('inert', !abierto);
       contenido.setAttribute('aria-hidden', String(!abierto));
     });

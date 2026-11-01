@@ -1,11 +1,12 @@
 ---
+import { conIdiomas } from '../../../../i18n';
 /**
  * Una carpeta de visionado (series de DC): sus temporadas y, si la tiene,
  * tu orden capítulo a capítulo entre series (los bloques Crossover).
  */
-import Base from '../../../layouts/Base.astro';
-import SubNav from '../../../components/SubNav.astro';
-import Caja from '../../../components/Caja.astro';
+import Base from '../../../../layouts/Base.astro';
+import SubNav from '../../../../components/SubNav.astro';
+import Caja from '../../../../components/Caja.astro';
 import {
   universosActivos,
   titulosDe,
@@ -17,7 +18,8 @@ import {
   type Seccion,
   type Hueco,
   type Visionado,
-} from '../../../lib/datos';
+} from '../../../../lib/datos';
+import { textos } from '../../../../i18n';
 
 interface Props {
   universo: Universo;
@@ -31,6 +33,7 @@ interface Props {
 }
 
 export async function getStaticPaths() {
+  return conIdiomas(await (async () => {
   const rutas: { params: { universo: string; carpeta: string }; props: Props }[] = [];
   for (const universo of await universosActivos()) {
     const titulos = await titulosDe(universo.id);
@@ -56,9 +59,11 @@ export async function getStaticPaths() {
     }
   }
   return rutas;
+})());
 }
 
 const { universo, seccion, carpeta, huecos, visionado, anterior, siguiente, titulos } = Astro.props as Props;
+const tx = textos(Astro.url);
 const porId = new Map<string, Titulo>(titulos.map((t) => [t.id, t]));
 // Un color por serie dentro del orden (en el orden en que aparecen)
 const series = visionado ? [...new Set(visionado.data.orden.map((o) => o.titulo.id))] : [];
@@ -66,41 +71,41 @@ const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
 ---
 
 <Base
-  titulo={`Carpeta ${carpeta.numero} (${carpeta.etapa}) · ${seccion.nombre} de ${universo.data.nombre} en orden`}
-  descripcion={`Carpeta ${carpeta.numero} de las series de ${universo.data.nombre} (${carpeta.etapa}): ${huecos.map((h) => h.titulo.corto).join(', ')}${visionado ? ', con el orden para verlas capítulo a capítulo' : ''}.`}
+  titulo={tx.carpetas.titulo(carpeta.numero, carpeta.etapa, seccion.nombre, universo.data.nombre)}
+  descripcion={tx.carpetas.descripcion(carpeta.numero, universo.data.nombre, carpeta.etapa, huecos.map((h) => h.titulo.corto).join(', '), Boolean(visionado))}
   universo={universo}
   migas={[
     { nombre: 'Heroteca', url: '/' },
     { nombre: universo.data.nombre, url: `/${universo.id}/` },
     { nombre: seccion.nombre, url: `/${universo.id}/${seccion.id}/` },
-    { nombre: `Carpeta ${carpeta.numero}`, url: urlCarpeta(universo.id, carpeta.numero) },
+    { nombre: tx.general.carpeta(carpeta.numero), url: urlCarpeta(universo.id, carpeta.numero) },
   ]}
 >
   <SubNav slot="subnav" universo={universo} activo={seccion.id} />
   <div class="contenedor">
     <header class="cab">
-      <nav class="miga" aria-label="Estás en">
+      <nav class="miga" aria-label={tx.general.estasEn}>
         <a href={`/${universo.id}/${seccion.id}/`}>{seccion.nombre}</a>
         <span aria-hidden="true">›</span>
-        <span>Carpeta {carpeta.numero}</span>
+        <span>{tx.general.carpeta(carpeta.numero)}</span>
       </nav>
       <h1>
-        Carpeta {carpeta.numero} <span class="etapa">· {carpeta.etapa}</span>
+        {tx.general.carpeta(carpeta.numero)} <span class="etapa">· {carpeta.etapa}</span>
       </h1>
       {carpeta.descripcion && <p>{carpeta.descripcion}</p>}
     </header>
 
-    <ol class="balda estanteria" data-orden="historia" style="--hueco-x: clamp(14px, 2.4vw, 26px)" aria-label={`Temporadas de la carpeta ${carpeta.numero}`}>
+    <ol class="balda estanteria" data-orden="historia" style="--hueco-x: clamp(14px, 2.4vw, 26px)" aria-label={tx.carpetas.temporadasDe(carpeta.numero)}>
       {huecos.map((h, i) => <Caja hueco={h} prioridad={i < 6} />)}
     </ol>
 
     {
       visionado && (
         <section class="orden" aria-labelledby="titulo-orden">
-          <h2 id="titulo-orden">Orden capítulo a capítulo</h2>
+          <h2 id="titulo-orden">{tx.carpetas.orden}</h2>
           <p class="explica">
-            Orden para ver juntas las series de esta carpeta{visionado.data.codigo && <> (bloque {visionado.data.codigo})</>}.
-            {visionado.data.borrador && <strong> Esta página de los documentos de la colección está a medio hacer.</strong>}
+            {tx.carpetas.explica}{visionado.data.codigo && tx.carpetas.bloque(visionado.data.codigo)}.
+            {visionado.data.borrador && <strong>{tx.carpetas.borrador}</strong>}
           </p>
           <ol class="lista">
             {visionado.data.orden.map((o) => {
@@ -113,7 +118,7 @@ const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
                   </a>
                   <span class="cod">{o.codigo ?? (t?.d.temporada ? `T${t.d.temporada}` : '')}</span>
                   <span class="cap">
-                    {o.capitulo ?? (o.codigo ? '' : 'Temporada completa')}
+                    {o.capitulo ?? (o.codigo ? '' : tx.carpetas.completa)}
                     {o.megacrossover && <span class="chip-mega">Megacrossover</span>}
                     {o.nota && <span class="nota"> {o.nota}</span>}
                   </span>
@@ -126,9 +131,9 @@ const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
       )
     }
 
-    <nav class="pasos" aria-label="Otras carpetas">
-      {anterior !== undefined ? <a href={urlCarpeta(universo.id, anterior)}>← Carpeta {anterior}</a> : <span />}
-      {siguiente !== undefined && <a href={urlCarpeta(universo.id, siguiente)}>Carpeta {siguiente} →</a>}
+    <nav class="pasos" aria-label={tx.carpetas.otras}>
+      {anterior !== undefined ? <a href={urlCarpeta(universo.id, anterior)}>← {tx.general.carpeta(anterior)}</a> : <span />}
+      {siguiente !== undefined && <a href={urlCarpeta(universo.id, siguiente)}>{tx.general.carpeta(siguiente)} →</a>}
     </nav>
   </div>
 </Base>

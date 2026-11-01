@@ -1,8 +1,12 @@
 ---
+import { conIdiomas } from '../../i18n';
+export function getStaticPaths() {
+  return conIdiomas([{ params: {} }]);
+}
 /** Qué es Heroteca, cómo está organizada y de dónde salen los datos. */
-import Base from '../layouts/Base.astro';
-import { SITE, AVISOS } from '../config/site';
-import { universosActivos, titulosDe } from '../lib/datos';
+import Base from '../../layouts/Base.astro';
+import { SITE, AVISOS } from '../../config/site';
+import { universosActivos, titulosDe } from '../../lib/datos';
 
 const universos = await universosActivos();
 const total = (await Promise.all(universos.map((u) => titulosDe(u.id)))).reduce((n, l) => n + l.length, 0);

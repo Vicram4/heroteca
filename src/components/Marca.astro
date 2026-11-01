@@ -1,12 +1,14 @@
 ---
 import { SITE } from '../config/site';
+import { textos } from '../i18n';
+const tx = textos(Astro.url);
 
 const [normal, resalte] = SITE.marca.join('') === SITE.nombre ? SITE.marca : [SITE.nombre, ''];
 ---
 
-<a href="/" class="marca" aria-label={`${SITE.nombre}, inicio`}>
+<a href="/" class="marca" aria-label={tx.general.inicio(SITE.nombre)}>
   <span class="nombre">{normal}<span class="resalte">{resalte}</span></span>
-  <span class="lema">{SITE.lema}</span>
+  <span class="lema">{tx.lema}</span>
 </a>
 
 <style>

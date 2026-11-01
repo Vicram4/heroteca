@@ -201,6 +201,16 @@ JustWatch que da TMDB. Se guardan en `datos/donde-ver.json`.
 - Para lanzarlo a mano: pestaña **Actions** del repositorio → «Actualizar «Dónde ver»» → **Run workflow**.
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_donde_ver.py`
 
+## Versión en inglés (/en/)
+
+- Todas las páginas están en `src/pages/[...idioma]/` y generan su versión española y la inglesa.
+- Los textos fijos de la web están en `src/i18n/textos.ts` (español e inglés, con las mismas claves).
+- En el código, los enlaces se escriben sin prefijo (`/marvel/umc/`): al compilar, los de las páginas inglesas
+  pasan a `/en/marvel/umc/` automáticamente (integración en `astro.config.mjs`). Por eso en `npm run dev` los enlaces
+  de las páginas inglesas llevan a las españolas; para revisarlas, usa `npm run build` y `npm run preview`.
+- Mientras `inglesPublicado` sea `false` en `src/config/site.ts`, las páginas inglesas no se indexan, no están en el
+  mapa del sitio y el botón de idioma solo aparece en ellas.
+
 ## Guías de visionado
 
 Las guías (/marvel/guias/…, /dc/guias/…) se definen en [`src/config/guias.ts`](../src/config/guias.ts):

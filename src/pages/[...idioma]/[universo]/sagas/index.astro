@@ -1,12 +1,17 @@
 ---
+import { conIdiomas } from '../../../../i18n';
 /** Relacionadas, sagas, trilogías y fases de un universo, en árbol. */
-import Base from '../../../layouts/Base.astro';
-import SubNav from '../../../components/SubNav.astro';
-import { universosActivos, sagasDe, titulosDe, type Saga } from '../../../lib/datos';
+import Base from '../../../../layouts/Base.astro';
+import SubNav from '../../../../components/SubNav.astro';
+import { universosActivos, sagasDe, titulosDe, type Saga } from '../../../../lib/datos';
 
 export async function getStaticPaths() {
+  return conIdiomas(await (async () => {
   return (await universosActivos()).map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
+})());
 }
+import { textos } from '../../../../i18n';
+const tx = textos(Astro.url);
 const { universo } = Astro.props;
 const sagas = await sagasDe(universo.id);
 const titulos = await titulosDe(universo.id);
@@ -22,20 +27,20 @@ const cuantos = (s: Saga): number => {
 };
 // Grupos definidos en el archivo de cada universo (gruposSagas); sin ellos, un único grupo
 const grupos = (
-  universo.data.gruposSagas.length ? universo.data.gruposSagas : [{ titulo: 'Sagas', texto: undefined, desde: -Infinity, hasta: Infinity }]
+  universo.data.gruposSagas.length ? universo.data.gruposSagas : [{ titulo: tx.sagas.unica, texto: undefined, desde: -Infinity, hasta: Infinity }]
 ).map((g) => ({ ...g, filtro: (s: Saga) => s.data.orden >= g.desde && s.data.orden < g.hasta }));
 const raices = sagas.filter((s) => !s.data.padre);
 ---
 
 <Base
-  titulo={`Sagas y colecciones de ${universo.data.nombre}`}
-  descripcion={`Sagas, trilogías y colecciones de ${universo.data.nombre}, con todas sus películas y series en orden.`}
+  titulo={tx.sagas.tituloSeo(universo.data.nombre)}
+  descripcion={tx.sagas.descripcionSeo(universo.data.nombre)}
   universo={universo}
-  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: 'Relacionadas y sagas', url: `/${universo.id}/sagas/` }]}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: tx.sagas.titulo, url: `/${universo.id}/sagas/` }]}
 >
   <SubNav slot="subnav" universo={universo} activo="sagas" />
   <div class="contenedor">
-    <header class="cab"><h1>Relacionadas y sagas</h1></header>
+    <header class="cab"><h1>{tx.sagas.titulo}</h1></header>
     {
       grupos.map((g) => {
         const lista = raices.filter(g.filtro);
@@ -47,7 +52,7 @@ const raices = sagas.filter((s) => !s.data.padre);
               {lista.map((s) => (
                 <li class="panel">
                   <a href={`/${universo.id}/sagas/${s.id}/`} class="nombre">{s.data.nombre}</a>
-                  <span class="meta">{cuantos(s)} títulos{s.data.descripcion && ` · ${s.data.descripcion}`}</span>
+                  <span class="meta">{tx.general.titulos(cuantos(s))}{s.data.descripcion && ` · ${s.data.descripcion}`}</span>
                   {hijas(s.id).length > 0 && (
                     <ul class="hijas">
                       {hijas(s.id).map((h) => (

@@ -1,14 +1,19 @@
 ---
+import { conIdiomas } from '../../../../i18n';
 /** Todos los personajes de un universo, ordenados por número de apariciones. */
-import Caratula from '../../../components/Caratula.astro';
-import Base from '../../../layouts/Base.astro';
-import SubNav from '../../../components/SubNav.astro';
-import { universosActivos } from '../../../lib/datos';
-import { personajesDe } from '../../../lib/personajes';
+import Caratula from '../../../../components/Caratula.astro';
+import Base from '../../../../layouts/Base.astro';
+import SubNav from '../../../../components/SubNav.astro';
+import { universosActivos } from '../../../../lib/datos';
+import { personajesDe } from '../../../../lib/personajes';
 
 export async function getStaticPaths() {
+  return conIdiomas(await (async () => {
   return (await universosActivos()).map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
+})());
 }
+import { textos } from '../../../../i18n';
+const tx = textos(Astro.url);
 const { universo } = Astro.props;
 const lista = await personajesDe(universo.id);
 const conApariciones = lista.filter((x) => x.apariciones.length);
@@ -16,16 +21,16 @@ const sin = lista.filter((x) => !x.apariciones.length);
 ---
 
 <Base
-  titulo={`Personajes de ${universo.data.nombre} y sus películas y series`}
-  descripcion={`Los personajes de ${universo.data.nombre} y todas las películas y series en las que aparecen, en orden.`}
+  titulo={tx.personajes.tituloSeo(universo.data.nombre)}
+  descripcion={tx.personajes.descripcionSeo(universo.data.nombre)}
   universo={universo}
-  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: 'Personajes', url: `/${universo.id}/personajes/` }]}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: tx.personajes.titulo, url: `/${universo.id}/personajes/` }]}
 >
   <SubNav slot="subnav" universo={universo} activo="personajes" />
   <div class="contenedor">
     <header class="cab">
-      <h1>Personajes</h1>
-      <p>{conApariciones.length} personajes con apariciones en las fichas. Pulsa uno para ver todos sus títulos.</p>
+      <h1>{tx.personajes.titulo}</h1>
+      <p>{tx.personajes.resumen(conApariciones.length)}</p>
     </header>
     <ul class="rejilla">
       {
@@ -39,7 +44,7 @@ const sin = lista.filter((x) => !x.apariciones.length);
                 </span>
                 <span class="nombre">{p.data.nombre}</span>
                 {p.data.identidad && <span class="identidad">{p.data.identidad}</span>}
-                <span class="cuenta">{apariciones.length} {apariciones.length === 1 ? 'título' : 'títulos'}</span>
+                <span class="cuenta">{tx.general.titulos(apariciones.length)}</span>
               </a>
             </li>
           );
@@ -49,8 +54,8 @@ const sin = lista.filter((x) => !x.apariciones.length);
     {
       sin.length > 0 && (
         <section class="sin">
-          <h2>Aún sin apariciones</h2>
-          <p>Están en la lista, pero ninguna ficha los nombra todavía en el reparto. Se completarán con los datos de TMDB.</p>
+          <h2>{tx.personajes.sinApariciones}</h2>
+          <p>{tx.personajes.sinAparicionesTexto}</p>
           <ul>
             {sin.map(({ p }) => (
               <li>

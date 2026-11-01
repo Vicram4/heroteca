@@ -10,18 +10,20 @@ interface Props {
   titulo: string;
   fondo?: string;
 }
+import { textos } from '../i18n';
+const tx = textos(Astro.url);
 const { id, titulo, fondo } = Astro.props;
 ---
 
-<div class="trailer" data-trailer={id}>
-  <button type="button" class="reproducir" aria-label={`Ver tráiler de ${titulo} (se carga desde YouTube)`}>
+<div class="trailer" data-trailer={id} data-titulo-iframe={tx.trailer.iframe(titulo)}>
+  <button type="button" class="reproducir" aria-label={tx.trailer.aria(titulo)}>
     {fondo && <img src={imagenTmdb(fondo, 'w780')} alt="" loading="lazy" decoding="async" width="780" height="439" />}
     <span class="icono" aria-hidden="true">
       <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M8 5.5v13l11-6.5-11-6.5Z"></path></svg>
     </span>
-    <span class="texto">Ver tráiler</span>
+    <span class="texto">{tx.trailer.ver}</span>
   </button>
-  <p class="aviso">Al reproducirlo se conecta con YouTube (modo de privacidad mejorada).</p>
+  <p class="aviso">{tx.trailer.aviso}</p>
 </div>
 
 <script>
@@ -29,7 +31,7 @@ const { id, titulo, fondo } = Astro.props;
     caja.querySelector('button')!.addEventListener('click', () => {
       const iframe = document.createElement('iframe');
       iframe.src = `https://www.youtube-nocookie.com/embed/${caja.dataset.trailer}?autoplay=1&rel=0`;
-      iframe.title = caja.querySelector('button')!.getAttribute('aria-label')!.replace('Ver tráiler de', 'Tráiler de').replace(' (se carga desde YouTube)', '');
+      iframe.title = caja.dataset.tituloIframe ?? '';
       iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
       iframe.allowFullscreen = true;
       iframe.referrerPolicy = 'strict-origin-when-cross-origin';

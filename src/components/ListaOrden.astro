@@ -1,6 +1,7 @@
 ---
 /** Lista de títulos en orden (para las guías): número, título, año, tipo y, si se pide, fase. */
 import type { Titulo } from '../lib/datos';
+import { textos, idiomaDe, nombreTipo } from '../i18n';
 
 interface Fila {
   /** Número o código que se muestra (001, 5.1…) */
@@ -17,7 +18,9 @@ interface Props {
   conFases?: boolean;
   etiqueta: string;
 }
-const { filas, cabeceraNum = 'Nº', conFases = false, etiqueta } = Astro.props;
+const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+const { filas, cabeceraNum = tx.lista.num, conFases = false, etiqueta } = Astro.props;
 ---
 
 <div class="tabla-desliza">
@@ -25,10 +28,10 @@ const { filas, cabeceraNum = 'Nº', conFases = false, etiqueta } = Astro.props;
     <thead>
       <tr>
         <th scope="col" class="c-num">{cabeceraNum}</th>
-        <th scope="col">Título</th>
-        <th scope="col" class="c-anio">Año</th>
-        <th scope="col" class="c-tipo">Tipo</th>
-        {conFases && <th scope="col" class="c-fase">Fase</th>}
+        <th scope="col">{tx.lista.titulo}</th>
+        <th scope="col" class="c-anio">{tx.lista.anio}</th>
+        <th scope="col" class="c-tipo">{tx.lista.tipo}</th>
+        {conFases && <th scope="col" class="c-fase">{tx.lista.fase}</th>}
       </tr>
     </thead>
     <tbody>
@@ -43,8 +46,8 @@ const { filas, cabeceraNum = 'Nº', conFases = false, etiqueta } = Astro.props;
             <td class="c-anio">{f.t.d.anio}</td>
             <td class="c-tipo">
               <span class="punto" aria-hidden="true" />
-              {f.t.tipoNombre}
-              {f.t.d.animada && ' animada'}
+              {nombreTipo(f.t.tipo, idioma)}
+              {f.t.d.animada && tx.lista.animada}
             </td>
             {conFases && <td class="c-fase">{f.fase}</td>}
           </tr>

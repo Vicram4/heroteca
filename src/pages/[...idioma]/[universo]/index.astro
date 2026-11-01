@@ -1,16 +1,21 @@
 ---
+import { conIdiomas } from '../../../i18n';
 /**
  * Inicio de un universo: sus estanterías, como tu presentación «999 estanterias».
  * Cada sección muestra su primera balda y enlaza a la estantería completa.
  */
-import Base from '../../layouts/Base.astro';
-import SubNav from '../../components/SubNav.astro';
-import Caja from '../../components/Caja.astro';
-import { universosActivos, titulosDe, huecosDeSeccion, sagasDe } from '../../lib/datos';
-import { guiasDe } from '../../config/guias';
+import Base from '../../../layouts/Base.astro';
+import SubNav from '../../../components/SubNav.astro';
+import Caja from '../../../components/Caja.astro';
+import { universosActivos, titulosDe, huecosDeSeccion, sagasDe } from '../../../lib/datos';
+import { guiasDe } from '../../../config/guias';
+import { textos } from '../../../i18n';
+const tx = textos(Astro.url);
 
 export async function getStaticPaths() {
+  return conIdiomas(await (async () => {
   return (await universosActivos()).map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
+})());
 }
 const { universo } = Astro.props;
 const titulos = await titulosDe(universo.id);
@@ -31,13 +36,13 @@ const relacionadas = (await sagasDe(universo.id)).filter((s) => !s.data.padre &&
   <div class="contenedor">
     <header class="cab">
       <h1><span class="nombre">{universo.data.nombre}</span></h1>
-      <p>{universo.data.descripcion} {titulos.length} títulos en {secciones.length} secciones.</p>
+      <p>{universo.data.descripcion} {tx.hub.resumen(titulos.length, secciones.length)}</p>
     </header>
 
     {
       guiasDe(universo.id).length > 0 && (
-        <nav class="guias-rapidas" aria-label="Guías de visionado">
-          <span class="etiqueta">Guías:</span>
+        <nav class="guias-rapidas" aria-label={tx.hub.guiasAria}>
+          <span class="etiqueta">{tx.hub.guias}</span>
           {guiasDe(universo.id).map((g) => (
             <a class="pastilla" href={`/${universo.id}/guias/${g.id}/`}>
               {g.titulo}
@@ -56,7 +61,7 @@ const relacionadas = (await sagasDe(universo.id)).filter((s) => !s.data.padre &&
             </h2>
             <p>{s.descripcion}</p>
             <a class="pastilla ver" href={`/${universo.id}/${s.id}/`}>
-              Ver los {total} <span aria-hidden="true">→</span>
+              {tx.hub.verLos(total)} <span aria-hidden="true">→</span>
             </a>
           </div>
           <ol class="balda-muestra estanteria" data-orden="historia" style="--hueco-x: clamp(14px, 2.4vw, 26px)">
@@ -64,7 +69,7 @@ const relacionadas = (await sagasDe(universo.id)).filter((s) => !s.data.padre &&
               <Caja hueco={h} prioridad={i < 6 && s === secciones[0].s} />
             ))}
           </ol>
-          {huecos.length > muestra.length && <p class="mas">…y {total - muestra.length} más en la estantería completa.</p>}
+          {huecos.length > muestra.length && <p class="mas">{tx.hub.mas(total - muestra.length)}</p>}
         </section>
       ))
     }
@@ -74,10 +79,10 @@ const relacionadas = (await sagasDe(universo.id)).filter((s) => !s.data.padre &&
         <section class="seccion" aria-labelledby="sec-relacionadas">
           <div class="cab-seccion">
             <h2 id="sec-relacionadas">
-              <a href={`/${universo.id}/sagas/`}>Relacionadas</a>
+              <a href={`/${universo.id}/sagas/`}>{tx.hub.relacionadas}</a>
             </h2>
             <a class="pastilla ver" href={`/${universo.id}/sagas/`}>
-              Todas las sagas y fases <span aria-hidden="true">→</span>
+              {tx.hub.todasSagas} <span aria-hidden="true">→</span>
             </a>
           </div>
           <ul class="relacionadas">

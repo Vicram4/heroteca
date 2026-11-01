@@ -4,10 +4,10 @@
  * sin recargar: las cajas se reordenan con CSS y se ocultan las que no encajan.
  */
 import Caja from './Caja.astro';
-import { TIPOS } from '../config/tipos';
+import { textos, idiomaDe, nombreTipo } from '../i18n';
 import type { CabeceraCarpeta, Hueco, Saga } from '../lib/datos';
 import { apariciones } from '../lib/personajes';
-import { clavePlataforma, plataformasIncluidas } from '../lib/dondever';
+import { clavePlataforma, plataformasIncluidas, paisDe } from '../lib/dondever';
 
 interface Props {
   huecos: Hueco[];
@@ -20,7 +20,9 @@ interface Props {
   /** Texto del botón del orden propio («Orden de la historia», «Por carpetas»…) */
   nombreOrden?: string;
 }
-const { huecos, cronologica, sagas = [], etiqueta, cabeceras = [], nombreOrden = 'Orden de la historia' } = Astro.props;
+const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+const { huecos, cronologica, sagas = [], etiqueta, cabeceras = [], nombreOrden = tx.estanteria.historia } = Astro.props;
 const tipos = [...new Set(huecos.map((h) => h.titulo.tipo))];
 const hayAnimadas = huecos.some((h) => h.titulo.d.animada) && huecos.some((h) => !h.titulo.d.animada);
 const decadas = [...new Set(huecos.map((h) => Math.floor(h.titulo.d.anio / 10) * 10))].sort();
@@ -32,7 +34,7 @@ const cuenta = new Map<string, number>();
 for (const t of new Set(huecos.map((h) => h.titulo.id))) for (const p of porTitulo.get(t) ?? []) cuenta.set(p, (cuenta.get(p) ?? 0) + 1);
 // Plataformas en las que se puede ver algo de esta estantería (suscripción o gratis), de más a menos títulos
 const porPlataforma = new Map<string, Set<string>>();
-for (const h of huecos) for (const p of plataformasIncluidas(h.titulo.id)) (porPlataforma.get(p) ?? porPlataforma.set(p, new Set()).get(p)!).add(h.titulo.id);
+for (const h of huecos) for (const p of plataformasIncluidas(h.titulo.id, paisDe(idioma))) (porPlataforma.get(p) ?? porPlataforma.set(p, new Set()).get(p)!).add(h.titulo.id);
 const plataformas = [...porPlataforma].sort((a, b) => b[1].size - a[1].size || a[0].localeCompare(b[0], 'es'));
 const personajesPresentes = personajes
   .filter((p) => (cuenta.get(p.id) ?? 0) > 1)
@@ -43,20 +45,20 @@ const personajesPresentes = personajes
   <div class="herramientas">
     {
       cronologica && (
-        <div class="grupo" role="group" aria-label="Orden">
+        <div class="grupo" role="group" aria-label={tx.estanteria.orden}>
           <button type="button" class="pastilla" data-poner-orden="historia" aria-pressed="true">{nombreOrden}</button>
-          <button type="button" class="pastilla" data-poner-orden="estreno" aria-pressed="false">Orden de estreno</button>
+          <button type="button" class="pastilla" data-poner-orden="estreno" aria-pressed="false">{tx.estanteria.estreno}</button>
         </div>
       )
     }
     {
       tipos.length > 1 && (
-        <div class="grupo" role="group" aria-label="Tipo">
-          <button type="button" class="pastilla" data-filtro-tipo="" aria-pressed="true">Todo</button>
+        <div class="grupo" role="group" aria-label={tx.estanteria.tipo}>
+          <button type="button" class="pastilla" data-filtro-tipo="" aria-pressed="true">{tx.estanteria.todo}</button>
           {tipos.map((t) => (
             <button type="button" class:list={['pastilla', `t-${t}`]} data-filtro-tipo={t} aria-pressed="false">
               <i class="punto" aria-hidden="true" />
-              {TIPOS[t].plural}
+              {nombreTipo(t, idioma, true)}
             </button>
           ))}
         </div>
@@ -66,11 +68,11 @@ const personajesPresentes = personajes
       {
         hayAnimadas && (
           <label>
-            <span class="solo-lectores">Animación</span>
+            <span class="solo-lectores">{tx.estanteria.animacion}</span>
             <select data-filtro-animada>
-              <option value="">Imagen real y animación</option>
-              <option value="false">Solo imagen real</option>
-              <option value="true">Solo animación</option>
+              <option value="">{tx.estanteria.realYAnimacion}</option>
+              <option value="false">{tx.estanteria.soloReal}</option>
+              <option value="true">{tx.estanteria.soloAnimacion}</option>
             </select>
           </label>
         )
@@ -78,11 +80,11 @@ const personajesPresentes = personajes
       {
         decadas.length > 1 && (
           <label>
-            <span class="solo-lectores">Década</span>
+            <span class="solo-lectores">{tx.estanteria.decada}</span>
             <select data-filtro-decada>
-              <option value="">Todas las décadas</option>
+              <option value="">{tx.estanteria.todasDecadas}</option>
               {decadas.map((d) => (
-                <option value={d}>Años {String(d).slice(2)} ({d})</option>
+                <option value={d}>{tx.estanteria.anios(d)}</option>
               ))}
             </select>
           </label>
@@ -91,9 +93,9 @@ const personajesPresentes = personajes
       {
         personajesPresentes.length > 0 && (
           <label>
-            <span class="solo-lectores">Personaje</span>
+            <span class="solo-lectores">{tx.estanteria.personaje}</span>
             <select data-filtro-personaje>
-              <option value="">Todos los personajes</option>
+              <option value="">{tx.estanteria.todosPersonajes}</option>
               {personajesPresentes.map((p) => (
                 <option value={p.id}>{p.data.nombre} ({cuenta.get(p.id)})</option>
               ))}
@@ -104,12 +106,12 @@ const personajesPresentes = personajes
       {
         plataformas.length > 0 && (
           <label>
-            <span class="solo-lectores">Plataforma</span>
+            <span class="solo-lectores">{tx.estanteria.plataforma}</span>
             <select data-filtro-plataforma>
-              <option value="">Todas las plataformas</option>
+              <option value="">{tx.estanteria.todasPlataformas}</option>
               {plataformas.map(([nombre, ids]) => (
                 <option value={clavePlataforma(nombre)}>
-                  En {nombre} ({ids.size})
+                  {tx.estanteria.enPlataforma(nombre, ids.size)}
                 </option>
               ))}
             </select>
@@ -119,9 +121,9 @@ const personajesPresentes = personajes
       {
         sagasPresentes.length > 0 && (
           <label>
-            <span class="solo-lectores">Saga o fase</span>
+            <span class="solo-lectores">{tx.estanteria.saga}</span>
             <select data-filtro-saga>
-              <option value="">Todas las sagas y fases</option>
+              <option value="">{tx.estanteria.todasSagas}</option>
               {sagasPresentes.map((s) => (
                 <option value={s.id}>{s.data.nombre}</option>
               ))}
@@ -130,7 +132,7 @@ const personajesPresentes = personajes
         )
       }
     </div>
-    <p class="cuenta" aria-live="polite" data-cuenta>{total} títulos</p>
+    <p class="cuenta" aria-live="polite" data-cuenta data-singular={tx.estanteria.titulo} data-plural={tx.estanteria.titulosPl}>{tx.general.titulos(total)}</p>
   </div>
 
   <ol class="estante">
@@ -139,10 +141,10 @@ const personajesPresentes = personajes
         <li class="cabecera" style={`--o-h:${c.ordenHistoria}`} data-cabecera={c.carpeta}>
           <h2>
             {c.etapa === 'En espera' ? (
-              'En espera'
+              tx.general.enEspera
             ) : (
               <>
-                Carpeta {c.carpeta}
+                {tx.general.carpeta(c.carpeta)}
                 {c.etapa && <span class="etapa"> · {c.etapa}</span>}
               </>
             )}
@@ -150,7 +152,7 @@ const personajesPresentes = personajes
           {c.descripcion && <p>{c.descripcion}</p>}
           {c.visionado && (
             <a href={c.visionado} class="ver-orden">
-              Ver el orden capítulo a capítulo →
+              {tx.estanteria.verOrden}
             </a>
           )}
         </li>
@@ -158,7 +160,7 @@ const personajesPresentes = personajes
     }
     {huecos.map((h, i) => <Caja hueco={h} prioridad={i < 6} personajes={[...(porTitulo.get(h.titulo.id) ?? [])]} />)}
   </ol>
-  <p class="vacio" data-vacio hidden>Ningún título cumple estos filtros.</p>
+  <p class="vacio" data-vacio hidden>{tx.estanteria.vacio}</p>
 </section>
 
 <script>
@@ -186,7 +188,7 @@ const personajesPresentes = personajes
       }
       // Una carpeta sin cajas visibles oculta también su cabecera
       for (const cab of cabeceras) cab.hidden = !celdas.some((c) => !c.hidden && c.dataset.carpeta === cab.dataset.cabecera);
-      cuenta.textContent = `${visibles.size} ${visibles.size === 1 ? 'título' : 'títulos'}`;
+      cuenta.textContent = `${visibles.size} ${visibles.size === 1 ? cuenta.dataset.singular : cuenta.dataset.plural}`;
       vacio.hidden = visibles.size > 0;
     }
 

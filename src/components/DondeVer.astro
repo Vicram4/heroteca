@@ -2,29 +2,34 @@
 /** «Dónde ver en España»: plataformas de suscripción, gratis, alquiler y compra (datos de JustWatch). */
 import { dondeVer, fechaDondeVer } from '../lib/dondever';
 import { imagenTmdb } from '../lib/tmdb';
+import { textos, idiomaDe, LOCALE } from '../i18n';
 
 interface Props {
   id: string;
   titulo: string;
 }
 const { id, titulo } = Astro.props;
-const d = dondeVer(id);
+const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+// En español, los datos de España; en inglés, los de Estados Unidos
+const pais = idioma === 'en' ? 'US' : 'ES';
+const d = dondeVer(id, pais);
 const grupos = d
   ? ([
-      ['Incluida en la suscripción', d.suscripcion],
-      ['Gratis', d.gratis],
-      ['Alquiler', d.alquiler],
-      ['Compra', d.compra],
+      [tx.dondeVer.suscripcion, d.suscripcion],
+      [tx.dondeVer.gratis, d.gratis],
+      [tx.dondeVer.alquiler, d.alquiler],
+      [tx.dondeVer.compra, d.compra],
     ].filter(([, lista]) => lista && lista.length) as [string, NonNullable<typeof d.suscripcion>][])
   : [];
-const fecha = fechaDondeVer?.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const fecha = fechaDondeVer(pais)?.toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
 
 {
   grupos.length > 0 && (
     <section class="panel donde-ver" aria-labelledby="titulo-donde-ver">
       <h2 class="h-panel" id="titulo-donde-ver">
-        Dónde ver en España
+        {tx.dondeVer.titulo}
       </h2>
       {grupos.map(([nombre, lista]) => (
         <div class="grupo">
@@ -46,13 +51,13 @@ const fecha = fechaDondeVer?.toLocaleDateString('es-ES', { day: 'numeric', month
         </div>
       ))}
       <p class="fuente">
-        Datos de <a href="https://www.justwatch.com/es" rel="noopener">JustWatch</a>
-        {fecha && ` del ${fecha}`}. La disponibilidad cambia con frecuencia.
+        {tx.dondeVer.datos} <a href={pais === 'US' ? 'https://www.justwatch.com/us' : 'https://www.justwatch.com/es'} rel="noopener">JustWatch</a>
+        {fecha && tx.dondeVer.del(fecha)}{tx.dondeVer.cambia}
         {d?.enlace && (
           <>
             {' '}
             <a href={d.enlace} rel="noopener">
-              Ver todas las opciones para {titulo}
+              {tx.dondeVer.todas(titulo)}
             </a>
           </>
         )}

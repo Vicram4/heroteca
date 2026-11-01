@@ -7,6 +7,7 @@ import BotonTema from '../components/BotonTema.astro';
 import Buscador from '../components/Buscador.astro';
 import ArchivoRojo from '../components/ArchivoRojo.astro';
 import { guiasDe } from '../config/guias';
+import { idiomaDe, textos, LOCALE, sinIdioma, enIdioma } from '../i18n';
 // Tipografías principales: se precargan para que el texto no cambie de tamaño al llegar la fuente
 import barlow400 from '@fontsource/barlow/files/barlow-latin-400-normal.woff2?url';
 import barlow600 from '@fontsource/barlow/files/barlow-latin-600-normal.woff2?url';
@@ -29,9 +30,11 @@ interface Props {
   /** Migas de pan (sin la página actual al final no hace falta: se añade sola) para los buscadores */
   migas?: { nombre: string; url: string }[];
 }
+const idioma = idiomaDe(Astro.url);
+const tx = textos(Astro.url);
 const {
   titulo,
-  descripcion = SITE.descripcion,
+  descripcion = tx.descripcion,
   universo,
   imagen = '/og-heroteca.jpg',
   tipoOg = 'website',
@@ -44,25 +47,41 @@ const datosMigas = migas?.length
   ? {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
-      itemListElement: migas.map((m, i) => ({ '@type': 'ListItem', position: i + 1, name: m.nombre, item: new URL(m.url, SITE.url).href })),
+      itemListElement: migas.map((m, i) => ({ '@type': 'ListItem', position: i + 1, name: m.nombre, item: new URL(enIdioma(idioma, m.url), SITE.url).href })),
     }
   : undefined;
 // Fecha de la última actualización: la de la compilación
-const actualizado = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' });
-const tituloPagina = titulo ? `${titulo} · ${SITE.nombre}` : `${SITE.nombre} · ${SITE.lema}`;
+const actualizado = new Date().toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' });
+const tituloPagina = titulo ? `${titulo} · ${SITE.nombre}` : `${SITE.nombre} · ${tx.lema}`;
 const universos = await universosActivos();
 const canonica = new URL(Astro.url.pathname, Astro.site);
+// La misma página en los dos idiomas (direcciones completas: no las toca la reescritura de enlaces)
+const rutaBase = sinIdioma(Astro.url.pathname);
+const alternativas = { es: new URL(rutaBase, SITE.url).href, en: new URL(enIdioma('en', rutaBase), SITE.url).href };
+// Mientras la versión inglesa no esté publicada, sus páginas no se indexan
+const ocultar = noIndexar || (idioma === 'en' && !SITE.inglesPublicado);
+const otroIdioma = idioma === 'en' ? alternativas.es : alternativas.en;
+const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
 ---
 
 <!doctype html>
-<html lang={SITE.idioma} data-universo={universo?.id}>
+<html lang={LOCALE[idioma]} data-universo={universo?.id}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {fuentes.map((f) => <link rel="preload" href={f} as="font" type="font/woff2" crossorigin />)}
     <title>{tituloPagina}</title>
     <meta name="description" content={descripcion} />
-    {noIndexar ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonica} />}
+    {ocultar ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonica} />}
+    {
+      SITE.inglesPublicado && !noIndexar && (
+        <>
+          <link rel="alternate" hreflang="es" href={alternativas.es} />
+          <link rel="alternate" hreflang="en" href={alternativas.en} />
+          <link rel="alternate" hreflang="x-default" href={alternativas.es} />
+        </>
+      )
+    }
     <link rel="sitemap" href="/sitemap-index.xml" />
     {SITE.googleVerificacion && <meta name="google-site-verification" content={SITE.googleVerificacion} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -71,7 +90,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content={tipoOg} />
     <meta property="og:url" content={canonica} />
     <meta property="og:site_name" content={SITE.nombre} />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content={LOCALE[idioma].replace('-', '_')} />
     {imagen && <meta property="og:image" content={new URL(imagen, Astro.site)} />}
     <meta name="twitter:card" content={imagen ? 'summary_large_image' : 'summary'} />
     {datos && <script type="application/ld+json" set:html={JSON.stringify(datos)} />}
@@ -87,11 +106,11 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     </script>
   </head>
   <body style={estiloUniverso(universo)}>
-    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <a class="saltar" href="#contenido">{tx.general.saltar}</a>
     <header class="cabecera">
       <div class="contenedor fila">
         <Marca />
-        <nav class="universos" aria-label="Universos">
+        <nav class="universos" aria-label={tx.general.universos}>
           {
             universos.map((u) => (
               <a href={`/${u.id}/`} aria-current={universo?.id === u.id ? 'true' : undefined} style={estiloUniverso(u)}>
@@ -102,6 +121,13 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
         </nav>
         <div class="acciones">
           <Buscador />
+          {
+            verBotonIdioma && (
+              <a class="pastilla idioma" href={otroIdioma} hreflang={idioma === 'en' ? 'es' : 'en'} aria-label={tx.general.cambiarIdiomaAria}>
+                {idioma === 'en' ? 'ES' : 'EN'}
+              </a>
+            )
+          }
           <BotonTema />
         </div>
       </div>
@@ -114,44 +140,44 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
 
     <footer class="pie">
       <div class="contenedor">
-        <p class="pie-marca"><strong>{SITE.nombre}</strong> · {SITE.lema}</p>
+        <p class="pie-marca"><strong>{SITE.nombre}</strong> · {tx.lema}</p>
         <div class="pie-columnas">
           <nav aria-labelledby="pie-explorar">
-            <h2 id="pie-explorar">Explorar</h2>
+            <h2 id="pie-explorar">{tx.pie.explorar}</h2>
             <ul>
               {universos.map((u) => <li><a href={`/${u.id}/`}>{u.data.nombre}</a></li>)}
-              {universos.filter((u) => guiasDe(u.id).length).map((u) => <li><a href={`/${u.id}/guias/`}>Guías de {u.data.nombre}</a></li>)}
+              {universos.filter((u) => guiasDe(u.id).length).map((u) => <li><a href={`/${u.id}/guias/`}>{tx.pie.guiasDe(u.data.nombre)}</a></li>)}
             </ul>
           </nav>
           <nav aria-labelledby="pie-proyecto">
-            <h2 id="pie-proyecto">Proyecto</h2>
+            <h2 id="pie-proyecto">{tx.pie.proyecto}</h2>
             <ul>
-              <li><a href="/acerca/">Acerca de Heroteca</a></li>
-              <li><a href="/privacidad/">Privacidad</a></li>
-              <li><a href={`${SITE.repositorio}/issues`} rel="noopener">Avisar de un error</a></li>
-              <li><a href={SITE.repositorio} rel="noopener">Código en GitHub</a></li>
+              <li><a href="/acerca/">{tx.pie.acerca}</a></li>
+              <li><a href="/privacidad/">{tx.pie.privacidad}</a></li>
+              <li><a href={`${SITE.repositorio}/issues`} rel="noopener">{tx.pie.error}</a></li>
+              <li><a href={SITE.repositorio} rel="noopener">{tx.pie.codigo}</a></li>
             </ul>
           </nav>
           <section aria-labelledby="pie-datos">
-            <h2 id="pie-datos">Datos</h2>
+            <h2 id="pie-datos">{tx.pie.datos}</h2>
             <ul class="fuentes">
               <li>
                 <a href="https://www.themoviedb.org/" rel="noopener" class="logo-tmdb" aria-label="The Movie Database (TMDB)">
                   <img src="/tmdb.svg" alt="TMDB" width="110" height="14" loading="lazy" />
                 </a>
-                <span>Fichas, carteles y tráileres</span>
+                <span>{tx.pie.datosTmdb}</span>
               </li>
               <li>
-                <a href="https://www.justwatch.com/es" rel="noopener" class="justwatch">JustWatch</a>
-                <span>Dónde ver en España</span>
+                <a href={idioma === 'en' ? 'https://www.justwatch.com/us' : 'https://www.justwatch.com/es'} rel="noopener" class="justwatch">JustWatch</a>
+                <span>{tx.pie.datosJustwatch}</span>
               </li>
             </ul>
           </section>
         </div>
         <div class="pie-legal">
-          <p>{AVISOS.fans}</p>
+          <p>{tx.pie.fans}</p>
           <p lang="en">{AVISOS.tmdb}</p>
-          <p>Actualizado el {actualizado}</p>
+          <p>{tx.pie.actualizado(actualizado)}</p>
         </div>
       </div>
     </footer>
@@ -229,6 +255,11 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     display: flex;
     gap: 8px;
     align-items: center;
+  }
+  .idioma {
+    font: 700 0.85rem var(--f-titulo);
+    letter-spacing: 0.05em;
+    text-decoration: none;
   }
   .pie {
     margin-top: 64px;

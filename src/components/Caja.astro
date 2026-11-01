@@ -2,7 +2,8 @@
 /** Una caja (carátula) en la estantería. El marco lleva el color del tipo, como en tus estanterías. */
 import Caratula from './Caratula.astro';
 import { numeroTexto, textoTramo, type Hueco } from '../lib/datos';
-import { clavePlataforma, plataformasIncluidas } from '../lib/dondever';
+import { textos, idiomaDe, nombreTipo } from '../i18n';
+import { clavePlataforma, plataformasIncluidas, paisDe } from '../lib/dondever';
 
 interface Props {
   hueco: Hueco;
@@ -13,6 +14,8 @@ interface Props {
 }
 const { hueco, prioridad = false, personajes = [] } = Astro.props;
 const t = hueco.titulo;
+const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
 const tramo = textoTramo(hueco);
 const decada = Math.floor(t.d.anio / 10) * 10;
 const porCarpetas = hueco.carpeta !== undefined;
@@ -30,13 +33,13 @@ const enEspera = t.d.enEspera;
   data-titulo={t.id}
   data-personajes={personajes.join(' ')}
   data-carpeta={hueco.carpeta}
-  data-plataformas={plataformasIncluidas(t.id).map(clavePlataforma).join(' ')}
+  data-plataformas={plataformasIncluidas(t.id, paisDe(idioma)).map(clavePlataforma).join(' ')}
 >
   <a href={t.url} class="caja">
     {
       porCarpetas ? (
         <>
-          {(hueco.codigo || enEspera) && <span class:list={['num', 'num-h', { espera: !hueco.codigo }]}>{hueco.codigo ?? 'En espera'}</span>}
+          {(hueco.codigo || enEspera) && <span class:list={['num', 'num-h', { espera: !hueco.codigo }]}>{hueco.codigo ?? tx.general.enEspera}</span>}
           {hueco.numero !== undefined && <span class="num num-e">{numeroTexto(hueco.numero)}</span>}
         </>
       ) : (
@@ -49,9 +52,9 @@ const enEspera = t.d.enEspera;
           <Caratula t={t} ancho={160} cargaInmediata={prioridad} />
         ) : (
           <span class="sin-tapa" aria-hidden="true">
-            <span class="tipo">{t.tipoNombre}</span>
+            <span class="tipo">{nombreTipo(t.tipo, idioma)}</span>
             <span class="nombre">{t.d.titulo}</span>
-            {t.d.temporada && <span class="temp">Temporada {t.d.temporada}</span>}
+            {t.d.temporada && <span class="temp">{tx.general.temporada(t.d.temporada)}</span>}
           </span>
         )
       }
@@ -59,9 +62,9 @@ const enEspera = t.d.enEspera;
     <span class="pie">
       <span class="nombre-pie">{t.corto}</span>
       <span class="extra">
-        {tramo ? <><span class="solo-lectores">capítulos </span>{tramo}</> : t.d.anio}
+        {tramo ? <><span class="solo-lectores">{tx.general.capitulos} </span>{tramo}</> : t.d.anio}
       </span>
-      <span class="solo-lectores">, {t.tipoNombre.toLowerCase()}{enEspera ? ', en espera' : ''}</span>
+      <span class="solo-lectores">, {nombreTipo(t.tipo, idioma).toLowerCase()}{enEspera ? `, ${tx.general.enEspera.toLowerCase()}` : ''}</span>
     </span>
   </a>
 </li>
