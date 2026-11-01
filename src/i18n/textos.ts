@@ -22,6 +22,8 @@ export const ES = {
     animado: (tipo: string) => `${tipo} de animación`,
     cambiarIdioma: 'English',
     cambiarIdiomaAria: 'Ver esta página en inglés',
+    idioma: 'Idioma',
+    idiomaActual: 'Español, idioma actual',
   },
   tema: { aOscuro: 'Cambiar a modo oscuro', aClaro: 'Cambiar a modo claro' },
   buscador: {
@@ -258,6 +260,8 @@ export const EN: Textos = {
     animado: (tipo) => `Animated ${tipo.toLowerCase()}`,
     cambiarIdioma: 'Español',
     cambiarIdiomaAria: 'View this page in Spanish',
+    idioma: 'Language',
+    idiomaActual: 'English, current language',
   },
   tema: { aOscuro: 'Switch to dark mode', aClaro: 'Switch to light mode' },
   buscador: {

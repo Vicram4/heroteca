@@ -126,10 +126,22 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
           <Buscador />
           {
             verBotonIdioma && (
-              <a class="pastilla idioma" href={otroIdioma} hreflang={idioma === 'en' ? 'es' : 'en'} lang={idioma === 'en' ? 'es' : 'en'} title={tx.general.cambiarIdiomaAria}>
-                {idioma === 'en' ? 'ES' : 'EN'}
-                <span class="solo-lectores"> ({tx.general.cambiarIdioma})</span>
-              </a>
+              // Interruptor ES | EN: el idioma actual va resaltado y el otro es el enlace
+              <div class="idiomas" role="group" aria-label={tx.general.idioma}>
+                {(['es', 'en'] as const).map((i) =>
+                  i === idioma ? (
+                    <span class="activo" aria-current="true" title={tx.general.idiomaActual}>
+                      {i.toUpperCase()}
+                      <span class="solo-lectores"> ({tx.general.idiomaActual})</span>
+                    </span>
+                  ) : (
+                    <a href={otroIdioma} hreflang={i} lang={i} title={tx.general.cambiarIdiomaAria}>
+                      {i.toUpperCase()}
+                      <span class="solo-lectores"> ({tx.general.cambiarIdioma})</span>
+                    </a>
+                  ),
+                )}
+              </div>
             )
           }
           <BotonTema />
@@ -260,10 +272,33 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
     gap: 8px;
     align-items: center;
   }
-  .idioma {
-    font: 700 0.85rem var(--f-titulo);
+  .idiomas {
+    display: inline-flex;
+    padding: 3px;
+    gap: 2px;
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    background: var(--sup);
+  }
+  .idiomas > * {
+    min-width: 36px;
+    padding: 6px 9px;
+    border-radius: 999px;
+    font: 700 0.85rem/1 var(--f-titulo);
     letter-spacing: 0.05em;
+    text-align: center;
     text-decoration: none;
+  }
+  .idiomas .activo {
+    background: var(--txt);
+    color: var(--fondo);
+  }
+  .idiomas a {
+    color: var(--txt-2);
+  }
+  .idiomas a:hover {
+    color: var(--txt);
+    background: var(--sup-2);
   }
   .pie {
     margin-top: 64px;
@@ -333,6 +368,50 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
     .universos a {
       font-size: 1rem;
       padding: 6px;
+    }
+  }
+  /* Móviles estrechos: cabecera más compacta para que quepa todo en una fila */
+  @media (max-width: 430px) {
+    .fila {
+      gap: 8px;
+    }
+    .acciones {
+      gap: 5px;
+    }
+    .universos a {
+      padding: 4px;
+    }
+    .idiomas > * {
+      min-width: 28px;
+      padding: 6px 5px;
+    }
+    .acciones :global(.pastilla) {
+      padding: 8px 10px;
+    }
+  }
+  /* Móviles muy estrechos (360 px): un poco más compacta todavía */
+  @media (max-width: 380px) {
+    .fila {
+      gap: 6px;
+    }
+    .acciones {
+      gap: 4px;
+    }
+    .fila :global(.marca .nombre) {
+      font-size: 1.55rem;
+    }
+    .universos {
+      gap: 0;
+    }
+    .universos a {
+      font-size: 0.92rem;
+    }
+    .acciones :global(.pastilla) {
+      padding: 7px 8px;
+    }
+    .idiomas > * {
+      min-width: 26px;
+      padding: 6px 4px;
     }
   }
 </style>
