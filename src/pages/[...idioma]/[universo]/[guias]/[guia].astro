@@ -1,4 +1,5 @@
 ---
+import { tablasEn } from '../../../../i18n/rutas';
 import { conIdiomas } from '../../../../i18n';
 /** Una guía de visionado: listas en orden generadas a partir de las fichas. */
 import Base from '../../../../layouts/Base.astro';
@@ -19,18 +20,20 @@ import {
   type Titulo,
   type Universo,
 } from '../../../../lib/datos';
-import { textos, idiomaDe, enIdioma, LOCALE } from '../../../../i18n';
+import { textos, idiomaDe, LOCALE } from '../../../../i18n';
+import { rutaEnIdioma } from '../../../../i18n/rutas';
 import { universoLoc, sagaLoc } from '../../../../i18n/datos';
 
 export async function getStaticPaths() {
+  const en = await tablasEn();
   return conIdiomas(await (async () => {
   const activos = new Set((await universosActivos()).map((u) => u.id));
   const universos = await universosActivos();
   return GUIAS.filter((g) => activos.has(g.universo)).map((guia) => ({
-    params: { universo: guia.universo, guia: guia.id },
+    params: { universo: guia.universo, guias: 'guias', guia: guia.id },
     props: { guia, universo: universos.find((u) => u.id === guia.universo)! },
   }));
-})());
+})(), (r) => ({ guias: 'guides', guia: en.guias.get(r.params.guia) }));
 }
 
 const { guia } = Astro.props as { guia: Guia; universo: Universo };
@@ -119,13 +122,14 @@ for (const id of guia.secciones) {
 
 // Datos estructurados: la primera lista como ItemList
 const primera = bloques[0]?.filas ?? carpetas.flatMap((c) => c.filas);
+const urlsLista = await Promise.all(primera.map((f) => rutaEnIdioma(f.t.url, idioma)));
 const datos = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   name: guia.titulo,
   description: guia.descripcion,
   numberOfItems: primera.length,
-  itemListElement: primera.map((f, i) => ({ '@type': 'ListItem', position: i + 1, name: f.t.corto, url: new URL(enIdioma(idioma, f.t.url), SITE.url).href })),
+  itemListElement: primera.map((f, i) => ({ '@type': 'ListItem', position: i + 1, name: f.t.corto, url: new URL(urlsLista[i], SITE.url).href })),
 };
 const indice = [...bloques.map((b) => ({ id: b.id, texto: b.titulo })), ...carpetas.map((c) => ({ id: c.id, texto: `${tx.general.carpeta(c.numero)} · ${c.etapa}` }))];
 const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t?.id))];

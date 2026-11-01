@@ -1,4 +1,5 @@
 ---
+import { tablasEn } from '../../../../i18n/rutas';
 import { conIdiomas } from '../../../../i18n';
 /**
  * Una carpeta de visionado (series de DC): sus temporadas y, si la tiene,
@@ -35,8 +36,9 @@ interface Props {
 }
 
 export async function getStaticPaths() {
+  const en = await tablasEn();
   return conIdiomas(await (async () => {
-  const rutas: { params: { universo: string; carpeta: string }; props: Props }[] = [];
+  const rutas: { params: { universo: string; carpetas: string; carpeta: string }; props: Props }[] = [];
   for (const universo of await universosActivos()) {
     const titulos = await titulosDe(universo.id);
     const visionados = await visionadosDe(universo.id);
@@ -45,7 +47,7 @@ export async function getStaticPaths() {
       const numeros = seccion.carpetas.map((c) => c.numero);
       numeros.forEach((n, i) => {
         rutas.push({
-          params: { universo: universo.id, carpeta: String(n) },
+          params: { universo: universo.id, carpetas: 'carpetas', carpeta: String(n) },
           props: {
             universo,
             seccion,
@@ -61,7 +63,7 @@ export async function getStaticPaths() {
     }
   }
   return rutas;
-})());
+})(), () => ({ carpetas: 'folders' }));
 }
 
 const idioma = idiomaDe(Astro.url);

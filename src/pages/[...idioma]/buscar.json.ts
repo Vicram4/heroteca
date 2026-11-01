@@ -10,7 +10,8 @@ import { getImage } from 'astro:assets';
 import { todosLosTitulos, universosActivos, numeroTexto } from '../../lib/datos';
 import { personajesDe } from '../../lib/personajes';
 import { imagenTmdb } from '../../lib/tmdb';
-import { enIdioma, nombreTipo, textosDe, type Idioma } from '../../i18n';
+import { nombreTipo, textosDe, type Idioma } from '../../i18n';
+import { rutaEnIdioma } from '../../i18n/rutas';
 import { seccionLoc, personajeLoc } from '../../i18n/datos';
 
 export async function GET({ params }: { params: { idioma?: string } }) {
@@ -33,7 +34,7 @@ export async function GET({ params }: { params: { idioma?: string } }) {
         o: t.d.tituloOriginal ?? '',
         a: t.d.otrosTitulos,
         r: t.m.reparto.map((r) => [r.actor, r.personaje].filter(Boolean).join(' ')).join(' · '),
-        u: enIdioma(idioma, t.url),
+        u: await rutaEnIdioma(t.url, idioma),
         y: t.d.anio,
         k: nombreTipo(t.tipo, idioma),
         c: t.tipo,
@@ -46,18 +47,18 @@ export async function GET({ params }: { params: { idioma?: string } }) {
   const personajes = (
     await Promise.all(
       [...activos.values()].map(async (u) =>
-        (await personajesDe(u.id)).map(({ p: original, apariciones }) => ({ p: personajeLoc(original, idioma), apariciones })).map(({ p, apariciones }) => ({
+        Promise.all((await personajesDe(u.id)).map(({ p: original, apariciones }) => ({ p: personajeLoc(original, idioma), apariciones })).map(async ({ p, apariciones }) => ({
           t: p.data.nombre,
           o: p.data.identidad ?? '',
           a: p.data.alias,
           r: '',
-          u: enIdioma(idioma, `/${u.id}/personajes/${p.id}/`),
+          u: await rutaEnIdioma(`/${u.id}/personajes/${p.id}/`, idioma),
           y: 0,
           k: idioma === 'en' ? 'Character' : 'Personaje',
           c: 'personaje',
           n: '',
           s: `${u.data.nombre} · ${tx.general.titulos(apariciones.length)}`,
-        })),
+        }))),
       ),
     )
   ).flat();

@@ -1,4 +1,5 @@
 ---
+import { tablasEn } from '../../../../i18n/rutas';
 import { conIdiomas } from '../../../../i18n';
 /** Estantería de una saga, fase o «Relacionada», incluyendo sus subsagas. */
 import Base from '../../../../layouts/Base.astro';
@@ -7,6 +8,7 @@ import Estanteria from '../../../../components/Estanteria.astro';
 import { universosActivos, sagasDe, titulosDe, huecosDeSeccion, type Saga } from '../../../../lib/datos';
 
 export async function getStaticPaths() {
+  const en = await tablasEn();
   return conIdiomas(await (async () => {
   const rutas = [];
   for (const universo of await universosActivos()) {
@@ -25,7 +27,7 @@ export async function getStaticPaths() {
     }
   }
   return rutas;
-})());
+})(), (r) => ({ saga: en.sagas.get(r.params.saga) }));
 }
 import { textos, idiomaDe } from '../../../../i18n';
 import { universoLoc, sagaLoc } from '../../../../i18n/datos';

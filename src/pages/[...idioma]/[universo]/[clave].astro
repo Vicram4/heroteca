@@ -1,4 +1,5 @@
 ---
+import { tablasEn } from '../../../i18n/rutas';
 import { conIdiomas } from '../../../i18n';
 /**
  * Dos tipos de página bajo /<universo>/<clave>/:
@@ -12,7 +13,8 @@ import Ficha from '../../../components/Ficha.astro';
 import { getImage } from 'astro:assets';
 import { SITE } from '../../../config/site';
 import { imagenTmdb } from '../../../lib/tmdb';
-import { textos, idiomaDe, enIdioma, nombreTipo } from '../../../i18n';
+import { textos, idiomaDe, nombreTipo } from '../../../i18n';
+import { rutaEnIdioma } from '../../../i18n/rutas';
 import { universoLoc, seccionLoc } from '../../../i18n/datos';
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
@@ -38,6 +40,7 @@ type Props =
   | { tipo: 'ficha'; universo: Universo; t: Titulo; sagas: Saga[]; anterior?: Titulo; siguiente?: Titulo; temporadas: Titulo[] };
 
 export async function getStaticPaths() {
+  const en = await tablasEn();
   return conIdiomas(await (async () => {
   const rutas: { params: { universo: string; clave: string }; props: Props }[] = [];
   for (const universo of await universosActivos()) {
@@ -67,7 +70,7 @@ export async function getStaticPaths() {
     }
   }
   return rutas;
-})());
+})(), (r) => ({ clave: r.props?.tipo === 'seccion' ? en.secciones.get(`${r.params.universo}/${r.params.clave}`) : en.fichas.get(r.params.clave) }));
 }
 
 // Las rutas llegan con los datos en español: aquí se pasan al idioma de la página
@@ -103,7 +106,7 @@ if (p.tipo === 'ficha') {
     : t.m.posterTmdb
       ? imagenTmdb(t.m.posterTmdb, 'w500')
       : undefined;
-  const url = new URL(enIdioma(idioma, t.url), SITE.url).href;
+  const url = new URL(await rutaEnIdioma(t.url, idioma), SITE.url).href;
   const persona = (n: string) => ({ '@type': 'Person', name: n });
   const comun = {
     url,

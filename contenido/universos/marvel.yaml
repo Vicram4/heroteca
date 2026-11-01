@@ -12,6 +12,7 @@ secciones:
     orden: cronologico
     tituloSeo: Orden cronológico del UMC (MCU) – todas las películas y series de Marvel
     descripcion: Universo Marvel Cinematográfico (UMC o MCU) en orden cronológico de la historia, con la numeración de la colección.
+    idEn: mcu
     nombreEn: MCU
     tituloSeoEn: MCU in chronological order – every Marvel film and series
     descripcionEn: The Marvel Cinematic Universe (MCU) in the chronological order of the story, with the collection’s numbering.
@@ -20,6 +21,7 @@ secciones:
     orden: estreno
     tituloSeo: Películas y series de Marvel anteriores al UMC (MCU)
     descripcion: Películas y series de Marvel anteriores o ajenas al UMC (MCU), por orden de estreno.
+    idEn: pre-mcu
     nombreEn: Pre-MCU
     tituloSeoEn: Marvel films and series before the MCU
     descripcionEn: Marvel films and series released before or outside the MCU, in release order.
@@ -28,6 +30,7 @@ secciones:
     orden: estreno
     tituloSeo: Películas y series de animación de Marvel
     descripcion: Películas y series animadas de Marvel, por orden de estreno.
+    idEn: animation
     nombreEn: Animation
     tituloSeoEn: Marvel animated films and series
     descripcionEn: Marvel animated films and series, in release order.

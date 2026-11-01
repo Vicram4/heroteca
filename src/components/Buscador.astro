@@ -3,9 +3,9 @@
  * Buscador instantáneo de títulos (y, más adelante, personajes).
  * Se abre con el botón, con "/" o con Ctrl+K. Navegable con teclado.
  */
-import { textos, idiomaDe, enIdioma } from '../i18n';
+import { textos, idiomaDe } from '../i18n';
 const tx = textos(Astro.url);
-const indice = enIdioma(idiomaDe(Astro.url), '/buscar.json');
+const indice = idiomaDe(Astro.url) === 'en' ? '/en/buscar.json' : '/buscar.json';
 ---
 
 <button type="button" class="abrir-buscar pastilla" data-abrir-buscar aria-haspopup="dialog">

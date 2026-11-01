@@ -74,7 +74,8 @@ const universos = defineCollection({
           descripcion: z.string().optional(),
           /** Título para buscadores de la estantería (si falta, se usa el nombre). */
           tituloSeo: z.string().optional(),
-          /** Versión inglesa (/en/): nombre (UMC → MCU), descripción y título para buscadores. */
+          /** Versión inglesa (/en/): id para la dirección (umc → mcu), nombre (UMC → MCU), descripción y título para buscadores. */
+          idEn: slug.optional(),
           nombreEn: z.string().optional(),
           descripcionEn: z.string().optional(),
           tituloSeoEn: z.string().optional(),

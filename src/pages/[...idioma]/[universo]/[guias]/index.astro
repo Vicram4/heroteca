@@ -1,4 +1,5 @@
 ---
+import { tablasEn } from '../../../../i18n/rutas';
 import { conIdiomas } from '../../../../i18n';
 /** Guías de visionado de un universo. */
 import Base from '../../../../layouts/Base.astro';
@@ -7,11 +8,12 @@ import { guiasDe } from '../../../../config/guias';
 import { universosActivos } from '../../../../lib/datos';
 
 export async function getStaticPaths() {
+  const en = await tablasEn();
   return conIdiomas(await (async () => {
   return (await universosActivos())
     .filter((u) => guiasDe(u.id).length > 0)
-    .map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
-})());
+    .map((universo) => ({ params: { universo: universo.id, guias: 'guias' }, props: { universo } }));
+})(), () => ({ guias: 'guides' }));
 }
 import { textos } from '../../../../i18n';
 const tx = textos(Astro.url);

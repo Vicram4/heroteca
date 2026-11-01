@@ -22,10 +22,19 @@ export const idiomaDe = (url: URL): Idioma => (url.pathname === '/en' || url.pat
 export const sinIdioma = (ruta: string) => ruta.replace(/^\/en(?=\/|$)/, '') || '/';
 export const enIdioma = (idioma: Idioma, ruta: string) => (idioma === 'en' ? `/en${ruta === '/' ? '/' : ruta}` : ruta);
 
-/** Duplica las rutas de getStaticPaths para los dos idiomas (params.idioma: undefined = español). */
-export function conIdiomas<P extends Record<string, string | undefined>, R>(rutas: { params: P; props?: R }[]) {
+/**
+ * Duplica las rutas de getStaticPaths para los dos idiomas (params.idioma: undefined = español).
+ * `enIngles` devuelve los parámetros que cambian en la dirección inglesa (slugs y palabras traducidas).
+ */
+export function conIdiomas<P extends Record<string, string | undefined>, R>(
+  rutas: { params: P; props?: R }[],
+  enIngles?: (r: { params: P; props?: R }) => Partial<P>,
+) {
   return IDIOMAS.flatMap((idioma) =>
-    rutas.map((r) => ({ params: { ...r.params, idioma: idioma === 'es' ? undefined : idioma }, props: r.props })),
+    rutas.map((r) => ({
+      params: { ...r.params, ...(idioma === 'en' ? enIngles?.(r) : {}), idioma: idioma === 'es' ? undefined : idioma },
+      props: r.props,
+    })),
   );
 }
 

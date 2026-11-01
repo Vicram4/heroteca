@@ -10,6 +10,8 @@ export interface Guia {
   universo: string;
   /** Final de la URL: /<universo>/guias/<id>/ */
   id: string;
+  /** Final de la URL en inglés: /en/<universo>/guides/<idEn>/ */
+  idEn?: string;
   titulo: string;
   /** Título para buscadores */
   tituloSeo: string;
@@ -30,6 +32,7 @@ export const GUIAS: Guia[] = [
   {
     universo: 'marvel',
     id: 'orden-umc',
+    idEn: 'mcu-watch-order',
     titulo: 'Cómo ver el UMC (MCU) en orden',
     tituloSeo: 'Orden para ver Marvel (UMC / MCU): orden cronológico y de estreno',
     descripcion:
@@ -46,6 +49,7 @@ export const GUIAS: Guia[] = [
   {
     universo: 'dc',
     id: 'orden-peliculas',
+    idEn: 'dc-movies-in-order',
     titulo: 'Orden de las películas de DC',
     tituloSeo: 'Orden para ver las películas de DC: Universo Extendido (DCEU) y clásicas',
     descripcion:
@@ -60,6 +64,7 @@ export const GUIAS: Guia[] = [
   {
     universo: 'dc',
     id: 'orden-arrowverso',
+    idEn: 'arrowverse-watch-order',
     titulo: 'Orden del Arrowverso capítulo a capítulo',
     tituloSeo: 'Orden para ver el Arrowverso capítulo a capítulo: Arrow, The Flash, Supergirl y Legends',
     descripcion:

@@ -7,7 +7,8 @@ import BotonTema from '../components/BotonTema.astro';
 import Buscador from '../components/Buscador.astro';
 import ArchivoRojo from '../components/ArchivoRojo.astro';
 import { guiasDe } from '../config/guias';
-import { idiomaDe, textos, LOCALE, sinIdioma, enIdioma } from '../i18n';
+import { idiomaDe, textos, LOCALE } from '../i18n';
+import { rutaEn, rutaEs, rutaEnIdioma } from '../i18n/rutas';
 // Tipografías principales: se precargan para que el texto no cambie de tamaño al llegar la fuente
 import barlow400 from '@fontsource/barlow/files/barlow-latin-400-normal.woff2?url';
 import barlow600 from '@fontsource/barlow/files/barlow-latin-600-normal.woff2?url';
@@ -43,11 +44,12 @@ const {
   migas,
 } = Astro.props;
 // Migas de pan como datos estructurados (Google las muestra en los resultados)
+const urlsMigas = await Promise.all((migas ?? []).map((m) => rutaEnIdioma(m.url, idioma)));
 const datosMigas = migas?.length
   ? {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
-      itemListElement: migas.map((m, i) => ({ '@type': 'ListItem', position: i + 1, name: m.nombre, item: new URL(enIdioma(idioma, m.url), SITE.url).href })),
+      itemListElement: migas.map((m, i) => ({ '@type': 'ListItem', position: i + 1, name: m.nombre, item: new URL(urlsMigas[i], SITE.url).href })),
     }
   : undefined;
 // Fecha de la última actualización: la de la compilación
@@ -56,8 +58,9 @@ const tituloPagina = titulo ? `${titulo} · ${SITE.nombre}` : `${SITE.nombre} ·
 const universos = await universosActivos();
 const canonica = new URL(Astro.url.pathname, Astro.site);
 // La misma página en los dos idiomas (direcciones completas: no las toca la reescritura de enlaces)
-const rutaBase = sinIdioma(Astro.url.pathname);
-const alternativas = { es: new URL(rutaBase, SITE.url).href, en: new URL(enIdioma('en', rutaBase), SITE.url).href };
+const rutaEspanol = idioma === 'en' ? await rutaEs(Astro.url.pathname) : Astro.url.pathname;
+const rutaIngles = idioma === 'en' ? Astro.url.pathname : await rutaEn(Astro.url.pathname);
+const alternativas = { es: new URL(rutaEspanol, SITE.url).href, en: new URL(rutaIngles, SITE.url).href };
 // Mientras la versión inglesa no esté publicada, sus páginas no se indexan
 const ocultar = noIndexar || (idioma === 'en' && !SITE.inglesPublicado);
 const otroIdioma = idioma === 'en' ? alternativas.es : alternativas.en;
