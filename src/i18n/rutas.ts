@@ -9,9 +9,10 @@
 import { getCollection } from 'astro:content';
 import { GUIAS } from '../config/guias';
 import { todosLosTitulos, universosActivos } from '../lib/datos';
+import { actores } from '../lib/actores';
 
 /** Palabras fijas de las direcciones. */
-export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon', miProgreso: 'my-progress', recomendaciones: 'recommendations', estadisticas: 'stats' } as const;
+export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon', miProgreso: 'my-progress', recomendaciones: 'recommendations', estadisticas: 'stats', actores: 'actors' } as const;
 export type Segmento = keyof typeof SEGMENTOS;
 export const segmento = (s: Segmento, idioma: 'es' | 'en') => (idioma === 'en' ? SEGMENTOS[s] : s);
 
@@ -105,7 +106,9 @@ async function calcular(): Promise<Tablas> {
     ['/mi-progreso/', `/en/${SEGMENTOS.miProgreso}/`],
     ['/recomendaciones/', `/en/${SEGMENTOS.recomendaciones}/`],
     ['/estadisticas/', `/en/${SEGMENTOS.estadisticas}/`],
+    ['/actores/', `/en/${SEGMENTOS.actores}/`],
   ]);
+  for (const a of await actores()) aIngles.set(`/actores/${a.id}/`, `/en/${SEGMENTOS.actores}/${a.id}/`);
   for (const u of universos) {
     const U = u.id;
     aIngles.set(`/${U}/`, `/en/${U}/`);

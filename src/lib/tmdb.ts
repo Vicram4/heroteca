@@ -25,7 +25,8 @@ export interface DatosTmdb {
   direccion?: string[];
   guion?: string[];
   creadores?: string[];
-  reparto?: { actor: string; personaje?: string }[];
+  /** Reparto; idTmdb y foto, para las páginas de actores */
+  reparto?: { actor: string; personaje?: string; idTmdb?: number; foto?: string }[];
   trailer?: string;
   generos?: string[];
   temporadas?: number;

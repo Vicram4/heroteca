@@ -95,6 +95,11 @@ def edad_serie(id_, refrescar):
     return edad_minima({r['iso_3166_1']: [r.get('rating', '').strip()] for r in datos.get('results', [])})
 
 
+def actor(c, personaje):
+    """Entrada del reparto: nombre, personaje y, para las páginas de actores, su id y foto de TMDB."""
+    return {'actor': c['name'], 'personaje': personaje or '', 'idTmdb': c.get('id'), 'foto': c.get('profile_path')}
+
+
 def valoracion(d):
     """Nota media de TMDB (0-10) y número de votos; se usan para ordenar las recomendaciones."""
     votos = d.get('vote_count') or 0
@@ -114,7 +119,7 @@ def datos_pelicula(d, refrescar):
         'sinopsis': (d.get('overview') or '').strip() or None,
         'direccion': nombres(cred.get('crew'), 'Director'),
         'guion': nombres(cred.get('crew'), 'Screenplay', 'Writer', 'Story'),
-        'reparto': [{'actor': c['name'], 'personaje': c.get('character') or ''} for c in (cred.get('cast') or [])[:MAX_REPARTO]],
+        'reparto': [actor(c, c.get('character')) for c in (cred.get('cast') or [])[:MAX_REPARTO]],
         'trailer': trailer(d.get('videos')),
         'generos': [g['name'] for g in d.get('genres', [])],
         'edad': edad_pelicula(d),
@@ -137,7 +142,7 @@ def datos_serie(d, temporada, refrescar):
         **valoracion(d),
     }
     agg = d.get('aggregate_credits') or {}
-    reparto = [{'actor': c['name'], 'personaje': ' / '.join(r.get('character', '') for r in c.get('roles', [])[:1])}
+    reparto = [actor(c, ' / '.join(r.get('character', '') for r in c.get('roles', [])[:1]))
                for c in (agg.get('cast') or (d.get('credits') or {}).get('cast') or [])[:MAX_REPARTO]]
     base['reparto'] = reparto
     if not temporada:
@@ -151,7 +156,7 @@ def datos_serie(d, temporada, refrescar):
     base['fecha'] = s.get('air_date') or base['fecha']
     if (s.get('overview') or '').strip():
         base['sinopsis'] = s['overview'].strip()
-    reparto_t = [{'actor': c['name'], 'personaje': c.get('character') or ''} for c in ((s.get('credits') or {}).get('cast') or [])[:MAX_REPARTO]]
+    reparto_t = [actor(c, c.get('character')) for c in ((s.get('credits') or {}).get('cast') or [])[:MAX_REPARTO]]
     if reparto_t:
         base['reparto'] = reparto_t
     base['trailer'] = trailer(s.get('videos')) or base['trailer']

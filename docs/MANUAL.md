@@ -269,6 +269,20 @@ En las guías, cada sección con orden de la historia (UMC, DCEU) tiene un apart
 
 Los tramos de una misma temporada cuentan una sola vez, en su primera aparición. Se genera solo con las fichas.
 
+## Actores y actrices
+
+Índice en `/actores/` (`/en/actors/`, con buscador por nombre o personaje) y una página por intérprete en
+`/actores/<nombre>/` (el nombre no se traduce). Se generan solas con `src/lib/actores.ts`:
+
+- **Quién tiene página:** quien aparece en al menos **3 obras distintas** (`MIN_OBRAS`; las temporadas de una serie
+  cuentan como una sola obra). Con 2 había más de 300 páginas casi vacías, que no aportan y restan en buscadores.
+- **De dónde salen los papeles:** el reparto de TMDB (`datos/tmdb/`, que ahora guarda también el id y la foto de cada
+  intérprete) y el reparto escrito en las fichas. El mismo nombre con otra escritura (tildes, mayúsculas) cuenta igual.
+- **Personajes:** se limpian las anotaciones de TMDB («(voice)», «(archive footage)»…) y se quitan los papeles
+  genéricos («Additional Voices», «Himself»). En inglés se usa el reparto inglés.
+- **Enlaces:** en cada ficha, el nombre del intérprete enlaza a su página si la tiene; también el gráfico de actores
+  de las estadísticas.
+
 ## Estadísticas
 
 Página `/estadisticas/` (`/en/stats/`), enlazada en el pie. Todo se calcula al compilar con las fichas y

@@ -1,0 +1,247 @@
+---
+import { conIdiomas, idiomaDe, textos, nombreTipo } from '../../../i18n';
+import { actores, obraDe, claveActor, limpiarPersonaje, mismoPersonaje, type Actor } from '../../../lib/actores';
+export async function getStaticPaths() {
+  return conIdiomas(
+    (await actores()).map((a) => ({ params: { actores: 'actores', actor: a.id }, props: { a } })),
+    () => ({ actores: 'actors' }),
+  );
+}
+/**
+ * Página de un actor o actriz: sus papeles en la colección, agrupados por obra (las temporadas de una serie juntas),
+ * con el personaje que interpreta. Foto y enlace de TMDB si los hay.
+ */
+import Base from '../../../layouts/Base.astro';
+import { SITE } from '../../../config/site';
+import { universosActivos, localizar, type Titulo } from '../../../lib/datos';
+import { imagenTmdb, datosTmdb } from '../../../lib/tmdb';
+import { rutaEnIdioma } from '../../../i18n/rutas';
+
+const { a } = Astro.props as { a: Actor };
+const tx = textos(Astro.url);
+const ta = tx.actores;
+const idioma = idiomaDe(Astro.url);
+const universos = await universosActivos();
+
+/** Personaje en el idioma de la página (en inglés, el del reparto inglés de TMDB si existe). */
+function personaje(t: Titulo, enEspanol?: string) {
+  if (idioma === 'es') return enEspanol;
+  const en = datosTmdb(t.universo, t.id, 'en')?.reparto?.find((r) => claveActor(r.actor) === claveActor(a.nombre));
+  return limpiarPersonaje(en?.personaje) || enEspanol;
+}
+
+// Agrupar por obra: una serie con varias temporadas es una sola tarjeta
+const grupos = new Map<string, { titulos: Titulo[]; personajes: Set<string> }>();
+for (const p of a.papeles) {
+  const g = grupos.get(obraDe(p.t)) ?? grupos.set(obraDe(p.t), { titulos: [], personajes: new Set() }).get(obraDe(p.t))!;
+  const t = localizar(p.t, idioma);
+  g.titulos.push(t);
+  const pj = personaje(p.t, p.personaje);
+  // Sin repetir el mismo personaje escrito con distinta mayúscula
+  if (pj) pj.split(' / ').forEach((x) => x.trim() && ![...g.personajes].some((y) => mismoPersonaje(y, x.trim())) && g.personajes.add(x.trim()));
+}
+const obras = [...grupos.values()].map((g) => {
+  const t = g.titulos[0];
+  const anios = [...new Set(g.titulos.map((x) => x.d.anio))];
+  return {
+    t,
+    temporadas: g.titulos.filter((x) => x.d.temporada).sort((x, y) => (x.d.temporada ?? 0) - (y.d.temporada ?? 0)),
+    nombre: g.titulos.length > 1 || t.d.temporada ? t.d.titulo : t.corto,
+    anios: anios.length > 1 ? `${Math.min(...anios)}–${Math.max(...anios)}` : String(anios[0]),
+    personajes: [...g.personajes],
+    tipo: t.d.animada ? tx.general.animado(nombreTipo(t.tipo, idioma)) : nombreTipo(t.tipo, idioma),
+    poster: t.m.posterTmdb,
+  };
+});
+// Personajes principales: los que interpreta en más obras
+const vecesPersonaje = new Map<string, number>();
+for (const p of obras.flatMap((o) => o.personajes)) {
+  const igual = [...vecesPersonaje.keys()].find((x) => mismoPersonaje(x, p)) ?? p;
+  vecesPersonaje.set(igual, (vecesPersonaje.get(igual) ?? 0) + 1);
+}
+const personajesPrincipales = [...vecesPersonaje].sort((x, y) => y[1] - x[1]).slice(0, 4).map(([p]) => p);
+const resumenUniversos = universos
+  .filter((u) => a.porUniverso[u.id])
+  .map((u) => `${u.data.nombre}: ${a.porUniverso[u.id]}`)
+  .join(' · ');
+const urlTmdb = a.idTmdb ? `https://www.themoviedb.org/person/${a.idTmdb}?language=${idioma === 'en' ? 'en-US' : 'es-ES'}` : undefined;
+const datos = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: a.nombre,
+  url: new URL(await rutaEnIdioma(`/actores/${a.id}/`, idioma), SITE.url).href,
+  ...(a.foto && { image: imagenTmdb(a.foto, 'w342') }),
+  ...(urlTmdb && { sameAs: [`https://www.themoviedb.org/person/${a.idTmdb}`] }),
+};
+---
+
+<Base
+  titulo={ta.tituloActor(a.nombre)}
+  descripcion={ta.descripcionActor(a.nombre, a.papeles.length, personajesPrincipales.join(', '))}
+  imagen={a.foto ? imagenTmdb(a.foto, 'w500') : undefined}
+  datos={datos}
+  migas={[
+    { nombre: 'Heroteca', url: '/' },
+    { nombre: ta.titulo, url: '/actores/' },
+    { nombre: a.nombre, url: `/actores/${a.id}/` },
+  ]}
+>
+  <article class="contenedor actor">
+    <nav class="miga" aria-label={tx.general.estasEn}>
+      <a href="/actores/">{ta.titulo}</a>
+    </nav>
+    <header class="cab">
+      <span class="foto">
+        {a.foto ? <img src={imagenTmdb(a.foto, 'w185')} alt="" width="185" height="278" /> : <span aria-hidden="true">{a.nombre.split(' ').map((p) => p[0]).slice(0, 2).join('')}</span>}
+      </span>
+      <div>
+        <h1>{a.nombre}</h1>
+        <p class="resumen">{ta.titulosEn(a.papeles.length)} · {resumenUniversos}</p>
+        {personajesPrincipales.length > 0 && <p class="personajes">{personajesPrincipales.join(' · ')}</p>}
+        {
+          urlTmdb && (
+            <p>
+              <a href={urlTmdb} rel="noopener">
+                {ta.enTmdb} ↗
+              </a>
+            </p>
+          )
+        }
+      </div>
+    </header>
+
+    <section aria-labelledby="t-papeles">
+      <h2 id="t-papeles">{ta.papeles}</h2>
+      <ul class="obras">
+        {
+          obras.map((o) => (
+            <li class="panel">
+              <span class="cartel">{o.poster && <img src={imagenTmdb(o.poster, 'w92')} alt="" width="92" height="138" loading="lazy" />}</span>
+              <div class="texto">
+                <a href={o.t.url} class="nombre">
+                  {o.nombre}
+                </a>
+                <span class="meta">
+                  {o.anios} · {o.tipo}
+                </span>
+                {o.personajes.length > 0 && <span class="como">{ta.como(o.personajes.join(' / '))}</span>}
+                {o.temporadas.length > 1 && (
+                  <ul class="temporadas" aria-label={ta.temporadas}>
+                    {o.temporadas.map((t) => (
+                      <li>
+                        <a href={t.url} class="chip">
+                          {tx.carpetas.temporadaCorta(t.d.temporada ?? 0)}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="fuente">{ta.fuente}</p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .actor {
+    padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .miga {
+    font-size: 0.9rem;
+    margin-bottom: 14px;
+  }
+  .cab {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 20px 26px;
+    margin-bottom: 26px;
+  }
+  .foto {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 140px;
+    aspect-ratio: 2 / 3;
+    border-radius: var(--radio);
+    overflow: hidden;
+    background: var(--sup);
+    border: 1px solid var(--borde);
+    font: 800 2.4rem var(--f-titulo);
+    color: var(--txt-2);
+  }
+  .foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  h1 {
+    margin: 0 0 6px;
+  }
+  .cab p {
+    margin: 4px 0 0;
+  }
+  .resumen {
+    font-weight: 600;
+  }
+  .personajes {
+    color: var(--txt-2);
+  }
+  .obras {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr));
+    gap: 12px;
+  }
+  .obras > li {
+    display: grid;
+    grid-template-columns: 62px 1fr;
+    gap: 14px;
+    padding: 12px;
+  }
+  .cartel {
+    aspect-ratio: 2 / 3;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--borde);
+  }
+  .cartel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .texto {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .nombre {
+    font: 700 1.05rem / 1.2 var(--f-titulo);
+    color: inherit;
+  }
+  .meta,
+  .como {
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .temporadas {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .fuente {
+    margin-top: 16px;
+    font-size: 0.82rem;
+    color: var(--txt-2);
+  }
+</style>

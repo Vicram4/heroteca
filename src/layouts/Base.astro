@@ -169,6 +169,7 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
               <li><a href="/recomendaciones/">{tx.recomendar.pie}</a></li>
               <li><a href="/mi-progreso/">{tx.progreso.pie}</a></li>
               <li><a href="/estadisticas/">{tx.estadisticas.pie}</a></li>
+              <li><a href="/actores/">{tx.actores.pie}</a></li>
               {universos.filter((u) => guiasDe(u.id).length).map((u) => <li><a href={`/${u.id}/guias/`}>{tx.pie.guiasDe(u.data.nombre)}</a></li>)}
             </ul>
           </nav>

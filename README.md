@@ -36,6 +36,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **¿Qué veo?**: encuesta de 7 preguntas (universo, tiempo, tono, imagen real o animación, plataformas, personaje
   favorito y nivel) que recomienda títulos con la nota de TMDB, la calificación por edades y lo que ya has visto.
   Funciona entera en el navegador.
+- **Actores y actrices**: página para cada intérprete con al menos tres obras en la colección (277), con foto,
+  todos sus papeles agrupados por obra y sus personajes; los nombres del reparto de cada ficha enlazan a ella.
 - **Estadísticas**: horas para verlo todo, maratón del UMC, horas por sección, estrenos por década, personajes y
   actores que más aparecen y récords, con gráficos accesibles (leyenda, tabla de datos y colores comprobados para
   daltonismo en modo claro y oscuro).

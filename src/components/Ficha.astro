@@ -7,6 +7,7 @@ import Spoiler from './Spoiler.astro';
 import DondeVer from './DondeVer.astro';
 import { numeroTexto, todosLosTitulos, urlCarpeta, localizar, type Titulo, type Universo, type Saga } from '../lib/datos';
 import { apariciones, enlacesRepartoEn } from '../lib/personajes';
+import { paginaDeActor, claveActor } from '../lib/actores';
 import { universoLoc, sagaLoc } from '../i18n/datos';
 import { textos, idiomaDe, nombreTipo, LOCALE } from '../i18n';
 
@@ -59,6 +60,8 @@ const hayTmdb =
   (!t.portada && Boolean(m.posterTmdb)) ||
   (d.conexiones.postCreditos.length === 0 && m.escenasCreditos.length > 0);
 const enlaceReparto = idioma === 'en' ? await enlacesRepartoEn() : (await apariciones()).enlaceReparto;
+// Actores con página propia (/actores/<id>/)
+const actorConPagina = await paginaDeActor();
 const todos = await todosLosTitulos(idioma);
 const buscarTitulo = (id: string) => todos.find((x) => x.id === id);
 // «Ver antes / después»: los tuyos; si no hay, los vecinos en tus trilogías y dulogías (por fecha)
@@ -231,9 +234,10 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
               <ul class="reparto">
                 {m.reparto.map((r, i) => {
                   const pid = enlaceReparto.get(`${t.id}|${i}`);
+                  const aid = actorConPagina.get(claveActor(r.actor));
                   return (
                     <li>
-                      <span>{r.actor}</span>
+                      <span>{aid ? <a href={`/actores/${aid}/`}>{r.actor}</a> : r.actor}</span>
                       {pid ? <a href={`/${universo.id}/personajes/${pid}/`}>{r.personaje}</a> : <span>{r.personaje}</span>}
                     </li>
                   );

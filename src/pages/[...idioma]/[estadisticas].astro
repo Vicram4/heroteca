@@ -14,6 +14,7 @@ import GraficoColumnas from '../../components/GraficoColumnas.astro';
 import { universosActivos, titulosDe, localizar, type Titulo } from '../../lib/datos';
 import { datosTmdb } from '../../lib/tmdb';
 import { apariciones } from '../../lib/personajes';
+import { paginaDeActor, claveActor } from '../../lib/actores';
 import { seccionLoc, personajeLoc } from '../../i18n/datos';
 
 const tx = textos(Astro.url);
@@ -71,6 +72,7 @@ const filasPersonajes = personajes
   .map(({ p, n }) => ({ etiqueta: p.data.nombre, url: `/${p.data.universo.id}/personajes/${p.id}/`, partes: [{ serie: p.data.universo.id, valor: n }] }));
 
 // Actores con más papeles (reparto de TMDB y de las fichas), repartidos por universo
+const paginaActor = await paginaDeActor();
 const porActor = new Map<string, Map<string, Set<string>>>();
 for (const t of titulos) {
   const reparto = new Set([...(datosTmdb(t.universo, t.id, 'es')?.reparto ?? []), ...t.m.reparto].map((r) => r.actor));
@@ -80,7 +82,7 @@ for (const t of titulos) {
   }
 }
 const filasActores = [...porActor]
-  .map(([actor, m]) => ({ etiqueta: actor, partes: universos.map((u) => ({ serie: u.id, valor: m.get(u.id)?.size ?? 0 })) }))
+  .map(([actor, m]) => ({ etiqueta: actor, url: paginaActor.get(claveActor(actor)) && `/actores/${paginaActor.get(claveActor(actor))}/`, partes: universos.map((u) => ({ serie: u.id, valor: m.get(u.id)?.size ?? 0 })) }))
   .sort((a, b) => b.partes.reduce((n, p) => n + p.valor, 0) - a.partes.reduce((n, p) => n + p.valor, 0) || a.etiqueta.localeCompare(b.etiqueta))
   .slice(0, 10);
 
