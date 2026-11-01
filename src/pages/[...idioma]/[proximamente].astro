@@ -10,6 +10,7 @@ export function getStaticPaths() {
 import Base from '../../layouts/Base.astro';
 import TarjetaEstreno from '../../components/TarjetaEstreno.astro';
 import ListaEstrenos from '../../components/ListaEstrenos.astro';
+import CuentaAtras from '../../components/CuentaAtras.astro';
 import { universosActivos } from '../../lib/datos';
 import { proximosEstrenos, enEmision, fechaProximamente, textosEstreno, fechaDe } from '../../lib/proximamente';
 import { paisDe } from '../../lib/dondever';
@@ -22,6 +23,8 @@ const pais = paisDe(idioma);
 const lista = proximosEstrenos(pais).filter((e) => uDe(e.universo));
 const emision = lista.filter(enEmision);
 const estrenos = lista.filter((e) => !enEmision(e));
+// El contador grande: la próxima película
+const siguientePelicula = estrenos.find((e) => e.tipo === 'pelicula');
 const anios = [...new Set(estrenos.map((e) => fechaDe(e, pais).slice(0, 4)))];
 const actualizado = fechaProximamente().toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
@@ -40,6 +43,7 @@ const actualizado = fechaProximamente().toLocaleDateString(LOCALE[idioma], { day
   <div class="contenedor proximos" data-proximos>
     <h1>{tx.proximos.titulo}</h1>
     <p class="entradilla">{tx.proximos.intro} {tx.proximos.actualizado(actualizado)}</p>
+    {siguientePelicula && <div class="destacado"><CuentaAtras e={siguientePelicula} u={uDe(siguientePelicula.universo)} /></div>}
 
     {
       universos.length > 1 && (
@@ -113,6 +117,9 @@ const actualizado = fechaProximamente().toLocaleDateString(LOCALE[idioma], { day
 <style>
   .proximos {
     padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .destacado {
+    margin: 20px 0 8px;
   }
   .entradilla {
     max-width: 70ch;

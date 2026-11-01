@@ -19,6 +19,8 @@ const tx = textos(Astro.url);
   data-hoy={tx.proximos.hoy}
   data-manana={tx.proximos.manana}
   data-faltan={tx.proximos.faltan(999)}
+  data-dia1={tx.proximos.dia1}
+  data-dias={tx.proximos.diasCorto}
 >
   <slot />
 </ul>
@@ -38,8 +40,13 @@ const tx = textos(Astro.url);
       }
       const cuenta = li.querySelector<HTMLElement>('[data-cuenta]');
       if (!cuenta || dias > 365) return;
-      cuenta.textContent = dias === 0 ? txHoy : dias === 1 ? manana : faltan.replace('999', String(dias));
+      // Anillo: número de días y arco que se cierra en el último año (al cargar, se anima desde vacío)
+      cuenta.setAttribute('aria-label', dias === 0 ? txHoy : dias === 1 ? manana : faltan.replace('999', String(dias)));
+      cuenta.querySelector('[data-cuenta-num]')!.textContent = dias === 0 ? txHoy : String(dias);
+      cuenta.querySelector('[data-cuenta-ud]')!.textContent = dias === 1 ? (lista.dataset.dia1 ?? '') : (lista.dataset.dias ?? '');
+      cuenta.classList.toggle('es-hoy', dias === 0);
       cuenta.hidden = false;
+      requestAnimationFrame(() => requestAnimationFrame(() => cuenta.style.setProperty('--p', String(Math.max(0.03, 1 - dias / 365)))));
     });
     // Sin estrenos visibles: se oculta el bloque entero (lo indica el atributo data-bloque del contenedor)
     const bloque = lista.closest<HTMLElement>('[data-bloque]');

@@ -247,7 +247,10 @@ usa la de España y la inglesa la de EE. UU. (si no se conoce, la fecha mundial)
 películas **estrenadas en cines en los últimos 60 días** (solo las que pasaron por cines; fuera cortos y pódcasts),
 que Próximamente no muestra y servirán para el bloque «En cines» de Novedades.
 
-Arriba salen las series **en emisión** (próximo episodio) y debajo los **estrenos por año**. Si el estreno ya tiene ficha
+Arriba, un **contador grande** del próximo estreno de cine (días, horas, minutos y segundos en directo, con el cartel de
+fondo; componente `CuentaAtras.astro`, también en la portada). Cada tarjeta lleva un **anillo** con los días que faltan,
+que se cierra a medida que se acerca el estreno (y brilla el día del estreno). Las animaciones se desactivan si el
+sistema pide reducir el movimiento. Luego salen las series **en emisión** (próximo episodio) y debajo los **estrenos por año**. Si el estreno ya tiene ficha
 en la colección, la tarjeta lleva a la ficha; si no, a TMDB. La cuenta atrás se calcula en el navegador, que además oculta
 lo que ya se haya estrenado desde la última actualización.
 
