@@ -2,7 +2,8 @@
 /** Navegación dentro de un universo: sus secciones (de su archivo de datos) y Relacionadas. */
 import type { Universo } from '../lib/datos';
 import { guiasDe } from '../config/guias';
-import { textos } from '../i18n';
+import { textos, idiomaDe } from '../i18n';
+import { universoLoc } from '../i18n/datos';
 const tx = textos(Astro.url);
 
 interface Props {
@@ -10,7 +11,8 @@ interface Props {
   /** Id de la sección o página activa: "umc", "sagas"… */
   activo?: string;
 }
-const { universo, activo } = Astro.props;
+const universo = universoLoc(Astro.props.universo, idiomaDe(Astro.url));
+const { activo } = Astro.props;
 const enlaces = [
   { id: 'inicio', texto: tx.subnav.estanterias, url: `/${universo.id}/` },
   ...universo.data.secciones.map((s) => ({ id: s.id, texto: s.nombre, url: `/${universo.id}/${s.id}/` })),

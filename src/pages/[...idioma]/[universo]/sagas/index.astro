@@ -10,10 +10,12 @@ export async function getStaticPaths() {
   return (await universosActivos()).map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
 })());
 }
-import { textos } from '../../../../i18n';
+import { textos, idiomaDe } from '../../../../i18n';
+import { universoLoc, sagaLoc } from '../../../../i18n/datos';
 const tx = textos(Astro.url);
-const { universo } = Astro.props;
-const sagas = await sagasDe(universo.id);
+const idioma = idiomaDe(Astro.url);
+const universo = universoLoc(Astro.props.universo, idioma);
+const sagas = (await sagasDe(universo.id)).map((s) => sagaLoc(s, idioma));
 const titulos = await titulosDe(universo.id);
 const hijas = (id?: string) => sagas.filter((s) => s.data.padre?.id === id);
 const cuantos = (s: Saga): number => {

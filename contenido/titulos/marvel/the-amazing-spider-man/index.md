@@ -12,5 +12,6 @@ tmdb:
   id: 1930
   tipo: movie
 notas: En los documentos de la colección el año era 2000
+notasEn: The collection documents gave the year as 2000.
 fuente: 001 Índices.pptx · diapositiva 19
 ---

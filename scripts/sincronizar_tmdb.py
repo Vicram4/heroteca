@@ -4,7 +4,10 @@ Descarga de TMDB los datos complementarios de cada ficha y los guarda en un arch
 así nunca depende de TMDB al publicarse y Vercel no necesita la clave.
 
 Uso:
-    .venv/Scripts/python.exe scripts/sincronizar_tmdb.py [universo] [--refrescar]
+    .venv/Scripts/python.exe scripts/sincronizar_tmdb.py [universo] [--refrescar] [--ingles]
+
+Con --ingles pide los datos en inglés (título, cartel, sinopsis, capítulos, géneros y tráiler) para la
+versión inglesa de la web y los guarda en datos/tmdb/<universo>.en.json.
 
 - Solo se usa para RELLENAR lo que falte: lo de tus documentos siempre manda (se decide al compilar).
 - Las respuestas de TMDB se guardan en cache/tmdb/ (no se sube); --refrescar las vuelve a pedir.
@@ -21,6 +24,8 @@ import tmdb  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parent.parent
 MAX_REPARTO = 12
+# Idioma de los vídeos preferido para el tráiler (se cambia con --ingles)
+IDIOMA_VIDEO = 'es'
 
 
 def leer_ficha(archivo):
@@ -34,9 +39,9 @@ def nombres(crew, *trabajos):
 
 
 def trailer(videos):
-    """El mejor tráiler de YouTube: en español primero, oficial antes que no oficial."""
+    """El mejor tráiler de YouTube: en el idioma de la web primero, oficial antes que no oficial."""
     lista = [v for v in (videos or {}).get('results', []) if v.get('site') == 'YouTube' and v.get('type') in ('Trailer', 'Teaser')]
-    lista.sort(key=lambda v: (v.get('iso_639_1') != 'es', v.get('type') != 'Trailer', not v.get('official'), v.get('published_at', '')))
+    lista.sort(key=lambda v: (v.get('iso_639_1') != IDIOMA_VIDEO, v.get('type') != 'Trailer', not v.get('official'), v.get('published_at', '')))
     return lista[0]['key'] if lista else None
 
 
@@ -62,6 +67,7 @@ def escenas_creditos(id_, refrescar):
 def datos_pelicula(d, refrescar):
     cred = d.get('credits') or {}
     return {
+        'titulo': (d.get('title') or '').strip() or None,
         'escenasCreditos': escenas_creditos(d['id'], refrescar),
         'poster': d.get('poster_path'),
         'fondo': d.get('backdrop_path'),
@@ -79,6 +85,7 @@ def datos_pelicula(d, refrescar):
 
 def datos_serie(d, temporada, refrescar):
     base = {
+        'titulo': (d.get('name') or '').strip() or None,
         'poster': d.get('poster_path'),
         'fondo': d.get('backdrop_path'),
         'fecha': d.get('first_air_date') or None,
@@ -135,8 +142,13 @@ def limpiar(obj):
 
 
 def main(argv):
+    global IDIOMA_VIDEO
     universo = next((a for a in argv if not a.startswith('--')), 'marvel')
     refrescar = '--refrescar' in argv
+    ingles = '--ingles' in argv
+    if ingles:
+        tmdb.IDIOMA = 'en-US'
+        IDIOMA_VIDEO = 'en'
     carpeta = RAIZ / 'contenido' / 'titulos' / universo
     salida = {}
     sin_tmdb = []
@@ -149,13 +161,13 @@ def main(argv):
             continue
         d = tmdb.get(f"/{ref['tipo']}/{ref['id']}", refrescar=refrescar,
                      append_to_response='credits,videos,release_dates' if ref['tipo'] == 'movie' else 'aggregate_credits,credits,videos',
-                     include_video_language='es,en')
+                     include_video_language='en,es' if ingles else 'es,en')
         if not d:
             sin_tmdb.append(ident)
             continue
         datos = datos_pelicula(d, refrescar) if ref['tipo'] == 'movie' else datos_serie(d, f.get('temporada'), refrescar)
         salida[ident] = limpiar({'id': ref['id'], 'tipo': ref['tipo'], **datos})
-    destino = RAIZ / 'datos' / 'tmdb' / f'{universo}.json'
+    destino = RAIZ / 'datos' / 'tmdb' / (f'{universo}.en.json' if ingles else f'{universo}.json')
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_text(json.dumps(salida, ensure_ascii=False, separators=(',', ':'), sort_keys=True), encoding='utf-8', newline='\n')
     con = lambda k: sum(1 for v in salida.values() if v.get(k))  # noqa: E731

@@ -37,6 +37,7 @@ tmdb:
   id: 79240
   tipo: tv
 notas: En las páginas de series de la colección aparece como 1.4; el RESUMEN de carpetas dice 8.4 (se sigue el RESUMEN).
+notasEn: The collection’s series pages list it as 1.4; the folder summary says 8.4 (the summary is followed).
 fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · series pagina 008 · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg

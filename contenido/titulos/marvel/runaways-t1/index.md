@@ -111,4 +111,5 @@ imagenes:
 - src: ./portada.jpg
   rol: portada
 notas: 'En los documentos de la colección ponía «Joe Schwartz» (errata corregida: Josh Schwartz)'
+notasEn: 'The collection documents said “Joe Schwartz” (typo corrected: Josh Schwartz).'
 ---

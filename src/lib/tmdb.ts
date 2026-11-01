@@ -13,6 +13,8 @@ export interface CapituloTmdb {
 }
 export interface DatosTmdb {
   id: number;
+  /** Título en el idioma del archivo (en los .en.json, el título en inglés) */
+  titulo?: string;
   tipo: 'movie' | 'tv';
   poster?: string;
   fondo?: string;
@@ -37,8 +39,9 @@ const porUniverso = new Map(
   Object.entries(archivos).map(([ruta, datos]) => [ruta.split('/').pop()!.replace('.json', ''), datos]),
 );
 
-export function datosTmdb(universo: string, id: string): DatosTmdb | undefined {
-  return porUniverso.get(universo)?.[id];
+/** Datos de TMDB de una ficha; con idioma 'en', los de la versión inglesa (datos/tmdb/<universo>.en.json). */
+export function datosTmdb(universo: string, id: string, idioma: 'es' | 'en' = 'es'): DatosTmdb | undefined {
+  return porUniverso.get(idioma === 'en' ? `${universo}.en` : universo)?.[id];
 }
 
 /** URL de una imagen del CDN de TMDB. Tamaños: w92, w154, w185, w342, w500, w780, original. */

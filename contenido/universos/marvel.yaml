@@ -2,6 +2,8 @@ nombre: Marvel
 orden: 1
 tituloSeo: Marvel en orden – películas y series del UMC (MCU), clásicas y de animación
 descripcion: Todas las películas y series de Marvel, del Universo Marvel Cinematográfico (UMC, en inglés MCU) a las producciones anteriores y la animación.
+tituloSeoEn: Marvel in order – MCU, classic and animated films and series
+descripcionEn: Every Marvel film and series, from the Marvel Cinematic Universe (MCU) to earlier productions and animation.
 # Secciones tal y como están en los documentos de la colección. "orden" indica qué significa
 # el número de cada ficha: cronologico (orden de la historia) o estreno.
 secciones:
@@ -10,21 +12,30 @@ secciones:
     orden: cronologico
     tituloSeo: Orden cronológico del UMC (MCU) – todas las películas y series de Marvel
     descripcion: Universo Marvel Cinematográfico (UMC o MCU) en orden cronológico de la historia, con la numeración de la colección.
+    nombreEn: MCU
+    tituloSeoEn: MCU in chronological order – every Marvel film and series
+    descripcionEn: The Marvel Cinematic Universe (MCU) in the chronological order of the story, with the collection’s numbering.
   - id: pre-umc
     nombre: Pre-UMC
     orden: estreno
     tituloSeo: Películas y series de Marvel anteriores al UMC (MCU)
     descripcion: Películas y series de Marvel anteriores o ajenas al UMC (MCU), por orden de estreno.
+    nombreEn: Pre-MCU
+    tituloSeoEn: Marvel films and series before the MCU
+    descripcionEn: Marvel films and series released before or outside the MCU, in release order.
   - id: animacion
     nombre: Animación
     orden: estreno
     tituloSeo: Películas y series de animación de Marvel
     descripcion: Películas y series animadas de Marvel, por orden de estreno.
+    nombreEn: Animation
+    tituloSeoEn: Marvel animated films and series
+    descripcionEn: Marvel animated films and series, in release order.
 # Grupos de la página «Relacionadas y sagas», por el campo `orden` de cada saga (desde ≤ orden < hasta).
 gruposSagas:
-  - { titulo: Relacionadas, texto: Multiversos y sagas relacionadas con el UMC (MCU)., desde: 0, hasta: 10 }
-  - { titulo: Trilogías y colecciones, texto: "Las agrupaciones del índice de la colección: trilogías, dulogías, cuatrilogías…", desde: 10, hasta: 100 }
-  - { titulo: Fases y sagas del UMC, texto: Clasificación oficial de Marvel Studios (dato añadido; no figura en los documentos de la colección)., desde: 100, hasta: 10000 }
+  - { titulo: Relacionadas, texto: Multiversos y sagas relacionadas con el UMC (MCU)., tituloEn: Related, textoEn: Multiverses and sagas related to the MCU., desde: 0, hasta: 10 }
+  - { titulo: Trilogías y colecciones, texto: "Las agrupaciones del índice de la colección: trilogías, dulogías, cuatrilogías…", tituloEn: Trilogies and collections, textoEn: "Groupings from the collection index: trilogies, duologies, quadrilogies…", desde: 10, hasta: 100 }
+  - { titulo: Fases y sagas del UMC, texto: Clasificación oficial de Marvel Studios (dato añadido; no figura en los documentos de la colección)., tituloEn: MCU phases and sagas, textoEn: Official Marvel Studios classification (added data; not in the collection documents)., desde: 100, hasta: 10000 }
 # Ambiente visual: acento (botones, marcas) y su versión para texto en modo claro y oscuro (contraste AA).
 tema:
   acento: "#E62429"

@@ -119,6 +119,7 @@ tmdb:
   id: 38472
   tipo: tv
 notas: 'Capítulos con página pero no en la lista: 2x11, 2x12, 2x13'
+notasEn: 'Episodes with a page but not in the list: 2x11, 2x12, 2x13'
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 121; 001 Índices.pptx · diapositiva 9
 imagenes:
 - src: ./portada.jpg

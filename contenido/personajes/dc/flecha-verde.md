@@ -1,5 +1,6 @@
 ---
 nombre: Flecha Verde
+nombreEn: Green Arrow
 universo: dc
 identidad: Oliver Queen
 alias:

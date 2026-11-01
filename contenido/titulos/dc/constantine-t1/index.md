@@ -44,6 +44,7 @@ tmdb:
   id: 60743
   tipo: tv
 notas: En las páginas de series de la colección aparece como 5.1; el RESUMEN de carpetas dice 4.4 (se sigue el RESUMEN).
+notasEn: The collection’s series pages list it as 5.1; the folder summary says 4.4 (the summary is followed).
 fuente: Archivador AZUL/RESUMEN de carpetas UDC · series pagina 005
 imagenes:
 - src: ./portada.jpg

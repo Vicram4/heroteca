@@ -90,4 +90,5 @@ imagenes:
 - src: ./portada.jpg
   rol: portada
 notas: 'En los documentos de la colección ponía «Katie Mathewson» (errata corregida: Katrina Mathewson)'
+notasEn: 'The collection documents said “Katie Mathewson” (typo corrected: Katrina Mathewson).'
 ---

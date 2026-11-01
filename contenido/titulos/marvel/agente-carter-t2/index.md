@@ -102,6 +102,7 @@ tmdb:
   id: 61550
   tipo: tv
 notas: 'Corregido: la lista de capítulos usaba códigos 1x en la temporada 2'
+notasEn: 'Corrected: the episode list used 1x codes for season 2.'
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 8; 001 Índices.pptx · diapositiva 5
 imagenes:
 - src: ./portada.jpg

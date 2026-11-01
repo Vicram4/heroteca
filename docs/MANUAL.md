@@ -208,6 +208,13 @@ JustWatch que da TMDB. Se guardan en `datos/donde-ver.json`.
 - En el código, los enlaces se escriben sin prefijo (`/marvel/umc/`): al compilar, los de las páginas inglesas
   pasan a `/en/marvel/umc/` automáticamente (integración en `astro.config.mjs`). Por eso en `npm run dev` los enlaces
   de las páginas inglesas llevan a las españolas; para revisarlas, usa `npm run build` y `npm run preview`.
+- **Datos en inglés:** títulos, carteles, sinopsis, capítulos, géneros, reparto y tráileres salen de TMDB en inglés
+  (`datos/tmdb/<universo>.en.json`). Para actualizarlos: `.venv/Scripts/python.exe scripts/sincronizar_tmdb.py marvel --ingles`
+  (y lo mismo con `dc`). En inglés, la portada principal es el cartel inglés y la carátula de la colección se muestra aparte.
+- **Nombres en inglés:** `nombreEn`, `descripcionEn`, `tituloSeoEn` y `etapaEn` en `contenido/universos/*.yaml`;
+  `nombreEn` en sagas y personajes; `notasEn` en las fichas. `scripts/traducir_en.py` traduce las notas nuevas y
+  añade los nombres que falten (avisa si una nota no tiene regla de traducción).
+- **Dónde ver en inglés:** datos de Estados Unidos (`datos/donde-ver-us.json`), que se actualizan con la tarea semanal.
 - Mientras `inglesPublicado` sea `false` en `src/config/site.ts`, las páginas inglesas no se indexan, no están en el
   mapa del sitio y el botón de idioma solo aparece en ellas.
 

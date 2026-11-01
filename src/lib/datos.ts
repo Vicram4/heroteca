@@ -66,6 +66,9 @@ export interface Titulo {
   /** Datos combinados (tuyos + TMDB) */
   m: Mezcla;
   tmdb?: DatosTmdb;
+  /** Versión inglesa: carátulas de la edición de la colección (la portada principal pasa a ser el cartel en inglés) */
+  portadaColeccion?: ImageMetadata;
+  contraportadaColeccion?: ImageMetadata;
 }
 
 /** Un hueco en la estantería. Una temporada repartida en varios tramos ocupa varios huecos. */
@@ -181,13 +184,82 @@ function preparar(t: TituloEntrada): Titulo {
   };
 }
 
-let cacheTitulos: Titulo[] | undefined;
-export async function todosLosTitulos() {
-  cacheTitulos ??= (await getCollection('titulos')).map(preparar);
-  return cacheTitulos;
+/**
+ * Versión inglesa de una ficha (/en/): título, sinopsis, reparto, capítulos, géneros, cartel y tráiler de TMDB en inglés.
+ * Los nombres de personas (dirección, guion) y las fechas siguen viniendo del archivo de la colección.
+ * Si TMDB no tiene algo en inglés, se usa lo que haya.
+ */
+function prepararEn(t: Titulo): Titulo {
+  const d = t.d;
+  const x = datosTmdb(t.universo, t.id, 'en');
+  if (!x) return t;
+  const titulo = x.titulo ?? d.tituloOriginal ?? d.titulo;
+  const original = d.tituloOriginal && d.tituloOriginal !== titulo ? d.tituloOriginal : undefined;
+  const dEn = {
+    ...d,
+    titulo,
+    tituloOriginal: original,
+    otrosTitulos: [d.titulo, ...d.otrosTitulos].filter((o, i, l) => o !== titulo && l.indexOf(o) === i),
+    notas: d.notasEn ?? d.notas,
+  };
+  const deTmdb = new Set<string>();
+  const de = <T,>(campo: string, valor: T | undefined, si: boolean) => {
+    if (si && valor !== undefined) deTmdb.add(campo);
+    return valor;
+  };
+  const caps: Capitulo[] = (x.capitulos ?? []).map((c) => ({
+    codigo: c.codigo,
+    titulo: c.titulo ?? '',
+    argumento: c.sinopsis,
+    duracion: c.duracion,
+    direccion: c.direccion ?? [],
+    guion: c.guion ?? [],
+    fecha: c.fecha,
+  }));
+  const m: Mezcla = {
+    ...t.m,
+    argumento: de('argumento', x.sinopsis, true) ?? undefined,
+    reparto: x.reparto?.length ? (deTmdb.add('reparto'), x.reparto) : t.m.reparto,
+    capitulos: caps.length ? (deTmdb.add('capitulos'), caps) : t.m.capitulos,
+    trailer: x.trailer ?? t.m.trailer,
+    posterTmdb: x.poster ?? t.m.posterTmdb,
+    fondoTmdb: x.fondo ?? t.m.fondoTmdb,
+    generos: x.generos ?? [],
+    creadores: x.creadores ?? t.m.creadores,
+    deTmdb: new Set([...[...t.m.deTmdb].filter((c) => !['argumento', 'reparto', 'capitulos'].includes(c)), ...deTmdb]),
+  };
+  // En inglés manda el cartel inglés; las carátulas de la colección se muestran aparte en la ficha
+  const conCartel = Boolean(x.poster);
+  return {
+    ...t,
+    d: dEn,
+    corto: d.temporada ? `${titulo} · S${d.temporada}` : titulo,
+    m,
+    tmdb: x,
+    portada: conCartel ? undefined : t.portada,
+    contraportada: conCartel ? undefined : t.contraportada,
+    portadaColeccion: conCartel ? t.portada : undefined,
+    contraportadaColeccion: conCartel ? t.contraportada : undefined,
+  };
 }
-export async function titulosDe(universo: string) {
-  return (await todosLosTitulos()).filter((t) => t.universo === universo);
+
+let cacheTitulos: Titulo[] | undefined;
+let cacheTitulosEn: Map<string, Titulo> | undefined;
+export async function todosLosTitulos(idioma: 'es' | 'en' = 'es') {
+  cacheTitulos ??= (await getCollection('titulos')).map(preparar);
+  if (idioma === 'es') return cacheTitulos;
+  cacheTitulosEn ??= new Map(cacheTitulos.map((t) => [t.id, prepararEn(t)]));
+  return [...cacheTitulosEn.values()];
+}
+export async function titulosDe(universo: string, idioma: 'es' | 'en' = 'es') {
+  return (await todosLosTitulos(idioma)).filter((t) => t.universo === universo);
+}
+
+/** La misma ficha en el idioma pedido (las páginas reciben las españolas desde getStaticPaths). */
+export function localizar<T extends Titulo | undefined>(t: T, idioma: 'es' | 'en'): T {
+  if (!t || idioma === 'es') return t;
+  if (!cacheTitulosEn) cacheTitulosEn = new Map((cacheTitulos ?? []).map((x) => [x.id, prepararEn(x)]));
+  return (cacheTitulosEn.get(t.id) ?? t) as T;
 }
 
 export type Visionado = CollectionEntry<'visionados'>;

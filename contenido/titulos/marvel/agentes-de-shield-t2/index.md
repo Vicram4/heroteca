@@ -191,6 +191,7 @@ tmdb:
   id: 1403
   tipo: tv
 notas: El argumento de 2x22 era el mismo que el de 2x21; se ha dejado vacío
+notasEn: The plot of 2x22 was the same as that of 2x21, so it has been left empty.
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 25; 003 Fichas SERIES UMC.pptx · diapositiva 40; 001 Índices.pptx · diapositiva 6; 001 Índices.pptx · diapositiva 7
 imagenes:
 - src: ./portada.jpg

@@ -107,4 +107,5 @@ imagenes:
 - src: ./portada.jpg
   rol: portada
 notas: 'En los documentos de la colección ponía «Terry McMillan» (errata corregida: Tracy McMillan)'
+notasEn: 'The collection documents said “Terry McMillan” (typo corrected: Tracy McMillan).'
 ---

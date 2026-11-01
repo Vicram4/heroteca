@@ -12,10 +12,16 @@ export async function getStaticPaths() {
   return (await universosActivos()).map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
 })());
 }
-import { textos } from '../../../../i18n';
+import { textos, idiomaDe } from '../../../../i18n';
+import { personajeLoc } from '../../../../i18n/datos';
+import { localizar } from '../../../../lib/datos';
 const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
 const { universo } = Astro.props;
-const lista = await personajesDe(universo.id);
+const lista = (await personajesDe(universo.id)).map(({ p, apariciones }) => ({
+  p: personajeLoc(p, idioma),
+  apariciones: apariciones.map((a) => ({ ...a, titulo: localizar(a.titulo, idioma) })),
+}));
 const conApariciones = lista.filter((x) => x.apariciones.length);
 const sin = lista.filter((x) => !x.apariciones.length);
 ---

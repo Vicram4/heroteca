@@ -126,6 +126,29 @@ async function calcular(): Promise<Resultado> {
   return { personajes, porPersonaje, porTitulo, enlaceReparto };
 }
 
+let cacheEnlacesEn: Promise<Map<string, string>> | undefined;
+/** Enlaces del reparto de la versión inglesa (el reparto de TMDB en inglés): "tituloId|índice" → personaje. */
+export function enlacesRepartoEn() {
+  cacheEnlacesEn ??= (async () => {
+    const personajes = await getCollection('personajes');
+    const indices = new Map<string, Indice>();
+    for (const u of new Set(personajes.map((p) => p.data.universo.id))) {
+      indices.set(u, crearIndice(personajes.filter((p) => p.data.universo.id === u)));
+    }
+    const enlaces = new Map<string, string>();
+    for (const t of await todosLosTitulos('en')) {
+      const indice = indices.get(t.universo);
+      if (!indice) continue;
+      t.m.reparto.forEach((r, i) => {
+        const ids = r.personaje ? deTexto(r.personaje, indice) : [];
+        if (ids.length === 1) enlaces.set(`${t.id}|${i}`, ids[0]);
+      });
+    }
+    return enlaces;
+  })();
+  return cacheEnlacesEn;
+}
+
 export async function personajesDe(universo: string) {
   const { personajes, porPersonaje } = await apariciones();
   return personajes

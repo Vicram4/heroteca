@@ -122,6 +122,7 @@ tmdb:
   id: 1403
   tipo: tv
 notas: El argumento de 7x13 era el mismo que el de 7x12; se ha dejado vacío
+notasEn: The plot of 7x13 was the same as that of 7x12, so it has been left empty.
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 201; 001 Índices.pptx · diapositiva 10
 imagenes:
 - src: ./portada.jpg

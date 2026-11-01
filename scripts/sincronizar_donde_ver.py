@@ -1,5 +1,6 @@
 """
-«Dónde ver» en España: plataformas de suscripción, gratis, alquiler y compra de cada ficha.
+«Dónde ver»: plataformas de suscripción, gratis, alquiler y compra de cada ficha, en España
+(versión española de la web) y en Estados Unidos (versión inglesa).
 
 Los datos los da TMDB y proceden de JustWatch (hay que citarlo en la web). Como los catálogos
 cambian a menudo, este script se ejecuta cada semana desde GitHub Actions
@@ -7,7 +8,7 @@ cambian a menudo, este script se ejecuta cada semana desde GitHub Actions
 
 Uso:
     .venv/Scripts/python.exe scripts/sincronizar_donde_ver.py
-Salida: datos/donde-ver.json
+Salida: datos/donde-ver.json (España) y datos/donde-ver-us.json (Estados Unidos)
 """
 import datetime
 import json
@@ -21,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 import tmdb  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parent.parent
-PAIS = 'ES'
+PAISES = {'ES': 'donde-ver.json', 'US': 'donde-ver-us.json'}
 CATEGORIAS = {'flatrate': 'suscripcion', 'free': 'gratis', 'ads': 'gratis', 'rent': 'alquiler', 'buy': 'compra'}
 
 
@@ -56,7 +57,8 @@ def plataformas(datos):
 
 
 def main():
-    titulos, cache = {}, {}
+    titulos = {p: {} for p in PAISES}
+    cache = {}
     for archivo in sorted((RAIZ / 'contenido' / 'titulos').glob('*/*/index.md')):
         ref = leer_ficha(archivo).get('tmdb')
         if not ref:
@@ -64,18 +66,19 @@ def main():
         clave = (ref['tipo'], ref['id'])
         if clave not in cache:
             datos = tmdb.get(f"/{ref['tipo']}/{ref['id']}/watch/providers", refrescar=True, language=None) or {}
-            cache[clave] = (datos.get('results') or {}).get(PAIS)
-        es = cache[clave]
-        if not es:
-            continue
-        grupos = plataformas(es)
-        if grupos:
-            titulos[archivo.parent.name] = {'enlace': es.get('link'), **grupos}
-    salida = {'fecha': datetime.date.today().isoformat(), 'pais': PAIS, 'fuente': 'JustWatch (vía TMDB)', 'titulos': titulos}
-    destino = RAIZ / 'datos' / 'donde-ver.json'
-    destino.write_text(json.dumps(salida, ensure_ascii=False, separators=(',', ':'), sort_keys=True), encoding='utf-8', newline='\n')
-    con = {c: sum(1 for t in titulos.values() if c in t) for c in ('suscripcion', 'gratis', 'alquiler', 'compra')}
-    print(f'{len(titulos)} fichas con «dónde ver» de {len(cache)} consultadas · {con} · {destino.stat().st_size // 1024} KB')
+            cache[clave] = datos.get('results') or {}
+        for pais in PAISES:
+            d = cache[clave].get(pais)
+            grupos = plataformas(d) if d else {}
+            if grupos:
+                titulos[pais][archivo.parent.name] = {'enlace': d.get('link'), **grupos}
+    hoy = datetime.date.today().isoformat()
+    for pais, nombre in PAISES.items():
+        salida = {'fecha': hoy, 'pais': pais, 'fuente': 'JustWatch (vía TMDB)', 'titulos': titulos[pais]}
+        destino = RAIZ / 'datos' / nombre
+        destino.write_text(json.dumps(salida, ensure_ascii=False, separators=(',', ':'), sort_keys=True), encoding='utf-8', newline='\n')
+        con = {c: sum(1 for t in titulos[pais].values() if c in t) for c in ('suscripcion', 'gratis', 'alquiler', 'compra')}
+        print(f'{pais}: {len(titulos[pais])} fichas con «dónde ver» de {len(cache)} consultadas · {con} · {destino.stat().st_size // 1024} KB')
 
 
 if __name__ == '__main__':

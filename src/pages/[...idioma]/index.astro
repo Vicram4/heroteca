@@ -9,8 +9,10 @@ import Base from '../../layouts/Base.astro';
 import { SITE } from '../../config/site';
 import { comprobarIntegridad } from '../../lib/integridad';
 import { todosLosUniversos, titulosDe, estiloUniverso } from '../../lib/datos';
-import { textos } from '../../i18n';
+import { textos, idiomaDe } from '../../i18n';
+import { seccionLoc } from '../../i18n/datos';
 const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
 
 await comprobarIntegridad();
 const universos = (await todosLosUniversos()).filter((u) => u.data.activo || u.data.proximamente);
@@ -54,7 +56,7 @@ const tarjetas = await Promise.all(
               </span>
               <span class="texto">
                 <span class="nombre">{u.data.nombre}</span>
-                <span class="secciones">{u.data.secciones.map((s) => s.nombre).join(' · ')}</span>
+                <span class="secciones">{u.data.secciones.map((s) => seccionLoc(s, idioma).nombre).join(' · ')}</span>
                 <span class="total">{tx.general.titulos(total)}</span>
               </span>
             </a>

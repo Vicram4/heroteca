@@ -12,5 +12,6 @@ tmdb:
   id: 487672
   tipo: movie
 notas: El documento 032 de la colección se titula «Próximas películas» y habla de Reign of the Supermen (2019).
+notasEn: Collection document 032 is titled “Próximas películas” (Upcoming films) and covers Reign of the Supermen (2019).
 fuente: animacion/Animación/032/Próximas películas.docx
 ---

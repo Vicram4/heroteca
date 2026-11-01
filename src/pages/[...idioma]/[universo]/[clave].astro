@@ -13,6 +13,7 @@ import { getImage } from 'astro:assets';
 import { SITE } from '../../../config/site';
 import { imagenTmdb } from '../../../lib/tmdb';
 import { textos, idiomaDe, enIdioma, nombreTipo } from '../../../i18n';
+import { universoLoc, seccionLoc } from '../../../i18n/datos';
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
 import {
@@ -29,6 +30,7 @@ import {
   type Hueco,
   type Saga,
   type CabeceraCarpeta,
+  localizar,
 } from '../../../lib/datos';
 
 type Props =
@@ -68,7 +70,17 @@ export async function getStaticPaths() {
 })());
 }
 
-const p = Astro.props as Props;
+// Las rutas llegan con los datos en español: aquí se pasan al idioma de la página
+const crudo = Astro.props as Props;
+const p: Props =
+  crudo.tipo === 'seccion'
+    ? (() => {
+        const seccion = seccionLoc(crudo.seccion, idioma);
+        // Las cabeceras de carpeta se calcularon con la etapa en español
+        const cabeceras = crudo.cabeceras.map((c) => ({ ...c, etapa: seccion.carpetas.find((x) => x.numero === c.carpeta)?.etapa ?? c.etapa }));
+        return { ...crudo, universo: universoLoc(crudo.universo, idioma), seccion, cabeceras };
+      })()
+    : { ...crudo, universo: universoLoc(crudo.universo, idioma), t: localizar(crudo.t, idioma) };
 
 /** Recorta un texto a ~155 caracteres sin partir palabras (para la descripción de buscadores). */
 const resumen = (texto: string, max = 155) => {

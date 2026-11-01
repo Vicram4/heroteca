@@ -213,6 +213,7 @@ tmdb:
   id: 1403
   tipo: tv
 notas: 'Capítulos en la lista sin página de detalle: 4x16, 4x17, 4x18, 4x19 · Capítulos con página pero no en la lista: 1x16, 1x17, 1x18, 1x19'
+notasEn: 'Episodes in the list without a detail page: 4x16, 4x17, 4x18, 4x19 · Episodes with a page but not in the list: 1x16, 1x17, 1x18, 1x19'
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 77; 003 Fichas SERIES UMC.pptx · diapositiva 81; 003 Fichas SERIES UMC.pptx · diapositiva 92; 001 Índices.pptx · diapositiva 7; 001 Índices.pptx · diapositiva 8
 imagenes:
 - src: ./portada.jpg

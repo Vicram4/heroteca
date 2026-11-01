@@ -1,6 +1,8 @@
 nombre: 'Animación: películas autónomas'
+nombreEn: 'Animation: standalone films'
 universo: dc
 tipo: saga
 orden: 200
 descripcion: Continuidad «Películas autónomas» de las películas de animación.
+descripcionEn: The “standalone films” continuity of the animated films.
 fuente: animacion/Animación/otras cosas/Continuidades.docx

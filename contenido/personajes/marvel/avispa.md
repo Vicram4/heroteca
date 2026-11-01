@@ -1,5 +1,6 @@
 ---
 nombre: La Avispa
+nombreEn: The Wasp
 universo: marvel
 identidad: Hope van Dyne
 alias:

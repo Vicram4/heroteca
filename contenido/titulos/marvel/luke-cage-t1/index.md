@@ -128,6 +128,7 @@ tmdb:
   id: 62126
   tipo: tv
 notas: 'Capítulos en la lista sin página de detalle: 1x02, 1x03, 1x04 · Capítulos con página pero no en la lista: 2x02, 2x03, 2x04'
+notasEn: 'Episodes in the list without a detail page: 1x02, 1x03, 1x04 · Episodes with a page but not in the list: 2x02, 2x03, 2x04'
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 70; 001 Índices.pptx · diapositiva 7
 imagenes:
 - src: ./portada.jpg

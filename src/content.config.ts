@@ -58,6 +58,9 @@ const universos = defineCollection({
     descripcion: z.string().optional(),
     /** Título para buscadores de la página del universo (si falta, se usa el nombre). */
     tituloSeo: z.string().optional(),
+    /** Versión inglesa (/en/) de la descripción y del título para buscadores. */
+    descripcionEn: z.string().optional(),
+    tituloSeoEn: z.string().optional(),
     /**
      * Bloques en los que se organiza el universo (en Marvel: UMC, Pre-UMC, Animación).
      * `orden` indica qué significa el número de cada ficha en esa sección.
@@ -71,16 +74,36 @@ const universos = defineCollection({
           descripcion: z.string().optional(),
           /** Título para buscadores de la estantería (si falta, se usa el nombre). */
           tituloSeo: z.string().optional(),
+          /** Versión inglesa (/en/): nombre (UMC → MCU), descripción y título para buscadores. */
+          nombreEn: z.string().optional(),
+          descripcionEn: z.string().optional(),
+          tituloSeoEn: z.string().optional(),
           /** Solo con `orden: carpetas`: las carpetas de visionado y su etapa (Pre-Crossover, Crossover…). */
           carpetas: z
-            .array(z.object({ numero: z.number().int(), etapa: z.string(), descripcion: z.string().optional() }))
+            .array(
+              z.object({
+                numero: z.number().int(),
+                etapa: z.string(),
+                etapaEn: z.string().optional(),
+                descripcion: z.string().optional(),
+              }),
+            )
             .default([]),
         }),
       )
       .default([]),
     /** Grupos de la página «Relacionadas y sagas», por el `orden` de cada saga (desde ≤ orden < hasta). */
     gruposSagas: z
-      .array(z.object({ titulo: z.string(), texto: z.string().optional(), desde: z.number(), hasta: z.number() }))
+      .array(
+        z.object({
+          titulo: z.string(),
+          texto: z.string().optional(),
+          tituloEn: z.string().optional(),
+          textoEn: z.string().optional(),
+          desde: z.number(),
+          hasta: z.number(),
+        }),
+      )
       .default([]),
     /** Ambiente visual: acento y su versión para texto en modo claro y oscuro. */
     tema: z.record(z.string(), z.string()).default({}),
@@ -100,6 +123,9 @@ const sagas = defineCollection({
     padre: reference('sagas').optional(),
     orden: z.number().default(0),
     descripcion: z.string().optional(),
+    /** Versión inglesa (/en/) del nombre y la descripción. */
+    nombreEn: z.string().optional(),
+    descripcionEn: z.string().optional(),
     notas: z.string().optional(),
     fuente: z.string().optional(),
   }),
@@ -113,6 +139,8 @@ const personajes = defineCollection({
   schema: ({ image }) =>
     z.object({
       nombre: z.string(),
+      /** Nombre en la versión inglesa (/en/): «Capitán América» → «Captain America». */
+      nombreEn: z.string().optional(),
       /** Otros nombres por los que se le conoce (también sirven para el buscador). */
       alias: z.array(z.string()).default([]),
       identidad: z.string().optional(),
@@ -257,6 +285,8 @@ const titulos = defineCollection({
 
       /** Información que no encaja en ningún campo, o dudosa. Nunca se descarta. */
       notas: z.string().optional(),
+      /** Las notas en inglés, para la versión inglesa (/en/). */
+      notasEn: z.string().optional(),
       /** De qué documento y diapositiva salió la información (para trazabilidad). */
       fuente: z.string().optional(),
     }),

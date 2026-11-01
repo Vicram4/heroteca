@@ -26,12 +26,12 @@ jobs:
         run: python scripts/sincronizar_donde_ver.py
       - name: Subir los cambios
         run: |
-          if git diff --quiet -- datos/donde-ver.json; then
+          if git diff --quiet -- datos/donde-ver.json datos/donde-ver-us.json; then
             echo "Sin cambios"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add datos/donde-ver.json
+          git add datos/donde-ver.json datos/donde-ver-us.json
           git commit -m "Dónde ver: datos actualizados ($(date -u +%Y-%m-%d))"
           git push

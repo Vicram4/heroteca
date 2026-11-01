@@ -5,8 +5,9 @@ import Trailer from './Trailer.astro';
 import { render } from 'astro:content';
 import Spoiler from './Spoiler.astro';
 import DondeVer from './DondeVer.astro';
-import { numeroTexto, todosLosTitulos, urlCarpeta, type Titulo, type Universo, type Saga } from '../lib/datos';
-import { apariciones } from '../lib/personajes';
+import { numeroTexto, todosLosTitulos, urlCarpeta, localizar, type Titulo, type Universo, type Saga } from '../lib/datos';
+import { apariciones, enlacesRepartoEn } from '../lib/personajes';
+import { universoLoc, sagaLoc } from '../i18n/datos';
 import { textos, idiomaDe, nombreTipo, LOCALE } from '../i18n';
 
 interface Props {
@@ -18,11 +19,16 @@ interface Props {
   /** Otras temporadas de la misma serie */
   temporadas: Titulo[];
 }
-const { t, universo, sagas, anterior, siguiente, temporadas } = Astro.props;
+const idioma = idiomaDe(Astro.url);
+const t = localizar(Astro.props.t, idioma);
+const universo = universoLoc(Astro.props.universo, idioma);
+const sagas = Astro.props.sagas.map((s) => sagaLoc(s, idioma));
+const anterior = localizar(Astro.props.anterior, idioma);
+const siguiente = localizar(Astro.props.siguiente, idioma);
+const temporadas = Astro.props.temporadas.map((o) => localizar(o, idioma));
 const d = t.d;
 const tx = textos(Astro.url);
 const f = tx.ficha;
-const idioma = idiomaDe(Astro.url);
 const tipoTexto = d.animada ? tx.general.animado(nombreTipo(d.tipo, idioma)) : nombreTipo(d.tipo, idioma);
 const seccion = universo.data.secciones.find((s) => s.id === d.seccion);
 const { Content } = await render(t.entrada);
@@ -52,8 +58,8 @@ const hayTmdb =
   [...m.deTmdb].some((c) => c !== 'trailer') ||
   (!t.portada && Boolean(m.posterTmdb)) ||
   (d.conexiones.postCreditos.length === 0 && m.escenasCreditos.length > 0);
-const { enlaceReparto } = await apariciones();
-const todos = await todosLosTitulos();
+const enlaceReparto = idioma === 'en' ? await enlacesRepartoEn() : (await apariciones()).enlaceReparto;
+const todos = await todosLosTitulos(idioma);
 const buscarTitulo = (id: string) => todos.find((x) => x.id === id);
 // «Ver antes / después»: los tuyos; si no hay, los vecinos en tus trilogías y dulogías (por fecha)
 const fechaDe = (x: Titulo) => (x.m.fecha ? x.m.fecha.getTime() : Date.UTC(x.d.anio, 0, 1));
@@ -124,6 +130,15 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       {t.contraportada && <Caratula t={t} contra ancho={320} alt={f.contraColeccion(d.titulo)} />}
       {t.portada && <p class="nota-caratula">{t.contraportada ? f.notaPortadaYContra : f.notaPortada}</p>}
       {!t.portada && m.posterTmdb && <p class="nota-caratula">{f.cartelTmdb}</p>}
+      {
+        t.portadaColeccion && (
+          <div class="coleccion">
+            <Caratula t={{ ...t, portada: t.portadaColeccion }} ancho={150} alt={f.portadaColeccion(d.titulo)} />
+            {t.contraportadaColeccion && <Caratula t={{ ...t, contraportada: t.contraportadaColeccion }} contra ancho={150} alt={f.contraColeccion(d.titulo)} />}
+            <p class="nota-caratula">{f.edicionColeccion}</p>
+          </div>
+        )
+      }
     </div>
 
     <div class="cuerpo">
@@ -396,6 +411,16 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     gap: 14px;
     position: sticky;
     top: 140px;
+  }
+  .coleccion {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 6px;
+    opacity: 0.92;
+  }
+  .coleccion .nota-caratula {
+    grid-column: 1 / -1;
   }
   .caratulas :global(img) {
     width: 100%;

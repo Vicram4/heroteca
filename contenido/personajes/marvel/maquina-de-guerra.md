@@ -1,5 +1,6 @@
 ---
 nombre: Máquina de Guerra
+nombreEn: War Machine
 universo: marvel
 identidad: James Rhodes
 alias:

@@ -131,6 +131,7 @@ tmdb:
   id: 1403
   tipo: tv
 notas: El argumento de 6x13 era el mismo que el de 6x12; se ha dejado vacío
+notasEn: The plot of 6x13 was the same as that of 6x12, so it has been left empty.
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 194; 001 Índices.pptx · diapositiva 10
 imagenes:
 - src: ./portada.png

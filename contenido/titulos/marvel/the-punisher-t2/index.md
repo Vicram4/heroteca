@@ -123,4 +123,5 @@ imagenes:
 - src: ./portada.jpg
   rol: portada
 notas: 'En los documentos de la colección ponía «Jon Stewart» (errata corregida: Josh Stewart)'
+notasEn: 'The collection documents said “Jon Stewart” (typo corrected: Josh Stewart).'
 ---

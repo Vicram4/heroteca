@@ -9,21 +9,25 @@ import SubNav from '../../../components/SubNav.astro';
 import Caja from '../../../components/Caja.astro';
 import { universosActivos, titulosDe, huecosDeSeccion, sagasDe } from '../../../lib/datos';
 import { guiasDe } from '../../../config/guias';
-import { textos } from '../../../i18n';
+import { textos, idiomaDe } from '../../../i18n';
+import { universoLoc, sagaLoc } from '../../../i18n/datos';
 const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
 
 export async function getStaticPaths() {
   return conIdiomas(await (async () => {
   return (await universosActivos()).map((universo) => ({ params: { universo: universo.id }, props: { universo } }));
 })());
 }
-const { universo } = Astro.props;
+const universo = universoLoc(Astro.props.universo, idioma);
 const titulos = await titulosDe(universo.id);
 const secciones = universo.data.secciones.map((s) => {
   const huecos = huecosDeSeccion(titulos.filter((t) => t.d.seccion === s.id), s);
   return { s, huecos, total: huecos.filter((h) => !h.repetido).length, muestra: huecos.slice(0, 8) };
 });
-const relacionadas = (await sagasDe(universo.id)).filter((s) => !s.data.padre && ['multiverso', 'saga'].includes(s.data.tipo) && s.data.orden < 100);
+const relacionadas = (await sagasDe(universo.id))
+  .filter((s) => !s.data.padre && ['multiverso', 'saga'].includes(s.data.tipo) && s.data.orden < 100)
+  .map((s) => sagaLoc(s, idioma));
 ---
 
 <Base

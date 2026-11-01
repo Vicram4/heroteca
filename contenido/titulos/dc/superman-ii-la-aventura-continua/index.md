@@ -19,6 +19,7 @@ tmdb:
   id: 8536
   tipo: movie
 notas: La colección incluye también otra versión (montaje alternativo).
+notasEn: The collection also includes an alternate cut.
 fuente: 'Archivador AZUL/PRE-DCUE Página 001 impresa orden de estreno · Disco: 001 UDC'
 imagenes:
 - src: ./portada.jpg

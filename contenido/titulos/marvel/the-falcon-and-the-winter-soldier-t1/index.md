@@ -74,6 +74,7 @@ tmdb:
   id: 88396
   tipo: tv
 notas: 'Capítulos con página pero no en la lista: 1x01'
+notasEn: 'Episodes with a page but not in the list: 1x01'
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 213; 001 Índices.pptx · diapositiva 10
 imagenes:
 - src: ./portada.png

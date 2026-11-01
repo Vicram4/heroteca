@@ -115,6 +115,7 @@ tmdb:
   id: 67178
   tipo: tv
 notas: 'Capítulos con página pero no en la lista: 1x11, 1x12, 1x13 · En los documentos de la colección ponía «Jon Stewart» (errata corregida: Josh Stewart)'
+notasEn: 'Episodes with a page but not in the list: 1x11, 1x12, 1x13 · The collection documents said “Jon Stewart” (typo corrected: Josh Stewart).'
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 104; 001 Índices.pptx · diapositiva 8
 imagenes:
 - src: ./portada.jpg

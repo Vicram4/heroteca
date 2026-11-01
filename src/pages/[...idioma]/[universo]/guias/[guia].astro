@@ -20,6 +20,7 @@ import {
   type Universo,
 } from '../../../../lib/datos';
 import { textos, idiomaDe, enIdioma, LOCALE } from '../../../../i18n';
+import { universoLoc, sagaLoc } from '../../../../i18n/datos';
 
 export async function getStaticPaths() {
   return conIdiomas(await (async () => {
@@ -32,11 +33,12 @@ export async function getStaticPaths() {
 })());
 }
 
-const { guia, universo } = Astro.props as { guia: Guia; universo: Universo };
+const { guia } = Astro.props as { guia: Guia; universo: Universo };
+const universo = universoLoc((Astro.props as { universo: Universo }).universo, idiomaDe(Astro.url));
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
-const titulos = await titulosDe(universo.id);
-const sagas = await sagasDe(universo.id);
+const titulos = await titulosDe(universo.id, idioma);
+const sagas = (await sagasDe(universo.id)).map((s) => sagaLoc(s, idioma));
 const fases = sagas.filter((s) => s.data.tipo === 'fase');
 const faseDe = (t: Titulo) => fases.find((f) => t.d.sagas.some((r) => r.id === f.id))?.data.nombre;
 const fechaCorta = (t: Titulo) =>

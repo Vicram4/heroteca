@@ -1,5 +1,6 @@
 ---
 nombre: Soldado de Invierno
+nombreEn: Winter Soldier
 universo: marvel
 identidad: Bucky Barnes
 alias:

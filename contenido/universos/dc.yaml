@@ -2,6 +2,8 @@ nombre: DC
 orden: 2
 tituloSeo: DC en orden – películas, DCEU, Arrowverso y animación
 descripcion: Todas las películas y series de DC, de los clásicos de Superman y Batman al Universo Extendido (DCEU), el Arrowverso y la animación.
+tituloSeoEn: DC in order – films, DCEU, Arrowverse and animation
+descripcionEn: Every DC film and series, from the Superman and Batman classics to the DC Extended Universe (DCEU), the Arrowverse and animation.
 # Secciones tal y como están en el disco duro de DC de la colección:
 #   TODO UDC/UDC Películas por orden/001 UDC y 002 DCDU · UDC Series por orden · animacion/Animación
 # "orden": cronologico (orden de la historia), estreno, o carpetas (las carpetas de visionado de series).
@@ -11,40 +13,52 @@ secciones:
     orden: estreno
     tituloSeo: Películas clásicas de DC – Superman, Batman y más, por orden de estreno
     descripcion: Películas clásicas de DC, de Superman (1978) a la trilogía de El caballero oscuro, por orden de estreno.
+    nombreEn: Classic DC
+    tituloSeoEn: Classic DC films – Superman, Batman and more, in release order
+    descripcionEn: Classic DC films, from Superman (1978) to The Dark Knight trilogy, in release order.
   - id: dcdu
     nombre: DCDU
     orden: cronologico
     tituloSeo: Orden del Universo Extendido de DC (DCEU) – películas en orden cronológico
     descripcion: Universo Extendido de DC (DCDU o DCEU), de El hombre de acero a Aquaman y el reino perdido, en orden de la historia.
+    nombreEn: DCEU
+    tituloSeoEn: DC Extended Universe (DCEU) in chronological order
+    descripcionEn: The DC Extended Universe (DCEU), from Man of Steel to Aquaman and the Lost Kingdom, in story order.
   - id: series
     nombre: Series
     orden: carpetas
     tituloSeo: Series de DC en orden – Smallville, Gotham, Arrowverso y más
     descripcion: Series de DC (Smallville, Gotham, el Arrowverso, Titans…) en carpetas de visionado para verlas en orden; en los bloques Crossover, capítulo a capítulo. El número de cada serie es el de su carpeta en el disco de la colección.
+    nombreEn: Series
+    tituloSeoEn: DC series in order – Smallville, Gotham, the Arrowverse and more
+    descripcionEn: DC series (Smallville, Gotham, the Arrowverse, Titans…) grouped in viewing folders to watch them in order; crossover blocks go episode by episode. Each series’ number is its folder on the collection’s drive.
     carpetas:
-      - { numero: 1, etapa: Pre-Crossover }
-      - { numero: 2, etapa: Pre-Crossover }
-      - { numero: 3, etapa: Pre-Crossover }
-      - { numero: 4, etapa: Crossover }
-      - { numero: 5, etapa: Crossover }
-      - { numero: 6, etapa: Crossover }
-      - { numero: 7, etapa: Película + Megacrossover }
-      - { numero: 8, etapa: Entre-Crossover }
-      - { numero: 9, etapa: Crossover }
-      - { numero: 10, etapa: Entre-Crossover }
-      - { numero: 11, etapa: Crossover }
-      - { numero: 12, etapa: Pos-Crossover }
-      - { numero: 13, etapa: Pos-Crossover }
+      - { numero: 1, etapa: Pre-Crossover, etapaEn: Pre-crossover }
+      - { numero: 2, etapa: Pre-Crossover, etapaEn: Pre-crossover }
+      - { numero: 3, etapa: Pre-Crossover, etapaEn: Pre-crossover }
+      - { numero: 4, etapa: Crossover, etapaEn: Crossover }
+      - { numero: 5, etapa: Crossover, etapaEn: Crossover }
+      - { numero: 6, etapa: Crossover, etapaEn: Crossover }
+      - { numero: 7, etapa: Película + Megacrossover, etapaEn: Film + mega-crossover }
+      - { numero: 8, etapa: Entre-Crossover, etapaEn: Between crossovers }
+      - { numero: 9, etapa: Crossover, etapaEn: Crossover }
+      - { numero: 10, etapa: Entre-Crossover, etapaEn: Between crossovers }
+      - { numero: 11, etapa: Crossover, etapaEn: Crossover }
+      - { numero: 12, etapa: Pos-Crossover, etapaEn: Post-crossover }
+      - { numero: 13, etapa: Pos-Crossover, etapaEn: Post-crossover }
   - id: animacion
     nombre: Animación
     orden: estreno
     tituloSeo: Películas y series de animación de DC
     descripcion: Películas y series animadas de DC, por orden de estreno.
+    nombreEn: Animation
+    tituloSeoEn: DC animated films and series
+    descripcionEn: DC animated films and series, in release order.
 # Grupos de la página «Relacionadas y sagas», por el campo `orden` de cada saga (desde ≤ orden < hasta).
 gruposSagas:
-  - { titulo: Héroes, texto: "Las películas de cada héroe, según las páginas «pelis solo» de la colección.", desde: 0, hasta: 10 }
-  - { titulo: Series y sellos, texto: El Arrowverso y los sellos editoriales Vertigo y Wildstorm., desde: 10, hasta: 100 }
-  - { titulo: Continuidades de animación, texto: Las continuidades que comparten las películas animadas de DC., desde: 100, hasta: 10000 }
+  - { titulo: Héroes, texto: "Las películas de cada héroe, según las páginas «pelis solo» de la colección.", tituloEn: Heroes, textoEn: "Each hero’s films, from the collection’s “solo films” pages.", desde: 0, hasta: 10 }
+  - { titulo: Series y sellos, texto: El Arrowverso y los sellos editoriales Vertigo y Wildstorm., tituloEn: Series and imprints, textoEn: The Arrowverse and the Vertigo and Wildstorm imprints., desde: 10, hasta: 100 }
+  - { titulo: Continuidades de animación, texto: Las continuidades que comparten las películas animadas de DC., tituloEn: Animation continuities, textoEn: The continuities shared by DC’s animated films., desde: 100, hasta: 10000 }
 # Ambiente visual: acento (botones, marcas) y su versión para texto en modo claro y oscuro (contraste AA).
 tema:
   acento: "#0476F2"

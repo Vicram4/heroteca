@@ -208,6 +208,7 @@ tmdb:
   id: 1403
   tipo: tv
 notas: El argumento de 1x07 era el mismo que el de 1x06; se ha dejado vacío
+notasEn: The plot of 1x07 was the same as that of 1x06, so it has been left empty.
 fuente: 003 Fichas SERIES UMC.pptx · diapositiva 13; 003 Fichas SERIES UMC.pptx · diapositiva 17; 003 Fichas SERIES UMC.pptx · diapositiva 21; 001 Índices.pptx · diapositiva 6
 imagenes:
 - src: ./portada.jpg

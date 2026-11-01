@@ -27,9 +27,14 @@ export async function getStaticPaths() {
   return rutas;
 })());
 }
-import { textos } from '../../../../i18n';
+import { textos, idiomaDe } from '../../../../i18n';
+import { universoLoc, sagaLoc } from '../../../../i18n/datos';
 const tx = textos(Astro.url);
-const { universo, saga, sagas, suyos } = Astro.props;
+const idioma = idiomaDe(Astro.url);
+const universo = universoLoc(Astro.props.universo, idioma);
+const saga = sagaLoc(Astro.props.saga, idioma);
+const sagas = Astro.props.sagas.map((s) => sagaLoc(s, idioma));
+const { suyos } = Astro.props;
 // Si todos sus títulos están en secciones con orden cronológico, se ofrece alternar orden
 const cronologica = suyos.length > 0 && suyos.every((t) => universo.data.secciones.find((s) => s.id === t.d.seccion)?.orden === 'cronologico');
 const huecos = huecosDeSeccion(suyos, { id: saga.id, nombre: saga.data.nombre, orden: cronologica ? 'cronologico' : 'estreno', carpetas: [] });

@@ -19,9 +19,14 @@ export async function getStaticPaths() {
   return rutas;
 })());
 }
-import { textos } from '../../../../i18n';
+import { textos, idiomaDe } from '../../../../i18n';
+import { personajeLoc } from '../../../../i18n/datos';
+import { localizar } from '../../../../lib/datos';
 const tx = textos(Astro.url);
-const { universo, p, apariciones, sagas } = Astro.props;
+const idioma = idiomaDe(Astro.url);
+const { universo, sagas } = Astro.props;
+const p = personajeLoc(Astro.props.p, idioma);
+const apariciones = Astro.props.apariciones.map((a) => ({ ...a, titulo: localizar(a.titulo, idioma) }));
 const titulos = apariciones.map((a) => a.titulo);
 const huecos = huecosDeSeccion(titulos, { id: p.id, nombre: p.data.nombre, orden: 'estreno', carpetas: [] });
 // Intérpretes: actor → títulos (en orden de estreno)

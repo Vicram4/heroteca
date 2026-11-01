@@ -16,6 +16,7 @@ tmdb:
   id: 475557
   tipo: movie
 notas: En los Word de la colección está en PRE-DCUE (n.º 025); en el disco, en 002 DCDU. Se sigue el disco.
+notasEn: The collection’s Word files place it in PRE-DCUE (no. 025); the drive places it in 002 DCDU. The drive is followed.
 fuente: 'Disco: 002 DCDU/012 Joker 2019 · Archivador AZUL/PRE-DCUE Página 004 impresa orden de estreno · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg

@@ -18,8 +18,10 @@ import {
   type Seccion,
   type Hueco,
   type Visionado,
+  localizar,
 } from '../../../../lib/datos';
-import { textos } from '../../../../i18n';
+import { textos, idiomaDe } from '../../../../i18n';
+import { universoLoc, seccionLoc } from '../../../../i18n/datos';
 
 interface Props {
   universo: Universo;
@@ -62,7 +64,13 @@ export async function getStaticPaths() {
 })());
 }
 
-const { universo, seccion, carpeta, huecos, visionado, anterior, siguiente, titulos } = Astro.props as Props;
+const idioma = idiomaDe(Astro.url);
+const crudo = Astro.props as Props;
+const universo = universoLoc(crudo.universo, idioma);
+const seccion = seccionLoc(crudo.seccion, idioma);
+const carpeta = seccion.carpetas.find((c) => c.numero === crudo.carpeta.numero) ?? crudo.carpeta;
+const { huecos, visionado, anterior, siguiente } = crudo;
+const titulos = crudo.titulos.map((t) => localizar(t, idioma));
 const tx = textos(Astro.url);
 const porId = new Map<string, Titulo>(titulos.map((t) => [t.id, t]));
 // Un color por serie dentro del orden (en el orden en que aparecen)

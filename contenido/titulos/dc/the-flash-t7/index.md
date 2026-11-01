@@ -15,5 +15,6 @@ tmdb:
   id: 60735
   tipo: tv
 notas: Está en el disco pero aún no en las carpetas de visionado.
+notasEn: On the drive but not yet in the viewing folders.
 fuente: 'Disco: UDC Series por orden'
 ---

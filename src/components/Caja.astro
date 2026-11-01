@@ -1,7 +1,7 @@
 ---
 /** Una caja (carátula) en la estantería. El marco lleva el color del tipo, como en tus estanterías. */
 import Caratula from './Caratula.astro';
-import { numeroTexto, textoTramo, type Hueco } from '../lib/datos';
+import { numeroTexto, textoTramo, localizar, type Hueco } from '../lib/datos';
 import { textos, idiomaDe, nombreTipo } from '../i18n';
 import { clavePlataforma, plataformasIncluidas, paisDe } from '../lib/dondever';
 
@@ -13,9 +13,9 @@ interface Props {
   personajes?: string[];
 }
 const { hueco, prioridad = false, personajes = [] } = Astro.props;
-const t = hueco.titulo;
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
+const t = localizar(hueco.titulo, idioma);
 const tramo = textoTramo(hueco);
 const decada = Math.floor(t.d.anio / 10) * 10;
 const porCarpetas = hueco.carpeta !== undefined;

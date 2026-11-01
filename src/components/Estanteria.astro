@@ -5,6 +5,7 @@
  */
 import Caja from './Caja.astro';
 import { textos, idiomaDe, nombreTipo } from '../i18n';
+import { sagaLoc, personajeLoc } from '../i18n/datos';
 import type { CabeceraCarpeta, Hueco, Saga } from '../lib/datos';
 import { apariciones } from '../lib/personajes';
 import { clavePlataforma, plataformasIncluidas, paisDe } from '../lib/dondever';
@@ -27,7 +28,7 @@ const tipos = [...new Set(huecos.map((h) => h.titulo.tipo))];
 const hayAnimadas = huecos.some((h) => h.titulo.d.animada) && huecos.some((h) => !h.titulo.d.animada);
 const decadas = [...new Set(huecos.map((h) => Math.floor(h.titulo.d.anio / 10) * 10))].sort();
 const idsSagas = new Set(huecos.flatMap((h) => h.titulo.d.sagas.map((s) => s.id)));
-const sagasPresentes = sagas.filter((s) => idsSagas.has(s.id));
+const sagasPresentes = sagas.filter((s) => idsSagas.has(s.id)).map((s) => sagaLoc(s, idioma));
 const total = huecos.filter((h) => !h.repetido).length;
 const { porTitulo, personajes } = await apariciones();
 const cuenta = new Map<string, number>();
@@ -38,6 +39,7 @@ for (const h of huecos) for (const p of plataformasIncluidas(h.titulo.id, paisDe
 const plataformas = [...porPlataforma].sort((a, b) => b[1].size - a[1].size || a[0].localeCompare(b[0], 'es'));
 const personajesPresentes = personajes
   .filter((p) => (cuenta.get(p.id) ?? 0) > 1)
+  .map((p) => personajeLoc(p, idioma))
   .sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es'));
 ---
 
