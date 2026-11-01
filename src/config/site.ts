@@ -32,11 +32,13 @@ export const SITE = {
    */
   inglesPublicado: true,
   /**
-   * Ancho mínimo (en píxeles) para que la carátula de la colección sea la imagen principal de un título.
-   * Si es más pequeña, se muestra el cartel de TMDB (en los dos idiomas) y la carátula aparece en la ficha
-   * como «Edición de la colección».
+   * Imagen principal de cada título (estanterías, fichas, mosaico de la portada):
+   *  - 'cartel': el cartel oficial de TMDB (web pública); la carátula de la colección se ve en la ficha
+   *    como «Edición de la colección» y solo es la principal si TMDB no tiene cartel.
+   *  - 'coleccion': las carátulas de la colección siempre que existan (para una versión personal).
+   * La dedicatoria escondida usa siempre las carátulas de la colección.
    */
-  anchoMinimoCaratula: 200,
+  caratulaPrincipal: 'cartel' as 'cartel' | 'coleccion',
   /** Código de verificación de Google Search Console (es público; no identifica a nadie). */
   googleVerificacion: 'd9udc0hSfl5WRRV432HhCeZPJ4Asyi5yJrZT4uV5kcM',
 } as const;

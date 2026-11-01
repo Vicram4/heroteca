@@ -4,11 +4,11 @@ export function getStaticPaths() {
   return conIdiomas([{ params: {} }]);
 }
 /** Portada: elegir universo. Se genera sola a partir de contenido/universos/. */
-import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { SITE } from '../../config/site';
 import { comprobarIntegridad } from '../../lib/integridad';
 import { todosLosUniversos, titulosDe, estiloUniverso } from '../../lib/datos';
+import Caratula from '../../components/Caratula.astro';
 import { textos, idiomaDe } from '../../i18n';
 import { seccionLoc } from '../../i18n/datos';
 const tx = textos(Astro.url);
@@ -18,10 +18,10 @@ await comprobarIntegridad();
 const universos = (await todosLosUniversos()).filter((u) => u.data.activo || u.data.proximamente);
 const tarjetas = await Promise.all(
   universos.map(async (u) => {
-    const titulos = u.data.activo ? await titulosDe(u.id) : [];
-    // Mosaico: carátulas de la primera sección, en tu orden
+    const titulos = u.data.activo ? await titulosDe(u.id, idioma) : [];
+    // Mosaico: la imagen principal de los primeros títulos de la primera sección, en el orden de la colección
     const mosaico = titulos
-      .filter((t) => (t.portada ?? t.portadaColeccion) && t.d.seccion === u.data.secciones[0]?.id)
+      .filter((t) => (t.portada || t.m.posterTmdb) && t.d.seccion === u.data.secciones[0]?.id)
       .sort((a, b) => (a.d.numero ?? 999) - (b.d.numero ?? 999))
       .slice(0, 12);
     return { u, total: titulos.length, mosaico };
@@ -51,7 +51,7 @@ const tarjetas = await Promise.all(
             <a href={`/${u.id}/`} class="universo" style={estiloUniverso(u)}>
               <span class="mosaico" aria-hidden="true">
                 {mosaico.map((t) => (
-                  <Image src={(t.portada ?? t.portadaColeccion)!} alt="" width={200} format="webp" loading={i === 0 ? 'eager' : 'lazy'} />
+                  <Caratula t={t} ancho={100} cargaInmediata={i === 0} />
                 ))}
               </span>
               <span class="texto">

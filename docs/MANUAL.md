@@ -182,10 +182,15 @@ del RESUMEN de carpetas UDC) y «animacion/Animación».
 
 ## Imagen principal de cada título
 
-La imagen principal (estanterías y ficha) es la carátula de la edición de la colección si mide al menos
-`anchoMinimoCaratula` píxeles de ancho (200 por defecto, en `src/config/site.ts`). Si es más pequeña y hay cartel
-en TMDB, se muestra el cartel y la carátula aparece debajo, en la ficha, como «Edición de la colección».
-La regla es la misma en español y en inglés (en inglés, con el cartel inglés), así que las dos versiones coinciden.
+`caratulaPrincipal` en `src/config/site.ts` decide qué imagen se ve en estanterías, fichas y portada:
+
+- `'cartel'` (web pública): el cartel oficial de TMDB (español en la versión española, inglés en la inglesa).
+  La carátula de la edición de la colección aparece debajo, en la ficha, como «Edición de la colección»,
+  y solo es la principal si TMDB no tiene cartel.
+- `'coleccion'`: las carátulas de la colección siempre que existan. Pensado para una versión personal de la web
+  (por ejemplo, otro proyecto de Vercel con este ajuste y su propia dirección).
+
+La dedicatoria escondida usa siempre las carátulas de la colección.
 
 ## Carátulas con márgenes blancos
 

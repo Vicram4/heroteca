@@ -28,7 +28,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Estanterías** con la numeración original y orden alternable: orden de la historia o de estreno.
 - **Orden por carpetas** para las series de DC (Pre-Crossover, Crossover…), con páginas que muestran el orden de visionado capítulo a capítulo entre varias series.
 - **Filtros** por tipo, década, personaje y saga; **búsqueda instantánea** (atajo `/`) que también encuentra títulos originales y alternativos.
-- **Fichas completas**: datos del archivo original, completados con sinopsis, reparto, carteles y tráileres de TMDB. Cada dato de TMDB queda marcado.
+- **Fichas completas**: datos del archivo original, completados con sinopsis, reparto, carteles y tráileres de TMDB. Cada dato de TMDB queda marcado. La imagen principal es el cartel oficial y cada ficha muestra también la carátula de la edición de la colección.
 - **Dónde ver**: plataformas de suscripción, alquiler y compra de cada título (España en la versión española,
   EE. UU. en la inglesa), con datos de JustWatch que se **actualizan solos cada semana**.
 - **Guías de visionado**: orden del UMC (cronológico y de estreno), películas de DC y Arrowverso capítulo a capítulo.

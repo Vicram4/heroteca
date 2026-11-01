@@ -1,5 +1,4 @@
 ---
-import { tablasEn } from '../../../../i18n/rutas';
 import { conIdiomas } from '../../../../i18n';
 /** Guías de visionado de un universo. */
 import Base from '../../../../layouts/Base.astro';
@@ -8,7 +7,6 @@ import { guiasDe, guiaLoc } from '../../../../config/guias';
 import { universosActivos } from '../../../../lib/datos';
 
 export async function getStaticPaths() {
-  const en = await tablasEn();
   return conIdiomas(await (async () => {
   return (await universosActivos())
     .filter((u) => guiasDe(u.id).length > 0)

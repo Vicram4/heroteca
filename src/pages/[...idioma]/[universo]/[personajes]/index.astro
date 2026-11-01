@@ -1,5 +1,4 @@
 ---
-import { tablasEn } from '../../../../i18n/rutas';
 import { conIdiomas } from '../../../../i18n';
 /** Todos los personajes de un universo, ordenados por número de apariciones. */
 import Caratula from '../../../../components/Caratula.astro';
@@ -9,7 +8,6 @@ import { universosActivos } from '../../../../lib/datos';
 import { personajesDe } from '../../../../lib/personajes';
 
 export async function getStaticPaths() {
-  const en = await tablasEn();
   return conIdiomas(await (async () => {
   return (await universosActivos()).map((universo) => ({ params: { universo: universo.id, personajes: 'personajes' }, props: { universo } }));
 })(), () => ({ personajes: 'characters' }));

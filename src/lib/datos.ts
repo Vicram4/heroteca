@@ -169,9 +169,9 @@ function preparar(t: TituloEntrada): Titulo {
   const contraportada = d.imagenes.find((i) => i.rol === 'contraportada')?.src;
   const temporada = d.temporada ? `Temporada ${d.temporada}` : '';
   const m = mezclar(d, tmdb);
-  // Imagen principal: la carátula de la colección si tiene buena resolución; si es pequeña y hay cartel de TMDB,
-  // manda el cartel y la carátula se muestra aparte en la ficha. La misma regla se aplica en inglés.
-  const usarCartel = Boolean(portada && portada.width < SITE.anchoMinimoCaratula && m.posterTmdb);
+  // Imagen principal según SITE.caratulaPrincipal: en la web pública, el cartel de TMDB (si existe) y la carátula
+  // de la colección aparte en la ficha; en una versión personal, la carátula. La misma regla se aplica en inglés.
+  const usarCartel = Boolean(portada && m.posterTmdb && SITE.caratulaPrincipal === 'cartel');
   return {
     id: t.id,
     entrada: t,
@@ -236,8 +236,8 @@ function prepararEn(t: Titulo): Titulo {
     creadores: x.creadores ?? t.m.creadores,
     deTmdb: new Set([...[...t.m.deTmdb].filter((c) => !['argumento', 'reparto', 'capitulos'].includes(c)), ...deTmdb]),
   };
-  // Misma regla que en español: si la carátula de la colección es buena, manda en los dos idiomas;
-  // si no (o no hay), el cartel de TMDB, aquí el inglés.
+  // Misma regla que en español: si allí manda la carátula de la colección, aquí también;
+  // si manda el cartel, aquí el cartel inglés.
   const caratulaBuena = Boolean(t.portada);
   const coleccion = t.portada ?? t.portadaColeccion;
   const contraColeccion = t.contraportada ?? t.contraportadaColeccion;
