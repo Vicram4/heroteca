@@ -361,14 +361,18 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
 </article>
 
 <script>
-  // «Volver»: si se llega desde otra página de Heroteca, regresa a ella; si no (Google, enlace directo),
-  // el enlace lleva a la estantería de la sección.
+  // «Volver»: si se llega desde otra página de Heroteca, regresa a ella; si no (Google, enlace directo,
+  // cambio de idioma), el enlace lleva a la estantería de la sección.
   document.querySelectorAll<HTMLAnchorElement>('[data-volver]').forEach((a) => {
-    let desdeLaWeb = false;
+    // Solo se vuelve atrás si la página anterior es de Heroteca y está en el mismo idioma. Si se acaba de
+    // cambiar de idioma, «atrás» sería la misma ficha en el otro idioma: entonces se va a la estantería.
+    const enIngles = (ruta: string) => ruta === '/en' || ruta.startsWith('/en/');
+    let mismaWebEIdioma = false;
     try {
-      desdeLaWeb = Boolean(document.referrer) && new URL(document.referrer).origin === location.origin;
+      const anterior = document.referrer ? new URL(document.referrer) : undefined;
+      mismaWebEIdioma = Boolean(anterior) && anterior!.origin === location.origin && enIngles(anterior!.pathname) === enIngles(location.pathname);
     } catch {}
-    if (!desdeLaWeb || history.length < 2) return;
+    if (!mismaWebEIdioma || history.length < 2) return;
     a.addEventListener('click', (e) => {
       e.preventDefault();
       history.back();
