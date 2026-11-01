@@ -1,7 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import { textos } from '../i18n';
-const tx = textos(Astro.url);
+import { textosDe } from '../i18n';
+// Vercel sirve esta misma página para cualquier dirección que no existe, también en /en/: va en los dos idiomas
+const tx = textosDe('es');
+const en = textosDe('en');
 import { universosActivos } from '../lib/datos';
 
 const universos = await universosActivos();
@@ -13,13 +15,31 @@ const universos = await universosActivos();
     <h1>{tx.error404.h1}</h1>
     <p>{tx.error404.texto}</p>
     <div class="acciones">
-      {universos.map((u) => <a class="pastilla" href={`/${u.id}/`}>Ir a {u.data.nombre}</a>)}
+      {universos.map((u) => <a class="pastilla" href={`/${u.id}/`}>{tx.error404.irA(u.data.nombre)}</a>)}
       <a class="pastilla" href="/">{tx.error404.portada}</a>
+    </div>
+    <div class="en" lang="en">
+      <h2>{en.error404.h1}</h2>
+      <p>{en.error404.texto}</p>
+      <div class="acciones">
+        {universos.map((u) => <a class="pastilla" href={`/en/${u.id}/`}>{en.error404.irA(u.data.nombre)}</a>)}
+        <a class="pastilla" href="/en/">{en.error404.portada}</a>
+      </div>
     </div>
   </section>
 </Base>
 
 <style>
+  .en {
+    margin: 40px auto 0;
+    padding-top: 28px;
+    max-width: 560px;
+    border-top: 1px solid var(--borde);
+  }
+  .en h2 {
+    margin: 0 0 8px;
+    font-size: 1.3rem;
+  }
   .error {
     padding-block: clamp(48px, 10vw, 110px);
     text-align: center;

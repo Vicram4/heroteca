@@ -35,7 +35,7 @@ const idioma = idiomaDe(Astro.url);
 const tx = textos(Astro.url);
 const {
   titulo,
-  descripcion = tx.descripcion,
+  descripcion: descripcionCompleta = tx.descripcion,
   universo,
   imagen = '/og-heroteca.jpg',
   tipoOg = 'website',
@@ -43,6 +43,9 @@ const {
   noIndexar = false,
   migas,
 } = Astro.props;
+// Descripción para buscadores: como mucho ~160 caracteres, sin partir palabras
+const descripcion =
+  descripcionCompleta.length <= 160 ? descripcionCompleta : `${descripcionCompleta.slice(0, 157).replace(/[\s,;:.·–-]+\S*$/, '')}…`;
 // Migas de pan como datos estructurados (Google las muestra en los resultados)
 const urlsMigas = await Promise.all((migas ?? []).map((m) => rutaEnIdioma(m.url, idioma)));
 const datosMigas = migas?.length

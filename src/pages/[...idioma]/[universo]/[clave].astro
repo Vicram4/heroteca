@@ -100,7 +100,7 @@ if (p.tipo === 'ficha') {
   const d = t.d;
   const nombre = d.temporada ? `${d.titulo} (${tx.general.temporadaMinus(d.temporada)})` : d.titulo;
   const base = tx.ficha.descripcionBase(nombreTipo(d.tipo, idioma), universo.data.nombre, d.anioFin ? `${d.anio}–${d.anioFin}` : String(d.anio));
-  descripcionFicha = resumen(t.m.argumento ? `${nombre}: ${t.m.argumento}` : `${nombre}. ${base}`);
+  descripcionFicha = resumen(t.m.argumento ? `${nombre}: ${t.m.argumento}` : `${nombre}. ${base} ${tx.ficha.descripcionExtra}`);
   imagenSocial = t.portada
     ? (await getImage({ src: t.portada, width: 600, format: 'jpg' })).src
     : t.m.posterTmdb
@@ -178,7 +178,9 @@ if (p.tipo === 'ficha') {
     <Base
       titulo={p.t.d.temporada
         ? tx.ficha.tituloSeoTemporada(`${p.t.d.titulo} (${tx.general.temporadaMinus(p.t.d.temporada)})`)
-        : tx.ficha.tituloSeo(`${p.t.d.titulo} (${p.t.d.anio})`)}
+        : p.t.d.tipo === 'serie'
+          ? tx.ficha.tituloSeoTemporada(`${p.t.d.titulo} (${tx.ficha.serieAnio(String(p.t.d.anio))})`)
+          : tx.ficha.tituloSeo(`${p.t.d.titulo} (${p.t.d.anio})`)}
       descripcion={descripcionFicha}
       universo={p.universo}
       imagen={imagenSocial}

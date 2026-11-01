@@ -13,10 +13,10 @@ temporada: 1
 fichaPropia: false
 sagas:
 - arrowverso
-anio: 2024
+anio: 2017
 tmdb:
-  id: 1559625
-  tipo: movie
+  id: 75486
+  tipo: tv
 fuente: 'Archivador AZUL/RESUMEN de carpetas UDC · Carátulas: complementos/Carátulas UDC'
 imagenes:
 - src: ./portada.jpg

@@ -5,7 +5,7 @@ import { conIdiomas } from '../../../../i18n';
 import Base from '../../../../layouts/Base.astro';
 import SubNav from '../../../../components/SubNav.astro';
 import Estanteria from '../../../../components/Estanteria.astro';
-import { universosActivos, sagasDe, titulosDe, huecosDeSeccion, type Saga } from '../../../../lib/datos';
+import { universosActivos, sagasDe, titulosDe, huecosDeSeccion, localizar, type Saga } from '../../../../lib/datos';
 
 export async function getStaticPaths() {
   const en = await tablasEn();
@@ -42,11 +42,17 @@ const cronologica = suyos.length > 0 && suyos.every((t) => universo.data.seccion
 const huecos = huecosDeSeccion(suyos, { id: saga.id, nombre: saga.data.nombre, orden: cronologica ? 'cronologico' : 'estreno', carpetas: [] });
 const padre: Saga | undefined = saga.data.padre ? sagas.find((s) => s.id === saga.data.padre!.id) : undefined;
 const hijas = sagas.filter((s) => s.data.padre?.id === saga.id);
+// Descripción para buscadores: la de la saga si es completa; si es corta («Trilogía.»), resumen + primeros títulos
+const primerosSaga = new Intl.ListFormat(idioma === 'en' ? 'en-US' : 'es-ES', { type: 'conjunction' }).format([...new Set(huecos.map((h) => h.titulo))].slice(0, 3).map((t) => localizar(t, idioma).corto));
+const descripcionSaga =
+  saga.data.descripcion && saga.data.descripcion.length >= 60
+    ? saga.data.descripcion
+    : [tx.sagas.sagaDescripcion(saga.data.nombre, suyos.length, universo.data.nombre), saga.data.descripcion, suyos.length ? tx.general.incluye(primerosSaga) : ''].filter(Boolean).join(' ');
 ---
 
 <Base
   titulo={tx.sagas.sagaSeo(saga.data.nombre, universo.data.nombre)}
-  descripcion={saga.data.descripcion ?? tx.sagas.sagaDescripcion(saga.data.nombre, suyos.length, universo.data.nombre)}
+  descripcion={descripcionSaga}
   universo={universo}
   migas={[
     { nombre: 'Heroteca', url: '/' },
