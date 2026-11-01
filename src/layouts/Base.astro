@@ -162,6 +162,7 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
             <h2 id="pie-explorar">{tx.pie.explorar}</h2>
             <ul>
               {universos.map((u) => <li><a href={`/${u.id}/`}>{u.data.nombre}</a></li>)}
+              <li><a href="/proximamente/">{tx.proximos.pie}</a></li>
               {universos.filter((u) => guiasDe(u.id).length).map((u) => <li><a href={`/${u.id}/guias/`}>{tx.pie.guiasDe(u.data.nombre)}</a></li>)}
             </ul>
           </nav>

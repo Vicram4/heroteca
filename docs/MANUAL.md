@@ -210,8 +210,26 @@ JustWatch que da TMDB. Se guardan en `datos/donde-ver.json`.
 - **Se actualizan solos cada lunes** con GitHub Actions (`.github/workflows/donde-ver.yml`), que sube el archivo
   nuevo y hace que Vercel vuelva a publicar la web. Necesita el secreto `TMDB_API_TOKEN` en GitHub
   (Settings → Secrets and variables → Actions).
-- Para lanzarlo a mano: pestaña **Actions** del repositorio → «Actualizar «Dónde ver»» → **Run workflow**.
+- Para lanzarlo a mano: pestaña **Actions** del repositorio → «Actualizar «Dónde ver» y «Próximamente»» → **Run workflow**.
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_donde_ver.py`
+
+## Próximamente (próximos estrenos)
+
+Página `/proximamente/` (en inglés, `/en/coming-soon/`), enlazada desde el pie y con una franja de los 4 próximos
+estrenos en la portada. Los datos están en `datos/proximamente.json` y los genera
+`scripts/sincronizar_proximamente.py` con dos fuentes de TMDB:
+
+- Películas y series con fecha futura de las **productoras** de cada universo (lista `PRODUCTORAS` del script:
+  Marvel Studios, Marvel Animation, DC Studios…). Si falta alguna, se busca su número en TMDB y se añade ahí.
+- **Series de la colección** con un episodio programado (temporada nueva o en emisión).
+
+Arriba salen las series **en emisión** (próximo episodio) y debajo los **estrenos por año**. Si el estreno ya tiene ficha
+en la colección, la tarjeta lleva a la ficha; si no, a TMDB. La cuenta atrás se calcula en el navegador, que además oculta
+lo que ya se haya estrenado desde la última actualización.
+
+- **Se actualiza sola cada lunes** con la misma tarea de GitHub Actions que «Dónde ver».
+- En local: `.venv/Scripts/python.exe scripts/sincronizar_proximamente.py`
+- Textos de la página: apartado `proximos` de `src/i18n/textos.ts`.
 
 ## Versión en inglés (/en/)
 

@@ -11,6 +11,9 @@ import { todosLosUniversos, titulosDe, estiloUniverso } from '../../lib/datos';
 import Caratula from '../../components/Caratula.astro';
 import { textos, idiomaDe } from '../../i18n';
 import { seccionLoc } from '../../i18n/datos';
+import TarjetaEstreno from '../../components/TarjetaEstreno.astro';
+import ListaEstrenos from '../../components/ListaEstrenos.astro';
+import { proximosEstrenos, enEmision } from '../../lib/proximamente';
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
 
@@ -27,6 +30,11 @@ const tarjetas = await Promise.all(
     return { u, total: titulos.length, mosaico };
   }),
 );
+// Próximos estrenos (sin las series en emisión): los 4 primeros de los universos activos
+const activos = universos.filter((u) => u.data.activo);
+const proximos = proximosEstrenos()
+  .filter((e) => !enEmision(e) && activos.some((u) => u.id === e.universo))
+  .slice(0, 4);
 ---
 
 <Base
@@ -73,6 +81,24 @@ const tarjetas = await Promise.all(
       }
     </div>
   </section>
+
+  {
+    proximos.length > 0 && (
+      <section class="contenedor proximos" data-bloque aria-labelledby="t-proximos">
+        <div class="cabecera-proximos">
+          <h2 id="t-proximos">{tx.proximos.titulo}</h2>
+          <a href="/proximamente/" class="ver-todos">
+            {tx.proximos.verTodos} →
+          </a>
+        </div>
+        <ListaEstrenos>
+          {proximos.map((e) => (
+            <TarjetaEstreno e={e} u={activos.find((u) => u.id === e.universo)} />
+          ))}
+        </ListaEstrenos>
+      </section>
+    )
+  }
 </Base>
 
 <style>
@@ -167,6 +193,23 @@ const tarjetas = await Promise.all(
     padding: 5px 12px;
     border-radius: 999px;
     background: rgb(255 255 255 / 0.16);
+  }
+  .proximos {
+    margin-top: clamp(32px, 5vw, 56px);
+  }
+  .cabecera-proximos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 20px;
+    margin-bottom: 16px;
+  }
+  .cabecera-proximos h2 {
+    margin: 0;
+  }
+  .ver-todos {
+    font-weight: 600;
   }
   @media (max-width: 760px) {
     .universos {

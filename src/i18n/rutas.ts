@@ -11,7 +11,7 @@ import { GUIAS } from '../config/guias';
 import { todosLosTitulos, universosActivos } from '../lib/datos';
 
 /** Palabras fijas de las direcciones. */
-export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy' } as const;
+export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon' } as const;
 export type Segmento = keyof typeof SEGMENTOS;
 export const segmento = (s: Segmento, idioma: 'es' | 'en') => (idioma === 'en' ? SEGMENTOS[s] : s);
 
@@ -101,6 +101,7 @@ async function calcular(): Promise<Tablas> {
     ['/', '/en/'],
     ['/acerca/', `/en/${SEGMENTOS.acerca}/`],
     ['/privacidad/', `/en/${SEGMENTOS.privacidad}/`],
+    ['/proximamente/', `/en/${SEGMENTOS.proximamente}/`],
   ]);
   for (const u of universos) {
     const U = u.id;

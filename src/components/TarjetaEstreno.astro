@@ -1,0 +1,149 @@
+---
+/**
+ * Tarjeta de un próximo estreno (página «Próximamente» y portada). Enlaza con la ficha si ya está en la colección;
+ * si no, con TMDB. La cuenta atrás («Faltan 45 días») la pone el script de ListaEstrenos en el navegador.
+ */
+import type { Universo } from '../lib/datos';
+import { estiloUniverso } from '../lib/datos';
+import { type Estreno, enEmision, textosEstreno, enlaceTmdb } from '../lib/proximamente';
+import { imagenTmdb } from '../lib/tmdb';
+import { textos, idiomaDe, LOCALE } from '../i18n';
+
+interface Props {
+  e: Estreno;
+  u?: Universo;
+  conSinopsis?: boolean;
+}
+const { e, u, conSinopsis = false } = Astro.props;
+const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+const x = textosEstreno(e, idioma);
+const fecha = new Date(`${e.fecha}T00:00:00Z`).toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const que = enEmision(e)
+  ? tx.proximos.episodio(e.temporada ?? 1, e.episodio ?? 1, fecha)
+  : e.tipo === 'pelicula'
+    ? tx.proximos.pelicula
+    : (e.temporada ?? 1) > 1
+      ? tx.proximos.temporadaNueva(e.temporada ?? 1)
+      : tx.proximos.serieNueva;
+const href = e.ficha ? `/${e.ficha}/` : enlaceTmdb(e, idioma);
+---
+
+<li class="estreno" data-fecha={e.fecha} data-universo={e.universo} style={estiloUniverso(u)}>
+  <a href={href} rel={e.ficha ? undefined : 'noopener'}>
+    <span class="cartel">
+      {
+        x.poster ? (
+          <img
+            src={imagenTmdb(x.poster, 'w342')}
+            srcset={`${imagenTmdb(x.poster, 'w185')} 185w, ${imagenTmdb(x.poster, 'w342')} 342w`}
+            sizes="(max-width: 600px) 45vw, 200px"
+            alt=""
+            width="342"
+            height="513"
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <span class="sin-cartel" aria-hidden="true">{x.titulo}</span>
+        )
+      }
+      <span class="cuenta" data-cuenta hidden />
+    </span>
+    <span class="nombre">{x.titulo}</span>
+    <span class="meta">
+      {u?.data.nombre && <span class="marca-u">{u.data.nombre}</span>}
+      {enEmision(e) ? que : <>{que} · <time datetime={e.fecha}>{fecha}</time></>}
+    </span>
+    {conSinopsis && x.sinopsis && <span class="sinopsis">{x.sinopsis}</span>}
+    <span class="destino">{e.ficha ? tx.proximos.enColeccion : `${tx.proximos.enTmdb} ↗`}</span>
+  </a>
+</li>
+
+<style>
+  .estreno a {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+  .cartel {
+    position: relative;
+    display: block;
+    aspect-ratio: 2 / 3;
+    border-radius: var(--radio);
+    overflow: hidden;
+    background: var(--sup);
+    box-shadow: 0 0 0 1px var(--borde), var(--sombra);
+    transition: transform var(--transicion), box-shadow var(--transicion);
+  }
+  .estreno a:hover .cartel,
+  .estreno a:focus-visible .cartel {
+    transform: translateY(-3px);
+    box-shadow: 0 0 0 2px var(--acento), var(--sombra);
+  }
+  .cartel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sin-cartel {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding: 12px;
+    text-align: center;
+    font: 700 1.1rem var(--f-titulo);
+    text-transform: uppercase;
+    background: radial-gradient(circle at 70% 20%, color-mix(in srgb, var(--acento) 45%, #000), #05070c 80%);
+    color: #fff;
+  }
+  .cuenta {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.78);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+  .nombre {
+    margin-top: 4px;
+    font: 700 1.05rem / 1.2 var(--f-titulo);
+  }
+  .meta {
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .marca-u {
+    display: inline-block;
+    margin-right: 6px;
+    padding: 0 7px;
+    border-radius: 4px;
+    /* algo más oscuro que el acento para que el texto blanco tenga contraste AA */
+    background: color-mix(in srgb, var(--acento) 82%, #000);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .sinopsis {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.88rem;
+    color: var(--txt-2);
+  }
+  .destino {
+    margin-top: auto;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--acento-txt);
+  }
+</style>

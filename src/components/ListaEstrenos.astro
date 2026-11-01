@@ -1,0 +1,59 @@
+---
+/**
+ * Rejilla de TarjetaEstreno. En el navegador pone la cuenta atrás de cada estreno y oculta los que ya han pasado
+ * (la web se compila cada semana, así que alguno puede haberse estrenado desde entonces).
+ */
+import { textos } from '../i18n';
+
+interface Props {
+  etiqueta?: string;
+}
+const { etiqueta } = Astro.props;
+const tx = textos(Astro.url);
+---
+
+<ul
+  class="rejilla-estrenos"
+  data-estrenos
+  aria-label={etiqueta}
+  data-hoy={tx.proximos.hoy}
+  data-manana={tx.proximos.manana}
+  data-faltan={tx.proximos.faltan(999)}
+>
+  <slot />
+</ul>
+
+<script>
+  const DIA = 86400000;
+  const hoy = new Date();
+  const hoyUtc = Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+  document.querySelectorAll<HTMLElement>('[data-estrenos]').forEach((lista) => {
+    const { hoy: txHoy = '', manana = '', faltan = '' } = lista.dataset;
+    lista.querySelectorAll<HTMLElement>('.estreno').forEach((li) => {
+      const dias = Math.round((Date.parse(`${li.dataset.fecha}T00:00:00Z`) - hoyUtc) / DIA);
+      if (dias < 0) {
+        li.hidden = true;
+        li.dataset.pasado = '';
+        return;
+      }
+      const cuenta = li.querySelector<HTMLElement>('[data-cuenta]');
+      if (!cuenta || dias > 365) return;
+      cuenta.textContent = dias === 0 ? txHoy : dias === 1 ? manana : faltan.replace('999', String(dias));
+      cuenta.hidden = false;
+    });
+    // Sin estrenos visibles: se oculta el bloque entero (lo indica el atributo data-bloque del contenedor)
+    const bloque = lista.closest<HTMLElement>('[data-bloque]');
+    if (bloque && !lista.querySelector('.estreno:not([data-pasado])')) bloque.hidden = true;
+  });
+</script>
+
+<style>
+  .rejilla-estrenos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(46%, 190px), 1fr));
+    gap: 26px 18px;
+  }
+</style>
