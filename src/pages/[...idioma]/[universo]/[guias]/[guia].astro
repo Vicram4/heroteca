@@ -6,6 +6,9 @@ import Base from '../../../../layouts/Base.astro';
 import SubNav from '../../../../components/SubNav.astro';
 import ListaOrden from '../../../../components/ListaOrden.astro';
 import ComparaOrden from '../../../../components/ComparaOrden.astro';
+import Caratula from '../../../../components/Caratula.astro';
+import Progreso from '../../../../components/Progreso.astro';
+import { datosTmdb } from '../../../../lib/tmdb';
 import { SITE } from '../../../../config/site';
 import { GUIAS, guiaLoc, type Guia } from '../../../../config/guias';
 import {
@@ -21,7 +24,7 @@ import {
   type Titulo,
   type Universo,
 } from '../../../../lib/datos';
-import { textos, idiomaDe, LOCALE } from '../../../../i18n';
+import { textos, idiomaDe, LOCALE, nombreTipo } from '../../../../i18n';
 import { rutaEnIdioma } from '../../../../i18n/rutas';
 import { universoLoc, sagaLoc } from '../../../../i18n/datos';
 
@@ -137,8 +140,30 @@ for (const id of guia.secciones) {
   }
 }
 
+// «Por dónde empezar»: rutas de títulos elegidos a mano (un id mal escrito para la compilación)
+const porIdTitulo = new Map(titulos.map((t) => [t.id, t]));
+const rutas = (guia.rutas ?? []).map((r, i) => ({
+  id: `ruta-${i + 1}`,
+  titulo: r.titulo,
+  texto: r.texto,
+  titulos: r.ids.map((id) => {
+    const t = porIdTitulo.get(id);
+    if (!t) throw new Error(`Guía «${guia.id}»: no existe la ficha «${id}» en ${universo.id}`);
+    return t;
+  }),
+}));
+const duracion = (t: Titulo) => {
+  const min = t.m.duracion;
+  if (t.tipo === 'serie' && t.m.capitulos.length) return tx.recomendar.capitulos(t.m.capitulos.length);
+  return min ? tx.recomendar.horas(Math.floor(min / 60), min % 60) : undefined;
+};
+const notaDe = (t: Titulo) => {
+  const d = datosTmdb(t.universo, t.id, 'es');
+  return d?.nota && (d.votos ?? 0) >= 20 ? d.nota.toLocaleString(LOCALE[idioma], { minimumFractionDigits: 1 }) : undefined;
+};
+
 // Datos estructurados: la primera lista como ItemList
-const primera = bloques[0]?.filas ?? carpetas.flatMap((c) => c.filas);
+const primera = bloques[0]?.filas ?? (rutas.length ? rutas[0].titulos.map((t) => ({ t })) : carpetas.flatMap((c) => c.filas));
 const urlsLista = await Promise.all(primera.map((f) => rutaEnIdioma(f.t.url, idioma)));
 const datos = {
   '@context': 'https://schema.org',
@@ -148,7 +173,7 @@ const datos = {
   numberOfItems: primera.length,
   itemListElement: primera.map((f, i) => ({ '@type': 'ListItem', position: i + 1, name: f.t.corto, url: new URL(urlsLista[i], SITE.url).href })),
 };
-const indice = [...bloques.map((b) => ({ id: b.id, texto: b.titulo })), ...comparaciones.map((c) => ({ id: c.id, texto: c.titulo })), ...carpetas.map((c) => ({ id: c.id, texto: `${tx.general.carpeta(c.numero)} · ${c.etapa}` }))];
+const indice = [...rutas.map((r) => ({ id: r.id, texto: r.titulo })), ...bloques.map((b) => ({ id: b.id, texto: b.titulo })), ...comparaciones.map((c) => ({ id: c.id, texto: c.titulo })), ...carpetas.map((c) => ({ id: c.id, texto: `${tx.general.carpeta(c.numero)} · ${c.etapa}` }))];
 const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t?.id))];
 ---
 
@@ -202,6 +227,51 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
           )}
         </section>
       ))
+    }
+
+    {
+      rutas.map((r) => (
+        <section id={r.id} class="bloque" aria-labelledby={`h-${r.id}`}>
+          <h2 id={`h-${r.id}`}>{r.titulo}</h2>
+          <p class="texto">{r.texto}</p>
+          <Progreso ids={r.titulos.map((t) => t.id)} conEnlace />
+          <ol class="ruta">
+            {r.titulos.map((t, i) => (
+              <li class={`t-${t.tipo}`} data-titulo={t.id}>
+                <a href={t.url}>
+                  <span class="tapa">
+                    {t.portada || t.m.posterTmdb ? <Caratula t={t} ancho={120} /> : null}
+                    <span class="paso" aria-hidden="true">{i + 1}</span>
+                    <span class="marca-visto">
+                      <span aria-hidden="true">✓</span>
+                      <span class="solo-lectores">{tx.progreso.visto}</span>
+                    </span>
+                  </span>
+                  <span class="nombre">{t.corto}</span>
+                  <span class="meta">
+                    {[t.d.anio, t.d.animada ? tx.general.animado(nombreTipo(t.tipo, idioma)) : nombreTipo(t.tipo, idioma), duracion(t)].filter(Boolean).join(' · ')}
+                  </span>
+                  {notaDe(t) && <span class="meta">★ {notaDe(t)}<span class="solo-lectores"> ({tx.recomendar.nota})</span></span>}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))
+    }
+
+    {
+      rutas.length > 0 && (
+        <aside class="panel siguiente-paso">
+          <div>
+            <h2>{tx.recomendar.cta}</h2>
+            <p>{tx.recomendar.ctaTexto}</p>
+          </div>
+          <a href="/recomendaciones/" class="pastilla boton-test">
+            {tx.recomendar.ctaBoton} →
+          </a>
+        </aside>
+      )
     }
 
     {
@@ -286,6 +356,104 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
   .indice ol {
     margin: 8px 0 0;
     padding-left: 1.3em;
+  }
+  /* «Por dónde empezar»: tarjetas numeradas de cada ruta */
+  .ruta {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(46%, 150px), 1fr));
+    gap: 22px 16px;
+  }
+  .ruta a {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .ruta .tapa {
+    position: relative;
+    display: block;
+    aspect-ratio: 2 / 3;
+    border-radius: var(--radio-s, 8px);
+    overflow: hidden;
+    background: var(--sup);
+    box-shadow: 0 0 0 3px var(--c, var(--borde));
+    transition: transform var(--transicion);
+  }
+  .ruta a:hover .tapa,
+  .ruta a:focus-visible .tapa {
+    transform: translateY(-3px);
+  }
+  .ruta .tapa :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .paso {
+    position: absolute;
+    left: 6px;
+    top: 6px;
+    display: grid;
+    place-items: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.8);
+    color: #fff;
+    font: 800 0.9rem var(--f-titulo);
+  }
+  .marca-visto {
+    display: none;
+  }
+  li[data-visto] .marca-visto {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #1a7f45;
+    color: #fff;
+    font-weight: 800;
+    box-shadow: 0 0 0 2px #fff;
+  }
+  .ruta .nombre {
+    margin-top: 6px;
+    font: 700 1rem / 1.2 var(--f-titulo);
+  }
+  .ruta .meta {
+    font-size: 0.82rem;
+    color: var(--txt-2);
+  }
+  .bloque :global(.progreso) {
+    margin-top: 6px;
+  }
+  .siguiente-paso {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px 24px;
+    margin-top: 36px;
+  }
+  .siguiente-paso h2 {
+    margin: 0 0 4px;
+  }
+  .siguiente-paso p {
+    margin: 0;
+    color: var(--txt-2);
+    max-width: 60ch;
+  }
+  .boton-test {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
   }
   .bloque {
     margin-top: 40px;

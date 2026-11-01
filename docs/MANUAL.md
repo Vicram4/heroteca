@@ -256,6 +256,18 @@ función `tonosDe` de `src/pages/[...idioma]/[recomendaciones].astro`.
 La nota, los votos y la edad están en `datos/tmdb/<universo>.json` (campos `nota`, `votos` y `edad`), que genera
 `scripts/sincronizar_tmdb.py`. Textos: apartado `recomendar` de `src/i18n/textos.ts`.
 
+## Por dónde empezar (guías de rutas)
+
+Cada universo tiene una guía «Por dónde empezar» (`/marvel/guias/por-donde-empezar/`, en inglés
+`/en/marvel/guides/where-to-start/`), la primera de su lista de guías. Es de tipo `rutas` en `src/config/guias.ts`:
+cada ruta tiene título, texto (con su versión `en`) y los **ids de las fichas** en el orden recomendado.
+
+- Las tarjetas muestran carátula, número de paso, año, tipo, duración y nota de TMDB, y se marcan con la ✓ de
+  «Mi progreso»; cada ruta tiene su barra «Has visto 3 de 10».
+- Al final, la llamada al test «¿Qué veo?».
+- Si un id está mal escrito, **la compilación falla** con un mensaje que dice qué ficha no existe.
+- Para cambiar una selección basta con editar la lista `ids` de la ruta.
+
 ## Cronológico frente a estreno (guías)
 
 En las guías, cada sección con orden de la historia (UMC, DCEU) tiene un apartado «cronológico frente a estreno»

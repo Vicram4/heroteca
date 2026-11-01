@@ -5,6 +5,7 @@
  * tipo:
  *  - 'secciones': estanterías completas en forma de lista (orden propio y, si lo tiene, de estreno)
  *  - 'carpetas':  carpetas de visionado de series, con el orden capítulo a capítulo si existe
+ *  - 'rutas':     selecciones para empezar («Por dónde empezar»): bloques de títulos elegidos a mano, por id de ficha
  */
 export interface Guia {
   universo: string;
@@ -19,18 +20,141 @@ export interface Guia {
   descripcion: string;
   /** Párrafos de introducción */
   intro: string[];
-  tipo: 'secciones' | 'carpetas';
+  tipo: 'secciones' | 'carpetas' | 'rutas';
   /** Ids de las secciones que muestra, en orden */
   secciones: string[];
   /** Solo para tipo 'carpetas': qué carpetas incluye */
   carpetas?: number[];
+  /** Solo para tipo 'rutas': cada ruta con sus títulos (ids de ficha) en el orden en que se recomiendan */
+  rutas?: Ruta[];
   /** Mostrar la fase (sagas de tipo «fase») de cada título */
   conFases?: boolean;
   /** Versión inglesa de los textos */
   en?: { titulo: string; tituloSeo: string; descripcion: string; intro: string[] };
 }
 
+export interface Ruta {
+  titulo: string;
+  texto: string;
+  ids: string[];
+  en?: { titulo: string; texto: string };
+}
+
 export const GUIAS: Guia[] = [
+  {
+    universo: 'marvel',
+    id: 'por-donde-empezar',
+    idEn: 'where-to-start',
+    titulo: 'Por dónde empezar a ver Marvel',
+    tituloSeo: 'Por dónde empezar a ver Marvel: las películas y series esenciales',
+    descripcion:
+      'Guía para empezar con Marvel sin perderse: las 10 películas esenciales del UMC, las mejores series para empezar, historias que se entienden solas y animación.',
+    intro: [
+      'Con más de 240 películas y series, Marvel puede imponer. No hace falta verlo todo: estas rutas son puntos de entrada que funcionan solos, ordenados para ver uno detrás de otro.',
+      'Si tienes poco tiempo, empieza por la primera ruta: diez películas que cuentan lo esencial del Universo Marvel Cinematográfico hasta Vengadores: Endgame. Cuando te quedes con ganas de más, la guía del orden completo tiene todo lo demás.',
+    ],
+    tipo: 'rutas',
+    secciones: [],
+    rutas: [
+      {
+        titulo: 'Lo esencial del UMC en 10 películas',
+        texto: 'El hilo principal de la saga del Infinito, de Iron Man a Endgame, sin rodeos.',
+        ids: ['iron-man-2008', 'capitan-america-el-primer-vengador', 'los-vengadores', 'capitan-america-el-soldado-de-invierno', 'guardianes-de-la-galaxia-2014', 'vengadores-la-era-de-ultron', 'capitan-america-civil-war', 'thor-ragnarok', 'vengadores-infinity-war', 'vengadores-endgame'],
+        en: { titulo: 'The MCU essentials in 10 films', texto: 'The main thread of the Infinity Saga, from Iron Man to Endgame, with no detours.' },
+      },
+      {
+        titulo: 'Si prefieres series',
+        texto: 'Tres temporadas muy distintas entre sí, de la calle de Daredevil a la fantasía de WandaVision y Loki.',
+        ids: ['daredevil-t1', 'wandavision-t1', 'loki-t1'],
+        en: { titulo: 'If you prefer series', texto: 'Three very different seasons, from Daredevil’s streets to the fantasy of WandaVision and Loki.' },
+      },
+      {
+        titulo: 'Historias que se entienden solas',
+        texto: 'No necesitas haber visto nada antes para disfrutarlas.',
+        ids: ['logan', 'deadpool', 'black-panther'],
+        en: { titulo: 'Stories that stand on their own', texto: 'You don’t need to have seen anything before to enjoy them.' },
+      },
+      {
+        titulo: 'Animación',
+        texto: 'De las mejores películas y series animadas de Marvel, para todas las edades.',
+        ids: ['spider-man-un-nuevo-universo', 'big-hero-6', 'x-men-97', 'el-espectacular-spider-man'],
+        en: { titulo: 'Animation', texto: 'Some of Marvel’s best animated films and series, for all ages.' },
+      },
+    ],
+    en: {
+      titulo: 'Where to start with Marvel',
+      tituloSeo: 'Where to start with Marvel: the essential films and series',
+      descripcion:
+        'A guide to getting into Marvel without getting lost: the 10 essential MCU films, the best series to start with, stories that stand on their own and animation.',
+      intro: [
+        'With more than 240 films and series, Marvel can feel daunting. You don’t need to watch it all: these routes are entry points that work on their own, ordered to watch one after another.',
+        'If you’re short on time, start with the first route: ten films that tell the essentials of the Marvel Cinematic Universe up to Avengers: Endgame. When you want more, the full watch order guide has everything else.',
+      ],
+    },
+  },
+  {
+    universo: 'dc',
+    id: 'por-donde-empezar',
+    idEn: 'where-to-start',
+    titulo: 'Por dónde empezar a ver DC',
+    tituloSeo: 'Por dónde empezar a ver DC: Batman, Superman y las películas esenciales',
+    descripcion:
+      'Guía para empezar con DC: la trilogía de Batman de Nolan, los clásicos de Superman y Batman, lo básico del Universo Extendido, películas que se entienden solas, series y animación.',
+    intro: [
+      'DC no tiene una única historia que seguir: tiene muchas continuidades distintas, y eso es una ventaja, porque casi cualquier bloque se puede empezar sin haber visto nada antes.',
+      'Estas rutas reúnen los puntos de entrada más habituales. Elige la que más te apetezca; si luego quieres seguir el Universo Extendido en orden, la guía de las películas de DC lo tiene completo.',
+    ],
+    tipo: 'rutas',
+    secciones: [],
+    rutas: [
+      {
+        titulo: 'La trilogía de Batman de Christopher Nolan',
+        texto: 'Para muchos, las mejores películas de superhéroes. Tres películas, una historia cerrada.',
+        ids: ['batman-begins', 'el-caballero-oscuro', 'el-caballero-oscuro-la-leyenda-renace'],
+        en: { titulo: 'Christopher Nolan’s Batman trilogy', texto: 'For many, the best superhero films ever made. Three films, one complete story.' },
+      },
+      {
+        titulo: 'Los clásicos',
+        texto: 'El Superman de Christopher Reeve y el Batman de Tim Burton, las películas que lo empezaron todo.',
+        ids: ['superman', 'batman-1989'],
+        en: { titulo: 'The classics', texto: 'Christopher Reeve’s Superman and Tim Burton’s Batman, the films that started it all.' },
+      },
+      {
+        titulo: 'Lo básico del Universo Extendido (DCEU)',
+        texto: 'Las cuatro películas que construyen la Liga de la Justicia.',
+        ids: ['el-hombre-de-acero', 'batman-vs-superman-el-amanecer-de-la-justicia', 'wonder-woman-2017', 'la-liga-de-la-justicia-de-zack-snyder'],
+        en: { titulo: 'DC Extended Universe (DCEU) basics', texto: 'The four films that build the Justice League.' },
+      },
+      {
+        titulo: 'Películas que se entienden solas',
+        texto: 'Dos visiones muy personales de Gotham, sin necesidad de ver nada más.',
+        ids: ['joker', 'the-batman'],
+        en: { titulo: 'Films that stand on their own', texto: 'Two very personal takes on Gotham, with no homework required.' },
+      },
+      {
+        titulo: 'Si prefieres series',
+        texto: 'El joven Clark Kent, el arranque del Arrowverso y el diablo de vacaciones en Los Ángeles.',
+        ids: ['smallville-t1', 'arrow-t1', 'lucifer-t1'],
+        en: { titulo: 'If you prefer series', texto: 'Young Clark Kent, the start of the Arrowverse and the devil on holiday in Los Angeles.' },
+      },
+      {
+        titulo: 'Animación',
+        texto: 'Tres películas animadas muy valoradas, cada una con su propia historia.',
+        ids: ['batman-ano-uno', 'la-liga-de-la-justicia-la-nueva-frontera', 'superman-hijo-rojo'],
+        en: { titulo: 'Animation', texto: 'Three highly rated animated films, each with its own story.' },
+      },
+    ],
+    en: {
+      titulo: 'Where to start with DC',
+      tituloSeo: 'Where to start with DC: Batman, Superman and the essential films',
+      descripcion:
+        'A guide to getting into DC: Nolan’s Batman trilogy, the Superman and Batman classics, DCEU basics, films that stand on their own, series and animation.',
+      intro: [
+        'DC doesn’t have a single story to follow: it has many separate continuities, and that’s an advantage, because almost any block can be started without having seen anything else.',
+        'These routes gather the most common entry points. Pick whichever you fancy; if you then want to follow the DC Extended Universe in order, the DC movies guide has it all.',
+      ],
+    },
+  },
   {
     universo: 'marvel',
     id: 'orden-umc',
@@ -115,4 +239,5 @@ export const GUIAS: Guia[] = [
 export const guiasDe = (universo: string) => GUIAS.filter((g) => g.universo === universo);
 
 /** La guía con sus textos en el idioma pedido (si falta la traducción, en español). */
-export const guiaLoc = (g: Guia, idioma: 'es' | 'en'): Guia => (idioma === 'en' && g.en ? { ...g, ...g.en } : g);
+export const guiaLoc = (g: Guia, idioma: 'es' | 'en'): Guia =>
+  idioma === 'en' && g.en ? { ...g, ...g.en, rutas: g.rutas?.map((r) => ({ ...r, ...r.en })) } : g;
