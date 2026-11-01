@@ -219,7 +219,8 @@ JustWatch que da TMDB. Se guardan en `datos/donde-ver.json`.
   `nombreEn` en sagas y personajes; `notasEn` en las fichas. `scripts/traducir_en.py` traduce las notas nuevas y
   añade los nombres que falten (avisa si una nota no tiene regla de traducción).
 - **Dónde ver en inglés:** datos de Estados Unidos (`datos/donde-ver-us.json`), que se actualizan con la tarea semanal.
-- Mientras `inglesPublicado` sea `false` en `src/config/site.ts`, las páginas inglesas no se indexan, no están en el
+- Con `inglesPublicado: true` en `src/config/site.ts` (activado), la versión inglesa se indexa, está en el mapa del sitio
+  y cada página enlaza con su traducción (hreflang). Si se pone a `false`, las páginas inglesas no se indexan, no están en el
   mapa del sitio y el botón de idioma solo aparece en ellas.
 
 ## Guías de visionado

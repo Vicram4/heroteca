@@ -38,7 +38,10 @@ export function universoLoc(u: Universo, idioma: Idioma): Universo {
 
 export function sagaLoc(s: Saga, idioma: Idioma): Saga {
   if (idioma === 'es') return s;
-  return { ...s, data: { ...s.data, nombre: s.data.nombreEn ?? s.data.nombre, descripcion: s.data.descripcionEn ?? s.data.descripcion } };
+  return {
+    ...s,
+    data: { ...s.data, nombre: s.data.nombreEn ?? s.data.nombre, descripcion: s.data.descripcionEn ?? s.data.descripcion, notas: s.data.notasEn ?? s.data.notas },
+  };
 }
 
 export function personajeLoc(p: Personaje, idioma: Idioma): Personaje {

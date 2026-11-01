@@ -126,8 +126,9 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
           <Buscador />
           {
             verBotonIdioma && (
-              <a class="pastilla idioma" href={otroIdioma} hreflang={idioma === 'en' ? 'es' : 'en'} aria-label={tx.general.cambiarIdiomaAria}>
+              <a class="pastilla idioma" href={otroIdioma} hreflang={idioma === 'en' ? 'es' : 'en'} lang={idioma === 'en' ? 'es' : 'en'} title={tx.general.cambiarIdiomaAria}>
                 {idioma === 'en' ? 'ES' : 'EN'}
+                <span class="solo-lectores"> ({tx.general.cambiarIdioma})</span>
               </a>
             )
           }

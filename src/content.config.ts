@@ -128,6 +128,7 @@ const sagas = defineCollection({
     nombreEn: z.string().optional(),
     descripcionEn: z.string().optional(),
     notas: z.string().optional(),
+    notasEn: z.string().optional(),
     fuente: z.string().optional(),
   }),
 });

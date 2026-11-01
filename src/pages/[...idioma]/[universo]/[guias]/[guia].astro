@@ -6,7 +6,7 @@ import Base from '../../../../layouts/Base.astro';
 import SubNav from '../../../../components/SubNav.astro';
 import ListaOrden from '../../../../components/ListaOrden.astro';
 import { SITE } from '../../../../config/site';
-import { GUIAS, type Guia } from '../../../../config/guias';
+import { GUIAS, guiaLoc, type Guia } from '../../../../config/guias';
 import {
   universosActivos,
   titulosDe,
@@ -36,7 +36,7 @@ export async function getStaticPaths() {
 })(), (r) => ({ guias: 'guides', guia: en.guias.get(r.params.guia) }));
 }
 
-const { guia } = Astro.props as { guia: Guia; universo: Universo };
+const guia = guiaLoc((Astro.props as { guia: Guia }).guia, idiomaDe(Astro.url));
 const universo = universoLoc((Astro.props as { universo: Universo }).universo, idiomaDe(Astro.url));
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
@@ -82,7 +82,10 @@ for (const id of guia.secciones) {
           n: o.n,
           t: porId.get(o.titulo.id),
           codigo: o.codigo,
-          capitulo: o.capitulo,
+          capitulo:
+            idioma === 'en' && o.codigo
+              ? porId.get(o.titulo.id)?.m.capitulos.find((c) => c.codigo === o.codigo)?.titulo || o.capitulo
+              : o.capitulo,
           mega: o.megacrossover,
           nota: o.nota,
         })),
@@ -205,7 +208,7 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
                   <li class:list={{ mega: o.mega }} style={`--c-serie: var(--serie-${colores(c).indexOf(o.t?.id) % 6})`}>
                     <span class="n">{o.n !== undefined ? String(o.n).padStart(2, '0') : '·'}</span>
                     <a href={o.t?.url}>{o.t?.d.titulo}</a>
-                    <span class="cod">{o.codigo ?? (o.t?.d.temporada ? `T${o.t.d.temporada}` : '')}</span>
+                    <span class="cod">{o.codigo ?? (o.t?.d.temporada ? tx.carpetas.temporadaCorta(o.t.d.temporada) : '')}</span>
                     <span class="cap">
                       {o.capitulo ?? tx.carpetas.completa}
                       {o.mega && <span class="chip-mega">Megacrossover</span>}

@@ -59,7 +59,7 @@ const anios = titulos.map((t) => t.d.anio);
       <div class="cartel">
         <h1>{p.data.nombre}</h1>
         {p.data.identidad && <p class="identidad">{p.data.identidad}</p>}
-        {p.data.alias.length > 0 && <p class="alias">También: {p.data.alias.join(' · ')}</p>}
+        {p.data.alias.length > 0 && <p class="alias">{tx.personajes.tambien}: {p.data.alias.join(' · ')}</p>}
       </div>
       <dl class="datos">
         <div><dt>{tx.personajes.titulos}</dt><dd>{titulos.length}</dd></div>

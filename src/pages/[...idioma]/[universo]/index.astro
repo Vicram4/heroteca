@@ -8,7 +8,7 @@ import Base from '../../../layouts/Base.astro';
 import SubNav from '../../../components/SubNav.astro';
 import Caja from '../../../components/Caja.astro';
 import { universosActivos, titulosDe, huecosDeSeccion, sagasDe } from '../../../lib/datos';
-import { guiasDe } from '../../../config/guias';
+import { guiasDe, guiaLoc } from '../../../config/guias';
 import { textos, idiomaDe } from '../../../i18n';
 import { universoLoc, sagaLoc } from '../../../i18n/datos';
 const tx = textos(Astro.url);
@@ -47,7 +47,7 @@ const relacionadas = (await sagasDe(universo.id))
       guiasDe(universo.id).length > 0 && (
         <nav class="guias-rapidas" aria-label={tx.hub.guiasAria}>
           <span class="etiqueta">{tx.hub.guias}</span>
-          {guiasDe(universo.id).map((g) => (
+          {guiasDe(universo.id).map((g) => guiaLoc(g, idioma)).map((g) => (
             <a class="pastilla" href={`/${universo.id}/guias/${g.id}/`}>
               {g.titulo}
             </a>

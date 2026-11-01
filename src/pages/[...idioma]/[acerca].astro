@@ -1,66 +1,120 @@
 ---
-import { conIdiomas } from '../../i18n';
+import { conIdiomas, idiomaDe } from '../../i18n';
 export function getStaticPaths() {
   return conIdiomas([{ params: { acerca: 'acerca' } }], () => ({ acerca: 'about' }));
 }
-/** Qué es Heroteca, cómo está organizada y de dónde salen los datos. */
+/** Qué es Heroteca, cómo está organizada y de dónde salen los datos (en español y en inglés). */
 import Base from '../../layouts/Base.astro';
 import { SITE, AVISOS } from '../../config/site';
 import { universosActivos, titulosDe } from '../../lib/datos';
 
+const idioma = idiomaDe(Astro.url);
 const universos = await universosActivos();
 const total = (await Promise.all(universos.map((u) => titulosDe(u.id)))).reduce((n, l) => n + l.length, 0);
+const en = idioma === 'en';
 ---
 
 <Base
-  titulo="Acerca de Heroteca"
-  descripcion="Qué es Heroteca, cómo se organizan sus películas y series de Marvel y DC (UMC, DCDU, carpetas de visionado) y de dónde salen sus datos."
-  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: 'Acerca de', url: '/acerca/' }]}
+  titulo={en ? 'About Heroteca' : 'Acerca de Heroteca'}
+  descripcion={en
+    ? 'What Heroteca is, how its Marvel and DC films and series are organized (MCU, DCEU, viewing folders) and where its data comes from.'
+    : 'Qué es Heroteca, cómo se organizan sus películas y series de Marvel y DC (UMC, DCDU, carpetas de visionado) y de dónde salen sus datos.'}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: en ? 'About' : 'Acerca de', url: '/acerca/' }]}
 >
-  <div class="contenedor texto-largo">
-    <h1>Acerca de {SITE.nombre}</h1>
-    <p class="entradilla">{SITE.nombre} es una enciclopedia de fans de las películas, series y animación de Marvel y DC: {total} títulos con sus fichas, personajes, sagas y órdenes para verlos.</p>
+  {
+    en ? (
+      <div class="contenedor texto-largo">
+        <h1>About {SITE.nombre}</h1>
+        <p class="entradilla">{SITE.nombre} is a fan encyclopedia of Marvel and DC films, series and animation: {total} titles with their details, characters, sagas and watch orders.</p>
 
-    <h2>Un archivo de colección</h2>
-    <p>La web nace de un archivo personal: años de colección catalogada en documentos de Word y PowerPoint y organizada en un disco duro. {SITE.nombre} respeta esa organización en lugar de imponer una genérica. Por eso cada título lleva el <strong>número de la colección</strong> (001, 002…) y las secciones se llaman como en el archivo.</p>
+        <h2>A collection archive</h2>
+        <p>The site grew out of a personal archive: years of a superhero collection catalogued in Word and PowerPoint documents and organized on a hard drive. {SITE.nombre} keeps that organization instead of imposing a generic one. That is why every title carries its <strong>collection number</strong> (001, 002…) and the sections follow the archive.</p>
 
-    <h2>Cómo está organizada</h2>
-    <h3>Marvel</h3>
-    <dl class="glosario">
-      <dt>UMC</dt>
-      <dd>Universo Marvel Cinematográfico (en inglés, <abbr title="Marvel Cinematic Universe">MCU</abbr>). Su numeración sigue el <strong>orden cronológico de la historia</strong>, no el de estreno. Una temporada puede ocupar varios números si sus capítulos transcurren en momentos distintos.</dd>
-      <dt>Pre-UMC</dt>
-      <dd>Películas y series de Marvel anteriores o ajenas al UMC, numeradas por orden de estreno.</dd>
-      <dt>Animación</dt>
-      <dd>Películas y series animadas, por orden de estreno.</dd>
-    </dl>
-    <h3>DC</h3>
-    <dl class="glosario">
-      <dt>UDC</dt>
-      <dd>Películas clásicas de DC (de Superman, 1978, a la trilogía de El caballero oscuro), numeradas por orden de estreno.</dd>
-      <dt>DCDU</dt>
-      <dd>Universo Extendido de DC (en inglés, <abbr title="DC Extended Universe">DCEU</abbr>), numerado en <strong>orden de la historia</strong>.</dd>
-      <dt>Series y carpetas</dt>
-      <dd>Las series se ven por <strong>carpetas de visionado</strong>, agrupadas en etapas: Pre-Crossover, Crossover, Entre-Crossover y Pos-Crossover. El código de cada temporada indica carpeta y posición: <em>2.3</em> es la tercera de la carpeta 2. En los bloques Crossover hay además un orden <strong>capítulo a capítulo</strong> para ver juntas varias series del Arrowverso. Lo marcado <em>En espera</em> está pendiente de colocar.</dd>
-    </dl>
-    <p>En todas las estanterías se puede alternar entre el orden propio de la sección y el orden de estreno.</p>
+        <h2>How it is organized</h2>
+        <h3>Marvel</h3>
+        <dl class="glosario">
+          <dt>MCU</dt>
+          <dd>The Marvel Cinematic Universe. Its numbering follows the <strong>chronological order of the story</strong>, not release order. A season can take several numbers when its episodes happen at different points in the timeline.</dd>
+          <dt>Pre-MCU</dt>
+          <dd>Marvel films and series released before or outside the MCU, numbered in release order.</dd>
+          <dt>Animation</dt>
+          <dd>Animated films and series, in release order.</dd>
+        </dl>
+        <h3>DC</h3>
+        <dl class="glosario">
+          <dt>Classic DC</dt>
+          <dd>Classic DC films (from Superman, 1978, to The Dark Knight trilogy), numbered in release order.</dd>
+          <dt>DCEU</dt>
+          <dd>The DC Extended Universe, numbered in <strong>story order</strong>.</dd>
+          <dt>Series and folders</dt>
+          <dd>The series are watched in <strong>viewing folders</strong>, grouped in stages: pre-crossover, crossover, between crossovers and post-crossover. Each season’s code gives its folder and position: <em>2.3</em> is the third one in folder 2. Crossover blocks also have an <strong>episode-by-episode</strong> order to watch several Arrowverse series together. Anything marked <em>On hold</em> is still waiting for its place.</dd>
+        </dl>
+        <p>Every shelf can switch between the section’s own order and release order.</p>
 
-    <h2>De dónde salen los datos</h2>
-    <ul>
-      <li><strong>El archivo de la colección manda:</strong> numeración, títulos, carátulas de sus ediciones, argumentos, repartos y listas de capítulos.</li>
-      <li>Lo que falta se completa con <a href="https://www.themoviedb.org/" rel="noopener">TMDB</a> (sinopsis, reparto, carteles y tráileres). En cada ficha, lo que viene de TMDB se indica con «de TMDB» o con una ᵀ.</li>
-      <li>Los títulos son los oficiales en España; los originales y alternativos también aparecen en la ficha y en el buscador.</li>
-      <li>Las escenas post-créditos y los cameos se ocultan como spoiler hasta que se pulsan.</li>
-    </ul>
+        <h2>Where the data comes from</h2>
+        <ul>
+          <li><strong>The collection archive comes first:</strong> numbering, organization, covers of its editions and notes.</li>
+          <li>In this English version, titles, synopses, cast, episodes, posters and trailers come from <a href="https://www.themoviedb.org/" rel="noopener">TMDB</a>. On each page, details from TMDB are marked “from TMDB” or with a ᵀ.</li>
+          <li>The collection is Spanish, so each title page also shows the cover of the Spanish edition in the collection.</li>
+          <li>“Where to watch” shows US availability, with data from <a href="https://www.justwatch.com/us" rel="noopener">JustWatch</a>.</li>
+          <li>Post-credits scenes and cameos are hidden as spoilers until you reveal them.</li>
+        </ul>
 
-    <h2>Errores y sugerencias</h2>
-    <p>Si ves un dato incorrecto o echas en falta algo, puedes avisar en <a href={`${SITE.repositorio}/issues`} rel="noopener">GitHub</a>.</p>
+        <h2>Errors and suggestions</h2>
+        <p>If you spot something wrong or missing, you can report it on <a href={`${SITE.repositorio}/issues`} rel="noopener">GitHub</a>.</p>
 
-    <h2>Aviso legal</h2>
-    <p>{AVISOS.fans}</p>
-    <p lang="en">{AVISOS.tmdb}</p>
-    <p>Más detalles sobre qué datos se tratan al visitar la web en la <a href="/privacidad/">página de privacidad</a>.</p>
-  </div>
+        <h2>Legal notice</h2>
+        <p>Unofficial, non-profit fan project. Not affiliated with Marvel, DC, Disney or Warner Bros. All characters and trademarks belong to their respective owners.</p>
+        <p>{AVISOS.tmdb}</p>
+        <p>More about the data handled when you visit the site on the <a href="/privacidad/">privacy page</a>.</p>
+      </div>
+    ) : (
+      <div class="contenedor texto-largo">
+        <h1>Acerca de {SITE.nombre}</h1>
+        <p class="entradilla">{SITE.nombre} es una enciclopedia de fans de las películas, series y animación de Marvel y DC: {total} títulos con sus fichas, personajes, sagas y órdenes para verlos.</p>
+
+        <h2>Un archivo de colección</h2>
+        <p>La web nace de un archivo personal: años de colección catalogada en documentos de Word y PowerPoint y organizada en un disco duro. {SITE.nombre} respeta esa organización en lugar de imponer una genérica. Por eso cada título lleva el <strong>número de la colección</strong> (001, 002…) y las secciones se llaman como en el archivo.</p>
+
+        <h2>Cómo está organizada</h2>
+        <h3>Marvel</h3>
+        <dl class="glosario">
+          <dt>UMC</dt>
+          <dd>Universo Marvel Cinematográfico (en inglés, <abbr title="Marvel Cinematic Universe">MCU</abbr>). Su numeración sigue el <strong>orden cronológico de la historia</strong>, no el de estreno. Una temporada puede ocupar varios números si sus capítulos transcurren en momentos distintos.</dd>
+          <dt>Pre-UMC</dt>
+          <dd>Películas y series de Marvel anteriores o ajenas al UMC, numeradas por orden de estreno.</dd>
+          <dt>Animación</dt>
+          <dd>Películas y series animadas, por orden de estreno.</dd>
+        </dl>
+        <h3>DC</h3>
+        <dl class="glosario">
+          <dt>UDC</dt>
+          <dd>Películas clásicas de DC (de Superman, 1978, a la trilogía de El caballero oscuro), numeradas por orden de estreno.</dd>
+          <dt>DCDU</dt>
+          <dd>Universo Extendido de DC (en inglés, <abbr title="DC Extended Universe">DCEU</abbr>), numerado en <strong>orden de la historia</strong>.</dd>
+          <dt>Series y carpetas</dt>
+          <dd>Las series se ven por <strong>carpetas de visionado</strong>, agrupadas en etapas: Pre-Crossover, Crossover, Entre-Crossover y Pos-Crossover. El código de cada temporada indica carpeta y posición: <em>2.3</em> es la tercera de la carpeta 2. En los bloques Crossover hay además un orden <strong>capítulo a capítulo</strong> para ver juntas varias series del Arrowverso. Lo marcado <em>En espera</em> está pendiente de colocar.</dd>
+        </dl>
+        <p>En todas las estanterías se puede alternar entre el orden propio de la sección y el orden de estreno.</p>
+
+        <h2>De dónde salen los datos</h2>
+        <ul>
+          <li><strong>El archivo de la colección manda:</strong> numeración, títulos, carátulas de sus ediciones, argumentos, repartos y listas de capítulos.</li>
+          <li>Lo que falta se completa con <a href="https://www.themoviedb.org/" rel="noopener">TMDB</a> (sinopsis, reparto, carteles y tráileres). En cada ficha, lo que viene de TMDB se indica con «de TMDB» o con una ᵀ.</li>
+          <li>Los títulos son los oficiales en España; los originales y alternativos también aparecen en la ficha y en el buscador.</li>
+          <li>Las escenas post-créditos y los cameos se ocultan como spoiler hasta que se pulsan.</li>
+        </ul>
+
+        <h2>Errores y sugerencias</h2>
+        <p>Si ves un dato incorrecto o echas en falta algo, puedes avisar en <a href={`${SITE.repositorio}/issues`} rel="noopener">GitHub</a>.</p>
+
+        <h2>Aviso legal</h2>
+        <p>{AVISOS.fans}</p>
+        <p lang="en">{AVISOS.tmdb}</p>
+        <p>Más detalles sobre qué datos se tratan al visitar la web en la <a href="/privacidad/">página de privacidad</a>.</p>
+      </div>
+    )
+  }
 </Base>
 
 <style>

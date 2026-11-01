@@ -73,6 +73,11 @@ const seccion = seccionLoc(crudo.seccion, idioma);
 const carpeta = seccion.carpetas.find((c) => c.numero === crudo.carpeta.numero) ?? crudo.carpeta;
 const { huecos, visionado, anterior, siguiente } = crudo;
 const titulos = crudo.titulos.map((t) => localizar(t, idioma));
+// En inglés, el título de cada capítulo sale de los datos ingleses de su temporada (los del orden están en español)
+const tituloCapitulo = (t: Titulo | undefined, codigo: string | undefined, original: string | undefined) =>
+  idioma === 'en' && t && codigo ? (t.m.capitulos.find((c) => c.codigo === codigo)?.titulo || original) : original;
+const notaOrden = (nota: string | undefined) => (nota && idioma === 'en' ? (nota.startsWith('Temporada completa') ? tx.carpetas.animada : undefined) : nota);
+
 const tx = textos(Astro.url);
 const porId = new Map<string, Titulo>(titulos.map((t) => [t.id, t]));
 // Un color por serie dentro del orden (en el orden en que aparecen)
@@ -126,17 +131,17 @@ const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
                   <a class="serie" href={t?.url}>
                     {t?.d.titulo ?? o.titulo.id}
                   </a>
-                  <span class="cod">{o.codigo ?? (t?.d.temporada ? `T${t.d.temporada}` : '')}</span>
+                  <span class="cod">{o.codigo ?? (t?.d.temporada ? tx.carpetas.temporadaCorta(t.d.temporada) : '')}</span>
                   <span class="cap">
-                    {o.capitulo ?? (o.codigo ? '' : tx.carpetas.completa)}
+                    {tituloCapitulo(t, o.codigo, o.capitulo) ?? (o.codigo ? '' : tx.carpetas.completa)}
                     {o.megacrossover && <span class="chip-mega">Megacrossover</span>}
-                    {o.nota && <span class="nota"> {o.nota}</span>}
+                    {notaOrden(o.nota) && <span class="nota"> {notaOrden(o.nota)}</span>}
                   </span>
                 </li>
               );
             })}
           </ol>
-          {visionado.data.notas && <p class="explica">{visionado.data.notas}</p>}
+          {visionado.data.notas && idioma === 'es' && <p class="explica">{visionado.data.notas}</p>}
         </section>
       )
     }

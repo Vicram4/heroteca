@@ -26,6 +26,8 @@ export interface Guia {
   carpetas?: number[];
   /** Mostrar la fase (sagas de tipo «fase») de cada título */
   conFases?: boolean;
+  /** Versión inglesa de los textos */
+  en?: { titulo: string; tituloSeo: string; descripcion: string; intro: string[] };
 }
 
 export const GUIAS: Guia[] = [
@@ -45,6 +47,17 @@ export const GUIAS: Guia[] = [
     tipo: 'secciones',
     secciones: ['umc'],
     conFases: true,
+    en: {
+      titulo: 'How to watch the MCU in order',
+      tituloSeo: 'MCU watch order: chronological and release order of every film and series',
+      descripcion:
+        'Every Marvel Cinematic Universe (MCU) film, series and One-Shot in chronological order and in release order, with their phases.',
+      intro: [
+        'There are two common ways to watch the Marvel Cinematic Universe (MCU): in release order, as it reached cinemas and TV, or in chronological order, following the story from World War II onwards.',
+        'The chronological order in this guide is the Heroteca collection’s own. It includes series and One-Shots, and splits some seasons into several parts when their episodes take place at different points in the timeline, as with Agents of S.H.I.E.L.D.',
+        'For a first watch, release order is the simplest, because it keeps the surprises as they were intended. Chronological order is ideal for a rewatch.',
+      ],
+    },
   },
   {
     universo: 'dc',
@@ -60,6 +73,16 @@ export const GUIAS: Guia[] = [
     ],
     tipo: 'secciones',
     secciones: ['dcdu', 'udc'],
+    en: {
+      titulo: 'DC movies in order',
+      tituloSeo: 'DC movies in order: the DC Extended Universe (DCEU) and the classic films',
+      descripcion:
+        'DC Extended Universe (DCEU) films in chronological and release order, plus the classic Superman, Batman and other DC films in release order.',
+      intro: [
+        'DC’s live-action films fall into two big groups: the DC Extended Universe (DCEU), which begins with Man of Steel (2013), and the earlier or standalone films, such as the Christopher Reeve Superman films, Tim Burton’s Batman and Christopher Nolan’s trilogy.',
+        'In the DCEU, chronological order starts with Wonder Woman, set during World War I. The collection includes Joker (2019) and The Batman (2022) in this group, although they are not part of the official DCEU continuity. The classic films don’t share a story, so they are listed in release order.',
+      ],
+    },
   },
   {
     universo: 'dc',
@@ -76,7 +99,20 @@ export const GUIAS: Guia[] = [
     tipo: 'carpetas',
     secciones: ['series'],
     carpetas: [4, 5, 6, 7, 8, 9, 10, 11],
+    en: {
+      titulo: 'Arrowverse watch order, episode by episode',
+      tituloSeo: 'Arrowverse watch order episode by episode: Arrow, The Flash, Supergirl and Legends',
+      descripcion:
+        'How to watch Arrow, The Flash, Supergirl, Legends of Tomorrow and the rest of the Arrowverse in order, episode by episode, with every crossover in place.',
+      intro: [
+        'The Arrowverse is the shared universe of DC series that began with Arrow (2012). Its shows cross over often, especially in the big yearly crossover events, so watching them separately spoils surprises and leaves storylines hanging.',
+        'This guide follows the Heroteca collection’s viewing folders. In the crossover blocks, seasons that aired at the same time are interleaved episode by episode, in the order they are best watched. The “between crossovers” folders gather other DC series that fit at that point.',
+      ],
+    },
   },
 ];
 
 export const guiasDe = (universo: string) => GUIAS.filter((g) => g.universo === universo);
+
+/** La guía con sus textos en el idioma pedido (si falta la traducción, en español). */
+export const guiaLoc = (g: Guia, idioma: 'es' | 'en'): Guia => (idioma === 'en' && g.en ? { ...g, ...g.en } : g);

@@ -1,42 +1,74 @@
 ---
-import { conIdiomas } from '../../i18n';
+import { conIdiomas, idiomaDe } from '../../i18n';
 export function getStaticPaths() {
   return conIdiomas([{ params: { privacidad: 'privacidad' } }], () => ({ privacidad: 'privacy' }));
 }
 /** Qué datos se tratan al visitar la web (sin cookies ni registro). */
 import Base from '../../layouts/Base.astro';
 import { SITE } from '../../config/site';
+const en = idiomaDe(Astro.url) === 'en';
 ---
 
 <Base
-  titulo="Privacidad"
-  descripcion="Heroteca no usa cookies ni pide datos personales. Qué información se trata al visitarla y con qué servicios."
-  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: 'Privacidad', url: '/privacidad/' }]}
+  titulo={en ? 'Privacy' : 'Privacidad'}
+  descripcion={en
+    ? 'Heroteca uses no cookies and asks for no personal data. What information is handled when you visit and which services are involved.'
+    : 'Heroteca no usa cookies ni pide datos personales. Qué información se trata al visitarla y con qué servicios.'}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: en ? 'Privacy' : 'Privacidad', url: '/privacidad/' }]}
 >
-  <div class="contenedor texto-largo">
-    <h1>Privacidad</h1>
-    <p class="entradilla">{SITE.nombre} es un proyecto de fans sin ánimo de lucro. <strong>No usa cookies, no tiene registro ni formularios y no pide datos personales.</strong></p>
+  {
+    en ? (
+      <div class="contenedor texto-largo">
+        <h1>Privacy</h1>
+        <p class="entradilla">{SITE.nombre} is a non-profit fan project. <strong>It uses no cookies, has no sign-up or forms and asks for no personal data.</strong></p>
 
-    <h2>Qué se guarda en tu navegador</h2>
-    <p>Solo tu elección de modo claro u oscuro, si la cambias con el botón de la cabecera. Se guarda en el propio navegador (<code>localStorage</code>) y no se envía a ningún sitio.</p>
+        <h2>What is stored in your browser</h2>
+        <p>Only your light or dark mode choice, if you change it with the button in the header. It is stored in your own browser (<code>localStorage</code>) and is never sent anywhere.</p>
 
-    {
-      SITE.cloudflareAnalytics && (
-        <>
-          <h2>Estadísticas de visitas</h2>
-          <p>Para saber cuántas personas visitan la web se usa <a href="https://www.cloudflare.com/web-analytics/" rel="noopener">Cloudflare Web Analytics</a>, que no usa cookies ni identifica a los visitantes: solo recoge datos agregados y anónimos (páginas vistas, país, tipo de dispositivo).</p>
-        </>
-      )
-    }
+        {
+          SITE.cloudflareAnalytics && (
+            <>
+              <h2>Visitor statistics</h2>
+              <p>To know how many people visit the site, it uses <a href="https://www.cloudflare.com/web-analytics/" rel="noopener">Cloudflare Web Analytics</a>, which uses no cookies and does not identify visitors: it only collects aggregated, anonymous data (page views, country, device type).</p>
+            </>
+          )
+        }
 
-    <h2>Servicios externos</h2>
-    <ul>
-      <li><strong>Alojamiento:</strong> la web está alojada en <a href="https://vercel.com/legal/privacy-policy" rel="noopener">Vercel</a>, que como cualquier servidor registra datos técnicos de las peticiones (como la dirección IP) por motivos de seguridad y funcionamiento.</li>
-      <li><strong>Carteles:</strong> algunas imágenes se cargan desde los servidores de <a href="https://www.themoviedb.org/privacy-policy" rel="noopener">TMDB</a>, que recibe la petición del navegador al mostrarlas.</li>
-      <li><strong>Tráileres:</strong> los vídeos de YouTube <em>solo se cargan si pulsas el botón de reproducir</em>, y lo hacen en el modo de privacidad mejorada (<code>youtube-nocookie.com</code>). A partir de ese momento se aplica la <a href="https://policies.google.com/privacy" rel="noopener">política de privacidad de Google</a>.</li>
-    </ul>
-    <p>Las tipografías están alojadas en la propia web: no se cargan desde Google Fonts ni otros servicios.</p>
-  </div>
+        <h2>External services</h2>
+        <ul>
+          <li><strong>Hosting:</strong> the site is hosted on <a href="https://vercel.com/legal/privacy-policy" rel="noopener">Vercel</a>, which, like any server, logs technical request data (such as the IP address) for security and operation.</li>
+          <li><strong>Posters:</strong> some images load from <a href="https://www.themoviedb.org/privacy-policy" rel="noopener">TMDB</a> servers, which receive your browser’s request when they are shown.</li>
+          <li><strong>Trailers:</strong> YouTube videos <em>only load if you press the play button</em>, and they use privacy-enhanced mode (<code>youtube-nocookie.com</code>). From that point, <a href="https://policies.google.com/privacy" rel="noopener">Google’s privacy policy</a> applies.</li>
+        </ul>
+        <p>Fonts are hosted on the site itself: nothing loads from Google Fonts or other services.</p>
+      </div>
+    ) : (
+      <div class="contenedor texto-largo">
+        <h1>Privacidad</h1>
+        <p class="entradilla">{SITE.nombre} es un proyecto de fans sin ánimo de lucro. <strong>No usa cookies, no tiene registro ni formularios y no pide datos personales.</strong></p>
+
+        <h2>Qué se guarda en tu navegador</h2>
+        <p>Solo tu elección de modo claro u oscuro, si la cambias con el botón de la cabecera. Se guarda en el propio navegador (<code>localStorage</code>) y no se envía a ningún sitio.</p>
+
+        {
+          SITE.cloudflareAnalytics && (
+            <>
+              <h2>Estadísticas de visitas</h2>
+              <p>Para saber cuántas personas visitan la web se usa <a href="https://www.cloudflare.com/web-analytics/" rel="noopener">Cloudflare Web Analytics</a>, que no usa cookies ni identifica a los visitantes: solo recoge datos agregados y anónimos (páginas vistas, país, tipo de dispositivo).</p>
+            </>
+          )
+        }
+
+        <h2>Servicios externos</h2>
+        <ul>
+          <li><strong>Alojamiento:</strong> la web está alojada en <a href="https://vercel.com/legal/privacy-policy" rel="noopener">Vercel</a>, que como cualquier servidor registra datos técnicos de las peticiones (como la dirección IP) por motivos de seguridad y funcionamiento.</li>
+          <li><strong>Carteles:</strong> algunas imágenes se cargan desde los servidores de <a href="https://www.themoviedb.org/privacy-policy" rel="noopener">TMDB</a>, que recibe la petición del navegador al mostrarlas.</li>
+          <li><strong>Tráileres:</strong> los vídeos de YouTube <em>solo se cargan si pulsas el botón de reproducir</em>, y lo hacen en el modo de privacidad mejorada (<code>youtube-nocookie.com</code>). A partir de ese momento se aplica la <a href="https://policies.google.com/privacy" rel="noopener">política de privacidad de Google</a>.</li>
+        </ul>
+        <p>Las tipografías están alojadas en la propia web: no se cargan desde Google Fonts ni otros servicios.</p>
+      </div>
+    )
+  }
 </Base>
 
 <style>

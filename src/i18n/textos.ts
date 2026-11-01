@@ -171,6 +171,8 @@ export const ES = {
     bloque: (c: string) => ` (bloque ${c})`,
     borrador: ' Esta página de los documentos de la colección está a medio hacer.',
     completa: 'Temporada completa',
+    animada: 'Animación',
+    temporadaCorta: (n: number) => `T${n}`,
     otras: 'Otras carpetas',
     titulo: (n: number, etapa: string, s: string, u: string) => `Carpeta ${n} (${etapa}) · ${s} de ${u} en orden`,
     descripcion: (n: number, u: string, etapa: string, lista: string, conOrden: boolean) =>
@@ -191,6 +193,7 @@ export const ES = {
     interpretadoPor: 'Interpretado por',
     dondeAparece: 'Dónde aparece',
     titulosCon: (n: string) => `Títulos con ${n}`,
+    tambien: 'También',
     todavia: 'Todavía no aparece en ninguna ficha.',
   },
   sagas: {
@@ -404,6 +407,8 @@ export const EN: Textos = {
     bloque: (c) => ` (block ${c})`,
     borrador: ' This page of the collection documents is still a draft.',
     completa: 'Full season',
+    animada: 'Animated',
+    temporadaCorta: (n) => `S${n}`,
     otras: 'Other folders',
     titulo: (n, etapa, s, u) => `Folder ${n} (${etapa}) · ${u} ${s} in order`,
     descripcion: (n, u, etapa, lista, conOrden) =>
@@ -424,6 +429,7 @@ export const EN: Textos = {
     interpretadoPor: 'Played by',
     dondeAparece: 'Appearances',
     titulosCon: (n) => `Titles with ${n}`,
+    tambien: 'Also known as',
     todavia: 'Not in any sheet yet.',
   },
   sagas: {

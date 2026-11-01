@@ -4,7 +4,7 @@ import { conIdiomas } from '../../../../i18n';
 /** Guías de visionado de un universo. */
 import Base from '../../../../layouts/Base.astro';
 import SubNav from '../../../../components/SubNav.astro';
-import { guiasDe } from '../../../../config/guias';
+import { guiasDe, guiaLoc } from '../../../../config/guias';
 import { universosActivos } from '../../../../lib/datos';
 
 export async function getStaticPaths() {
@@ -15,10 +15,10 @@ export async function getStaticPaths() {
     .map((universo) => ({ params: { universo: universo.id, guias: 'guias' }, props: { universo } }));
 })(), () => ({ guias: 'guides' }));
 }
-import { textos } from '../../../../i18n';
+import { textos, idiomaDe } from '../../../../i18n';
 const tx = textos(Astro.url);
 const { universo } = Astro.props;
-const guias = guiasDe(universo.id);
+const guias = guiasDe(universo.id).map((g) => guiaLoc(g, idiomaDe(Astro.url)));
 ---
 
 <Base
