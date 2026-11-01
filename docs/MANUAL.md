@@ -353,6 +353,9 @@ proyecto; el issue se puede cerrar al revisarlo. Si un lunes no llega nada, pued
 puede comprobar en la pestaña Actions) o que las notificaciones por correo de GitHub estén desactivadas
 (github.com → Settings → Notifications).
 
+**Probar que llegan los correos:** pestaña **Actions** del repositorio → «Actualizar «Dónde ver» y «Próximamente»» →
+**Run workflow** → marcar «Mandar un aviso de prueba» → **Run workflow**. En un par de minutos llega el correo.
+
 ## Versión en inglés (/en/)
 
 - Todas las páginas están en `src/pages/[...idioma]/` y generan su versión española y la inglesa.
