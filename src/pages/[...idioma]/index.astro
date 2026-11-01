@@ -14,6 +14,7 @@ import { seccionLoc } from '../../i18n/datos';
 import TarjetaEstreno from '../../components/TarjetaEstreno.astro';
 import ListaEstrenos from '../../components/ListaEstrenos.astro';
 import { proximosEstrenos, enEmision } from '../../lib/proximamente';
+import { guiasDe, guiaLoc } from '../../config/guias';
 import { paisDe } from '../../lib/dondever';
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
@@ -36,6 +37,8 @@ const activos = universos.filter((u) => u.data.activo);
 const proximos = proximosEstrenos(paisDe(idioma))
   .filter((e) => !enEmision(e) && activos.some((u) => u.id === e.universo))
   .slice(0, 4);
+// Guías para empezar (todas menos las de carpetas, que son muy específicas)
+const guiasPortada = activos.flatMap((u) => guiasDe(u.id).filter((g) => g.tipo !== 'carpetas').map((g) => ({ u, g: guiaLoc(g, idioma) })));
 ---
 
 <Base
@@ -92,6 +95,26 @@ const proximos = proximosEstrenos(paisDe(idioma))
       <a href="/recomendaciones/" class="pastilla boton-test">{tx.recomendar.ctaBoton} →</a>
     </div>
   </section>
+
+  {
+    guiasPortada.length > 0 && (
+      <section class="contenedor guias-portada" aria-labelledby="t-guias">
+        <h2 id="t-guias">{tx.portada.guias}</h2>
+        <p class="sub">{tx.portada.guiasTexto}</p>
+        <ul>
+          {guiasPortada.map(({ u, g }) => (
+            <li style={estiloUniverso(u)}>
+              <a href={`/${u.id}/guias/${g.id}/`}>
+                <span class="marca-u">{u.data.nombre}</span>
+                <span class="nombre-guia">{g.titulo}</span>
+                <span class="desc-guia">{g.descripcion}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
 
   {
     proximos.length > 0 && (
@@ -207,6 +230,63 @@ const proximos = proximosEstrenos(paisDe(idioma))
   }
   .proximos {
     margin-top: clamp(32px, 5vw, 56px);
+  }
+  /* Guías para empezar */
+  .guias-portada {
+    margin-top: clamp(32px, 5vw, 56px);
+  }
+  .guias-portada h2 {
+    margin: 0 0 4px;
+  }
+  .guias-portada .sub {
+    margin: 0 0 16px;
+    color: var(--txt-2);
+    max-width: 70ch;
+  }
+  .guias-portada ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 12px;
+  }
+  .guias-portada a {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%;
+    padding: 16px;
+    border: 1px solid var(--borde);
+    border-top: 4px solid var(--acento);
+    border-radius: var(--radio);
+    background: var(--sup);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color var(--transicion), transform var(--transicion);
+  }
+  .guias-portada a:hover,
+  .guias-portada a:focus-visible {
+    border-color: var(--acento);
+    transform: translateY(-2px);
+  }
+  .marca-u {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--acento-txt);
+  }
+  .nombre-guia {
+    font: 700 1.1rem / 1.2 var(--f-titulo);
+  }
+  .desc-guia {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.88rem;
+    color: var(--txt-2);
   }
   /* Llamada al test «¿Qué veo?» */
   .test-cta {

@@ -9,6 +9,8 @@ import { numeroTexto, todosLosTitulos, urlCarpeta, localizar, type Titulo, type 
 import { apariciones, enlacesRepartoEn } from '../lib/personajes';
 import { paginaDeActor, claveActor } from '../lib/actores';
 import { leerEpoca } from '../lib/lineaTemporal';
+import { plataformasIncluidas, paisDe } from '../lib/dondever';
+import { datosTmdb } from '../lib/tmdb';
 import { GUIAS } from '../config/guias';
 import { universoLoc, sagaLoc } from '../i18n/datos';
 import { textos, idiomaDe, nombreTipo, LOCALE } from '../i18n';
@@ -65,6 +67,31 @@ const enlaceReparto = idioma === 'en' ? await enlacesRepartoEn() : (await aparic
 // Cuándo transcurre (línea temporal del UMC) y la guía que la muestra
 const epoca = leerEpoca(t.d.epoca);
 const guiaLinea = GUIAS.find((g) => g.tipo === 'linea' && g.universo === universo.id && g.secciones.includes(t.d.seccion));
+// «En resumen»: un párrafo propio con los datos de la colección (distinto en cada ficha; útil para buscadores).
+// Partes de texto y enlaces (los títulos de al lado en la colección).
+const r = f.resumen;
+const resumen: (string | { texto: string; url: string })[][] = [];
+{
+  const frase1 = seccion?.orden === 'carpetas' && d.visionado?.codigo
+    ? r.carpeta(d.visionado.codigo, seccion.nombre, universo.data.nombre)
+    : seccion && d.numero !== undefined && r.ordenes[seccion.orden]
+      ? r.puesto(d.numero, r.ordenes[seccion.orden], seccion.nombre, universo.data.nombre)
+      : '';
+  const epocaTexto = leerEpoca(d.epoca)?.texto;
+  if (frase1) resumen.push([`${frase1}${epocaTexto ? r.transcurre(epocaTexto) : ''}.`]);
+  if (anterior && siguiente) resumen.push([r.vaDespues, { texto: anterior.corto, url: anterior.url }, r.yAntes, { texto: siguiente.corto, url: siguiente.url }, '.']);
+  else if (anterior) resumen.push([r.vaDespues, { texto: anterior.corto, url: anterior.url }, '.']);
+  else if (siguiente) resumen.push([r.vaAntes, { texto: siguiente.corto, url: siguiente.url }, '.']);
+  const minutos = m.duracion;
+  const largo = d.tipo === 'serie' && m.capitulos.length ? r.capitulos(m.capitulos.length) : minutos ? r.dura(tx.recomendar.horas(Math.floor(minutos / 60), minutos % 60)) : '';
+  const poscreditos = d.conexiones.postCreditos.length > 0 || m.escenasCreditos.length > 0;
+  if (largo) resumen.push([`${largo}${poscreditos ? r.poscreditos : ''}.`]);
+  else if (poscreditos) resumen.push([`${r.soloPoscreditos}.`]);
+  const plataformas = plataformasIncluidas(t.id, paisDe(idioma));
+  if (plataformas.length) resumen.push([r.plataformas(new Intl.ListFormat(LOCALE[idioma], { type: 'conjunction' }).format(plataformas.slice(0, 3)))]);
+  const tmdbEs = datosTmdb(t.universo, t.id, 'es');
+  if (tmdbEs?.nota && (tmdbEs.votos ?? 0) >= 50) resumen.push([r.nota(tmdbEs.nota.toLocaleString(LOCALE[idioma], { minimumFractionDigits: 1 }))]);
+}
 // Actores con página propia (/actores/<id>/)
 const actorConPagina = await paginaDeActor();
 const todos = await todosLosTitulos(idioma);
@@ -194,6 +221,21 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           )
         }
       </header>
+
+      {
+        resumen.length > 0 && (
+          <section class="panel resumen" aria-labelledby="titulo-resumen">
+            <h2 class="h-panel" id="titulo-resumen">{r.titulo}</h2>
+            <p>
+              {resumen.map((frase) => (
+                <>
+                  {frase.map((parte) => (typeof parte === 'string' ? parte : <a href={parte.url}>{parte.texto}</a>))}{' '}
+                </>
+              ))}
+            </p>
+          </section>
+        )
+      }
 
       {
         t.m.argumento && (

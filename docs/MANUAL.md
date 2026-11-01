@@ -420,6 +420,20 @@ elemento a esa lista.
 - Cada universo y cada sección de `contenido/universos/*.yaml` admite `tituloSeo` (el título que muestra Google).
 - Los grupos de la página «Relacionadas y sagas» se definen en `gruposSagas` del mismo archivo.
 
+
+### Textos generados para buscadores
+
+- **Título de las fichas:** «Capitana Marvel (2019): dónde ver, reparto y orden» (temporadas: «…: dónde ver, capítulos y
+  reparto»), para encajar con lo que la gente busca. Textos `tituloSeo` en el apartado `ficha` de `src/i18n/textos.ts`.
+- **«En resumen»** en cada ficha: un párrafo propio con el puesto en el orden, el año en que transcurre, los títulos de
+  antes y después (enlazados), la duración o los capítulos, si tiene poscréditos, dónde verla y la nota de TMDB. Así cada
+  ficha tiene texto único además de la sinopsis de TMDB (que comparten muchas webs). Se genera en `Ficha.astro`.
+- **Preguntas frecuentes** al final de las guías con orden de la historia (UMC, DCEU): cuántos títulos hay, el primero,
+  el más reciente, cuánto se tarda y por dónde empezar. Las respuestas se calculan con los datos.
+- **Guías en la portada:** bloque «Guías para empezar» con todas las guías salvo las de carpetas.
+- No se usa `lastmod` en el mapa del sitio: solo podría poner la fecha de cada publicación en todas las páginas, y Google
+  ignora las fechas que no son fiables.
+
 ## Añadir un personaje
 
 `contenido/personajes/marvel/thor.md`:

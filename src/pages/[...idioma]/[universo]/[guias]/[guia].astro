@@ -58,6 +58,14 @@ const bloques: Bloque[] = [];
 // Cronológico frente a estreno (secciones con orden de la historia)
 type Comparacion = { id: string; titulo: string; seccion: string; filas: { t: Titulo; historia: number; estreno: number }[] };
 const comparaciones: Comparacion[] = [];
+// Preguntas frecuentes de las secciones con orden de la historia (respuestas calculadas con los datos)
+type Pregunta = { pregunta: string; respuesta: (string | { texto: string; url: string })[] };
+const preguntas: Pregunta[] = [];
+const minutosDe = (t: Titulo) => {
+  const dt = datosTmdb(t.universo, t.id, 'es');
+  const caps = dt?.capitulos ?? [];
+  return caps.length ? caps.reduce((n, c) => n + (c.duracion ?? dt?.duracion ?? 0), 0) : (dt?.duracion ?? t.m.duracion ?? 0);
+};
 
 // Carpetas de visionado (series)
 type BloqueCarpeta = {
@@ -131,6 +139,36 @@ for (const id of guia.secciones) {
       seccion: seccion.nombre,
       filas: enHistoria.map((t, i) => ({ t, historia: i + 1, estreno: enEstreno.indexOf(t) + 1 })).filter((f) => f.estreno > 0),
     });
+    // Preguntas frecuentes
+    const fq = tx.guias.faq;
+    const porTipo = new Map<string, number>();
+    for (const t of enHistoria) porTipo.set(t.tipo, (porTipo.get(t.tipo) ?? 0) + 1);
+    const lista = new Intl.ListFormat(LOCALE[idioma], { type: 'conjunction' });
+    const partes = lista.format([...porTipo].sort((a, b) => b[1] - a[1]).map(([tipo, n]) => `${n} ${nombreTipo(tipo as Titulo['tipo'], idioma, n !== 1).toLowerCase()}`));
+    preguntas.push({ pregunta: fq.cuantos(seccion.nombre), respuesta: [fq.cuantosR(seccion.nombre, enHistoria.length, partes)] });
+    const primera = enHistoria[0];
+    const primeraEstreno = enEstreno[0];
+    if (primera) {
+      const [antes, despues] = fq.primeraR('§', leerEpoca(primera.d.epoca)?.texto ?? '').split('§');
+      const respuesta: Pregunta['respuesta'] = [antes, { texto: primera.corto, url: primera.url }, despues];
+      if (primeraEstreno && primeraEstreno !== primera) {
+        const [a2, d2] = fq.primeraEstreno('§', primeraEstreno.d.anio).split('§');
+        respuesta.push(a2, { texto: primeraEstreno.corto, url: primeraEstreno.url }, d2);
+      }
+      preguntas.push({ pregunta: fq.primera(seccion.nombre), respuesta });
+    }
+    const reciente = enEstreno.at(-1);
+    if (reciente) {
+      const [a3, d3] = fq.recienteR('§', reciente.d.anio).split('§');
+      preguntas.push({ pregunta: fq.reciente(seccion.nombre), respuesta: [a3, { texto: reciente.corto, url: reciente.url }, d3] });
+    }
+    const horas = Math.round(enHistoria.reduce((n, t) => n + minutosDe(t), 0) / 60);
+    if (horas) preguntas.push({ pregunta: fq.horas(seccion.nombre), respuesta: [fq.horasR(horas, Math.round(horas / 24))] });
+    const empezar = GUIAS.find((g) => g.universo === universo.id && g.tipo === 'rutas');
+    if (empezar) {
+      const g = guiaLoc(empezar, idioma);
+      preguntas.push({ pregunta: fq.empezar, respuesta: [`${fq.empezarR} `, { texto: g.titulo, url: `/${universo.id}/guias/${g.id}/` }, '.'] });
+    }
   } else {
     bloques.push({
       id,
@@ -193,7 +231,7 @@ const datos = {
   numberOfItems: primera.length,
   itemListElement: primera.map((f, i) => ({ '@type': 'ListItem', position: i + 1, name: f.t.corto, url: new URL(urlsLista[i], SITE.url).href })),
 };
-const indice = [...rutas.map((r) => ({ id: r.id, texto: r.titulo })), ...bloques.map((b) => ({ id: b.id, texto: b.titulo })), ...comparaciones.map((c) => ({ id: c.id, texto: c.titulo })), ...carpetas.map((c) => ({ id: c.id, texto: `${tx.general.carpeta(c.numero)} · ${c.etapa}` }))];
+const indice = [...rutas.map((r) => ({ id: r.id, texto: r.titulo })), ...bloques.map((b) => ({ id: b.id, texto: b.titulo })), ...comparaciones.map((c) => ({ id: c.id, texto: c.titulo })), ...(preguntas.length ? [{ id: 'preguntas', texto: tx.guias.faq.titulo }] : []), ...carpetas.map((c) => ({ id: c.id, texto: `${tx.general.carpeta(c.numero)} · ${c.etapa}` }))];
 const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t?.id))];
 ---
 
@@ -364,6 +402,20 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
           <ComparaOrden filas={c.filas} seccion={c.seccion} />
         </section>
       ))
+    }
+
+    {
+      preguntas.length > 0 && (
+        <section id="preguntas" class="bloque preguntas" aria-labelledby="h-preguntas">
+          <h2 id="h-preguntas">{tx.guias.faq.titulo}</h2>
+          {preguntas.map((q) => (
+            <>
+              <h3>{q.pregunta}</h3>
+              <p>{q.respuesta.map((parte) => (typeof parte === 'string' ? parte : <a href={parte.url}>{parte.texto}</a>))}</p>
+            </>
+          ))}
+        </section>
+      )
     }
 
     {
@@ -554,6 +606,15 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
   .fuente-linea {
     margin-top: 24px;
     font-size: 0.82rem;
+    color: var(--txt-2);
+  }
+  .preguntas h3 {
+    margin: 20px 0 4px;
+    font-size: 1.05rem;
+  }
+  .preguntas p {
+    margin: 0;
+    max-width: 75ch;
     color: var(--txt-2);
   }
   /* «Por dónde empezar»: tarjetas numeradas de cada ruta */

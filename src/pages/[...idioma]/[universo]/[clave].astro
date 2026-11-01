@@ -176,7 +176,9 @@ if (p.tipo === 'ficha') {
     </Base>
   ) : (
     <Base
-      titulo={p.t.d.temporada ? `${p.t.d.titulo} (${tx.general.temporadaMinus(p.t.d.temporada)})` : `${p.t.d.titulo} (${p.t.d.anio})`}
+      titulo={p.t.d.temporada
+        ? tx.ficha.tituloSeoTemporada(`${p.t.d.titulo} (${tx.general.temporadaMinus(p.t.d.temporada)})`)
+        : tx.ficha.tituloSeo(`${p.t.d.titulo} (${p.t.d.anio})`)}
       descripcion={descripcionFicha}
       universo={p.universo}
       imagen={imagenSocial}
