@@ -1,0 +1,334 @@
+---
+import { conIdiomas, idiomaDe, textos, LOCALE, nombreTipo } from '../../i18n';
+export function getStaticPaths() {
+  return conIdiomas([{ params: { estadisticas: 'estadisticas' } }], () => ({ estadisticas: 'stats' }));
+}
+/**
+ * Estadísticas curiosas de la colección, calculadas al compilar con las fichas y los datos de TMDB:
+ * horas totales, maratón de la sección principal, poscréditos, horas por sección, estrenos por década,
+ * personajes y actores que más aparecen y récords (duración, capítulos, nota y antigüedad).
+ */
+import Base from '../../layouts/Base.astro';
+import GraficoBarras, { type Serie } from '../../components/GraficoBarras.astro';
+import GraficoColumnas from '../../components/GraficoColumnas.astro';
+import { universosActivos, titulosDe, localizar, type Titulo } from '../../lib/datos';
+import { datosTmdb } from '../../lib/tmdb';
+import { apariciones } from '../../lib/personajes';
+import { seccionLoc, personajeLoc } from '../../i18n/datos';
+
+const tx = textos(Astro.url);
+const e = tx.estadisticas;
+const idioma = idiomaDe(Astro.url);
+const numero = (n: number) => n.toLocaleString(LOCALE[idioma]);
+const universos = await universosActivos();
+const series: Serie[] = universos.map((u) => ({ id: u.id, nombre: u.data.nombre, color: u.data.tema?.acento ?? '#888' }));
+const titulos: Titulo[] = (await Promise.all(universos.map((u) => titulosDe(u.id)))).flat();
+
+/** Minutos de un título: suma de sus capítulos (series) o su duración. */
+function minutos(t: Titulo) {
+  const d = datosTmdb(t.universo, t.id, 'es');
+  const caps = d?.capitulos ?? [];
+  if (caps.length) return caps.reduce((n, c) => n + (c.duracion ?? d?.duracion ?? 0), 0);
+  return d?.duracion ?? t.m.duracion ?? 0;
+}
+const horas = (min: number) => Math.round(min / 60);
+const minTotal = titulos.reduce((n, t) => n + minutos(t), 0);
+
+// Maratón de la primera sección del primer universo (el UMC)
+const principal = universos[0];
+const seccionPrincipal = principal ? seccionLoc(principal.data.secciones[0], idioma) : undefined;
+const minPrincipal = titulos.filter((t) => t.universo === principal?.id && t.d.seccion === principal?.data.secciones[0]?.id).reduce((n, t) => n + minutos(t), 0);
+
+const peliculas = titulos.filter((t) => t.tipo === 'pelicula');
+const conPoscreditos = peliculas.filter((t) => t.d.conexiones.postCreditos.length > 0 || t.m.escenasCreditos.length > 0).length;
+
+// Horas por sección
+const filasTiempo = universos
+  .flatMap((u) =>
+    u.data.secciones.map((s) => ({
+      etiqueta: `${u.data.nombre} · ${seccionLoc(s, idioma).nombre}`,
+      url: `/${u.id}/${s.id}/`,
+      partes: [{ serie: u.id, valor: horas(titulos.filter((t) => t.universo === u.id && t.d.seccion === s.id).reduce((n, t) => n + minutos(t), 0)) }],
+    })),
+  )
+  .sort((a, b) => b.partes[0].valor - a.partes[0].valor);
+
+// Estrenos por década
+const decadas = [...new Set(titulos.map((t) => Math.floor(t.d.anio / 10) * 10))].sort();
+const grupos = decadas.map((d) => ({
+  etiqueta: idioma === 'en' ? `${d}s` : String(d),
+  corta: `’${String(d).slice(2)}`,
+  valores: Object.fromEntries(universos.map((u) => [u.id, titulos.filter((t) => t.universo === u.id && Math.floor(t.d.anio / 10) * 10 === d).length])),
+}));
+
+// Personajes que más aparecen
+const { porPersonaje, personajes } = await apariciones();
+const filasPersonajes = personajes
+  .filter((p) => universos.some((u) => u.id === p.data.universo.id))
+  .map((p) => ({ p: personajeLoc(p, idioma), n: porPersonaje.get(p.id)?.length ?? 0 }))
+  .sort((a, b) => b.n - a.n)
+  .slice(0, 10)
+  .map(({ p, n }) => ({ etiqueta: p.data.nombre, url: `/${p.data.universo.id}/personajes/${p.id}/`, partes: [{ serie: p.data.universo.id, valor: n }] }));
+
+// Actores con más papeles (reparto de TMDB y de las fichas), repartidos por universo
+const porActor = new Map<string, Map<string, Set<string>>>();
+for (const t of titulos) {
+  const reparto = new Set([...(datosTmdb(t.universo, t.id, 'es')?.reparto ?? []), ...t.m.reparto].map((r) => r.actor));
+  for (const a of reparto) {
+    const m = porActor.get(a) ?? porActor.set(a, new Map()).get(a)!;
+    (m.get(t.universo) ?? m.set(t.universo, new Set()).get(t.universo)!).add(t.id);
+  }
+}
+const filasActores = [...porActor]
+  .map(([actor, m]) => ({ etiqueta: actor, partes: universos.map((u) => ({ serie: u.id, valor: m.get(u.id)?.size ?? 0 })) }))
+  .sort((a, b) => b.partes.reduce((n, p) => n + p.valor, 0) - a.partes.reduce((n, p) => n + p.valor, 0) || a.etiqueta.localeCompare(b.etiqueta))
+  .slice(0, 10);
+
+// Récords
+const conNota = titulos.filter((t) => (datosTmdb(t.universo, t.id, 'es')?.votos ?? 0) >= 500);
+const nota = (t: Titulo) => datosTmdb(t.universo, t.id, 'es')!.nota ?? 0;
+const pelisConDuracion = peliculas.filter((t) => minutos(t) > 0);
+const porMinutos = [...pelisConDuracion].sort((a, b) => minutos(b) - minutos(a));
+const temporadas = titulos.filter((t) => t.tipo === 'serie' && t.d.temporada);
+const capsDe = (t: Titulo) => datosTmdb(t.universo, t.id, 'es')?.capitulos?.length ?? 0;
+const masCaps = [...temporadas].sort((a, b) => capsDe(b) - capsDe(a))[0];
+const porNota = [...conNota].sort((a, b) => nota(b) - nota(a) || (datosTmdb(b.universo, b.id, 'es')!.votos ?? 0) - (datosTmdb(a.universo, a.id, 'es')!.votos ?? 0));
+const antigua = [...titulos].sort((a, b) => a.d.anio - b.d.anio)[0];
+const duracionTxt = (min: number) => tx.recomendar.horas(Math.floor(min / 60), min % 60);
+const notaTxt = (t: Titulo) => e.notaDe(nota(t).toLocaleString(LOCALE[idioma], { minimumFractionDigits: 1 }), numero(datosTmdb(t.universo, t.id, 'es')!.votos ?? 0));
+const records = [
+  porMinutos[0] && { titulo: e.larga, t: porMinutos[0], dato: duracionTxt(minutos(porMinutos[0])) },
+  porMinutos.at(-1) && { titulo: e.corta, t: porMinutos.at(-1)!, dato: duracionTxt(minutos(porMinutos.at(-1)!)) },
+  masCaps && { titulo: e.masCapitulos, t: masCaps, dato: e.capitulos(capsDe(masCaps)) },
+  porNota[0] && { titulo: e.mejor, t: porNota[0], dato: notaTxt(porNota[0]) },
+  porNota.at(-1) && { titulo: e.peor, t: porNota.at(-1)!, dato: notaTxt(porNota.at(-1)!) },
+  antigua && { titulo: e.antigua, t: antigua, dato: nombreTipo(antigua.tipo, idioma) },
+]
+  .filter((r): r is { titulo: string; t: Titulo; dato: string } => Boolean(r))
+  .map((r) => ({ ...r, t: localizar(r.t, idioma) }));
+---
+
+<Base titulo={e.tituloSeo} descripcion={e.descripcion} migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: e.titulo, url: '/estadisticas/' }]}>
+  <div class="contenedor estadisticas">
+    <h1>{e.titulo}</h1>
+    <p class="entradilla">{e.intro}</p>
+
+    <section class="cifras" aria-label={e.titulo}>
+      <div class="principal">
+        <p class="cifra">{numero(horas(minTotal))}</p>
+        <p class="rotulo">{e.horasTotales}</p>
+        <p class="nota">{e.horasTexto(Math.round(minTotal / 60 / 24))}</p>
+      </div>
+      <dl class="fichas">
+        <div>
+          <dt>{e.titulos}</dt>
+          <dd>{numero(titulos.length)}</dd>
+        </div>
+        {
+          seccionPrincipal && (
+            <div>
+              <dt>{e.maraton(seccionPrincipal.nombre)}</dt>
+              <dd>
+                {e.horas(horas(minPrincipal))}
+                <span>{e.maratonTexto(Math.round(minPrincipal / 60 / 24))}</span>
+              </dd>
+            </div>
+          )
+        }
+        <div>
+          <dt>{e.postCreditos}</dt>
+          <dd>{e.deN(conPoscreditos, peliculas.length)}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="panel bloque" aria-labelledby="t-tiempo">
+      <h2 id="t-tiempo">{e.tiempo}</h2>
+      <p class="explica">{e.tiempoNota}</p>
+      <GraficoBarras filas={filasTiempo} series={series} formato={(n) => e.horas(numero(n))} cabecera={e.seccion} etiqueta={e.tiempo} />
+    </section>
+
+    <section class="panel bloque" aria-labelledby="t-decadas">
+      <h2 id="t-decadas">{e.decadas}</h2>
+      <GraficoColumnas grupos={grupos} series={series} cabecera={e.decada} etiqueta={e.decadas} formato={(n) => e.titulosN(n)} />
+    </section>
+
+    <div class="dos">
+      <section class="panel bloque" aria-labelledby="t-personajes">
+        <h2 id="t-personajes">{e.personajes}</h2>
+        <p class="explica">{e.personajesNota}</p>
+        <GraficoBarras filas={filasPersonajes} series={series} formato={(n) => String(n)} cabecera={e.nombre} etiqueta={e.personajes} />
+      </section>
+      <section class="panel bloque" aria-labelledby="t-actores">
+        <h2 id="t-actores">{e.actores}</h2>
+        <p class="explica">{e.actoresNota}</p>
+        <GraficoBarras filas={filasActores} series={series} formato={(n) => String(n)} cabecera={e.nombre} etiqueta={e.actores} />
+      </section>
+    </div>
+
+    <section class="bloque" aria-labelledby="t-records">
+      <h2 id="t-records">{e.records}</h2>
+      <ul class="records">
+        {
+          records.map((r) => (
+            <li class="panel">
+              <span class="r-titulo">{r.titulo}</span>
+              <a href={r.t.url} class="r-nombre">
+                {r.t.corto}
+              </a>
+              <span class="r-dato">
+                {r.t.d.anio} · {r.dato}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+  <div class="aviso-grafico" role="tooltip" hidden data-aviso-grafico></div>
+</Base>
+
+<script>
+  // Aviso al pasar el ratón por las barras y columnas (data-tip): sigue al puntero
+  const aviso = document.querySelector<HTMLElement>('[data-aviso-grafico]')!;
+  document.querySelectorAll<HTMLElement>('[data-tip]').forEach((el) => {
+    el.addEventListener('pointermove', (ev) => {
+      aviso.textContent = el.dataset.tip ?? '';
+      aviso.hidden = false;
+      const x = Math.min(ev.clientX + 14, innerWidth - aviso.offsetWidth - 8);
+      aviso.style.transform = `translate(${x}px, ${ev.clientY + 16}px)`;
+    });
+    el.addEventListener('pointerleave', () => (aviso.hidden = true));
+  });
+</script>
+
+<style>
+  .estadisticas {
+    padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .entradilla {
+    max-width: 70ch;
+    color: var(--txt-2);
+  }
+  .cifras {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 18px;
+    margin: 24px 0 18px;
+  }
+  .principal {
+    padding: clamp(18px, 3vw, 26px);
+    border-radius: var(--radio);
+    background: var(--sup);
+    border: 1px solid var(--borde);
+  }
+  .principal p {
+    margin: 0;
+  }
+  /* Cifra principal: una sola por página, en la tipografía de la web */
+  .cifra {
+    color: var(--txt);
+    font: 800 clamp(3rem, 8vw, 4.6rem) / 1 var(--f-titulo);
+  }
+  .rotulo {
+    font-weight: 700;
+  }
+  .nota {
+    margin-top: 6px !important;
+    color: var(--txt-2);
+    font-size: 0.9rem;
+  }
+  .fichas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 18px;
+    margin: 0;
+  }
+  .fichas > div {
+    padding: 18px;
+    border-radius: var(--radio);
+    background: var(--sup);
+    border: 1px solid var(--borde);
+  }
+  .fichas dt {
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .fichas dd {
+    margin: 6px 0 0;
+    font: 700 1.9rem / 1.1 var(--f-titulo);
+  }
+  .fichas dd span {
+    display: block;
+    margin-top: 4px;
+    font: 500 0.85rem var(--f-texto, inherit);
+    color: var(--txt-2);
+  }
+  .bloque {
+    margin-top: 18px;
+  }
+  .bloque h2 {
+    margin-top: 0;
+  }
+  .explica {
+    margin: 4px 0 14px;
+    font-size: 0.88rem;
+    color: var(--txt-2);
+  }
+  .dos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 18px;
+  }
+  .dos .bloque {
+    margin-top: 18px;
+  }
+  .records {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 14px;
+  }
+  .records li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .r-titulo {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--txt-2);
+  }
+  .r-nombre {
+    font: 700 1.2rem / 1.2 var(--f-titulo);
+    color: inherit;
+  }
+  .r-dato {
+    font-size: 0.9rem;
+    color: var(--txt-2);
+  }
+  .aviso-grafico {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    max-width: 320px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--txt);
+    color: var(--fondo);
+    font-size: 0.82rem;
+    font-weight: 600;
+    pointer-events: none;
+    box-shadow: var(--sombra);
+  }
+  @media (max-width: 760px) {
+    .cifras {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

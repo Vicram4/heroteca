@@ -256,6 +256,21 @@ función `tonosDe` de `src/pages/[...idioma]/[recomendaciones].astro`.
 La nota, los votos y la edad están en `datos/tmdb/<universo>.json` (campos `nota`, `votos` y `edad`), que genera
 `scripts/sincronizar_tmdb.py`. Textos: apartado `recomendar` de `src/i18n/textos.ts`.
 
+## Estadísticas
+
+Página `/estadisticas/` (`/en/stats/`), enlazada en el pie. Todo se calcula al compilar con las fichas y
+`datos/tmdb/`, así que se actualiza sola al añadir títulos:
+
+- **Cifras:** horas para verlo todo (suma de la duración de cada película y de cada capítulo), títulos, maratón de la
+  primera sección (el UMC) y películas con escena poscréditos.
+- **Gráficos:** horas por sección, estrenos por década, los 10 personajes que más aparecen y los 10 actores con más
+  papeles (repartidos por universo). Componentes `GraficoBarras.astro` y `GraficoColumnas.astro`: cada uno lleva
+  leyenda, aviso al pasar el ratón y la misma información en una tabla («Ver los datos en una tabla»).
+- **Colores:** el acento de cada universo (rojo Marvel, azul DC), comprobados con el validador de paletas para
+  daltonismo y contraste en modo claro y oscuro. Si se añade un universo, conviene volver a comprobarlos.
+- **Récords:** película más larga y más corta, temporada con más capítulos, mejor y peor valorada en TMDB (con al menos
+  500 votos) y título más antiguo.
+
 ## Mi progreso (vistos)
 
 Cada ficha tiene un botón **«Marcar como visto»**. Lo marcado se ve en toda la web:

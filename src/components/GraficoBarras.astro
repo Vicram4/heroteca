@@ -1,0 +1,208 @@
+---
+/**
+ * Gráfico de barras horizontales para la página de estadísticas. Cada barra puede repartirse entre series
+ * (los universos), apiladas con un hueco de 2 px. Lleva leyenda (si hay más de una serie), el total en la punta,
+ * un aviso con el detalle al pasar el ratón (data-tip, ver la página) y la misma información en una tabla.
+ * El color de cada serie es el acento de su universo (comprobado para daltonismo y contraste en los dos modos).
+ */
+import { textos } from '../i18n';
+
+export interface Serie {
+  id: string;
+  nombre: string;
+  color: string;
+}
+export interface Fila {
+  etiqueta: string;
+  url?: string;
+  partes: { serie: string; valor: number }[];
+}
+interface Props {
+  filas: Fila[];
+  series: Serie[];
+  /** Texto del valor («471 h», «27 títulos») */
+  formato: (n: number) => string;
+  /** Encabezado de la primera columna de la tabla */
+  cabecera: string;
+  etiqueta: string;
+}
+const { filas, series, formato, cabecera, etiqueta } = Astro.props;
+const tx = textos(Astro.url);
+const total = (f: Fila) => f.partes.reduce((n, p) => n + p.valor, 0);
+const maximo = Math.max(1, ...filas.map(total));
+const nombre = (id: string) => series.find((s) => s.id === id)?.nombre ?? id;
+const enUso = series.filter((s) => filas.some((f) => f.partes.some((p) => p.serie === s.id && p.valor > 0)));
+const colores = enUso.map((s) => `--c-${s.id}:${s.color}`).join(';');
+const detalle = (f: Fila) =>
+  [f.etiqueta, ...f.partes.filter((p) => p.valor > 0).map((p) => `${nombre(p.serie)}: ${formato(p.valor)}`)].join(' · ');
+---
+
+<figure class="grafico" style={colores}>
+  {
+    enUso.length > 1 && (
+      <ul class="leyenda" aria-hidden="true">
+        {enUso.map((s) => (
+          <li>
+            <i style={`background:var(--c-${s.id})`} />
+            {s.nombre}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <ol class="barras" aria-label={etiqueta}>
+    {
+      filas.map((f) => {
+        const partes = f.partes.filter((p) => p.valor > 0);
+        return (
+          <li class="fila">
+            <span class="nombre">{f.url ? <a href={f.url}>{f.etiqueta}</a> : f.etiqueta}</span>
+            <span class="pista" data-tip={detalle(f)} style={`--w:${(total(f) / maximo) * 100}%;--w-num:${total(f) / maximo}`}>
+              <span class="barra">
+                {partes.map((p) => (
+                  <span class="parte" style={`flex:${p.valor};background:var(--c-${p.serie})`} />
+                ))}
+              </span>
+              <span class="valor">{formato(total(f))}</span>
+            </span>
+          </li>
+        );
+      })
+    }
+  </ol>
+  <details class="tabla">
+    <summary>{tx.estadisticas.verTabla}</summary>
+    <div class="tabla-desliza">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">{cabecera}</th>
+            {enUso.length > 1 && enUso.map((s) => <th scope="col">{s.nombre}</th>)}
+            <th scope="col">{tx.estadisticas.total}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            filas.map((f) => (
+              <tr>
+                <th scope="row">{f.etiqueta}</th>
+                {enUso.length > 1 && enUso.map((s) => <td>{formato(f.partes.find((p) => p.serie === s.id)?.valor ?? 0)}</td>)}
+                <td>{formato(total(f))}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </details>
+</figure>
+
+<style>
+  .grafico {
+    margin: 0;
+  }
+  .leyenda {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin: 0 0 12px;
+    padding: 0;
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .leyenda li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .leyenda i {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+  .barras {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .fila {
+    display: grid;
+    grid-template-columns: minmax(7em, 13em) 1fr;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+  }
+  .nombre {
+    overflow-wrap: anywhere;
+  }
+  .nombre a {
+    color: inherit;
+  }
+  /* La barra ocupa --w del espacio que deja libre el valor; el valor va justo detrás de la barra */
+  .pista {
+    position: relative;
+    display: block;
+    min-width: 0;
+    /* zona de puntero más alta que la barra */
+    padding-block: 4px;
+    padding-right: 5em;
+  }
+  .barra {
+    display: flex;
+    gap: 2px;
+    width: var(--w);
+    height: 18px;
+    min-width: 4px;
+  }
+  .parte {
+    min-width: 2px;
+  }
+  /* Extremo de datos redondeado (4 px); cuadrado en la línea base */
+  .parte:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+  .valor {
+    position: absolute;
+    top: 50%;
+    left: calc((100% - 5em) * var(--w-num, 1) + 8px);
+    transform: translateY(-50%);
+    font-variant-numeric: tabular-nums;
+    color: var(--txt-2);
+    white-space: nowrap;
+  }
+  .tabla {
+    margin-top: 14px;
+    font-size: 0.88rem;
+  }
+  .tabla summary {
+    cursor: pointer;
+    color: var(--txt-2);
+    font-weight: 600;
+  }
+  .tabla-desliza {
+    overflow-x: auto;
+  }
+  table {
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  th,
+  td {
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--borde);
+    text-align: right;
+  }
+  th:first-child {
+    text-align: left;
+  }
+  @media (max-width: 560px) {
+    .fila {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+  }
+</style>

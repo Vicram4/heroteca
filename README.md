@@ -36,6 +36,9 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **¿Qué veo?**: encuesta de 7 preguntas (universo, tiempo, tono, imagen real o animación, plataformas, personaje
   favorito y nivel) que recomienda títulos con la nota de TMDB, la calificación por edades y lo que ya has visto.
   Funciona entera en el navegador.
+- **Estadísticas**: horas para verlo todo, maratón del UMC, horas por sección, estrenos por década, personajes y
+  actores que más aparecen y récords, con gráficos accesibles (leyenda, tabla de datos y colores comprobados para
+  daltonismo en modo claro y oscuro).
 - **Mi progreso**: marca lo que has visto desde cada ficha; las estanterías y guías lo señalan, se puede filtrar
   por «sin ver» y la página `/mi-progreso/` muestra el avance por sección y el siguiente título. Se guarda solo en el
   navegador (sin cuentas), con copia de seguridad descargable.
