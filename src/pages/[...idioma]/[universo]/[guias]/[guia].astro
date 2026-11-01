@@ -5,6 +5,7 @@ import { conIdiomas } from '../../../../i18n';
 import Base from '../../../../layouts/Base.astro';
 import SubNav from '../../../../components/SubNav.astro';
 import ListaOrden from '../../../../components/ListaOrden.astro';
+import ComparaOrden from '../../../../components/ComparaOrden.astro';
 import { SITE } from '../../../../config/site';
 import { GUIAS, guiaLoc, type Guia } from '../../../../config/guias';
 import {
@@ -50,6 +51,9 @@ const fechaCorta = (t: Titulo) =>
 type Fila = { num?: string; t: Titulo; detalle?: string; fase?: string };
 type Bloque = { id: string; titulo: string; texto?: string; filas: Fila[]; enlace?: { texto: string; url: string }; cabeceraNum?: string };
 const bloques: Bloque[] = [];
+// Cronológico frente a estreno (secciones con orden de la historia)
+type Comparacion = { id: string; titulo: string; seccion: string; filas: { t: Titulo; historia: number; estreno: number }[] };
+const comparaciones: Comparacion[] = [];
 
 // Carpetas de visionado (series)
 type BloqueCarpeta = {
@@ -112,6 +116,16 @@ for (const id of guia.secciones) {
       cabeceraNum: '#',
       filas: estreno.map((h, i) => ({ num: String(i + 1), t: h.titulo, detalle: fechaCorta(h.titulo), fase: faseDe(h.titulo) })),
     });
+    // Puesto de cada título (sin repetir los tramos) en los dos órdenes
+    const enHistoria: Titulo[] = [];
+    for (const h of huecos) if (!enHistoria.includes(h.titulo)) enHistoria.push(h.titulo);
+    const enEstreno = estreno.map((h) => h.titulo);
+    comparaciones.push({
+      id: `${id}-compara`,
+      titulo: tx.guias.compara(seccion.nombre),
+      seccion: seccion.nombre,
+      filas: enHistoria.map((t, i) => ({ t, historia: i + 1, estreno: enEstreno.indexOf(t) + 1 })).filter((f) => f.estreno > 0),
+    });
   } else {
     bloques.push({
       id,
@@ -134,7 +148,7 @@ const datos = {
   numberOfItems: primera.length,
   itemListElement: primera.map((f, i) => ({ '@type': 'ListItem', position: i + 1, name: f.t.corto, url: new URL(urlsLista[i], SITE.url).href })),
 };
-const indice = [...bloques.map((b) => ({ id: b.id, texto: b.titulo })), ...carpetas.map((c) => ({ id: c.id, texto: `${tx.general.carpeta(c.numero)} · ${c.etapa}` }))];
+const indice = [...bloques.map((b) => ({ id: b.id, texto: b.titulo })), ...comparaciones.map((c) => ({ id: c.id, texto: c.titulo })), ...carpetas.map((c) => ({ id: c.id, texto: `${tx.general.carpeta(c.numero)} · ${c.etapa}` }))];
 const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t?.id))];
 ---
 
@@ -186,6 +200,16 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
               <a href={b.enlace.url}>{b.enlace.texto} →</a>
             </p>
           )}
+        </section>
+      ))
+    }
+
+    {
+      comparaciones.map((c) => (
+        <section id={c.id} class="bloque" aria-labelledby={`h-${c.id}`}>
+          <h2 id={`h-${c.id}`}>{c.titulo}</h2>
+          <p class="texto">{tx.guias.comparaTexto}</p>
+          <ComparaOrden filas={c.filas} seccion={c.seccion} />
         </section>
       ))
     }

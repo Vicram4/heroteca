@@ -1,0 +1,259 @@
+---
+/**
+ * Cronológico frente a estreno (guías): cuánto cambia el puesto de cada título entre los dos órdenes.
+ *  - Gráfico de pendientes (solo en pantallas anchas): una línea por título, de su puesto en la historia (izquierda)
+ *    a su puesto en estreno (derecha). En gris; en el color del universo, los que más cambian, con su nombre.
+ *    Al pasar el ratón por una línea se resalta (y su <title> da el detalle).
+ *  - «Los que más cambian», en tarjetas (se ven también en el móvil).
+ *  - La tabla con todos los títulos (la misma información, accesible).
+ */
+import type { Titulo } from '../lib/datos';
+import { textos } from '../i18n';
+
+interface Props {
+  /** Títulos sin repetir, con su puesto (desde 1) en cada orden */
+  filas: { t: Titulo; historia: number; estreno: number }[];
+  seccion: string;
+}
+const { filas, seccion } = Astro.props;
+const tx = textos(Astro.url);
+const g = tx.guias;
+const DESTACADOS = 6;
+const n = filas.length;
+const cambio = (f: (typeof filas)[number]) => f.estreno - f.historia;
+const destacados = new Set(
+  [...filas]
+    .sort((a, b) => Math.abs(cambio(b)) - Math.abs(cambio(a)) || a.historia - b.historia)
+    .slice(0, DESTACADOS)
+    .map((f) => f.t.id),
+);
+const textoCambio = (d: number) => (d === 0 ? g.igual : d < 0 ? g.sube(-d) : g.baja(d));
+
+// Geometría del gráfico (unidades del viewBox)
+const FILA = 18;
+const ANCHO = 900;
+const COL = 290; // ancho de cada columna de nombres
+const ARRIBA = 30;
+const alto = ARRIBA + n * FILA + 10;
+const y = (puesto: number) => ARRIBA + (puesto - 0.5) * FILA;
+const x1 = COL;
+const x2 = ANCHO - COL;
+const porHistoria = [...filas].sort((a, b) => a.historia - b.historia);
+const porEstreno = [...filas].sort((a, b) => a.estreno - b.estreno);
+---
+
+<div class="compara">
+  <figure class="pendientes">
+    <svg viewBox={`0 0 ${ANCHO} ${alto}`} role="img" aria-label={g.ariaCompara(seccion)}>
+      <text x={x1 - 10} y="14" text-anchor="end" class="cab">{g.historia}</text>
+      <text x={x2 + 10} y="14" class="cab">{g.estreno}</text>
+      {
+        porHistoria.map((f) => (
+          <text x={x1 - 10} y={y(f.historia) + 4} text-anchor="end" class:list={['nombre', { fuerte: destacados.has(f.t.id) }]}>
+            {f.historia}. {f.t.corto.length > 34 ? `${f.t.corto.slice(0, 33)}…` : f.t.corto}
+          </text>
+        ))
+      }
+      {
+        porEstreno.map((f) => (
+          <text x={x2 + 10} y={y(f.estreno) + 4} class:list={['nombre', { fuerte: destacados.has(f.t.id) }]}>
+            {f.estreno}. {f.t.corto.length > 34 ? `${f.t.corto.slice(0, 33)}…` : f.t.corto}
+          </text>
+        ))
+      }
+      {/* Primero las grises y luego las destacadas, para que queden por encima */}
+      {
+        [...filas]
+          .sort((a, b) => Number(destacados.has(a.t.id)) - Number(destacados.has(b.t.id)))
+          .map((f) => (
+            <g class:list={['linea', { destacada: destacados.has(f.t.id) }]}>
+              <title>{`${f.t.corto}: ${g.puestos(f.historia, f.estreno)}`}</title>
+              <line x1={x1} y1={y(f.historia)} x2={x2} y2={y(f.estreno)} class="trazo" />
+              <line x1={x1} y1={y(f.historia)} x2={x2} y2={y(f.estreno)} class="zona" />
+              <circle cx={x1} cy={y(f.historia)} r="4" />
+              <circle cx={x2} cy={y(f.estreno)} r="4" />
+            </g>
+          ))
+      }
+    </svg>
+    <figcaption>{g.comparaGrafico}</figcaption>
+  </figure>
+
+  <h3 class="h-cambian">{g.masCambian}</h3>
+  <ol class="cambian">
+    {
+      [...filas]
+        .filter((f) => destacados.has(f.t.id))
+        .sort((a, b) => Math.abs(cambio(b)) - Math.abs(cambio(a)) || a.historia - b.historia)
+        .map((f) => (
+          <li>
+            <a href={f.t.url}>{f.t.corto}</a>
+            <span>{g.puestos(f.historia, f.estreno)}</span>
+            <strong>{textoCambio(cambio(f))}</strong>
+          </li>
+        ))
+    }
+  </ol>
+
+  <details class="tabla">
+    <summary>{g.tablaCompara}</summary>
+    <div class="tabla-desliza">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">{tx.lista.titulo}</th>
+            <th scope="col">{g.historia}</th>
+            <th scope="col">{g.estreno}</th>
+            <th scope="col">{g.cambio}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            porHistoria.map((f) => (
+              <tr>
+                <th scope="row">
+                  <a href={f.t.url}>{f.t.corto}</a>
+                </th>
+                <td>{f.historia}</td>
+                <td>{f.estreno}</td>
+                <td>{textoCambio(cambio(f))}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </details>
+</div>
+
+<style>
+  .pendientes {
+    margin: 0 0 8px;
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .cab {
+    font: 700 13px var(--f-titulo);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    fill: var(--txt-2);
+  }
+  .nombre {
+    font-size: 11.5px;
+    fill: var(--txt-2);
+  }
+  .nombre.fuerte {
+    fill: var(--txt);
+    font-weight: 700;
+  }
+  .linea {
+    color: color-mix(in srgb, var(--txt-2) 40%, transparent);
+  }
+  .linea.destacada {
+    color: var(--acento);
+  }
+  .trazo {
+    stroke: currentColor;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+  }
+  .destacada .trazo {
+    stroke-width: 2;
+  }
+  /* Zona invisible más ancha para que sea fácil pasar el ratón */
+  .zona {
+    stroke: transparent;
+    stroke-width: 9;
+  }
+  circle {
+    fill: currentColor;
+    stroke: var(--sup);
+    stroke-width: 2;
+  }
+  .linea:not(.destacada) circle {
+    r: 2.5;
+  }
+  .linea:hover {
+    color: var(--txt);
+  }
+  .linea:hover .trazo {
+    stroke-width: 2.5;
+  }
+  svg:has(.linea:hover) .linea:not(:hover) {
+    opacity: 0.25;
+  }
+  figcaption {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .h-cambian {
+    margin: 22px 0 10px;
+    font-size: 1.1rem;
+  }
+  .cambian {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+    gap: 10px;
+  }
+  .cambian li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 14px;
+    border: 1px solid var(--borde);
+    border-left: 4px solid var(--acento);
+    border-radius: var(--radio);
+    background: var(--sup);
+  }
+  .cambian a {
+    font-weight: 700;
+  }
+  .cambian span {
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .cambian strong {
+    font-size: 0.9rem;
+  }
+  .tabla {
+    margin-top: 14px;
+    font-size: 0.9rem;
+  }
+  .tabla summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--txt-2);
+  }
+  .tabla-desliza {
+    overflow-x: auto;
+  }
+  table {
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  th,
+  td {
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--borde);
+    text-align: right;
+  }
+  th[scope='row'],
+  thead th:first-child {
+    text-align: left;
+    font-weight: 500;
+  }
+  /* El gráfico necesita anchura: en pantallas estrechas quedan las tarjetas y la tabla */
+  @media (max-width: 760px) {
+    .pendientes {
+      display: none;
+    }
+  }
+</style>

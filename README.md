@@ -42,7 +42,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Mi progreso**: marca lo que has visto desde cada ficha; las estanterías y guías lo señalan, se puede filtrar
   por «sin ver» y la página `/mi-progreso/` muestra el avance por sección y el siguiente título. Se guarda solo en el
   navegador (sin cuentas), con copia de seguridad descargable.
-- **Guías de visionado**: orden del UMC (cronológico y de estreno), películas de DC y Arrowverso capítulo a capítulo.
+- **Guías de visionado**: orden del UMC (cronológico y de estreno, con un gráfico que compara cuánto cambia cada
+  título entre los dos órdenes), películas de DC y Arrowverso capítulo a capítulo.
 - **Bilingüe (español e inglés)**: interfaz, datos (títulos, sinopsis, capítulos y carteles en inglés) y direcciones
   traducidas (`/en/marvel/captain-america-the-first-avenger/`), con `hreflang` para los buscadores.
 - **Spoilers ocultos** hasta pulsarlos, aviso de escenas post-créditos y "ver antes / ver después".

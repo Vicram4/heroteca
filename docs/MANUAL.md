@@ -256,6 +256,19 @@ función `tonosDe` de `src/pages/[...idioma]/[recomendaciones].astro`.
 La nota, los votos y la edad están en `datos/tmdb/<universo>.json` (campos `nota`, `votos` y `edad`), que genera
 `scripts/sincronizar_tmdb.py`. Textos: apartado `recomendar` de `src/i18n/textos.ts`.
 
+## Cronológico frente a estreno (guías)
+
+En las guías, cada sección con orden de la historia (UMC, DCEU) tiene un apartado «cronológico frente a estreno»
+(componente `ComparaOrden.astro`):
+
+- **Gráfico de pendientes** (en pantallas anchas): a la izquierda el puesto de cada título en el orden de la historia,
+  a la derecha en el de estreno, unidos por una línea. En el color del universo, los 6 que más cambian; al pasar el
+  ratón se resalta una línea.
+- **Los que más cambian**, en tarjetas («5.º en la historia · 50.º en estreno»), visibles también en el móvil.
+- **Tabla** con todos los títulos, sus dos puestos y el cambio.
+
+Los tramos de una misma temporada cuentan una sola vez, en su primera aparición. Se genera solo con las fichas.
+
 ## Estadísticas
 
 Página `/estadisticas/` (`/en/stats/`), enlazada en el pie. Todo se calcula al compilar con las fichas y
