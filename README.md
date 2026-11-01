@@ -31,6 +31,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Fichas completas**: datos del archivo original, completados con sinopsis, reparto, carteles y tráileres de TMDB. Cada dato de TMDB queda marcado. La imagen principal es el cartel oficial y cada ficha muestra también la carátula de la edición de la colección.
 - **Dónde ver**: plataformas de suscripción, alquiler y compra de cada título (España en la versión española,
   EE. UU. en la inglesa), con datos de JustWatch que se **actualizan solos cada semana**.
+- **Aviso semanal**: cada lunes, si hay estrenos anunciados, cambios de fecha, títulos estrenados que faltan en la
+  colección o cambios en plataformas, GitHub Actions publica un resumen como issue y llega por correo.
 - **Próximamente**: calendario de los próximos estrenos de Marvel y DC (películas, series y temporadas nuevas) y de las
   series en emisión, con cuenta atrás y filtro por universo. Datos de TMDB que se **actualizan solos cada semana**.
 - **¿Qué veo?**: encuesta de 7 preguntas (universo, tiempo, tono, imagen real o animación, plataformas, personaje

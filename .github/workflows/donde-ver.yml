@@ -1,4 +1,5 @@
 # Actualiza cada semana los datos de «Dónde ver» (JustWatch vía TMDB) y de «Próximamente» (TMDB) y los sube al repositorio.
+# Después prepara un resumen de la semana y, si hay algo relevante, lo publica como «issue»: GitHub lo manda por correo.
 # Al subirse, Vercel vuelve a publicar la web sola.
 # Necesita el secreto TMDB_API_TOKEN en GitHub: Settings → Secrets and variables → Actions.
 name: Actualizar «Dónde ver» y «Próximamente»
@@ -10,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   actualizar:
@@ -24,6 +26,7 @@ jobs:
         env:
           TMDB_API_TOKEN: ${{ secrets.TMDB_API_TOKEN }}
         run: |
+          cp datos/proximamente.json "$RUNNER_TEMP/proximamente-anterior.json"
           python scripts/sincronizar_donde_ver.py
           python scripts/sincronizar_proximamente.py
       - name: Subir los cambios
@@ -37,3 +40,11 @@ jobs:
           git add datos/donde-ver.json datos/donde-ver-us.json datos/proximamente.json datos/novedades-plataformas.json
           git commit -m "Dónde ver y Próximamente: datos actualizados ($(date -u +%Y-%m-%d))"
           git push
+      - name: Resumen semanal (aviso por correo)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/resumen_semanal.py "$RUNNER_TEMP/proximamente-anterior.json" "$RUNNER_TEMP/resumen.md"
+          if [ -f "$RUNNER_TEMP/resumen.md" ]; then
+            gh issue create --title "Resumen semanal de Heroteca ($(date -u +%Y-%m-%d))" --body-file "$RUNNER_TEMP/resumen.md"
+          fi

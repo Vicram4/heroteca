@@ -332,6 +332,27 @@ no hay cuentas ni servidor. Son los mismos en español e inglés. El código est
 con `data-titulo="<id>"` recibe `data-visto` si está visto, los botones `data-alternar-visto` marcan y desmarcan y las barras
 son el componente `Progreso.astro`. Textos: apartado `progreso` de `src/i18n/textos.ts`.
 
+## Aviso semanal por correo
+
+Cada lunes, después de actualizar los datos, la tarea de GitHub Actions ejecuta `scripts/resumen_semanal.py`.
+Si hay algo relevante, publica un **issue** «Resumen semanal de Heroteca» en el repositorio y **GitHub lo manda por
+correo** (y a la app de GitHub). Si no hay nada que contar, no se crea.
+
+Qué incluye:
+
+- **Estrenos anunciados nuevos**, **cambios de fecha** y estrenos que **ya no aparecen** en TMDB (comparando
+  `datos/proximamente.json` con el de la semana anterior). Próximamente ya los muestra solo.
+- **Ya estrenado y sin ficha en la colección**: la pista para decidir si se añade (y dónde).
+- **Cambios en plataformas y en digital** en España (del historial de `datos/novedades-plataformas.json`).
+- **Pendientes de la colección** (fichas sin TMDB; títulos del UMC sin año para la línea temporal), solo junto a otras
+  novedades para no repetir el mismo aviso cada semana.
+
+Las productoras vigiladas están en `PRODUCTORAS` de `scripts/sincronizar_proximamente.py` (incluye Marvel
+Entertainment, que recoge las películas de Marvel de Sony). Cuando llegue el aviso, basta con contárselo a Claude en el
+proyecto; el issue se puede cerrar al revisarlo. Si un lunes no llega nada, puede ser que no hubiera novedades (se
+puede comprobar en la pestaña Actions) o que las notificaciones por correo de GitHub estén desactivadas
+(github.com → Settings → Notifications).
+
 ## Versión en inglés (/en/)
 
 - Todas las páginas están en `src/pages/[...idioma]/` y generan su versión española y la inglesa.

@@ -144,6 +144,30 @@
   },
   {
    "cines": {
+    "US": "2027-06-18"
+   },
+   "clave": "movie-911916",
+   "en": {
+    "poster": "/9KAe39xqyZnv9J4W3DRGdQqX82h.jpg",
+    "sinopsis": "Hunted by Miguel O'Hara's Spider Society and betrayed by his friends, Miles finds himself in the darkest corners of the Spider-Verse in search of a way home. Knowing that his family has been not only fractured but endangered by his calling, it's a race against the clock for Miles to travel across the wildest reaches of time and space to fight for and reunite everything he holds most dear.",
+    "titulo": "Spider-Man: Beyond the Spider-Verse"
+   },
+   "es": {
+    "poster": "/9KAe39xqyZnv9J4W3DRGdQqX82h.jpg",
+    "sinopsis": "La historia continua de Miles Morales y los muchos otros Spider-People de diferentes realidades.",
+    "titulo": "Spider-Man: Beyond the Spider-Verse"
+   },
+   "fecha": "2027-06-16",
+   "ficha": null,
+   "tipo": "pelicula",
+   "tmdb": {
+    "id": 911916,
+    "tipo": "movie"
+   },
+   "universo": "marvel"
+  },
+  {
+   "cines": {
     "ES": "2027-07-09",
     "US": "2027-07-09"
    },

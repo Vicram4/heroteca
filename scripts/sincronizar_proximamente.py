@@ -29,9 +29,11 @@ RAIZ = Path(__file__).resolve().parent.parent
 DESTINO = RAIZ / 'datos' / 'proximamente.json'
 
 # Productoras de TMDB de cada universo (/search/company). Añade aquí las que falten.
+# Marvel Entertainment y Marvel Enterprises recogen las películas de Marvel de otros estudios (Sony: Spider-Verse, Venom…).
+# No se incluyen Columbia ni Sony Pictures Animation: traerían muchas películas que no son de superhéroes.
 PRODUCTORAS = {
-    'marvel': {420: 'Marvel Studios', 13252: 'Marvel Animation', 38679: 'Marvel Television'},
-    'dc': {184898: 'DC Studios', 9993: 'DC Entertainment', 128064: 'DC Films'},
+    'marvel': {420: 'Marvel Studios', 13252: 'Marvel Animation', 38679: 'Marvel Television', 7505: 'Marvel Entertainment', 19551: 'Marvel Enterprises'},
+    'dc': {184898: 'DC Studios', 9993: 'DC Entertainment', 128064: 'DC Films', 429: 'DC', 165407: 'DC Vertigo'},
 }
 IDIOMAS = {'es': 'es-ES', 'en': 'en-US'}
 # Películas estrenadas hace poco que se siguen guardando (para «En cines» en Novedades)
