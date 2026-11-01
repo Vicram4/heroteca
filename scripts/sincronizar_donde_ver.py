@@ -11,7 +11,8 @@ Uso:
 Salida: datos/donde-ver.json (España) y datos/donde-ver-us.json (Estados Unidos)
 
 Además apunta en datos/novedades-plataformas.json lo que llega y lo que se va de cada plataforma
-(suscripción o gratis) respecto a la semana anterior, para la futura sección «Novedades».
+respecto a la semana anterior, para la futura sección «Novedades»: en modo 'plataforma' (suscripción
+o gratis) y en modo 'digital' (alquiler o compra).
 Se guardan los últimos DIAS_HISTORIAL días.
 """
 import datetime
@@ -62,9 +63,13 @@ def plataformas(datos):
     return salida
 
 
-def incluidas(t):
-    """Plataformas donde se ve sin pagar aparte (suscripción o gratis)."""
-    return {p['nombre'] for c in ('suscripcion', 'gratis') for p in t.get(c, [])}
+# Modos que se comparan: 'plataforma' (incluido en la suscripción o gratis) y 'digital' (alquiler o compra)
+MODOS = {'plataforma': ('suscripcion', 'gratis'), 'digital': ('alquiler', 'compra')}
+
+
+def disponibles(t, modo):
+    """Plataformas de un título en ese modo."""
+    return {p['nombre'] for c in MODOS[modo] for p in t.get(c, [])}
 
 
 def apuntar_novedades(pais, anteriores, nuevos, hoy):
@@ -75,9 +80,10 @@ def apuntar_novedades(pais, anteriores, nuevos, hoy):
     for clave in ('llegadas', 'salidas'):
         del_pais[clave] = [e for e in del_pais[clave] if e['fecha'] >= limite and e['fecha'] != hoy]
     for ident in sorted(set(anteriores) | set(nuevos)):
-        antes, ahora = incluidas(anteriores.get(ident, {})), incluidas(nuevos.get(ident, {}))
-        del_pais['llegadas'] += [{'fecha': hoy, 'id': ident, 'plataforma': p} for p in sorted(ahora - antes)]
-        del_pais['salidas'] += [{'fecha': hoy, 'id': ident, 'plataforma': p} for p in sorted(antes - ahora)]
+        for modo in MODOS:
+            antes, ahora = disponibles(anteriores.get(ident, {}), modo), disponibles(nuevos.get(ident, {}), modo)
+            del_pais['llegadas'] += [{'fecha': hoy, 'id': ident, 'plataforma': p, 'modo': modo} for p in sorted(ahora - antes)]
+            del_pais['salidas'] += [{'fecha': hoy, 'id': ident, 'plataforma': p, 'modo': modo} for p in sorted(antes - ahora)]
     ARCHIVO_NOVEDADES.write_text(json.dumps(historial, ensure_ascii=False, indent=1, sort_keys=True), encoding='utf-8', newline='\n')
     return sum(1 for e in del_pais['llegadas'] if e['fecha'] == hoy), sum(1 for e in del_pais['salidas'] if e['fecha'] == hoy)
 

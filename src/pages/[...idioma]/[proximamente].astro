@@ -11,16 +11,18 @@ import Base from '../../layouts/Base.astro';
 import TarjetaEstreno from '../../components/TarjetaEstreno.astro';
 import ListaEstrenos from '../../components/ListaEstrenos.astro';
 import { universosActivos } from '../../lib/datos';
-import { proximosEstrenos, enEmision, fechaProximamente, textosEstreno } from '../../lib/proximamente';
+import { proximosEstrenos, enEmision, fechaProximamente, textosEstreno, fechaDe } from '../../lib/proximamente';
+import { paisDe } from '../../lib/dondever';
 
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
 const universos = await universosActivos();
 const uDe = (id: string) => universos.find((u) => u.id === id);
-const lista = proximosEstrenos().filter((e) => uDe(e.universo));
+const pais = paisDe(idioma);
+const lista = proximosEstrenos(pais).filter((e) => uDe(e.universo));
 const emision = lista.filter(enEmision);
 const estrenos = lista.filter((e) => !enEmision(e));
-const anios = [...new Set(estrenos.map((e) => e.fecha.slice(0, 4)))];
+const anios = [...new Set(estrenos.map((e) => fechaDe(e, pais).slice(0, 4)))];
 const actualizado = fechaProximamente().toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
 
@@ -75,7 +77,7 @@ const actualizado = fechaProximamente().toLocaleDateString(LOCALE[idioma], { day
             <h3 id={`t-${a}`} class="anio">{a}</h3>
             <ListaEstrenos>
               {estrenos
-                .filter((e) => e.fecha.startsWith(a))
+                .filter((e) => fechaDe(e, pais).startsWith(a))
                 .map((e) => (
                   <TarjetaEstreno e={e} u={uDe(e.universo)} conSinopsis />
                 ))}

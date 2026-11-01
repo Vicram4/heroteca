@@ -1,6 +1,31 @@
 {
  "estrenos": [
   {
+   "cines": {
+    "ES": "2026-10-23",
+    "US": "2026-10-23"
+   },
+   "clave": "movie-1400940",
+   "en": {
+    "poster": "/9l1NuFjel2j89hiuiJbsxfblqjy.jpg",
+    "sinopsis": "Matt Hagen's meteoric rise from Gotham street kid to Hollywood leading man is tragically cut short when a local crime boss's actions leave him horribly disfigured. Abandoned by his team and with nothing left, Matt seeks out a cutting edge treatment that miraculously returns him to his former self… but also unexpectedly affects his grip on reality, spiraling him down a destructive path of all-consuming revenge.",
+    "titulo": "Clayface"
+   },
+   "es": {
+    "poster": "/6ihSDJlBNcvoTWzSA0jonZyOXTs.jpg",
+    "sinopsis": "Una criatura cambiante hecha de arcilla mágica acecha Ciudad Gótica, alternando entre villano y aliado de Batman. Varias figuras trágicas han asumido el manto de Cara de Barro a lo largo de los años.",
+    "titulo": "Clayface"
+   },
+   "fecha": "2026-10-19",
+   "ficha": null,
+   "tipo": "pelicula",
+   "tmdb": {
+    "id": 1400940,
+    "tipo": "movie"
+   },
+   "universo": "dc"
+  },
+  {
    "clave": "tv-231801-t1",
    "en": {
     "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
@@ -70,6 +95,10 @@
    "universo": "marvel"
   },
   {
+   "cines": {
+    "ES": "2026-12-18",
+    "US": "2026-12-18"
+   },
    "clave": "movie-1003596",
    "en": {
     "poster": "/bqAHPSEyRkM4BpkncGFCKjBXf9p.jpg",
@@ -114,6 +143,10 @@
    "universo": "marvel"
   },
   {
+   "cines": {
+    "ES": "2027-07-09",
+    "US": "2027-07-09"
+   },
    "clave": "movie-1523140",
    "en": {
     "poster": "/tYLgfKk3cEk7LskgxWyW37Nty01.jpg",
@@ -135,6 +168,10 @@
    "universo": "dc"
   },
   {
+   "cines": {
+    "ES": "2027-12-17",
+    "US": "2027-12-17"
+   },
    "clave": "movie-1003598",
    "en": {
     "poster": "/f0YBuh4hyiAheXhh4JnJWoKi9g5.jpg",
@@ -156,6 +193,10 @@
    "universo": "marvel"
   },
   {
+   "cines": {
+    "ES": "2028-02-18",
+    "US": "2028-02-18"
+   },
    "clave": "movie-806704",
    "en": {
     "poster": "/r5fl4aMsmTjgc8DdDqQaM84roWp.jpg",
@@ -177,6 +218,9 @@
    "universo": "dc"
   },
   {
+   "cines": {
+    "US": "2028-05-05"
+   },
    "clave": "movie-1293690",
    "en": {
     "poster": "/jSn3jOzI91dOx4aVdfMrirWXH6R.jpg",
@@ -198,6 +242,9 @@
    "universo": "marvel"
   },
   {
+   "cines": {
+    "US": "2028-07-28"
+   },
    "clave": "movie-1738010",
    "en": {
     "poster": "/zgC1zo3lyujoEiIMnUrHltvPmZg.jpg",
@@ -219,6 +266,9 @@
    "universo": "marvel"
   },
   {
+   "cines": {
+    "US": "2028-09-22"
+   },
    "clave": "movie-1364797",
    "en": {
     "poster": "/byZZQsE933kaBCq6i2yGQnJF6TN.jpg",
@@ -240,6 +290,9 @@
    "universo": "dc"
   },
   {
+   "cines": {
+    "US": "2028-12-15"
+   },
    "clave": "movie-1386618",
    "en": {
     "poster": "/zJc9fYZxgq4yzI0Oru2e1Cf3a3V.jpg",

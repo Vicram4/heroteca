@@ -5,7 +5,8 @@
  */
 import type { Universo } from '../lib/datos';
 import { estiloUniverso } from '../lib/datos';
-import { type Estreno, enEmision, textosEstreno, enlaceTmdb } from '../lib/proximamente';
+import { type Estreno, enEmision, textosEstreno, enlaceTmdb, fechaDe } from '../lib/proximamente';
+import { paisDe } from '../lib/dondever';
 import { imagenTmdb } from '../lib/tmdb';
 import { textos, idiomaDe, LOCALE } from '../i18n';
 
@@ -18,7 +19,8 @@ const { e, u, conSinopsis = false } = Astro.props;
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
 const x = textosEstreno(e, idioma);
-const fecha = new Date(`${e.fecha}T00:00:00Z`).toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const dia = fechaDe(e, paisDe(idioma));
+const fecha = new Date(`${dia}T00:00:00Z`).toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 const que = enEmision(e)
   ? tx.proximos.episodio(e.temporada ?? 1, e.episodio ?? 1, fecha)
   : e.tipo === 'pelicula'
@@ -29,7 +31,7 @@ const que = enEmision(e)
 const href = e.ficha ? `/${e.ficha}/` : enlaceTmdb(e, idioma);
 ---
 
-<li class="estreno" data-fecha={e.fecha} data-universo={e.universo} style={estiloUniverso(u)}>
+<li class="estreno" data-fecha={dia} data-universo={e.universo} style={estiloUniverso(u)}>
   <a href={href} rel={e.ficha ? undefined : 'noopener'}>
     <span class="cartel">
       {
@@ -53,7 +55,7 @@ const href = e.ficha ? `/${e.ficha}/` : enlaceTmdb(e, idioma);
     <span class="nombre">{x.titulo}</span>
     <span class="meta">
       {u?.data.nombre && <span class="marca-u">{u.data.nombre}</span>}
-      {enEmision(e) ? que : <>{que} · <time datetime={e.fecha}>{fecha}</time></>}
+      {enEmision(e) ? que : <>{que} · <time datetime={dia}>{fecha}</time></>}
     </span>
     {conSinopsis && x.sinopsis && <span class="sinopsis">{x.sinopsis}</span>}
     <span class="destino">{e.ficha ? tx.proximos.enColeccion : `${tx.proximos.enTmdb} ↗`}</span>

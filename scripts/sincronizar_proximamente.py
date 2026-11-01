@@ -11,7 +11,8 @@ Se ejecuta cada semana desde GitHub Actions (.github/workflows/donde-ver.yml), j
 
 Uso:
     .venv/Scripts/python.exe scripts/sincronizar_proximamente.py
-Salida: datos/proximamente.json
+Salida: datos/proximamente.json (también las películas estrenadas en los últimos DIAS_EN_CINES días,
+con su fecha de estreno en cines en España y EE. UU., para el bloque «En cines» de Novedades)
 """
 import datetime
 import json
@@ -33,6 +34,21 @@ PRODUCTORAS = {
     'dc': {184898: 'DC Studios', 9993: 'DC Entertainment', 128064: 'DC Films'},
 }
 IDIOMAS = {'es': 'es-ES', 'en': 'en-US'}
+# Películas estrenadas hace poco que se siguen guardando (para «En cines» en Novedades)
+DIAS_EN_CINES = 60
+PAISES_CINE = ('ES', 'US')
+
+
+def fechas_cine(id_):
+    """Fecha de estreno en cines (tipos 2 y 3 de TMDB: limitado y general) en cada país, la más temprana."""
+    datos = tmdb.get(f'/movie/{id_}/release_dates', refrescar=True, language=None) or {}
+    salida = {}
+    for r in datos.get('results') or []:
+        if r.get('iso_3166_1') in PAISES_CINE:
+            fechas = sorted(x['release_date'][:10] for x in r.get('release_dates') or [] if x.get('type') in (2, 3) and x.get('release_date'))
+            if fechas:
+                salida[r['iso_3166_1']] = fechas[0]
+    return salida
 
 
 def leer_ficha(archivo):
@@ -78,12 +94,18 @@ def textos_de(tipo, id_, temporada=None):
 
 def main():
     hoy = datetime.date.today().isoformat()
+    desde_cines = (datetime.date.today() - datetime.timedelta(days=DIAS_EN_CINES)).isoformat()
     fichas = fichas_de_la_coleccion()
     vistos, lista = set(), []
 
     def anadir(universo, tipo, id_, fecha, temporada=None, episodio=None):
         clave = f'{tipo}-{id_}' + (f'-t{temporada}' if temporada else '')
-        if clave in vistos or not fecha or fecha < hoy:
+        # Series: solo lo que está por emitirse. Películas: también las estrenadas hace poco (siguen en cines)
+        if clave in vistos or not fecha or fecha < (desde_cines if tipo == 'movie' else hoy):
+            return
+        cines = fechas_cine(id_) if tipo == 'movie' else {}
+        # Lo ya estrenado solo cuenta si pasó por los cines (fuera cortos, especiales de plataforma, pódcasts…)
+        if fecha < hoy and not cines:
             return
         vistos.add(clave)
         lista.append({
@@ -92,6 +114,8 @@ def main():
             'tipo': 'pelicula' if tipo == 'movie' else 'serie',
             'tmdb': {'tipo': tipo, 'id': id_},
             'fecha': fecha,
+            # Películas: estreno en cines en España y en Estados Unidos (puede diferir de la fecha mundial)
+            **({'cines': cines} if cines else {}),
             # Series: estreno de temporada (episodio 1) o en emisión (próximo episodio)
             **({'temporada': temporada, 'episodio': episodio} if tipo == 'tv' else {}),
             'ficha': ficha_de(fichas, tipo, id_, temporada),
@@ -109,7 +133,7 @@ def main():
         for compania in productoras:
             for pagina in (1, 2):
                 d = tmdb.get('/discover/movie', refrescar=True, with_companies=compania, sort_by='primary_release_date.asc',
-                             page=pagina, **{'primary_release_date.gte': hoy}) or {}
+                             page=pagina, **{'primary_release_date.gte': desde_cines}) or {}
                 for r in d.get('results') or []:
                     anadir(universo, 'movie', r['id'], r.get('release_date'))
                 if pagina >= (d.get('total_pages') or 1):

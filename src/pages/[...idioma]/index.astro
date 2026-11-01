@@ -14,6 +14,7 @@ import { seccionLoc } from '../../i18n/datos';
 import TarjetaEstreno from '../../components/TarjetaEstreno.astro';
 import ListaEstrenos from '../../components/ListaEstrenos.astro';
 import { proximosEstrenos, enEmision } from '../../lib/proximamente';
+import { paisDe } from '../../lib/dondever';
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
 
@@ -32,7 +33,7 @@ const tarjetas = await Promise.all(
 );
 // Próximos estrenos (sin las series en emisión): los 4 primeros de los universos activos
 const activos = universos.filter((u) => u.data.activo);
-const proximos = proximosEstrenos()
+const proximos = proximosEstrenos(paisDe(idioma))
   .filter((e) => !enEmision(e) && activos.some((u) => u.id === e.universo))
   .slice(0, 4);
 ---

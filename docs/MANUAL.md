@@ -213,8 +213,8 @@ JustWatch que da TMDB. Se guardan en `datos/donde-ver.json`.
 - Para lanzarlo a mano: pestaña **Actions** del repositorio → «Actualizar «Dónde ver» y «Próximamente»» → **Run workflow**.
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_donde_ver.py`
 - **Historial de llegadas y salidas** (para la futura sección «Novedades»): cada semana se compara con la anterior y
-  se apunta en `datos/novedades-plataformas.json` qué títulos llegan o se van de cada plataforma (suscripción o gratis),
-  por país. Se guardan los últimos 120 días.
+  se apunta en `datos/novedades-plataformas.json` qué títulos llegan o se van de cada plataforma, por país y en dos
+  modos: `plataforma` (suscripción o gratis) y `digital` (alquiler o compra). Se guardan los últimos 120 días.
 
 ## Próximamente (próximos estrenos)
 
@@ -225,6 +225,11 @@ estrenos en la portada. Los datos están en `datos/proximamente.json` y los gene
 - Películas y series con fecha futura de las **productoras** de cada universo (lista `PRODUCTORAS` del script:
   Marvel Studios, Marvel Animation, DC Studios…). Si falta alguna, se busca su número en TMDB y se añade ahí.
 - **Series de la colección** con un episodio programado (temporada nueva o en emisión).
+
+Las películas guardan su **fecha de estreno en cines en España y en EE. UU.** (campo `cines`): la versión española
+usa la de España y la inglesa la de EE. UU. (si no se conoce, la fecha mundial). El archivo conserva además las
+películas **estrenadas en cines en los últimos 60 días** (solo las que pasaron por cines; fuera cortos y pódcasts),
+que Próximamente no muestra y servirán para el bloque «En cines» de Novedades.
 
 Arriba salen las series **en emisión** (próximo episodio) y debajo los **estrenos por año**. Si el estreno ya tiene ficha
 en la colección, la tarjeta lleva a la ficha; si no, a TMDB. La cuenta atrás se calcula en el navegador, que además oculta
