@@ -161,7 +161,8 @@ const href = e.ficha ? `/${e.ficha}/` : enlaceTmdb(e, idioma);
     min-width: 58px;
     padding: 0 12px;
     border-radius: 999px;
-    background: var(--acento);
+    /* algo más oscuro que el acento: texto blanco con contraste AA */
+    background: color-mix(in srgb, var(--acento) 82%, #000);
     animation: latido 1.6s ease-in-out infinite;
   }
   .cuenta.es-hoy svg,

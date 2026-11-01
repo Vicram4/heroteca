@@ -44,7 +44,8 @@ const unidades = [
       <p class="fecha">
         {p.enCines} <time datetime={dia}>{fecha}</time>
       </p>
-      <ol class="cifras" aria-label={p.faltan(diasAlPublicar)} role="timer" aria-live="off">
+      <div role="timer" aria-live="off" aria-label={p.faltan(diasAlPublicar)}>
+      <ol class="cifras">
         {
           unidades.map(([clave, nombre, valor]) => (
             <li>
@@ -56,6 +57,7 @@ const unidades = [
           ))
         }
       </ol>
+      </div>
       <p class="hoy" data-es-hoy hidden>{p.hoyEstreno}</p>
     </div>
   </div>
