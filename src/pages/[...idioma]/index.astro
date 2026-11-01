@@ -21,7 +21,7 @@ const tarjetas = await Promise.all(
     const titulos = u.data.activo ? await titulosDe(u.id) : [];
     // Mosaico: carátulas de la primera sección, en tu orden
     const mosaico = titulos
-      .filter((t) => t.portada && t.d.seccion === u.data.secciones[0]?.id)
+      .filter((t) => (t.portada ?? t.portadaColeccion) && t.d.seccion === u.data.secciones[0]?.id)
       .sort((a, b) => (a.d.numero ?? 999) - (b.d.numero ?? 999))
       .slice(0, 12);
     return { u, total: titulos.length, mosaico };
@@ -51,7 +51,7 @@ const tarjetas = await Promise.all(
             <a href={`/${u.id}/`} class="universo" style={estiloUniverso(u)}>
               <span class="mosaico" aria-hidden="true">
                 {mosaico.map((t) => (
-                  <Image src={t.portada!} alt="" width={200} format="webp" loading={i === 0 ? 'eager' : 'lazy'} />
+                  <Image src={(t.portada ?? t.portadaColeccion)!} alt="" width={200} format="webp" loading={i === 0 ? 'eager' : 'lazy'} />
                 ))}
               </span>
               <span class="texto">

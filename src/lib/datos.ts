@@ -5,6 +5,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
 import { TIPOS, type TipoTitulo } from '../config/tipos';
+import { SITE } from '../config/site';
 import { datosTmdb, type DatosTmdb } from './tmdb';
 
 export type Universo = CollectionEntry<'universos'>;
@@ -167,6 +168,10 @@ function preparar(t: TituloEntrada): Titulo {
   const portada = d.imagenes.find((i) => i.rol === 'portada')?.src ?? d.imagenes[0]?.src;
   const contraportada = d.imagenes.find((i) => i.rol === 'contraportada')?.src;
   const temporada = d.temporada ? `Temporada ${d.temporada}` : '';
+  const m = mezclar(d, tmdb);
+  // Imagen principal: la carátula de la colección si tiene buena resolución; si es pequeña y hay cartel de TMDB,
+  // manda el cartel y la carátula se muestra aparte en la ficha. La misma regla se aplica en inglés.
+  const usarCartel = Boolean(portada && portada.width < SITE.anchoMinimoCaratula && m.posterTmdb);
   return {
     id: t.id,
     entrada: t,
@@ -175,11 +180,13 @@ function preparar(t: TituloEntrada): Titulo {
     url: urlTitulo(d.universo.id, t.id),
     tipo: d.tipo,
     tipoNombre: TIPOS[d.tipo].nombre,
-    portada,
-    contraportada,
+    portada: usarCartel ? undefined : portada,
+    contraportada: usarCartel ? undefined : contraportada,
+    portadaColeccion: usarCartel ? portada : undefined,
+    contraportadaColeccion: usarCartel ? contraportada : undefined,
     subtitulo: [TIPOS[d.tipo].nombre + (d.animada ? ' de animación' : ''), temporada].filter(Boolean).join(' · '),
     corto: d.temporada ? `${d.titulo} · T${d.temporada}` : d.titulo,
-    m: mezclar(d, tmdb),
+    m,
     tmdb,
   };
 }
@@ -229,8 +236,12 @@ function prepararEn(t: Titulo): Titulo {
     creadores: x.creadores ?? t.m.creadores,
     deTmdb: new Set([...[...t.m.deTmdb].filter((c) => !['argumento', 'reparto', 'capitulos'].includes(c)), ...deTmdb]),
   };
-  // En inglés manda el cartel inglés; las carátulas de la colección se muestran aparte en la ficha
-  const conCartel = Boolean(x.poster);
+  // Misma regla que en español: si la carátula de la colección es buena, manda en los dos idiomas;
+  // si no (o no hay), el cartel de TMDB, aquí el inglés.
+  const caratulaBuena = Boolean(t.portada);
+  const coleccion = t.portada ?? t.portadaColeccion;
+  const contraColeccion = t.contraportada ?? t.contraportadaColeccion;
+  const conCartel = !caratulaBuena && Boolean(x.poster);
   return {
     ...t,
     d: dEn,
@@ -239,8 +250,8 @@ function prepararEn(t: Titulo): Titulo {
     tmdb: x,
     portada: conCartel ? undefined : t.portada,
     contraportada: conCartel ? undefined : t.contraportada,
-    portadaColeccion: conCartel ? t.portada : undefined,
-    contraportadaColeccion: conCartel ? t.contraportada : undefined,
+    portadaColeccion: conCartel ? coleccion : t.portadaColeccion,
+    contraportadaColeccion: conCartel ? contraColeccion : t.contraportadaColeccion,
   };
 }
 

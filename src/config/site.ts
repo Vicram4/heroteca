@@ -31,6 +31,12 @@ export const SITE = {
    * (noindex, fuera del mapa del sitio) ni aparece el botón de idioma en las páginas en español.
    */
   inglesPublicado: true,
+  /**
+   * Ancho mínimo (en píxeles) para que la carátula de la colección sea la imagen principal de un título.
+   * Si es más pequeña, se muestra el cartel de TMDB (en los dos idiomas) y la carátula aparece en la ficha
+   * como «Edición de la colección».
+   */
+  anchoMinimoCaratula: 200,
   /** Código de verificación de Google Search Console (es público; no identifica a nadie). */
   googleVerificacion: 'd9udc0hSfl5WRRV432HhCeZPJ4Asyi5yJrZT4uV5kcM',
 } as const;

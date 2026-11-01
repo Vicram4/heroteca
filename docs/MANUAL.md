@@ -180,6 +180,13 @@ del RESUMEN de carpetas UDC) y «animacion/Animación».
 - En la sección Series, cada ficha lleva `visionado: { carpeta, codigo, orden }` (tu código 2.3, 5.1…)
   y `numero` es el de la carpeta del disco (011 Smallville). `enEspera: true` la pone al final, en «En espera».
 
+## Imagen principal de cada título
+
+La imagen principal (estanterías y ficha) es la carátula de la edición de la colección si mide al menos
+`anchoMinimoCaratula` píxeles de ancho (200 por defecto, en `src/config/site.ts`). Si es más pequeña y hay cartel
+en TMDB, se muestra el cartel y la carátula aparece debajo, en la ficha, como «Edición de la colección».
+La regla es la misma en español y en inglés (en inglés, con el cartel inglés), así que las dos versiones coinciden.
+
 ## Carátulas con márgenes blancos
 
 Algunas carátulas de los documentos traen márgenes blancos alrededor de la caja. Para recortarlos
