@@ -32,6 +32,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Fichas completas**: datos del archivo original, completados con sinopsis, reparto, carteles y tráileres de TMDB. Cada dato de TMDB queda marcado. La imagen principal es el cartel oficial y cada ficha muestra también la carátula de la edición de la colección.
 - **Dónde ver**: plataformas de suscripción, alquiler y compra de cada título (España en la versión española,
   EE. UU. en la inglesa), con datos de JustWatch que se **actualizan solos cada semana**.
+- **Pasatiempos**: adivina el personaje, ¿qué héroe eres? y ¿cuál se estrenó antes?, hechos con los datos de la colección.
 - **Noticias** de Marvel y DC recogidas cada día de medios especializados (RSS), clasificadas por universo y con
   enlace a la fuente original.
 - **Aviso semanal**: cada lunes, si hay estrenos anunciados, cambios de fecha, títulos estrenados que faltan en la

@@ -1,0 +1,111 @@
+---
+import { conIdiomas } from '../../../i18n';
+import { JUEGOS, type Juego } from '../../../config/juegos';
+export function getStaticPaths() {
+  return conIdiomas(
+    JUEGOS.map((j) => ({ params: { pasatiempos: 'pasatiempos', juego: j.id as string }, props: { juego: j } })),
+    (r) => ({ pasatiempos: 'games', juego: (r.props as { juego: Juego }).juego.idEn }),
+  );
+}
+/** Página de un pasatiempo: prepara los datos que necesita cada juego (personajes o títulos) y lo muestra. */
+import { getImage } from 'astro:assets';
+import Base from '../../../layouts/Base.astro';
+import BotonVolver from '../../../components/BotonVolver.astro';
+import JuegoAdivina, { type PersonajeJuego } from '../../../components/JuegoAdivina.astro';
+import JuegoQuienEres from '../../../components/JuegoQuienEres.astro';
+import JuegoCualAntes, { type TituloJuego } from '../../../components/JuegoCualAntes.astro';
+import { universosActivos, todosLosTitulos, localizar } from '../../../lib/datos';
+import { apariciones } from '../../../lib/personajes';
+import { imagenTmdb } from '../../../lib/tmdb';
+import { textos, idiomaDe } from '../../../i18n';
+import { rutaEnIdioma } from '../../../i18n/rutas';
+import { personajeLoc } from '../../../i18n/datos';
+
+const { juego } = Astro.props as { juego: Juego };
+const tx = textos(Astro.url);
+const j = tx.juegos;
+const idioma = idiomaDe(Astro.url);
+const universos = await universosActivos();
+const activos = new Map(universos.map((u) => [u.id, u]));
+const nombre = { adivina: j.adivina, quien: j.quien, antes: j.antes }[juego.clave];
+const texto = { adivina: j.adivinaTexto, quien: j.quienTexto, antes: j.antesTexto }[juego.clave];
+
+// «Adivina el personaje»: los que salen en al menos 4 títulos
+let personajes: PersonajeJuego[] = [];
+if (juego.clave === 'adivina') {
+  const { personajes: todos, porPersonaje } = await apariciones();
+  personajes = await Promise.all(
+    todos
+      .filter((p) => activos.has(p.data.universo.id) && (porPersonaje.get(p.id)?.length ?? 0) >= 4)
+      .map(async (original) => {
+        const p = personajeLoc(original, idioma);
+        const aps = porPersonaje.get(p.id) ?? [];
+        const actores = new Map<string, number>();
+        for (const a of aps) if (a.actor) actores.set(a.actor, (actores.get(a.actor) ?? 0) + 1);
+        return {
+          id: p.id,
+          n: p.data.nombre,
+          u: p.data.universo.id,
+          un: activos.get(p.data.universo.id)!.data.nombre,
+          url: await rutaEnIdioma(`/${p.data.universo.id}/personajes/${p.id}/`, idioma),
+          t: aps.length,
+          a: Math.min(...aps.map((a) => a.titulo.d.anio)),
+          tit: [...new Set(aps.map((a) => localizar(a.titulo, idioma).corto))].slice(0, 8),
+          act: [...actores].sort((x, y) => y[1] - x[1]).slice(0, 3).map(([n]) => n),
+          ide: p.data.identidad && p.data.identidad !== p.data.nombre ? p.data.identidad : undefined,
+        };
+      }),
+  );
+}
+
+// «¿Cuál se estrenó antes?»: películas y primeras temporadas con imagen
+let titulosJuego: TituloJuego[] = [];
+if (juego.clave === 'antes') {
+  const lista = (await todosLosTitulos(idioma)).filter((t) => activos.has(t.universo) && (t.portada || t.m.posterTmdb) && (t.d.temporada ?? 1) === 1);
+  titulosJuego = await Promise.all(
+    lista.map(async (t) => ({
+      n: t.corto,
+      f: t.m.fecha ? t.m.fecha.toISOString().slice(0, 10) : `${t.d.anio}-06-30`,
+      anio: t.m.fecha ? t.m.fecha.getUTCFullYear() : t.d.anio,
+      img: t.portada ? (await getImage({ src: t.portada, width: 185, format: 'webp' })).src : imagenTmdb(t.m.posterTmdb!, 'w185'),
+      url: await rutaEnIdioma(t.url, idioma),
+      u: t.universo,
+    })),
+  );
+}
+---
+
+<Base
+  titulo={`${nombre} · ${j.titulo}`}
+  descripcion={texto}
+  migas={[
+    { nombre: 'Heroteca', url: '/' },
+    { nombre: j.titulo, url: '/pasatiempos/' },
+    { nombre, url: `/pasatiempos/${juego.id}/` },
+  ]}
+>
+  <div class="contenedor pagina-juego">
+    <BotonVolver href="/pasatiempos/">
+      <nav class="miga" aria-label={tx.general.estasEn}><a href="/pasatiempos/">{j.titulo}</a></nav>
+    </BotonVolver>
+    <h1>{nombre}</h1>
+    <p class="entradilla">{texto}</p>
+    {juego.clave === 'adivina' && <JuegoAdivina personajes={personajes} />}
+    {juego.clave === 'quien' && <JuegoQuienEres />}
+    {juego.clave === 'antes' && <JuegoCualAntes titulos={titulosJuego} />}
+  </div>
+</Base>
+
+<style>
+  .pagina-juego {
+    padding-bottom: 48px;
+  }
+  h1 {
+    margin-top: 6px;
+  }
+  .entradilla {
+    max-width: 70ch;
+    color: var(--txt-2);
+    margin-bottom: 20px;
+  }
+</style>

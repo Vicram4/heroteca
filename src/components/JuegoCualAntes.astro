@@ -1,0 +1,180 @@
+---
+/**
+ * «¿Cuál se estrenó antes?»: dos títulos al azar (de años distintos); se elige el que se estrenó primero.
+ * Cada acierto suma a la racha; un fallo la reinicia. La mejor racha se guarda en el navegador.
+ */
+import { textos } from '../i18n';
+
+export interface TituloJuego {
+  n: string;
+  /** AAAA-MM-DD (o solo el año) */
+  f: string;
+  anio: number;
+  img?: string;
+  url: string;
+  u: string;
+}
+interface Props {
+  titulos: TituloJuego[];
+}
+const { titulos } = Astro.props;
+const tx = textos(Astro.url);
+const j = tx.juegos;
+---
+
+<div class="juego panel" data-cual-antes data-correcto={j.correcto} data-incorrecto={j.incorrecto('{x}')} data-elegir={j.elegir('{x}')}>
+  <div class="marcador">
+    <span>{j.racha}: <strong data-racha>0</strong></span>
+    <span>{j.mejor}: <strong data-mejor>0</strong></span>
+  </div>
+  <div class="pareja" data-pareja></div>
+  <p class="resultado" data-resultado role="status"></p>
+  <button type="button" class="pastilla principal" data-siguiente hidden>{j.siguiente} →</button>
+  <script type="application/json" data-datos set:html={JSON.stringify(titulos)} />
+</div>
+
+<script>
+  import type { TituloJuego } from './JuegoCualAntes.astro';
+  document.querySelectorAll<HTMLElement>('[data-cual-antes]').forEach((caja) => {
+    const todos: TituloJuego[] = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '[]');
+    const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
+    const CLAVE = 'heroteca:racha-cual-antes';
+    let racha = 0;
+    let mejor = 0;
+    try {
+      mejor = Number(localStorage.getItem(CLAVE) ?? 0) || 0;
+    } catch {}
+    $('[data-mejor]').textContent = String(mejor);
+    const azar = () => todos[Math.floor(Math.random() * todos.length)];
+    function ronda() {
+      const a = azar();
+      let b = azar();
+      for (let i = 0; i < 50 && (b.anio === a.anio || b.n === a.n); i++) b = azar();
+      const pareja = $('[data-pareja]');
+      pareja.replaceChildren(
+        ...[a, b].map((t) => {
+          const boton = document.createElement('button');
+          boton.type = 'button';
+          boton.className = 'carta';
+          boton.setAttribute('aria-label', (caja.dataset.elegir ?? '').replace('{x}', t.n));
+          boton.innerHTML = `<span class="cartel">${t.img ? `<img src="${t.img}" alt="" width="185" height="278" loading="eager">` : ''}</span><span class="nombre"></span><span class="anio" hidden></span>`;
+          boton.querySelector('.nombre')!.textContent = t.n;
+          boton.querySelector('.anio')!.textContent = String(t.anio);
+          boton.addEventListener('click', () => elegir(t, a, b));
+          return boton;
+        }),
+      );
+      $('[data-resultado]').textContent = '';
+      $('[data-resultado]').className = 'resultado';
+      $<HTMLButtonElement>('[data-siguiente]').hidden = true;
+    }
+    function elegir(t: TituloJuego, a: TituloJuego, b: TituloJuego) {
+      const antes = a.f <= b.f ? a : b;
+      const bien = t === antes;
+      caja.querySelectorAll<HTMLButtonElement>('.carta').forEach((c, i) => {
+        c.disabled = true;
+        c.querySelector<HTMLElement>('.anio')!.hidden = false;
+        c.classList.add([a, b][i] === antes ? 'buena' : 'otra');
+      });
+      racha = bien ? racha + 1 : 0;
+      if (racha > mejor) {
+        mejor = racha;
+        try {
+          localStorage.setItem(CLAVE, String(mejor));
+        } catch {}
+      }
+      $('[data-racha]').textContent = String(racha);
+      $('[data-mejor]').textContent = String(mejor);
+      const r = $('[data-resultado]');
+      r.textContent = bien ? (caja.dataset.correcto ?? '') : (caja.dataset.incorrecto ?? '').replace('{x}', `${antes.n} (${antes.anio})`);
+      r.className = `resultado ${bien ? 'bien' : 'mal'}`;
+      const sig = $<HTMLButtonElement>('[data-siguiente]');
+      sig.hidden = false;
+      sig.focus();
+    }
+    $('[data-siguiente]').addEventListener('click', ronda);
+    ronda();
+  });
+</script>
+
+<style>
+  .juego {
+    max-width: 760px;
+  }
+  .marcador {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--txt-2);
+  }
+  .pareja {
+    margin-top: 16px;
+  }
+  .pareja {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(10px, 3vw, 24px);
+  }
+  .pareja :global(.carta) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: var(--radio);
+    border: 2px solid var(--borde);
+    background: var(--sup-2, var(--sup));
+    color: inherit;
+    cursor: pointer;
+    transition: border-color var(--transicion), transform var(--transicion);
+  }
+  .pareja :global(.carta:hover:not(:disabled)) {
+    border-color: var(--acento);
+    transform: translateY(-3px);
+  }
+  .pareja :global(.cartel) {
+    width: min(100%, 180px);
+    aspect-ratio: 2 / 3;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--borde);
+  }
+  .pareja :global(.cartel img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .pareja :global(.nombre) {
+    font: 700 1rem / 1.2 var(--f-titulo);
+    text-align: center;
+  }
+  .pareja :global(.anio) {
+    font: 800 1.6rem var(--f-titulo);
+  }
+  .pareja :global(.carta.buena) {
+    border-color: #1a7f45;
+    box-shadow: 0 0 0 3px #1a7f45;
+  }
+  .pareja :global(.carta.otra) {
+    opacity: 0.75;
+  }
+  .resultado {
+    min-height: 1.5em;
+    margin: 16px 0 8px;
+    font-weight: 700;
+  }
+  .resultado.bien {
+    color: var(--visto-txt);
+  }
+  .resultado.mal {
+    color: var(--acento-txt);
+  }
+  .principal {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
+  }
+</style>

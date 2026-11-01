@@ -95,7 +95,10 @@ const guiasPortada = activos.flatMap((u) => guiasDe(u.id).filter((g) => g.tipo !
         <h2 id="t-test">{tx.recomendar.cta}</h2>
         <p>{tx.recomendar.ctaTexto}</p>
       </div>
-      <a href="/recomendaciones/" class="pastilla boton-test">{tx.recomendar.ctaBoton} →</a>
+      <div class="acciones-test">
+        <a href="/recomendaciones/" class="pastilla boton-test">{tx.recomendar.ctaBoton} →</a>
+        <a href="/pasatiempos/" class="enlace-juegos">{tx.recomendar.ctaJuegos} →</a>
+      </div>
     </div>
   </section>
 
@@ -331,6 +334,15 @@ const guiasPortada = activos.flatMap((u) => guiasDe(u.id).filter((g) => g.tipo !
     margin: 0;
     max-width: 62ch;
     color: var(--txt-2);
+  }
+  .acciones-test {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 18px;
+  }
+  .enlace-juegos {
+    font-weight: 600;
   }
   .boton-test {
     background: var(--txt);

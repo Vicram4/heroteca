@@ -1,0 +1,138 @@
+---
+import { conIdiomas } from '../../../i18n';
+export function getStaticPaths() {
+  return conIdiomas([{ params: { pasatiempos: 'pasatiempos' } }], () => ({ pasatiempos: 'games' }));
+}
+/** Pasatiempos: los juegos disponibles y las ideas para más adelante. */
+import Base from '../../../layouts/Base.astro';
+import { JUEGOS, IDEAS } from '../../../config/juegos';
+import { textos, idiomaDe } from '../../../i18n';
+
+const tx = textos(Astro.url);
+const j = tx.juegos;
+const idioma = idiomaDe(Astro.url);
+const fichas = JUEGOS.map((g) => ({
+  id: g.id,
+  nombre: { adivina: j.adivina, quien: j.quien, antes: j.antes }[g.clave],
+  texto: { adivina: j.adivinaTexto, quien: j.quienTexto, antes: j.antesTexto }[g.clave],
+  icono: { adivina: '?', quien: '★', antes: '⇄' }[g.clave],
+}));
+---
+
+<Base titulo={j.tituloSeo} descripcion={j.descripcion} migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: j.titulo, url: '/pasatiempos/' }]}>
+  <div class="contenedor pasatiempos">
+    <h1>{j.titulo}</h1>
+    <p class="entradilla">{j.intro}</p>
+    <ul class="juegos">
+      {
+        fichas.map((f) => (
+          <li>
+            <a href={`/pasatiempos/${f.id}/`}>
+              <span class="icono" aria-hidden="true">{f.icono}</span>
+              <span class="etiqueta">{j.demo}</span>
+              <span class="nombre">{f.nombre}</span>
+              <span class="texto">{f.texto}</span>
+              <span class="jugar">{j.jugar} →</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <section class="ideas" aria-labelledby="t-ideas">
+      <h2 id="t-ideas">{j.ideas}</h2>
+      <p>{j.ideasTexto}</p>
+      <ul>
+        {
+          IDEAS.map((i) => (
+            <li>
+              <strong>{i[idioma][0]}</strong>: {i[idioma][1]}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .pasatiempos {
+    padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .entradilla {
+    max-width: 70ch;
+    color: var(--txt-2);
+  }
+  .juegos {
+    list-style: none;
+    margin: 20px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 16px;
+  }
+  .juegos a {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 100%;
+    padding: 22px;
+    border-radius: calc(var(--radio) + 4px);
+    border: 1px solid var(--borde);
+    background: radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--acento) 22%, transparent), transparent 55%), var(--sup);
+    color: inherit;
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform var(--transicion), border-color var(--transicion);
+  }
+  .juegos a:hover,
+  .juegos a:focus-visible {
+    border-color: var(--acento);
+    transform: translateY(-3px);
+  }
+  .icono {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--acento) 82%, #000);
+    color: #fff;
+    font: 800 1.6rem var(--f-titulo);
+  }
+  .etiqueta {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--borde);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--txt-2);
+  }
+  .nombre {
+    font: 800 1.35rem / 1.15 var(--f-titulo);
+  }
+  .texto {
+    color: var(--txt-2);
+    font-size: 0.92rem;
+  }
+  .jugar {
+    margin-top: auto;
+    font-weight: 700;
+    color: var(--acento-txt);
+  }
+  .ideas {
+    margin-top: 40px;
+    max-width: 80ch;
+  }
+  .ideas p {
+    color: var(--txt-2);
+  }
+  .ideas li {
+    margin-bottom: 6px;
+  }
+</style>

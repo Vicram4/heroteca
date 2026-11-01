@@ -381,6 +381,22 @@ Página `/estadisticas/` (`/en/stats/`), enlazada en el pie. Todo se calcula al 
 - **Récords:** película más larga y más corta, temporada con más capítulos, mejor y peor valorada en TMDB (con al menos
   500 votos) y título más antiguo.
 
+## Pasatiempos
+
+Página `/pasatiempos/` (`/en/games/`), enlazada en el pie y junto a la llamada al test de la portada, con tres juegos
+(demos) que funcionan en el navegador con los datos de la web:
+
+- **Adivina el personaje** (`JuegoAdivina.astro`): 5 rondas con personajes que salen en al menos 4 títulos. Pistas que se
+  desvelan una a una (universo y número de títulos, primera aparición, un título, intérpretes, identidad) y cuatro
+  opciones del mismo universo. Puntos: 5 menos las pistas extra usadas.
+- **¿Qué héroe eres?** (`JuegoQuienEres.astro`): 6 preguntas; cada respuesta suma puntos a varios héroes. Preguntas,
+  respuestas y resultados (ES/EN) en `src/config/quien-eres.ts`, redactados en neutro porque describen a quien juega.
+- **¿Cuál se estrenó antes?** (`JuegoCualAntes.astro`): dos títulos de años distintos; la mejor racha se guarda en el
+  navegador.
+
+La lista de juegos está en `src/config/juegos.ts`, con las **ideas para más adelante** que se muestran en la página
+(Heroedle, cartel pixelado, ordenar la cronología, conectar actores, trivia diaria…).
+
 ## Mi progreso (vistos)
 
 Cada ficha tiene un botón **«Marcar como visto»**. Lo marcado se ve en toda la web:

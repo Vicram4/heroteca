@@ -1,0 +1,259 @@
+---
+/**
+ * «Adivina el personaje»: 5 rondas. En cada una, pistas que se desvelan una a una (universo y número de títulos,
+ * primera aparición, un título, intérpretes, identidad) y cuatro opciones del mismo universo.
+ * Puntos por ronda: 5 menos las pistas extra usadas (mínimo 1). Todo en el navegador con los datos incrustados.
+ */
+import { textos } from '../i18n';
+
+export interface PersonajeJuego {
+  id: string;
+  /** Nombre */
+  n: string;
+  /** Universo (id y nombre) */
+  u: string;
+  un: string;
+  url: string;
+  /** Títulos en los que aparece */
+  t: number;
+  /** Año de su primera aparición */
+  a: number;
+  /** Algunos títulos */
+  tit: string[];
+  /** Intérpretes principales */
+  act: string[];
+  /** Identidad secreta */
+  ide?: string;
+}
+interface Props {
+  personajes: PersonajeJuego[];
+}
+const { personajes } = Astro.props;
+const tx = textos(Astro.url);
+const j = tx.juegos;
+// Plantillas para el script ({n}, {u}, {a}, {t}, {x}…)
+const plantillas = {
+  pista: j.pista(91, 92),
+  universo: j.pistaUniverso('{u}', 93),
+  desde: j.pistaDesde(94),
+  titulo: j.pistaTitulo('{x}'),
+  actores: j.pistaActores('{x}'),
+  identidad: j.pistaIdentidad('{x}'),
+  ronda: j.ronda(95, 96),
+  final: j.final(97, 98),
+  correcto: j.correcto,
+  incorrecto: j.incorrecto('{x}'),
+};
+---
+
+<div class="juego panel" data-adivina>
+  <div class="marcador">
+    <span data-ronda></span>
+    <span>{j.puntos}: <strong data-puntos>0</strong></span>
+  </div>
+  <div data-zona-juego>
+    <p class="numero-pista" data-num-pista></p>
+    <ol class="pistas" data-pistas></ol>
+    <button type="button" class="pastilla" data-otra-pista>{j.otraPista}</button>
+    <div class="opciones" data-opciones role="group"></div>
+    <p class="resultado" data-resultado role="status"></p>
+    <div class="acciones">
+      <a data-ver-ficha hidden>{j.verFicha} →</a>
+      <button type="button" class="pastilla principal" data-siguiente hidden>{j.siguiente} →</button>
+    </div>
+  </div>
+  <div class="final" data-final hidden>
+    <p class="nota-final" data-nota-final></p>
+    <button type="button" class="pastilla principal" data-otra-vez>{j.otraVez}</button>
+  </div>
+  <script type="application/json" data-datos set:html={JSON.stringify(personajes)} />
+  <script type="application/json" data-plantillas set:html={JSON.stringify(plantillas)} />
+</div>
+
+<script>
+  import type { PersonajeJuego } from './JuegoAdivina.astro';
+  const RONDAS = 5;
+  const PISTAS = 5;
+  document.querySelectorAll<HTMLElement>('[data-adivina]').forEach((caja) => {
+    const todos: PersonajeJuego[] = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '[]');
+    const t = JSON.parse(caja.querySelector('[data-plantillas]')!.textContent ?? '{}');
+    const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
+    const azar = <T,>(l: T[]) => l[Math.floor(Math.random() * l.length)];
+    const mezclar = <T,>(l: T[]) => [...l].sort(() => Math.random() - 0.5);
+    let ronda = 0;
+    let puntos = 0;
+    let pistas = 1;
+    let usados = new Set<string>();
+    let actual: PersonajeJuego;
+    let lista: string[] = [];
+
+    function pistasDe(p: PersonajeJuego) {
+      const l = [t.universo.replace('{u}', p.un).replace('93', String(p.t)), t.desde.replace('94', String(p.a))];
+      if (p.tit.length) l.push(t.titulo.replace('{x}', azar(p.tit)));
+      if (p.act.length) l.push(t.actores.replace('{x}', p.act.join(', ')));
+      if (p.ide) l.push(t.identidad.replace('{x}', p.ide));
+      while (l.length < PISTAS && p.tit.length > 1) l.push(t.titulo.replace('{x}', p.tit.find((x) => !l.some((y) => y.includes(x))) ?? p.tit[0]));
+      return l.slice(0, PISTAS);
+    }
+    function pintarPistas() {
+      const ol = $('[data-pistas]');
+      ol.replaceChildren(...lista.slice(0, pistas).map((x) => Object.assign(document.createElement('li'), { textContent: x })));
+      $('[data-num-pista]').textContent = t.pista.replace('91', String(pistas)).replace('92', String(lista.length));
+      $<HTMLButtonElement>('[data-otra-pista]').hidden = pistas >= lista.length;
+    }
+    function nuevaRonda() {
+      ronda++;
+      const libres = todos.filter((p) => !usados.has(p.id));
+      actual = azar(libres);
+      usados.add(actual.id);
+      lista = pistasDe(actual);
+      pistas = 1;
+      $('[data-ronda]').textContent = t.ronda.replace('95', String(ronda)).replace('96', String(RONDAS));
+      // Tres opciones falsas del mismo universo (si no hay bastantes, de cualquiera)
+      const mismos = todos.filter((p) => p.id !== actual.id && p.u === actual.u);
+      const falsas = mezclar(mismos.length >= 3 ? mismos : todos.filter((p) => p.id !== actual.id)).slice(0, 3);
+      const zona = $('[data-opciones]');
+      zona.replaceChildren(
+        ...mezclar([actual, ...falsas]).map((p) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'opcion';
+          b.textContent = p.n;
+          b.dataset.id = p.id;
+          b.addEventListener('click', () => responder(b));
+          return b;
+        }),
+      );
+      $('[data-resultado]').textContent = '';
+      $('[data-resultado]').className = 'resultado';
+      $<HTMLAnchorElement>('[data-ver-ficha]').hidden = true;
+      $<HTMLButtonElement>('[data-siguiente]').hidden = true;
+      pintarPistas();
+    }
+    function responder(b: HTMLButtonElement) {
+      const bien = b.dataset.id === actual.id;
+      caja.querySelectorAll<HTMLButtonElement>('.opcion').forEach((o) => {
+        o.disabled = true;
+        if (o.dataset.id === actual.id) o.classList.add('buena');
+        else if (o === b) o.classList.add('mala');
+      });
+      if (bien) puntos += Math.max(1, PISTAS - (pistas - 1));
+      $('[data-puntos]').textContent = String(puntos);
+      const r = $('[data-resultado]');
+      r.textContent = bien ? t.correcto : t.incorrecto.replace('{x}', actual.n);
+      r.className = `resultado ${bien ? 'bien' : 'mal'}`;
+      pistas = lista.length;
+      pintarPistas();
+      const enlace = $<HTMLAnchorElement>('[data-ver-ficha]');
+      enlace.href = actual.url;
+      enlace.hidden = false;
+      const sig = $<HTMLButtonElement>('[data-siguiente]');
+      sig.hidden = false;
+      sig.focus();
+    }
+    function empezar() {
+      ronda = 0;
+      puntos = 0;
+      usados = new Set();
+      $('[data-puntos]').textContent = '0';
+      $('[data-final]').hidden = true;
+      $('[data-zona-juego]').hidden = false;
+      nuevaRonda();
+    }
+    $('[data-otra-pista]').addEventListener('click', () => {
+      pistas = Math.min(lista.length, pistas + 1);
+      pintarPistas();
+    });
+    $('[data-siguiente]').addEventListener('click', () => {
+      if (ronda < RONDAS) return nuevaRonda();
+      $('[data-zona-juego]').hidden = true;
+      $('[data-final]').hidden = false;
+      $('[data-nota-final]').textContent = t.final.replace('97', String(puntos)).replace('98', String(RONDAS * PISTAS));
+      $<HTMLButtonElement>('[data-otra-vez]').focus();
+    });
+    $('[data-otra-vez]').addEventListener('click', empezar);
+    empezar();
+  });
+</script>
+
+<style>
+  .juego {
+    max-width: 760px;
+  }
+  .marcador {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--txt-2);
+  }
+  .numero-pista {
+    margin: 16px 0 6px;
+    font-size: 0.82rem;
+    color: var(--txt-2);
+  }
+  .pistas {
+    margin: 0 0 14px;
+    padding-left: 1.2em;
+    display: grid;
+    gap: 6px;
+    font-size: 1.05rem;
+  }
+  .opciones {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .opciones :global(.opcion) {
+    padding: 14px 16px;
+    border-radius: var(--radio);
+    border: 1px solid var(--borde);
+    background: var(--sup-2, var(--sup));
+    color: inherit;
+    font: 700 1rem var(--f-titulo);
+    cursor: pointer;
+    transition: border-color var(--transicion), transform var(--transicion);
+  }
+  .opciones :global(.opcion:hover:not(:disabled)) {
+    border-color: var(--acento);
+    transform: translateY(-2px);
+  }
+  .opciones :global(.opcion.buena) {
+    background: #1a7f45;
+    border-color: #1a7f45;
+    color: #fff;
+  }
+  .opciones :global(.opcion.mala) {
+    background: #b3261e;
+    border-color: #b3261e;
+    color: #fff;
+  }
+  .resultado {
+    min-height: 1.5em;
+    margin: 16px 0 8px;
+    font-weight: 700;
+  }
+  .resultado.bien {
+    color: var(--visto-txt);
+  }
+  .resultado.mal {
+    color: var(--acento-txt);
+  }
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+  }
+  .principal {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
+  }
+  .nota-final {
+    font: 800 1.6rem var(--f-titulo);
+  }
+</style>
