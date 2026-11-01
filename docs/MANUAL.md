@@ -282,6 +282,7 @@ Los tramos de una misma temporada cuentan una sola vez, en su primera aparición
   genéricos («Additional Voices», «Himself»). En inglés se usa el reparto inglés.
 - **Enlaces:** en cada ficha, el nombre del intérprete enlaza a su página si la tiene; también el gráfico de actores
   de las estadísticas.
+- **Buscador:** los actores con página salen en la búsqueda (por nombre y, con menos prioridad, por sus personajes).
 
 ## Estadísticas
 

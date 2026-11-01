@@ -9,6 +9,7 @@ export function getStaticPaths() {
 import { getImage } from 'astro:assets';
 import { todosLosTitulos, universosActivos, numeroTexto } from '../../lib/datos';
 import { personajesDe } from '../../lib/personajes';
+import { actores, limpiarPersonaje } from '../../lib/actores';
 import { imagenTmdb } from '../../lib/tmdb';
 import { nombreTipo, textosDe, type Idioma } from '../../i18n';
 import { rutaEnIdioma } from '../../i18n/rutas';
@@ -62,5 +63,21 @@ export async function GET({ params }: { params: { idioma?: string } }) {
       ),
     )
   ).flat();
-  return new Response(JSON.stringify([...personajes, ...items]), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
+  // Actores y actrices con página: se encuentran por nombre (y por sus personajes, con menos prioridad)
+  const interpretes = await Promise.all(
+    (await actores()).map(async (a) => ({
+      t: a.nombre,
+      o: '',
+      a: [],
+      r: [...new Set(a.papeles.map((p) => limpiarPersonaje(p.personaje)).filter(Boolean))].join(' · '),
+      u: await rutaEnIdioma(`/actores/${a.id}/`, idioma),
+      y: 0,
+      k: tx.actores.tipo,
+      c: 'actor',
+      n: '',
+      s: tx.general.titulos(a.papeles.length),
+      i: a.foto ? imagenTmdb(a.foto, 'w92') : undefined,
+    })),
+  );
+  return new Response(JSON.stringify([...personajes, ...interpretes, ...items]), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
 }

@@ -216,7 +216,8 @@ button {
 .t-one-shot {
   --c: var(--oneshot);
 }
-.t-personaje {
+.t-personaje,
+.t-actor {
   --c: var(--acento);
 }
 .t-especial,

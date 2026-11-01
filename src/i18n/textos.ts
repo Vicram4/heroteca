@@ -271,6 +271,7 @@ export const ES = {
     enTmdb: 'Ver en TMDB',
     fuente: 'Reparto según TMDB y las fichas de la colección.',
     pie: 'Actores y actrices',
+    tipo: 'Intérprete',
   },
   estadisticas: {
     titulo: 'Estadísticas',
@@ -687,6 +688,7 @@ export const EN: Textos = {
     enTmdb: 'See on TMDB',
     fuente: 'Cast according to TMDB and the collection’s pages.',
     pie: 'Actors',
+    tipo: 'Actor',
   },
   estadisticas: {
     titulo: 'Stats',
