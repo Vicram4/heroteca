@@ -30,6 +30,11 @@ export interface DatosTmdb {
   generos?: string[];
   temporadas?: number;
   capitulos?: CapituloTmdb[];
+  /** Nota media de TMDB (0-10) y número de votos (para el recomendador) */
+  nota?: number;
+  votos?: number;
+  /** Edad mínima según la calificación por edades (España; si no hay, Estados Unidos) */
+  edad?: number;
   /** Escenas durante / después de los créditos (palabras clave de TMDB) */
   escenasCreditos?: ('durante' | 'despues')[];
 }

@@ -64,6 +64,43 @@ def escenas_creditos(id_, refrescar):
     return [v for k, v in ESCENAS_CREDITOS.items() if k in nombres_kw]
 
 
+# Calificación por edades → edad mínima (España primero; si no hay, Estados Unidos)
+EDADES = {
+    'TP': 0, 'A': 0, 'Ai': 0, 'Infantil': 0, 'G': 0, 'TV-Y': 0, 'TV-G': 0,
+    '7': 7, '7i': 7, 'PG': 7, 'TV-Y7': 7, 'TV-PG': 7,
+    '12': 12, '13': 13, 'PG-13': 13, 'TV-14': 14,
+    '16': 16, 'R': 17, 'TV-MA': 17,
+    '18': 18, 'X': 18, 'NC-17': 18,
+}
+
+
+def edad_minima(certificaciones):
+    """certificaciones: {'ES': ['12', ...], 'US': ['PG-13']} → edad (o None)."""
+    for pais in ('ES', 'US'):
+        edades = [EDADES[c] for c in certificaciones.get(pais, []) if c in EDADES]
+        if edades:
+            return max(edades)
+    return None
+
+
+def edad_pelicula(d):
+    cert = {}
+    for r in (d.get('release_dates') or {}).get('results', []):
+        cert[r['iso_3166_1']] = [x.get('certification', '').strip() for x in r.get('release_dates', [])]
+    return edad_minima(cert)
+
+
+def edad_serie(id_, refrescar):
+    datos = tmdb.get(f'/tv/{id_}/content_ratings', refrescar=refrescar, language=None) or {}
+    return edad_minima({r['iso_3166_1']: [r.get('rating', '').strip()] for r in datos.get('results', [])})
+
+
+def valoracion(d):
+    """Nota media de TMDB (0-10) y número de votos; se usan para ordenar las recomendaciones."""
+    votos = d.get('vote_count') or 0
+    return {'nota': round(d['vote_average'], 1), 'votos': votos} if votos and d.get('vote_average') else {}
+
+
 def datos_pelicula(d, refrescar):
     cred = d.get('credits') or {}
     return {
@@ -80,6 +117,8 @@ def datos_pelicula(d, refrescar):
         'reparto': [{'actor': c['name'], 'personaje': c.get('character') or ''} for c in (cred.get('cast') or [])[:MAX_REPARTO]],
         'trailer': trailer(d.get('videos')),
         'generos': [g['name'] for g in d.get('genres', [])],
+        'edad': edad_pelicula(d),
+        **valoracion(d),
     }
 
 
@@ -94,6 +133,8 @@ def datos_serie(d, temporada, refrescar):
         'creadores': [c['name'] for c in d.get('created_by', [])],
         'trailer': trailer(d.get('videos')),
         'generos': [g['name'] for g in d.get('genres', [])],
+        'edad': edad_serie(d['id'], refrescar),
+        **valoracion(d),
     }
     agg = d.get('aggregate_credits') or {}
     reparto = [{'actor': c['name'], 'personaje': ' / '.join(r.get('character', '') for r in c.get('roles', [])[:1])}

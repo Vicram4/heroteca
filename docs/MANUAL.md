@@ -231,6 +231,28 @@ lo que ya se haya estrenado desde la última actualización.
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_proximamente.py`
 - Textos de la página: apartado `proximos` de `src/i18n/textos.ts`.
 
+## ¿Qué veo? (recomendaciones)
+
+Página `/recomendaciones/` (`/en/recommendations/`), enlazada desde la portada («¿No sabes qué ver?») y el pie. Hace
+7 preguntas, de una en una y todas opcionales: universo, cuánto tiempo hay (película, algo corto, serie corta o larga),
+tono (se pueden marcar varios), imagen real o animación, plataformas, personaje favorito y cuánto conoces los universos.
+
+Cómo decide (`src/lib/recomendar.ts`, en el navegador):
+
+1. **Filtra** por universo, formato, estilo y plataformas, y quita lo marcado como visto en «Mi progreso».
+2. **Puntúa** con la nota media de TMDB ponderada por número de votos (con pocos votos cuenta menos), más puntos por
+   tono, personaje y nivel («Estoy empezando» favorece películas y primeras temporadas; «Ya he visto bastante», joyas
+   con buena nota y pocos votos).
+3. Si quedan menos de 6, **suelta filtros** (primero plataformas, luego formato, estilo y universo) y lo avisa.
+4. De cada serie propone **una sola temporada**: la primera que no hayas visto.
+
+Los **tonos** salen de los géneros de TMDB y de la **calificación por edades**: «Oscuro y adulto» = +16, terror o
+thriller criminal; «Para ver en familia» = género familiar/infantil o calificación para todos o +7. Para ajustarlos,
+función `tonosDe` de `src/pages/[...idioma]/[recomendaciones].astro`.
+
+La nota, los votos y la edad están en `datos/tmdb/<universo>.json` (campos `nota`, `votos` y `edad`), que genera
+`scripts/sincronizar_tmdb.py`. Textos: apartado `recomendar` de `src/i18n/textos.ts`.
+
 ## Mi progreso (vistos)
 
 Cada ficha tiene un botón **«Marcar como visto»**. Lo marcado se ve en toda la web:

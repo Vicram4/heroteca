@@ -33,6 +33,9 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
   EE. UU. en la inglesa), con datos de JustWatch que se **actualizan solos cada semana**.
 - **Próximamente**: calendario de los próximos estrenos de Marvel y DC (películas, series y temporadas nuevas) y de las
   series en emisión, con cuenta atrás y filtro por universo. Datos de TMDB que se **actualizan solos cada semana**.
+- **¿Qué veo?**: encuesta de 7 preguntas (universo, tiempo, tono, imagen real o animación, plataformas, personaje
+  favorito y nivel) que recomienda títulos con la nota de TMDB, la calificación por edades y lo que ya has visto.
+  Funciona entera en el navegador.
 - **Mi progreso**: marca lo que has visto desde cada ficha; las estanterías y guías lo señalan, se puede filtrar
   por «sin ver» y la página `/mi-progreso/` muestra el avance por sección y el siguiente título. Se guarda solo en el
   navegador (sin cuentas), con copia de seguridad descargable.

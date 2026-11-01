@@ -1,0 +1,611 @@
+---
+import { conIdiomas, idiomaDe, textos, nombreTipo } from '../../i18n';
+export function getStaticPaths() {
+  return conIdiomas([{ params: { recomendaciones: 'recomendaciones' } }], () => ({ recomendaciones: 'recommendations' }));
+}
+/**
+ * «¿Qué veo?»: encuesta corta que recomienda títulos. Las preguntas se ven de una en una y la recomendación se
+ * calcula en el navegador (src/lib/recomendar.ts) con los datos de todos los títulos, que van incrustados aquí.
+ * Se excluyen los títulos marcados como vistos en «Mi progreso».
+ */
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { universosActivos, todosLosTitulos, localizar } from '../../lib/datos';
+import { imagenTmdb, datosTmdb } from '../../lib/tmdb';
+import { apariciones } from '../../lib/personajes';
+import { plataformasIncluidas, paisDe } from '../../lib/dondever';
+import { rutaEnIdioma } from '../../i18n/rutas';
+import { personajeLoc } from '../../i18n/datos';
+import type { Item, Tono } from '../../lib/recomendar';
+
+const tx = textos(Astro.url);
+const r = tx.recomendar;
+const idioma = idiomaDe(Astro.url);
+const pais = paisDe(idioma);
+const universos = await universosActivos();
+const activos = new Set(universos.map((u) => u.id));
+const { porTitulo, personajes } = await apariciones();
+
+/**
+ * Tonos a partir de los géneros de TMDB (en español, los mismos para las dos versiones) y de la calificación por
+ * edades: «oscuro y adulto» = para mayores de 16, terror o thriller criminal; «en familia» = para todos o +7.
+ */
+function tonosDe(generos: string[], edad?: number): Tono[] {
+  const g = new Set(generos);
+  const hay = (...n: string[]) => n.some((x) => g.has(x));
+  const tonos: Tono[] = [];
+  if (hay('Acción', 'Aventura', 'Action & Adventure', 'Western', 'Bélica')) tonos.push('accion');
+  if (hay('Comedia')) tonos.push('humor');
+  if ((edad ?? 0) >= 16 || hay('Terror') || (hay('Crimen') && hay('Suspense', 'Misterio'))) tonos.push('oscuro');
+  if (hay('Misterio', 'Suspense')) tonos.push('misterio');
+  if (hay('Ciencia ficción', 'Sci-Fi & Fantasy', 'Fantasía')) tonos.push('fantasia');
+  if (hay('Familia', 'Kids') || (edad !== undefined && edad <= 7)) tonos.push('familia');
+  return tonos;
+}
+
+const titulos = (await todosLosTitulos('es')).filter((t) => activos.has(t.universo));
+const items: (Item & { meta: string; durTxt?: string })[] = await Promise.all(
+  titulos.map(async (es) => {
+    const t = localizar(es, idioma);
+    const tmdb = datosTmdb(es.universo, es.id, 'es');
+    const dur = t.m.duracion;
+    const caps = t.tipo === 'serie' ? t.m.capitulos.length || undefined : undefined;
+    const img = t.portada
+      ? (await getImage({ src: t.portada, width: 185, format: 'webp' })).src
+      : t.m.posterTmdb
+        ? imagenTmdb(t.m.posterTmdb, 'w185')
+        : undefined;
+    return {
+      id: t.id,
+      u: t.universo,
+      n: t.corto,
+      url: await rutaEnIdioma(t.url, idioma),
+      img,
+      tipo: t.tipo,
+      anio: t.d.anio,
+      animada: t.d.animada,
+      dur,
+      caps,
+      serie: t.d.serie,
+      temp: t.d.temporada,
+      tonos: tonosDe(es.m.generos, tmdb?.edad),
+      pl: plataformasIncluidas(t.id, pais),
+      pj: [...(porTitulo.get(t.id) ?? [])],
+      nota: tmdb?.nota,
+      votos: tmdb?.votos,
+      meta: `${t.d.anio} · ${t.d.animada ? tx.general.animado(nombreTipo(t.tipo, idioma)) : nombreTipo(t.tipo, idioma)}`,
+      durTxt: caps ? r.capitulos(caps) : dur ? r.horas(Math.floor(dur / 60), dur % 60) : undefined,
+    };
+  }),
+);
+
+// Plataformas con más títulos en el país de la versión (las 10 primeras)
+const cuentaPl = new Map<string, number>();
+for (const i of items) for (const p of i.pl) cuentaPl.set(p, (cuentaPl.get(p) ?? 0) + 1);
+const plataformas = [...cuentaPl].sort((a, b) => b[1] - a[1]).slice(0, 10).map(([p]) => p);
+
+// Personajes con al menos 3 títulos, por nombre
+const cuentaPj = new Map<string, number>();
+for (const i of items) for (const p of i.pj) cuentaPj.set(p, (cuentaPj.get(p) ?? 0) + 1);
+const nombreU = new Map(universos.map((u) => [u.id, u.data.nombre]));
+const listaPersonajes = personajes
+  .filter((p) => activos.has(p.data.universo.id) && (cuentaPj.get(p.id) ?? 0) >= 3)
+  .map((p) => personajeLoc(p, idioma))
+  .sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, idioma));
+const nombresPersonajes = Object.fromEntries(listaPersonajes.map((p) => [p.id, p.data.nombre]));
+
+// Textos que necesita el script para escribir los resultados
+const textosCliente = {
+  tonos: r.tonos,
+  motivoPlataforma: r.motivoPlataforma('{p}'),
+  motivoPersonaje: r.motivoPersonaje('{p}'),
+  motivoEmpezar: r.motivoEmpezar,
+  motivoJoya: r.motivoJoya,
+  nota: r.nota,
+  ampliado: r.ampliado,
+  vistosFuera: r.vistosFuera(999),
+  sinResultados: r.sinResultados,
+  personajes: nombresPersonajes,
+};
+
+const preguntas = ['universo', 'formato', 'tonos', 'estilo', 'plataformas', 'personaje', 'nivel'].filter(
+  (p) => (p !== 'universo' || universos.length > 1) && (p !== 'plataformas' || plataformas.length > 0),
+);
+const total = preguntas.length;
+const num = (p: string) => preguntas.indexOf(p) + 1;
+---
+
+<Base titulo={r.tituloSeo} descripcion={r.descripcion} migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: r.titulo, url: '/recomendaciones/' }]}>
+  <div class="contenedor recomendador" data-recomendador>
+    <h1>{r.titulo}</h1>
+    <p class="entradilla">{r.intro}</p>
+
+    <form class="test panel" data-test>
+      {
+        preguntas.includes('universo') && (
+          <fieldset data-paso hidden={preguntas[0] !== 'universo'}>
+            <legend>
+              <span class="num">{r.pregunta(num('universo'), total)}</span>
+              <h2 tabindex="-1">{r.pUniverso}</h2>
+            </legend>
+            <div class="opciones">
+              {universos.map((u) => (
+                <label class="opcion">
+                  <input type="radio" name="universo" value={u.id} />
+                  <span>{u.data.nombre}</span>
+                </label>
+              ))}
+              <label class="opcion">
+                <input type="radio" name="universo" value="" checked />
+                <span>{r.daIgual}</span>
+              </label>
+            </div>
+          </fieldset>
+        )
+      }
+      <fieldset data-paso hidden={preguntas[0] !== 'formato'}>
+        <legend>
+          <span class="num">{r.pregunta(num('formato'), total)}</span>
+          <h2 tabindex="-1">{r.pFormato}</h2>
+        </legend>
+        <div class="opciones">
+          {
+            (
+              [
+                ['pelicula', r.fPelicula],
+                ['corto', r.fCorto],
+                ['serieCorta', r.fSerieCorta],
+                ['serieLarga', r.fSerieLarga],
+                ['', r.daIgual],
+              ] as const
+            ).map(([v, texto]) => (
+              <label class="opcion">
+                <input type="radio" name="formato" value={v} checked={v === ''} />
+                <span>{texto}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+      <fieldset data-paso hidden={preguntas[0] !== 'tonos'}>
+        <legend>
+          <span class="num">{r.pregunta(num('tonos'), total)}</span>
+          <h2 tabindex="-1">{r.pTono}</h2>
+          <span class="ayuda">{r.ayudaVarias}</span>
+        </legend>
+        <div class="opciones">
+          {
+            Object.entries(r.tonos).map(([v, texto]) => (
+              <label class="opcion">
+                <input type="checkbox" name="tonos" value={v} />
+                <span>{texto}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+      <fieldset data-paso hidden={preguntas[0] !== 'estilo'}>
+        <legend>
+          <span class="num">{r.pregunta(num('estilo'), total)}</span>
+          <h2 tabindex="-1">{r.pEstilo}</h2>
+        </legend>
+        <div class="opciones">
+          {
+            (
+              [
+                ['real', r.eReal],
+                ['animacion', r.eAnimacion],
+                ['', r.daIgual],
+              ] as const
+            ).map(([v, texto]) => (
+              <label class="opcion">
+                <input type="radio" name="estilo" value={v} checked={v === ''} />
+                <span>{texto}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+      {
+        preguntas.includes('plataformas') && (
+          <fieldset data-paso hidden={preguntas[0] !== 'plataformas'}>
+            <legend>
+              <span class="num">{r.pregunta(num('plataformas'), total)}</span>
+              <h2 tabindex="-1">{r.pPlataforma}</h2>
+              <span class="ayuda">{r.ayudaPlataforma}</span>
+            </legend>
+            <div class="opciones">
+              {plataformas.map((p) => (
+                <label class="opcion">
+                  <input type="checkbox" name="plataformas" value={p} />
+                  <span>{p}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        )
+      }
+      <fieldset data-paso hidden={preguntas[0] !== 'personaje'}>
+        <legend>
+          <span class="num">{r.pregunta(num('personaje'), total)}</span>
+          <h2 tabindex="-1" id="t-personaje">{r.pPersonaje}</h2>
+        </legend>
+        <select name="personaje" aria-labelledby="t-personaje">
+          <option value="">{r.ningunPersonaje}</option>
+          {
+            listaPersonajes.map((p) => (
+              <option value={p.id}>
+                {p.data.nombre}
+                {universos.length > 1 ? ` (${nombreU.get(p.data.universo.id)})` : ''}
+              </option>
+            ))
+          }
+        </select>
+      </fieldset>
+      <fieldset data-paso hidden={preguntas[0] !== 'nivel'}>
+        <legend>
+          <span class="num">{r.pregunta(num('nivel'), total)}</span>
+          <h2 tabindex="-1">{r.pNivel}</h2>
+        </legend>
+        <div class="opciones">
+          {
+            (
+              [
+                ['empezando', r.nEmpezando],
+                ['veterano', r.nVeterano],
+                ['', r.daIgual],
+              ] as const
+            ).map(([v, texto]) => (
+              <label class="opcion">
+                <input type="radio" name="nivel" value={v} checked={v === ''} />
+                <span>{texto}</span>
+              </label>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <div class="navegacion">
+        <button type="button" class="pastilla" data-atras hidden>← {r.atras}</button>
+        <button type="button" class="pastilla principal" data-siguiente>{r.siguiente} →</button>
+        <button type="submit" class="pastilla principal" data-ver hidden>{r.verResultados}</button>
+      </div>
+    </form>
+
+    <section class="resultados" data-resultados hidden aria-labelledby="t-resultados">
+      <h2 id="t-resultados" tabindex="-1">{r.resultados}</h2>
+      <p class="aviso" data-aviso hidden></p>
+      <ol class="lista" data-lista></ol>
+      <div class="navegacion">
+        <button type="button" class="pastilla principal" data-mas>{r.masIdeas}</button>
+        <button type="button" class="pastilla" data-cambiar>{r.cambiar}</button>
+        <button type="button" class="pastilla" data-repetir>{r.repetir}</button>
+      </div>
+    </section>
+
+    <script type="application/json" data-items set:html={JSON.stringify(items)} />
+    <script type="application/json" data-textos set:html={JSON.stringify(textosCliente)} />
+  </div>
+</Base>
+
+<script>
+  import { recomendar, type Item, type Respuestas, type Recomendacion, type Tono, type Formato } from '../../lib/recomendar';
+  import { leerVistos } from '../../lib/vistos';
+
+  type ItemPagina = Item & { meta: string; durTxt?: string };
+  const raiz = document.querySelector<HTMLElement>('[data-recomendador]')!;
+  const form = raiz.querySelector<HTMLFormElement>('[data-test]')!;
+  const pasos = [...form.querySelectorAll<HTMLFieldSetElement>('[data-paso]')];
+  const items: ItemPagina[] = JSON.parse(raiz.querySelector('[data-items]')!.textContent ?? '[]');
+  const tx = JSON.parse(raiz.querySelector('[data-textos]')!.textContent ?? '{}');
+  const btnAtras = form.querySelector<HTMLButtonElement>('[data-atras]')!;
+  const btnSiguiente = form.querySelector<HTMLButtonElement>('[data-siguiente]')!;
+  const btnVer = form.querySelector<HTMLButtonElement>('[data-ver]')!;
+  const resultados = raiz.querySelector<HTMLElement>('[data-resultados]')!;
+  const lista = raiz.querySelector<HTMLOListElement>('[data-lista]')!;
+  const aviso = raiz.querySelector<HTMLElement>('[data-aviso]')!;
+  const btnMas = raiz.querySelector<HTMLButtonElement>('[data-mas]')!;
+  const POR_TANDA = 6;
+  let paso = 0;
+  let ordenados: Recomendacion[] = [];
+  let mostrados = 0;
+
+  function irA(n: number, enfocar = true) {
+    paso = Math.max(0, Math.min(pasos.length - 1, n));
+    pasos.forEach((p, i) => (p.hidden = i !== paso));
+    btnAtras.hidden = paso === 0;
+    const ultimo = paso === pasos.length - 1;
+    btnSiguiente.hidden = ultimo;
+    btnVer.hidden = !ultimo;
+    if (enfocar) pasos[paso].querySelector<HTMLElement>('h2')?.focus();
+  }
+
+  function respuestas(): Respuestas {
+    const d = new FormData(form);
+    const valor = (k: string) => (d.get(k) as string) || undefined;
+    return {
+      universo: valor('universo'),
+      formato: valor('formato') as Formato | undefined,
+      tonos: d.getAll('tonos') as Tono[],
+      estilo: valor('estilo') as Respuestas['estilo'],
+      plataformas: d.getAll('plataformas') as string[],
+      personaje: valor('personaje'),
+      nivel: valor('nivel') as Respuestas['nivel'],
+    };
+  }
+
+  const crear = <K extends keyof HTMLElementTagNameMap>(etiqueta: K, clase?: string, texto?: string) => {
+    const el = document.createElement(etiqueta);
+    if (clase) el.className = clase;
+    if (texto) el.textContent = texto;
+    return el;
+  };
+
+  function textoMotivo(m: Recomendacion['motivos'][number]) {
+    if (m.tipo === 'plataforma') return tx.motivoPlataforma.replace('{p}', m.valor);
+    if (m.tipo === 'personaje') return tx.motivoPersonaje.replace('{p}', tx.personajes[m.valor ?? ''] ?? m.valor);
+    if (m.tipo === 'tono') return tx.tonos[m.valor ?? ''];
+    return m.tipo === 'empezar' ? tx.motivoEmpezar : tx.motivoJoya;
+  }
+
+  function tarjeta({ item, motivos }: Recomendacion) {
+    const i = item as ItemPagina;
+    const li = crear('li', 'rec');
+    const a = crear('a');
+    a.href = i.url;
+    const cartel = crear('span', 'cartel');
+    if (i.img) {
+      const img = crear('img');
+      img.src = i.img;
+      img.alt = '';
+      img.width = 185;
+      img.height = 278;
+      img.loading = 'lazy';
+      cartel.append(img);
+    }
+    a.append(cartel);
+    const texto = crear('span', 'texto');
+    texto.append(crear('span', 'nombre', i.n), crear('span', 'meta', [i.meta, i.durTxt].filter(Boolean).join(' · ')));
+    if (i.nota && (i.votos ?? 0) >= 20) {
+      const nota = crear('span', 'nota', `★ ${i.nota.toFixed(1)}`);
+      nota.title = tx.nota;
+      const sr = crear('span', 'solo-lectores', ` (${tx.nota})`);
+      nota.append(sr);
+      texto.append(nota);
+    }
+    const ul = crear('ul', 'motivos');
+    for (const m of motivos.slice(0, 3)) ul.append(crear('li', undefined, textoMotivo(m)));
+    if (ul.childElementCount) texto.append(ul);
+    a.append(texto);
+    li.append(a);
+    return li;
+  }
+
+  function mostrarMas() {
+    const tanda = ordenados.slice(mostrados, mostrados + POR_TANDA);
+    tanda.forEach((r) => lista.append(tarjeta(r)));
+    mostrados += tanda.length;
+    btnMas.hidden = mostrados >= ordenados.length;
+  }
+
+  function calcular() {
+    const { lista: l, ampliado, quitadosVistos } = recomendar(items, respuestas(), leerVistos());
+    ordenados = l;
+    mostrados = 0;
+    lista.replaceChildren();
+    const avisos = [l.length === 0 ? tx.sinResultados : '', ampliado && l.length ? tx.ampliado : '', quitadosVistos ? tx.vistosFuera.replace('999', String(quitadosVistos)) : ''].filter(Boolean);
+    aviso.textContent = avisos.join(' ');
+    aviso.hidden = avisos.length === 0;
+    mostrarMas();
+    form.hidden = true;
+    resultados.hidden = false;
+    resultados.querySelector<HTMLElement>('h2')?.focus();
+  }
+
+  btnAtras.addEventListener('click', () => irA(paso - 1));
+  btnSiguiente.addEventListener('click', () => irA(paso + 1));
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    calcular();
+  });
+  // Intro en una pregunta intermedia avanza en vez de enviar
+  form.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && paso < pasos.length - 1 && (e.target as HTMLElement).tagName !== 'BUTTON') {
+      e.preventDefault();
+      irA(paso + 1);
+    }
+  });
+  btnMas.addEventListener('click', () => {
+    const primeraNueva = mostrados;
+    mostrarMas();
+    lista.children[primeraNueva]?.querySelector('a')?.focus();
+  });
+  raiz.querySelector('[data-cambiar]')?.addEventListener('click', () => {
+    resultados.hidden = true;
+    form.hidden = false;
+    irA(0);
+  });
+  raiz.querySelector('[data-repetir]')?.addEventListener('click', () => {
+    form.reset();
+    resultados.hidden = true;
+    form.hidden = false;
+    irA(0);
+  });
+  irA(0, false);
+</script>
+
+<style>
+  .recomendador {
+    padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .entradilla {
+    max-width: 70ch;
+    color: var(--txt-2);
+  }
+  .test {
+    max-width: 760px;
+    margin-top: 20px;
+  }
+  fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  legend {
+    padding: 0;
+    margin-bottom: 18px;
+  }
+  legend .num {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--txt-2);
+  }
+  legend h2 {
+    margin: 4px 0 0;
+    font-size: clamp(1.4rem, 3.4vw, 1.9rem);
+    outline: none;
+  }
+  .ayuda {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.9rem;
+    color: var(--txt-2);
+  }
+  .opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .opcion {
+    position: relative;
+    cursor: pointer;
+  }
+  .opcion input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .opcion span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--borde);
+    background: var(--sup-2, var(--sup));
+    font-weight: 600;
+    transition: background-color var(--transicion), border-color var(--transicion);
+  }
+  .opcion:hover span {
+    border-color: var(--txt-2);
+  }
+  .opcion input:checked + span {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
+  }
+  .opcion input[type='checkbox']:checked + span::before {
+    content: '✓';
+  }
+  .opcion input:focus-visible + span {
+    outline: 2px solid var(--acento);
+    outline-offset: 2px;
+  }
+  select {
+    max-width: 100%;
+    font-size: 1rem;
+  }
+  .navegacion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 26px;
+  }
+  .principal {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
+  }
+  .resultados {
+    margin-top: 20px;
+  }
+  .resultados h2 {
+    outline: none;
+  }
+  .aviso {
+    max-width: 70ch;
+    color: var(--txt-2);
+  }
+  .lista {
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: 14px;
+  }
+  .lista :global(.rec a) {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 14px;
+    height: 100%;
+    padding: 12px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--sup);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color var(--transicion), transform var(--transicion);
+  }
+  .lista :global(.rec a:hover),
+  .lista :global(.rec a:focus-visible) {
+    border-color: var(--acento);
+    transform: translateY(-2px);
+  }
+  .lista :global(.cartel) {
+    aspect-ratio: 2 / 3;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--borde);
+  }
+  .lista :global(.cartel img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .lista :global(.texto) {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .lista :global(.nombre) {
+    font: 700 1.1rem / 1.2 var(--f-titulo);
+  }
+  .lista :global(.meta),
+  .lista :global(.nota) {
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .lista :global(.motivos) {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .lista :global(.motivos li) {
+    padding: 3px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--borde);
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+</style>

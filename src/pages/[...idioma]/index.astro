@@ -82,6 +82,16 @@ const proximos = proximosEstrenos()
     </div>
   </section>
 
+  <section class="contenedor" aria-labelledby="t-test">
+    <div class="test-cta">
+      <div>
+        <h2 id="t-test">{tx.recomendar.cta}</h2>
+        <p>{tx.recomendar.ctaTexto}</p>
+      </div>
+      <a href="/recomendaciones/" class="pastilla boton-test">{tx.recomendar.ctaBoton} →</a>
+    </div>
+  </section>
+
   {
     proximos.length > 0 && (
       <section class="contenedor proximos" data-bloque aria-labelledby="t-proximos">
@@ -196,6 +206,31 @@ const proximos = proximosEstrenos()
   }
   .proximos {
     margin-top: clamp(32px, 5vw, 56px);
+  }
+  /* Llamada al test «¿Qué veo?» */
+  .test-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 28px;
+    margin-top: clamp(24px, 4vw, 40px);
+    padding-block: clamp(18px, 3vw, 26px);
+    border-block: 1px solid var(--borde);
+  }
+  .test-cta h2 {
+    margin: 0 0 4px;
+  }
+  .test-cta p {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--txt-2);
+  }
+  .boton-test {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
+    padding: 12px 20px;
   }
   .cabecera-proximos {
     display: flex;

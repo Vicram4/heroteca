@@ -73,6 +73,9 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {fuentes.map((f) => <link rel="preload" href={f} as="font" type="font/woff2" crossorigin />)}
+    {/* Los carteles vienen del servidor de imágenes de TMDB: conectar con él cuanto antes */}
+    <link rel="preconnect" href="https://image.tmdb.org" />
+    <link rel="dns-prefetch" href="https://image.tmdb.org" />
     <title>{tituloPagina}</title>
     <meta name="description" content={descripcion} />
     {ocultar ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonica} />}
@@ -163,6 +166,7 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
             <ul>
               {universos.map((u) => <li><a href={`/${u.id}/`}>{u.data.nombre}</a></li>)}
               <li><a href="/proximamente/">{tx.proximos.pie}</a></li>
+              <li><a href="/recomendaciones/">{tx.recomendar.pie}</a></li>
               <li><a href="/mi-progreso/">{tx.progreso.pie}</a></li>
               {universos.filter((u) => guiasDe(u.id).length).map((u) => <li><a href={`/${u.id}/guias/`}>{tx.pie.guiasDe(u.data.nombre)}</a></li>)}
             </ul>
