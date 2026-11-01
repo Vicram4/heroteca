@@ -477,6 +477,14 @@ tipo: multiverso      # multiverso | saga | fase | trilogia | otro
 orden: 1
 ```
 
+
+**Comprobar que una saga está completa:** las colecciones de TMDB indican qué películas forman cada saga. En la revisión
+de noviembre de 2026 se añadieron tres fichas que no estaban en los documentos (su campo `fuente` lo indica):
+*Venom: El último baile* (la trilogía de Venom tenía 2) y, para completar el primer arco del DC Animated Movie Universe
+(16 películas, 2013-2020, según la Wikipedia), *Jóvenes Titanes: El contrato de Judas* y *Liga de la Justicia Oscura:
+La Guerra Apokolips*. Otras cuatro fichas existentes se añadieron a esa continuidad, y *El regreso del Caballero Oscuro*
+a la suya. Las fichas añadidas no llevan número de la colección: se colocan por año.
+
 ## Añadir un universo nuevo (p. ej. "Otros")
 
 `contenido/universos/otros.yaml` ya existe con `activo: false`. Para mostrarlo:

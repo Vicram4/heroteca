@@ -7,7 +7,9 @@ universo: dc
 seccion: animacion
 numero: 35
 fichaPropia: false
-anio: 2018
+sagas:
+- animacion-dcamu
+anio: 2019
 tmdb:
   id: 537055
   tipo: movie

@@ -9,6 +9,8 @@ universo: dc
 seccion: animacion
 numero: 15
 fichaPropia: false
+sagas:
+- animacion-dark-knight-returns
 anio: 2012
 tmdb:
   id: 123025

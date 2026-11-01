@@ -7,6 +7,8 @@ universo: dc
 seccion: animacion
 numero: 32
 fichaPropia: false
+sagas:
+- animacion-dcamu
 anio: 2019
 tmdb:
   id: 487672
