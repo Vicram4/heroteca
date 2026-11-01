@@ -11,6 +11,7 @@ calidad:
 sagas:
 - fase-4
 anio: 2021
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: '''Loki'' está ambientada tras los eventos de "Vengadores: Endgame", que mostraba un viaje al pasado que impulsaba la inmersión de Loki en una línea temporal alternativa. En esa aventura cuenta en su poder con el Teseracto, pero las cosas no salen como le habría gustado, ya que en su camino se cruza la AVT (Agencia de Variación Temporal), que le obliga a colaborar con ellos para reparar las grietas provocadas en diferentes momentos de la historia.'
 reparto:

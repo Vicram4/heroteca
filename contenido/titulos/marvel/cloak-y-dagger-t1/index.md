@@ -10,6 +10,7 @@ numero: 53
 calidad:
 - 720p
 anio: 2018
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: 'Esta serie de imagen real, que trata del amor interracial, muestra a una pareja, dos adolescentes con trasfondos muy diferentes, que se encuentran sepultados, pero a la par despertados, por unos poderes de reciente adquisición, mientras se empiezan a enamorar: Tandy puede emitir dagas de luz y Tyrone tiene la habilidad de sumir a otros en la oscuridad. Rápidamente, aprenden que son mejores juntos que por separado, pero los sentimientos que sienten el uno por el otro hacen que su complicado mundo sea aún más desafiante.'
 reparto:

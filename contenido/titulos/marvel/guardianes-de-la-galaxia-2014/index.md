@@ -11,6 +11,7 @@ calidad:
 sagas:
 - fase-2
 anio: 2014
+epoca: '2014'
 nacionalidad: E.E.U.U.
 duracion: 136
 direccion: Hnos. Russo

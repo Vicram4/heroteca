@@ -10,6 +10,7 @@ numero: 56
 calidad:
 - 720p
 anio: 2018
+epoca: '2017'
 nacionalidad: E.E.U.U.
 argumento: Mientras una guerra de bandas se cierne sobre Chinatown, Danny y Colleen protegen a los inocentes y luchan contra enemigos temibles, incluidos algunos rostros familiares.
 reparto:

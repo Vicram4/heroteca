@@ -10,6 +10,7 @@ numero: 60
 calidad:
 - 720p
 anio: 2019
+epoca: '2018'
 nacionalidad: E.E.U.U.
 argumento: Cuando Jessica Jones se cruza con un psicópata altamente inteligente, ella y Patricia Walker deben reparar su relación fracturada y unirse para derrotarlo. Pero una pérdida devastadora revela sus ideas conflictivas de heroísmo y las pone en un curso de colisión que las cambiará para siempre a ambas.
 reparto:

@@ -11,6 +11,7 @@ calidad:
 sagas:
 - fase-4
 anio: 2021
+epoca: '2023'
 nacionalidad: E.E.U.U.
 argumento: Marvel Studios WandaVision combina el estilo cómico de situaciones clásicas con el Universo Cinematográfico de Marvel en el que Wanda Maximoff y Visión, dos seres superpoderosos que viven su vida suburbana ideal, comienzan a sospechar que no todo es lo que parece.
 reparto:

@@ -10,6 +10,7 @@ numero: 61
 calidad:
 - 720p
 anio: 2019
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: Los Runaways han dejado atrás a sus casas (y a sus malvados padres) y ahora deberán aprender a vivir por su cuenta. A la vez que intentan recolectar comida, buscar refugio o cuidarse mutuamente, nuestros chicos se están empezando a dar cuenta de que, ya sea para bien o para mal, están obligados a permanecer unidos. Dependerá de ellos el detener a PRIDE de una vez por todas pero alguien le ha enviado un misterioso mensaje a Jonah… ¿hay un topo entre ellos? Mientras tanto, PRIDE se está concentrando en encontrar a sus chicos y Jonah tiene su propio plan en mente.
 reparto:

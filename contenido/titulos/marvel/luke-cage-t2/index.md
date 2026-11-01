@@ -10,6 +10,7 @@ numero: 54
 calidad:
 - 720p
 anio: 2018
+epoca: '2017'
 nacionalidad: E.E.U.U.
 argumento: Tras limpiar su nombre, Luke se ha convertido en una celebridad en las calles de Harlem, con una reputación tan a prueba de balas como su piel. Pero ser tan visible tan solo ha aumentado su necesidad de protegerse a la comunidad y de encontrar límites de a quienes no puede salvar. Con la aparición de un nuevo enemigo, Luke debe confrontar la fina línea que separa a un héroe de un villano.
 reparto:

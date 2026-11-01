@@ -11,6 +11,7 @@ numero: 92
 sagas:
 - fase-5
 anio: 2024
+epoca: '2026'
 tmdb:
   id: 138501
   tipo: tv

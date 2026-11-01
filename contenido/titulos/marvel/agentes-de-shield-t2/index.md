@@ -19,6 +19,7 @@ tramos:
 calidad:
 - 720p
 anio: 2015
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: Coulson y su equipo siguen trabajando en la clandestinidad después de la caída de S.H.I.E.L.D. frente a HYDRA. Coulson comienza a reconstruir la organización de agentes secretos, lo que es tarea difícil cuando no puede confiar en nadie. El enfrentamiento con Ward ha dejado graves consecuencias en la vida de Fitz. Skye es oficialmente una agente de S.H.I.E.L.D. y ha descubierto parte de su origen como 0-8-4 (objeto peligroso de origen desconocido).
 reparto:

@@ -224,7 +224,7 @@ const titulos = defineCollection({
       anioFin: z.number().int().optional(),
       fechaEstreno: z.coerce.date().optional(),
       fechaEstrenoEspana: z.coerce.date().optional(),
-      /** Cuándo transcurre, en texto libre: "1943–1945", "años 90". */
+      /** Cuándo transcurre (línea temporal del UMC): "2016", "1943–1945" o "sin fecha". Ver src/lib/lineaTemporal.ts */
       epoca: z.string().optional(),
 
       nacionalidad: z.string().optional(),

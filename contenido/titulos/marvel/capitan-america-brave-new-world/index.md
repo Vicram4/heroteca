@@ -11,6 +11,7 @@ numero: 93
 sagas:
 - fase-5
 anio: 2025
+epoca: '2026–2027'
 tmdb:
   id: 822119
   tipo: movie

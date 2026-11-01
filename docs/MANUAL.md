@@ -273,6 +273,22 @@ cada ruta tiene título, texto (con su versión `en`) y los **ids de las fichas*
 - Si un id está mal escrito, **la compilación falla** con un mensaje que dice qué ficha no existe.
 - Para cambiar una selección basta con editar la lista `ids` de la ruta.
 
+## Línea temporal del UMC (años de la historia)
+
+Guía `/marvel/guias/linea-temporal/` (`/en/marvel/guides/mcu-timeline/`), de tipo `linea` en `src/config/guias.ts`:
+cada título del UMC colocado en el año en que transcurre, de 1943 a 2028, con saltos por año, ✓ de «Mi progreso» y,
+al final, los títulos sin año oficial. En cada ficha del UMC aparece el chip **«Transcurre en 1995»**, que enlaza a
+su año en la línea temporal.
+
+- **El dato** es el campo `epoca` de cada ficha: un año (`'2016'`), un intervalo (`'2013–2014'`) o `'sin fecha'`
+  si la cronología oficial no da año (Agentes de S.H.I.E.L.D., Loki, Runaways…). El orden de la colección no cambia.
+- **Fuente:** la cronología oficial de Marvel Studios (libro de 2023) tal como la recoge la Wikipedia
+  («Marvel Cinematic Universe timeline»), comprobada en noviembre de 2026.
+- **Casos discutidos** (Iron Man, Black Panther, Infinity War…) llevan una nota: lista `NOTAS` de
+  `src/lib/lineaTemporal.ts`.
+- **Al añadir un título al UMC hay que ponerle `epoca`.** Si falta, el build muestra un aviso (sin detenerse) y el
+  resumen semanal por correo lo incluye en «Pendientes». Mientras tanto, el título no sale en la línea temporal.
+
 ## Cronológico frente a estreno (guías)
 
 En las guías, cada sección con orden de la historia (UMC, DCEU) tiene un apartado «cronológico frente a estreno»

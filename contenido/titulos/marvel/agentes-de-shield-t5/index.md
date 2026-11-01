@@ -22,6 +22,7 @@ tramos:
 calidad:
 - 720p
 anio: 2017
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: |-
   El agente Phillip Coulson y el equipo escaparon del Marco de Aida y despertaron en el mundo real. Poco sabían que Aida era ahora completamente humana, y con múltiples habilidades inhumanas, con la peligrosa noción de que, con Leopold Fitz a su lado, podría cambiar el mundo. Después de derrotarla con la ayuda del Vengador Fantasma, el equipo salió a una celebración, pero fueron interrumpidos por un misterioso hombre que los dejó congelados. Lo siguiente que vemos es a Coulson a bordo de una nave... en el espacio.

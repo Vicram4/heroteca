@@ -10,6 +10,7 @@ serie: daredevil-born-again
 temporada: 2
 numero: 99
 anio: 2026
+epoca: '2027'
 tmdb:
   id: 202555
   tipo: tv

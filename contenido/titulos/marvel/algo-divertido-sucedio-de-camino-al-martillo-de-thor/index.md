@@ -11,6 +11,7 @@ numero: 10
 sagas:
 - fase-1
 anio: 2011
+epoca: '2011'
 tmdb:
   id: 76535
   tipo: movie

@@ -10,6 +10,7 @@ numero: 34
 calidad:
 - 720p
 anio: 2016
+epoca: '2015'
 nacionalidad: E.E.U.U.
 argumento: Después de un experimento saboteado que lo dejó con super fuerza y una piel indestructible, Luke Cage se convierte en un fugitivo intentado recuperar su vida en el moderno Harlem en Nueva York. Pero él pronto saldrá de las sombras y deberá luchar una batalla por el corazón de su ciudad — lo que le obligará a enfrentarse a un pasado que había intentado olvidar.
 reparto:

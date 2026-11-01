@@ -9,6 +9,7 @@ numero: 13
 sagas:
 - fase-1
 anio: 2012
+epoca: '2012'
 tmdb:
   id: 119569
   tipo: movie

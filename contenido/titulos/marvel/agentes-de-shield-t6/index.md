@@ -12,6 +12,7 @@ numero: 65
 calidad:
 - 720p
 anio: 2019
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: Anteriormente el equipo saltó en el tiempo hacia un futuro distópico que pronto se dieron que debía evitarse. Mientras enfrentaban múltiples líneas de tiempo y nuevos enemigos de planetas lejanos, se encontraron con familiares, amigos, compañeros de equipo y el coraje para llevar a cabo su mayor desafío hasta el momento. ¿Su próximo desafío? Llegar a comprender el hecho de que doblar las leyes del espacio y el tiempo pudo haber salvado al planeta, pero no pudo salvar a Leopold Fitz o a Phillip Coulson.
 reparto:

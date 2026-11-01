@@ -10,6 +10,7 @@ numero: 51
 calidad:
 - 720p
 anio: 2018
+epoca: '2017'
 nacionalidad: E.E.U.U.
 argumento: Jessica Jones es una mujer con superpoderes que tuvo una breve carrera de superhéroe hasta un incidente en el que el villano Kilgrave hizo que matara a alguien. Después de ese incidente, se convierte en investigadora privada. Cuando Kilgrave reaparece, Jessica debe levantarse para detenerlo.
 reparto:

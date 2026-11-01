@@ -12,6 +12,7 @@ numero: 68
 calidad:
 - 720p
 anio: 2020
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: Coulson y los agentes de S.H.I.E.L.D. son empujados hacia atrás en el tiempo y están varados en 1931 en la ciudad de Nueva York. Con el nuevo Zephyr listo para saltar en el tiempo en cualquier momento, el equipo debe apresurarse para averiguar exactamente lo que pasó. Si fallan, significaría un desastre para el pasado, el presente y el futuro del mundo.
 reparto:

@@ -12,6 +12,7 @@ calidad:
 sagas:
 - fase-4
 anio: 2022
+epoca: '2025'
 nacionalidad: E.E.U.U.
 duracion: 161
 direccion: Ryan Coogler

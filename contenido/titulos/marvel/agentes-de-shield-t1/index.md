@@ -22,6 +22,7 @@ tramos:
 calidad:
 - 720p
 anio: 2013
+epoca: 'sin fecha'
 anioFin: 2014
 nacionalidad: E.E.U.U.
 argumento: 'En Algunos meses después del triunfo de los vengadores sobre la invasión Chitauri de Loki, el agente Coulson -que fue presumiblemente dado por muerto en acción- agrupa un equipo de agentes especializados en diferentes áreas para resolver todo tipo de caso relacionados con súper humanos alrededor del mundo en nombre de la organización S.H.I.E.L.D. El equipo formado por Coulson consiste en: Melinda May, especialista en combate, manejo de armas y quien pilotea el avión de S.H.I.E.L.D. apodado "el autobús"; Grant Ward, experto espía y en combate cuerpo a cuerpo; Jemma Simmons, agente con dos doctorados en medicina y compañera cercana de Leopold Fitz, experto en ingeniería y armas experimentales. Al equipo también se integra Skye, una talentosa hacker activista que, pese a que en un principio empieza siendo una rival de SHIELD, finalmente acepta la oferta de Coulson de unirse al equipo, formando vínculos con todos los miembros del equipo.'

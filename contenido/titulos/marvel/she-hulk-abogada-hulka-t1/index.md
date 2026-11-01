@@ -14,6 +14,7 @@ calidad:
 sagas:
 - fase-4
 anio: 2022
+epoca: '2024–2025'
 nacionalidad: E.E.U.U.
 argumento: |-
   Jennifer Walters quien al recibir una transfusión de sangre de emergencia de su primo, Bruce Banner, adquiere los superpoderes de Hulk, el alter-ego de Banner, pero de una forma más leve.

@@ -14,6 +14,7 @@ calidad:
 sagas:
 - fase-4
 anio: 2022
+epoca: '2024'
 nacionalidad: E.E.U.U.
 duracion: 126
 direccion: Sam Raimi

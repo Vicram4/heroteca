@@ -10,6 +10,7 @@ calidad:
 sagas:
 - fase-3
 anio: 2017
+epoca: '2017'
 nacionalidad: E.E.U.U.
 duracion: 130
 direccion: Taika Waititi

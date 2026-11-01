@@ -10,6 +10,7 @@ numero: 3
 calidad:
 - 720p
 anio: 2016
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: Dedicada a la lucha contra nuevas amenazas atómicas en el ocaso de la Segunda Guerra Mundial, la agente Peggy Carter ahora debe viajar de la ciudad de Nueva York a Los Ángeles para su misión más peligrosa hasta ahora. Pero incluso cuando descubra nuevos amigos, un nuevo hogar – y quizás un nuevo amor – ella descubrirá que las luces brillantes de la post-guerra en Hollywood enmascaran una amenaza aún más siniestra para todos los que ella ha jurado proteger.​
 reparto:

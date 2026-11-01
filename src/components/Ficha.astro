@@ -8,6 +8,8 @@ import DondeVer from './DondeVer.astro';
 import { numeroTexto, todosLosTitulos, urlCarpeta, localizar, type Titulo, type Universo, type Saga } from '../lib/datos';
 import { apariciones, enlacesRepartoEn } from '../lib/personajes';
 import { paginaDeActor, claveActor } from '../lib/actores';
+import { leerEpoca } from '../lib/lineaTemporal';
+import { GUIAS } from '../config/guias';
 import { universoLoc, sagaLoc } from '../i18n/datos';
 import { textos, idiomaDe, nombreTipo, LOCALE } from '../i18n';
 
@@ -60,6 +62,9 @@ const hayTmdb =
   (!t.portada && Boolean(m.posterTmdb)) ||
   (d.conexiones.postCreditos.length === 0 && m.escenasCreditos.length > 0);
 const enlaceReparto = idioma === 'en' ? await enlacesRepartoEn() : (await apariciones()).enlaceReparto;
+// Cuándo transcurre (línea temporal del UMC) y la guía que la muestra
+const epoca = leerEpoca(t.d.epoca);
+const guiaLinea = GUIAS.find((g) => g.tipo === 'linea' && g.universo === universo.id && g.secciones.includes(t.d.seccion));
 // Actores con página propia (/actores/<id>/)
 const actorConPagina = await paginaDeActor();
 const todos = await todosLosTitulos(idioma);
@@ -161,6 +166,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           <li><span class="chip tipo">{tipoTexto}</span></li>
           <li><span class="chip">{d.anioFin ? `${d.anio}–${d.anioFin}` : d.anio}</span></li>
           {m.duracion && <li><span class="chip">{m.duracion} min</span></li>}
+          {epoca && <li>{guiaLinea ? <a class="chip" href={`/${universo.id}/guias/${guiaLinea.id}/#a-${epoca.desde}`}>{tx.guias.linea.transcurre(epoca.texto)}</a> : <span class="chip">{tx.guias.linea.transcurre(epoca.texto)}</span>}</li>}
           {tienePostCreditos && <li><span class="chip postcreditos">{f.postCreditos}</span></li>}
           {d.calidad.map((c) => <li><span class="chip calidad">{c === '4k' ? '4K' : c.toUpperCase()}</span></li>)}
           {misSagas.map((s) => <li><a class="chip" href={`/${universo.id}/sagas/${s.id}/`}>{s.data.nombre}</a></li>)}

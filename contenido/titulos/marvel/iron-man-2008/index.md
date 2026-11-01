@@ -10,6 +10,7 @@ calidad:
 sagas:
 - fase-1
 anio: 2008
+epoca: '2008'
 nacionalidad: E.E.U.U.
 duracion: 126
 direccion: Jon Favreau

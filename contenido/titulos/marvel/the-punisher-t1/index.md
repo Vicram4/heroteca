@@ -10,6 +10,7 @@ numero: 48
 calidad:
 - 720p
 anio: 2017
+epoca: '2016'
 nacionalidad: E.E.U.U.
 argumento: Frank Castle, conocido por las calles de Nueva York como 'el Castigador', busca venganza contra los responsables de la muerte de su familia y, por el camino, destapa una conspiración que va mucho más allá de su vendetta personal.
 reparto:

@@ -10,6 +10,7 @@ numero: 43
 calidad:
 - 720p
 anio: 2017
+epoca: '2016'
 nacionalidad: E.E.U.U.
 argumento: Daredevil, Jessica Jones, Iron Fist y Luke Cage están juntos por primera vez. Los Defensores es un equipo formado por estos cuatro superhéroes cuya misión es proteger Hell's Kitchen, uno de los barrios más problemáticos de la ciudad de Nueva York. Un abogado ciego, una mujer con súper fuerza, un multimillonario experto en artes marciales y un auténtico hombre de acero serán los encargados de detener a la villana Alexandra, que amenaza con destruir todo cuanto quieren. Por suerte, no estarán solos, ya que a este equipo se unen otros héroes como Elektra, Misty Knight y Colleen Wing.
 reparto:

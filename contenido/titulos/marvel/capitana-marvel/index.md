@@ -11,6 +11,7 @@ calidad:
 sagas:
 - fase-3
 anio: 2019
+epoca: '1995'
 nacionalidad: E.E.U.U.
 duracion: 124
 direccion: Anna Boden

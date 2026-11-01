@@ -10,6 +10,7 @@ numero: 94
 sagas:
 - fase-5
 anio: 2025
+epoca: '2025–2027'
 tmdb:
   id: 202555
   tipo: tv

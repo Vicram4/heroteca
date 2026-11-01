@@ -10,6 +10,7 @@ numero: 2
 calidad:
 - 720p
 anio: 2015
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: En 1946, después de acabar la guerra y de perder a su amado Capitán América, la agente Peggy Carter, trabaja en la Reserva Científica Estratégica en Nueva York, siendo menospreciada por sus compañeros hombres. Howard Stark que se ha convertido en un fugitivo tras ser injustamente inculpado de vender algunos de sus peligrosos inventos en el mercado negro, contacta con ella para que le ayude en diversas misiones para recuperarlos extraoficialmente. Arriesgándose a ser acusada de traición si es descubierta, no podrá confiar en nadie más que en Edwin Jarvis, el formal mayordomo de Stark.
 reparto:

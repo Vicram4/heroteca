@@ -9,6 +9,7 @@ numero: 9
 sagas:
 - fase-1
 anio: 2011
+epoca: '2010'
 tmdb:
   id: 76122
   tipo: movie

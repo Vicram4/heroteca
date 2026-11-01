@@ -9,6 +9,7 @@ numero: 4
 sagas:
 - fase-2
 anio: 2013
+epoca: '1946'
 tmdb:
   id: 211387
   tipo: movie

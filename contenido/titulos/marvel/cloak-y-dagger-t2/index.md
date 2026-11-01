@@ -10,6 +10,7 @@ numero: 55
 calidad:
 - 720p
 anio: 2019
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: Mientras Tyrone y Tandy tratan de encontrar su lugar como héroes más activos en este mundo. A medida que aprenden y crecen emocionalmente, también lo harán sus habilidades. Vimos a Tandy y Ty sumergiendo sus pies en el mundo de las esperanzas y los miedos; en esta temporada, se sumergirán más profundamente en esta piscina metafísica. Con poderes mejorados y una elección que hacer sobre el tipo de héroes que quieren ser, toman la decisión de correr hacia el peligro, de cabeza. Se enfrentan a un despiadado justiciero y descubren un mal que se ha estado apoderando de las jóvenes de la ciudad, a medida que la serie aborda temas más serios como la violencia de las pandillas y la trata de seres humanos.
 reparto:

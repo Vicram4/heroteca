@@ -9,6 +9,7 @@ seccion: umc
 fichaPropia: false
 numero: 33
 anio: 2016
+epoca: 'sin fecha'
 tmdb:
   id: 69088
   tipo: tv

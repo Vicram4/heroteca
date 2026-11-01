@@ -11,6 +11,7 @@ calidad:
 sagas:
 - fase-3
 anio: 2016
+epoca: '2016'
 nacionalidad: E.E.U.U.
 duracion: 147
 direccion: Hnos. Russo

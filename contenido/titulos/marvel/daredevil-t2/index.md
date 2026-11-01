@@ -10,6 +10,7 @@ numero: 29
 calidad:
 - 720p
 anio: 2016
+epoca: '2015'
 nacionalidad: E.E.U.U.
 argumento: Con Wilson Fisk en prisión, las cosas parecen más calmadas en Hell's Kitchen, y Matt, Foggy y Karen continúan con la firma legal reconciliados. Sin embargo, pronto vuelven a enfrentarse a nuevos peligros, empezando por los ataques de un hombre Frank Castle, que es conocido públicamente como the Punisher y que persigue implacablemente a distintos criminales. Mientras tanto, Daredevil continúa vigilando las calles, y pronto se da cuenta de la presencia de los Yakuza y de una anciana organización. Además, una compañera de su pasado, Elektra Natchios, aparece en escena con la intención de que Daredevil le ayude a parar los sangrientos planes de la organización.
 reparto:

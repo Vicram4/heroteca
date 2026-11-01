@@ -11,6 +11,7 @@ numero: 44
 sagas:
 - fase-4
 anio: 2022
+epoca: '2014'
 tmdb:
   id: 232125
   tipo: tv

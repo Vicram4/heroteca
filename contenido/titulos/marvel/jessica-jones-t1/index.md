@@ -10,6 +10,7 @@ numero: 27
 calidad:
 - 720p
 anio: 2015
+epoca: '2015'
 nacionalidad: E.E.U.U.
 argumento: |-
   Jessica Jones es una mujer con superpoderes que tuvo una breve carrera de superhéroe hasta un incidente en el que el villano Kilgrave hizo que matara a alguien. Después de ese incidente, se convierte en investigadora privada.

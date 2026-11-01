@@ -10,6 +10,7 @@ numero: 23
 calidad:
 - 720p
 anio: 2015
+epoca: '2015'
 nacionalidad: E.E.U.U.
 argumento: El abogado Matt Murdock usa sus sentidos intensificados producto de quedar ciego cuando era un niño para combatir el crimen en las calles nocturnas de Hell's Kitchen como Daredevil.
 reparto:

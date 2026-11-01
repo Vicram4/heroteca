@@ -11,6 +11,7 @@ calidad:
 sagas:
 - fase-5
 anio: 2023
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: Después de la batalla por el alma de la Autoridad de la Variación Temporal, Loki navega por un multiverso en expansión en compañía de Mobius y el Cazador B-15, entre otros. Junto a ellos, el dios del engaño intenta dar con el paradero del Juez Renslayer, Sylvie, Miss Minutos, al mismo tiempo que busca conocer la verdad sobre lo que significa poseer el libre albedrío y un propósito glorioso.
 reparto:

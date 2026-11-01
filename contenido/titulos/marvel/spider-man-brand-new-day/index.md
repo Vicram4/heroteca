@@ -10,6 +10,7 @@ numero: 100
 sagas:
 - fase-6
 anio: 2026
+epoca: '2028'
 tmdb:
   id: 969681
   tipo: movie

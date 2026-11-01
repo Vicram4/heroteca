@@ -14,6 +14,7 @@ calidad:
 sagas:
 - fase-3
 anio: 2017
+epoca: '2014'
 nacionalidad: E.E.U.U.
 duracion: 137
 direccion: James Gunn

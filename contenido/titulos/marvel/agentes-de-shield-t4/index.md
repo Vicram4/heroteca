@@ -23,6 +23,7 @@ tramos:
 calidad:
 - 720p
 anio: 2016
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: |-
   La cuarta temporada de 'Agents of SHIELD' se divide en tres partes:

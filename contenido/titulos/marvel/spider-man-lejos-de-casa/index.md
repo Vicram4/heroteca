@@ -13,6 +13,7 @@ calidad:
 sagas:
 - fase-3
 anio: 2019
+epoca: '2024'
 nacionalidad: E.E.U.U.
 duracion: 129
 direccion: Jon Watts

@@ -22,6 +22,7 @@ tramos:
 calidad:
 - 720p
 anio: 2015
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: 'Coulson y Daisy Johnson (antes conocida como Skye) siguen con la misión de encontrar y proteger a personas con poderes, sobre todo inhumanos, después de la guerra contra Jiaying y su ejército. Se enfrentan contra otra organización que intenta capturar a los inhumanos. Fitz investiga la desaparición de Simmons. Se une al equipo como agente el inhumano Lincoln Campbell, junto a los anteriores miembros: Hunter, Bobbi y Mack. El equipo de Coulson sigue en peligro frente a HYDRA y el ex-agente Ward.'
 reparto:

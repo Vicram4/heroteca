@@ -9,6 +9,7 @@ numero: 16
 sagas:
 - fase-2
 anio: 2014
+epoca: '2014'
 tmdb:
   id: 253980
   tipo: movie

@@ -11,6 +11,7 @@ calidad:
 sagas:
 - fase-3
 anio: 2018
+epoca: '2018'
 nacionalidad: E.E.U.U.
 duracion: 156
 direccion: Anthony & Joe Russo

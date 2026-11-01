@@ -13,6 +13,7 @@ calidad:
 sagas:
 - fase-4
 anio: 2022
+epoca: '2025'
 nacionalidad: E.E.U.U.
 argumento: Su protagonista es Kamala Khan, una adolescente musulmana que vive en Jersey City. Además de jugar a la consola y escribir "fan-fiction" sin parar, Kamala es muy fan de los superhéroes, sobre todo de la Capitana Marvel. Pero se siente fuera de lugar en el instituto y, a veces, incluso en casa. Hasta que un día consigue superpoderes como los de sus admirados ídolos. Y la vida es mejor con superpoderes, ¿no?
 reparto:

@@ -10,6 +10,7 @@ calidad:
 sagas:
 - fase-3
 anio: 2018
+epoca: '2016'
 nacionalidad: E.E.U.U.
 duracion: 134
 direccion: Ryan Coogler

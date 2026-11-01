@@ -13,6 +13,7 @@ calidad:
 sagas:
 - fase-4
 anio: 2021
+epoca: '2024'
 nacionalidad: E.E.U.U.
 argumento: 'Después de los eventos de ‘Avengers: Endgame’, Samuel Wilson / Falcon y James Barnes / Soldado del Invierno se unen en una aventura global que pone a prueba sus habilidades, y su paciencia, en Marvel Studios'' The Falcon and the Winter Soldier.'
 reparto:

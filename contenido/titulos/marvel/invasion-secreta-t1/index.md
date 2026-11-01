@@ -12,6 +12,7 @@ calidad:
 sagas:
 - fase-5
 anio: 2023
+epoca: '2026'
 nacionalidad: E.E.U.U.
 argumento: |-
   Nick Fury, ex director de S.H.I.E.L.D., descubre la conspiración alienígena.

@@ -10,6 +10,7 @@ numero: 39
 calidad:
 - 720p
 anio: 2017
+epoca: '2016'
 nacionalidad: E.E.U.U.
 argumento: El multimillonario Danny Rand (Finn Jones) regresa a Nueva York, tras haber estado desaparecido durante años tratando de reconectar con su pasado y su legado familiar. Sus conocimientos de kung-fu y su puño de hierro permitirán que Rand vuelva para controlar el crimen de la ciudad.
 reparto:

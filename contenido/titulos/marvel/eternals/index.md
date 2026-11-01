@@ -10,6 +10,7 @@ calidad:
 sagas:
 - fase-4
 anio: 2021
+epoca: '2024'
 nacionalidad: E.E.U.U.
 duracion: 156
 direccion: Chloé Zhao

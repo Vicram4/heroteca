@@ -10,6 +10,7 @@ numero: 49
 calidad:
 - 720p
 anio: 2017
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: Marvel's Runaways cuenta la historia de seis diversos adolescentes que apenas pueden sostenerse unos a otros, pero que deben unirse para enfrentar un enemigo común - sus padres.
 reparto:

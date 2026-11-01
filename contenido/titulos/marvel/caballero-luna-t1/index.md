@@ -12,6 +12,7 @@ calidad:
 sagas:
 - fase-4
 anio: 2022
+epoca: '2025'
 nacionalidad: E.E.U.U.
 argumento: Un trabajador de un museo que lucha contra un trastorno de identidad disociativo, recibe los poderes de un dios egipcio de la luna. Pronto descubre que estos poderes pueden ser tanto una bendición como una maldición.
 reparto:

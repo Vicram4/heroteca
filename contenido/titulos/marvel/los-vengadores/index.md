@@ -11,6 +11,7 @@ calidad:
 sagas:
 - fase-1
 anio: 2012
+epoca: '2012'
 nacionalidad: E.E.U.U.
 duracion: 143
 direccion: Joss Whedon

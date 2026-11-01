@@ -11,6 +11,7 @@ calidad:
 sagas:
 - fase-1
 anio: 2011
+epoca: '1943–1945'
 nacionalidad: E.E.U.U.
 duracion: 125
 direccion: Joe Johnston

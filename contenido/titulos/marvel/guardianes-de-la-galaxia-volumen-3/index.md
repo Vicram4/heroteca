@@ -13,6 +13,7 @@ calidad:
 sagas:
 - fase-5
 anio: 2023
+epoca: '2026'
 nacionalidad: E.E.U.U.
 duracion: 150
 direccion: James Gunn

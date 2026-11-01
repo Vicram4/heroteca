@@ -9,6 +9,7 @@ sagas:
 - deadpool
 - fase-5
 anio: 2024
+epoca: '2024'
 tmdb:
   id: 533535
   tipo: movie

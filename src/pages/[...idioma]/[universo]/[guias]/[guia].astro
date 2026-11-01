@@ -9,6 +9,7 @@ import ComparaOrden from '../../../../components/ComparaOrden.astro';
 import Caratula from '../../../../components/Caratula.astro';
 import Progreso from '../../../../components/Progreso.astro';
 import { datosTmdb } from '../../../../lib/tmdb';
+import { leerEpoca, NOTAS } from '../../../../lib/lineaTemporal';
 import { SITE } from '../../../../config/site';
 import { GUIAS, guiaLoc, type Guia } from '../../../../config/guias';
 import {
@@ -71,7 +72,8 @@ const carpetas: BloqueCarpeta[] = [];
 
 for (const id of guia.secciones) {
   const seccion = universo.data.secciones.find((s) => s.id === id);
-  if (!seccion) continue;
+  // La línea temporal usa las secciones a su manera (más abajo)
+  if (!seccion || guia.tipo === 'linea') continue;
   const deSeccion = titulos.filter((t) => t.d.seccion === id);
   if (guia.tipo === 'carpetas') {
     const visionados = await visionadosDe(universo.id);
@@ -162,8 +164,26 @@ const notaDe = (t: Titulo) => {
   return d?.nota && (d.votos ?? 0) >= 20 ? d.nota.toLocaleString(LOCALE[idioma], { minimumFractionDigits: 1 }) : undefined;
 };
 
+// Línea temporal (tipo 'linea'): títulos agrupados por el año en que empiezan, en el orden de la colección
+const linea: { anio: number; titulos: { t: Titulo; texto: string; varios: boolean }[] }[] = [];
+const sinFecha: Titulo[] = [];
+if (guia.tipo === 'linea') {
+  for (const id of guia.secciones) {
+    const seccion = universo.data.secciones.find((s) => s.id === id);
+    if (!seccion) continue;
+    const enOrden: Titulo[] = [];
+    for (const h of huecosDeSeccion(titulos.filter((t) => t.d.seccion === id), seccion)) if (!enOrden.includes(h.titulo)) enOrden.push(h.titulo);
+    const conEpoca = enOrden.map((t, i) => ({ t, i, e: leerEpoca(t.d.epoca) }));
+    for (const x of conEpoca.filter((x) => !x.e)) sinFecha.push(x.t);
+    for (const x of conEpoca.filter((x) => x.e).sort((a, b) => a.e!.desde - b.e!.desde || a.i - b.i)) {
+      const g = linea.at(-1)?.anio === x.e!.desde ? linea.at(-1)! : (linea.push({ anio: x.e!.desde, titulos: [] }), linea.at(-1)!);
+      g.titulos.push({ t: x.t, texto: x.e!.texto, varios: x.e!.hasta > x.e!.desde });
+    }
+  }
+}
+
 // Datos estructurados: la primera lista como ItemList
-const primera = bloques[0]?.filas ?? (rutas.length ? rutas[0].titulos.map((t) => ({ t })) : carpetas.flatMap((c) => c.filas));
+const primera = linea.length ? linea.flatMap((g) => g.titulos.map(({ t }) => ({ t }))) : bloques[0]?.filas ?? (rutas.length ? rutas[0].titulos.map((t) => ({ t })) : carpetas.flatMap((c) => c.filas));
 const urlsLista = await Promise.all(primera.map((f) => rutaEnIdioma(f.t.url, idioma)));
 const datos = {
   '@context': 'https://schema.org',
@@ -227,6 +247,68 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
           )}
         </section>
       ))
+    }
+
+    {
+      linea.length > 0 && (
+        <section class="linea" aria-label={guia.titulo}>
+          <nav class="saltos" aria-label={tx.guias.linea.ir}>
+            <span>{tx.guias.linea.ir}:</span>
+            {linea.map((g) => (
+              <a href={`#a-${g.anio}`} class="chip">
+                {g.anio}
+              </a>
+            ))}
+          </nav>
+          <ol class="anios">
+            {linea.map((g) => (
+              <li class="anio" id={`a-${g.anio}`}>
+                <h2 class="marca-anio">{g.anio}</h2>
+                <ul class="titulos-anio">
+                  {g.titulos.map(({ t, texto, varios }) => (
+                    <li class={`t-${t.tipo}`} data-titulo={t.id}>
+                      <a href={t.url}>
+                        <span class="tapa">{t.portada || t.m.posterTmdb ? <Caratula t={t} ancho={56} /> : null}</span>
+                        <span class="texto-t">
+                          <span class="nombre">
+                            {t.corto}
+                            <span class="marca-visto">
+                              <span aria-hidden="true">✓</span>
+                              <span class="solo-lectores">{tx.progreso.visto}</span>
+                            </span>
+                          </span>
+                          <span class="meta">
+                            {[varios ? texto : '', t.d.animada ? tx.general.animado(nombreTipo(t.tipo, idioma)) : nombreTipo(t.tipo, idioma), t.d.anio && tx.guias.linea.estreno(t.d.anio)].filter(Boolean).join(' · ')}
+                          </span>
+                          {NOTAS[t.id] && <span class="nota">{NOTAS[t.id][idioma]}</span>}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ol>
+          {sinFecha.length > 0 && (
+            <section class="sin-fecha" aria-labelledby="h-sin-fecha">
+              <h2 id="h-sin-fecha">{tx.guias.linea.sinFecha}</h2>
+              <p class="texto">{tx.guias.linea.sinFechaTexto}</p>
+              <ul>
+                {sinFecha.map((t) => (
+                  <li data-titulo={t.id}>
+                    <a href={t.url}>{t.corto}</a>
+                    <span class="marca-visto">
+                      <span aria-hidden="true">✓</span>
+                      <span class="solo-lectores">{tx.progreso.visto}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          <p class="fuente-linea">{tx.guias.linea.fuente}</p>
+        </section>
+      )
     }
 
     {
@@ -357,6 +439,123 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
     margin: 8px 0 0;
     padding-left: 1.3em;
   }
+  /* Línea temporal: una marca por año sobre una línea vertical */
+  .saltos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0 24px;
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .anios {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 26px;
+    border-left: 2px solid var(--borde);
+  }
+  .anio {
+    position: relative;
+    padding-bottom: 22px;
+    scroll-margin-top: 140px;
+  }
+  .anio::before {
+    content: '';
+    position: absolute;
+    left: -34px;
+    top: 0.55em;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--acento);
+    box-shadow: 0 0 0 3px var(--fondo);
+  }
+  .marca-anio {
+    margin: 0 0 10px;
+    font: 800 1.7rem / 1.1 var(--f-titulo);
+  }
+  .titulos-anio {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 10px;
+  }
+  .titulos-anio a {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid var(--borde);
+    border-left: 4px solid var(--c, var(--borde));
+    border-radius: var(--radio);
+    background: var(--sup);
+    color: inherit;
+    text-decoration: none;
+  }
+  .titulos-anio a:hover,
+  .titulos-anio a:focus-visible {
+    border-color: var(--acento);
+  }
+  .titulos-anio .tapa {
+    aspect-ratio: 2 / 3;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--borde);
+  }
+  .titulos-anio .tapa :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .texto-t {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .texto-t .nombre {
+    font-weight: 700;
+  }
+  .texto-t .meta,
+  .texto-t .nota {
+    font-size: 0.8rem;
+    color: var(--txt-2);
+  }
+  .texto-t .nota {
+    font-style: italic;
+  }
+  .linea .marca-visto {
+    display: none;
+  }
+  .linea [data-visto] .marca-visto {
+    display: inline-grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    margin-left: 6px;
+    border-radius: 50%;
+    background: #1a7f45;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    vertical-align: 1px;
+  }
+  .sin-fecha ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    padding: 0;
+    list-style: none;
+  }
+  .fuente-linea {
+    margin-top: 24px;
+    font-size: 0.82rem;
+    color: var(--txt-2);
+  }
   /* «Por dónde empezar»: tarjetas numeradas de cada ruta */
   .ruta {
     list-style: none;
@@ -406,10 +605,10 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
     color: #fff;
     font: 800 0.9rem var(--f-titulo);
   }
-  .marca-visto {
+  .ruta .marca-visto {
     display: none;
   }
-  li[data-visto] .marca-visto {
+  .ruta li[data-visto] .marca-visto {
     position: absolute;
     top: 6px;
     right: 6px;

@@ -5,6 +5,7 @@
  * tipo:
  *  - 'secciones': estanterías completas en forma de lista (orden propio y, si lo tiene, de estreno)
  *  - 'carpetas':  carpetas de visionado de series, con el orden capítulo a capítulo si existe
+ *  - 'linea':     línea temporal por años de la sección (campo `epoca`; ver src/lib/lineaTemporal.ts)
  *  - 'rutas':     selecciones para empezar («Por dónde empezar»): bloques de títulos elegidos a mano, por id de ficha
  */
 export interface Guia {
@@ -20,7 +21,7 @@ export interface Guia {
   descripcion: string;
   /** Párrafos de introducción */
   intro: string[];
-  tipo: 'secciones' | 'carpetas' | 'rutas';
+  tipo: 'secciones' | 'carpetas' | 'rutas' | 'linea';
   /** Ids de las secciones que muestra, en orden */
   secciones: string[];
   /** Solo para tipo 'carpetas': qué carpetas incluye */
@@ -180,6 +181,31 @@ export const GUIAS: Guia[] = [
         'There are two common ways to watch the Marvel Cinematic Universe (MCU): in release order, as it reached cinemas and TV, or in chronological order, following the story from World War II onwards.',
         'The chronological order in this guide is the Heroteca collection’s own. It includes series and One-Shots, and splits some seasons into several parts when their episodes take place at different points in the timeline, as with Agents of S.H.I.E.L.D.',
         'For a first watch, release order is the simplest, because it keeps the surprises as they were intended. Chronological order is ideal for a rewatch.',
+      ],
+    },
+  },
+  {
+    universo: 'marvel',
+    id: 'linea-temporal',
+    idEn: 'mcu-timeline',
+    titulo: 'Línea temporal del UMC: en qué año transcurre cada película y serie',
+    tituloSeo: 'Línea temporal del UMC (MCU) por años: cuándo transcurre cada película y serie',
+    descripcion:
+      'La cronología del Universo Marvel Cinematográfico año a año: de la Segunda Guerra Mundial a 2028, con el año en que transcurre cada película y serie según la cronología oficial.',
+    intro: [
+      'Esta línea temporal coloca cada película y serie del Universo Marvel Cinematográfico en el año en que transcurre su historia, de 1943 a 2028. Los años son los de la cronología oficial de Marvel Studios (libro de 2023), tal como los recoge la Wikipedia.',
+      'Es un complemento del orden de la colección, que no cambia: cuando varios títulos comparten año, aparecen en el orden de la colección. Algunas series no tienen año oficial y se listan al final.',
+    ],
+    tipo: 'linea',
+    secciones: ['umc'],
+    en: {
+      titulo: 'MCU timeline: the year each film and series takes place',
+      tituloSeo: 'MCU timeline by year: when every Marvel film and series takes place',
+      descripcion:
+        'The Marvel Cinematic Universe timeline year by year: from World War II to 2028, with the year each film and series takes place according to the official timeline.',
+      intro: [
+        'This timeline places every Marvel Cinematic Universe film and series in the year its story takes place, from 1943 to 2028. The years come from Marvel Studios’ official timeline (2023 book), as collected by Wikipedia.',
+        'It complements the collection’s order, which doesn’t change: when several titles share a year, they appear in collection order. Some series have no official year and are listed at the end.',
       ],
     },
   },

@@ -10,6 +10,7 @@ calidad:
 sagas:
 - fase-1
 anio: 2010
+epoca: '2010'
 nacionalidad: E.E.U.U.
 duracion: 124
 direccion: Jon Favreau

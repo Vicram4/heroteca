@@ -10,6 +10,7 @@ numero: 57
 calidad:
 - 720p
 anio: 2018
+epoca: '2017'
 nacionalidad: E.E.U.U.
 argumento: Perdido durante meses, Matthew Murdock reaparece como un hombre destrozado, poniendo en duda su futuro como el justiciero Daredevil y como abogado pero cuando su archienemigo Wilson Fisk es liberado de prisión, Murdock debe elegir entre esconderse del mundo o abrazar su destino como héroe.
 reparto:

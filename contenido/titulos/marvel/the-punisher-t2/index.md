@@ -10,6 +10,7 @@ numero: 59
 calidad:
 - 720p
 anio: 2019
+epoca: '2018'
 nacionalidad: E.E.U.U.
 argumento: El ex oficial de la marina convertido en vigilante, Frank Castle, vivía una vida tranquila hasta que repentinamente se ve envuelto en el intento de asesinato de una joven chica. A medida que se adentra en el misterio que la rodea y a los que están en la búsqueda de la información que ella guarda, Castle se vuelve un objetivo cuando nuevos y viejos enemigos lo obligan a confrontar si debe aceptar su destino y asumir una vida como el Punisher.
 reparto:

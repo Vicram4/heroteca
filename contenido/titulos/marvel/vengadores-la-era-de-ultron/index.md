@@ -11,6 +11,7 @@ calidad:
 sagas:
 - fase-2
 anio: 2015
+epoca: '2015'
 nacionalidad: E.E.U.U.
 duracion: 141
 direccion: Joss Whedon

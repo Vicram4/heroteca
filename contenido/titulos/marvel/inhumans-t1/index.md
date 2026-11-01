@@ -12,6 +12,7 @@ numero: 47
 calidad:
 - 720p
 anio: 2017
+epoca: 'sin fecha'
 nacionalidad: E.E.U.U.
 argumento: Después de que la Familia Real Inhumana se rompa debido a un golpe militar, apenas consiguen escapar a Hawai donde sorprendentes interacciones con el mundo y la humanidad a su alrededor demostrarán que quizás no puedan salvarse solo a sí mismos sino a la Tierra entera.
 reparto:

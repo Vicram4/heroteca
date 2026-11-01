@@ -10,6 +10,7 @@ numero: 95
 sagas:
 - fase-5
 anio: 2025
+epoca: '2027'
 tmdb:
   id: 986056
   tipo: movie

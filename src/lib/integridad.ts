@@ -6,6 +6,7 @@
  * lista completa de errores.
  */
 import { getCollection } from 'astro:content';
+import { llevaEpoca } from './lineaTemporal';
 
 let resultado: Promise<void> | undefined;
 
@@ -80,6 +81,10 @@ async function ejecutar() {
     existe(donde, 'universos', v.data.universo);
     v.data.orden.forEach((o) => existe(donde, 'titulos', o.titulo));
   }
+
+  // Aviso (no detiene el build): títulos del UMC sin época para la línea temporal
+  const sinEpoca = titulos.filter((t) => llevaEpoca(t.data.universo.id, t.data.seccion) && !t.data.epoca).map((t) => t.id);
+  if (sinEpoca.length) console.warn(`⚠️  Títulos del UMC sin «epoca» (no salen en la línea temporal): ${sinEpoca.join(', ')}`);
 
   if (errores.length) {
     throw new Error(`Hay ${errores.length} problema(s) en los datos:\n  - ${errores.join('\n  - ')}`);

@@ -12,6 +12,7 @@ sagas:
 - 4-fantasticos
 - fase-6
 anio: 2025
+epoca: '1964'
 tmdb:
   id: 617126
   tipo: movie

@@ -11,6 +11,7 @@ calidad:
 sagas:
 - fase-2
 anio: 2013
+epoca: '2013'
 nacionalidad: E.E.U.U.
 duracion: 112
 direccion: Alan Taylor

@@ -12,6 +12,7 @@ numero: 96
 sagas:
 - fase-5
 anio: 2025
+epoca: '2025'
 tmdb:
   id: 114471
   tipo: tv

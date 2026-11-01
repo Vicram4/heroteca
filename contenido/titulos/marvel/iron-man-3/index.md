@@ -10,6 +10,7 @@ calidad:
 sagas:
 - fase-2
 anio: 2013
+epoca: '2013–2014'
 nacionalidad: E.E.U.U.
 duracion: 131
 direccion: Shane Black
