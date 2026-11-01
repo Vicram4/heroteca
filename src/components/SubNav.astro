@@ -19,6 +19,7 @@ const enlaces = [
   { id: 'sagas', texto: tx.subnav.sagas, url: `/${universo.id}/sagas/` },
   { id: 'personajes', texto: tx.subnav.personajes, url: `/${universo.id}/personajes/` },
   ...(guiasDe(universo.id).length ? [{ id: 'guias', texto: tx.subnav.guias, url: `/${universo.id}/guias/` }] : []),
+  { id: 'noticias', texto: tx.subnav.noticias, url: `/${universo.id}/noticias/` },
 ];
 ---
 

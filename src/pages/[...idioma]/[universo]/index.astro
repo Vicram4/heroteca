@@ -11,6 +11,8 @@ import { universosActivos, titulosDe, huecosDeSeccion, sagasDe } from '../../../
 import { guiasDe, guiaLoc } from '../../../config/guias';
 import { textos, idiomaDe } from '../../../i18n';
 import { universoLoc, sagaLoc } from '../../../i18n/datos';
+import ListaNoticias from '../../../components/ListaNoticias.astro';
+import { noticiasDe } from '../../../lib/noticias';
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
 
@@ -101,10 +103,36 @@ const relacionadas = (await sagasDe(universo.id))
         </section>
       )
     }
+
+    {
+      noticiasDe(idioma, universo.id).length > 0 && (
+        <section class="seccion" aria-labelledby="sec-noticias">
+          <div class="cab-noticias">
+            <h2 id="sec-noticias">{tx.noticias.ultimasDe(universo.data.nombre)}</h2>
+            <a href={`/${universo.id}/noticias/`}>{tx.noticias.verTodas} →</a>
+          </div>
+          <ListaNoticias noticias={noticiasDe(idioma, universo.id, 4)} universos={[Astro.props.universo]} compacta />
+        </section>
+      )
+    }
   </div>
 </Base>
 
 <style>
+  .cab-noticias {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 20px;
+    margin-bottom: 12px;
+  }
+  .cab-noticias h2 {
+    margin: 0;
+  }
+  .cab-noticias a {
+    font-weight: 600;
+  }
   .cab {
     padding: clamp(24px, 4vw, 40px) 0 8px;
   }

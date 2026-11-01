@@ -1,0 +1,58 @@
+---
+import { conIdiomas } from '../../../../i18n';
+/** Noticias de un universo (las de datos/noticias.json clasificadas como suyas). */
+import Base from '../../../../layouts/Base.astro';
+import SubNav from '../../../../components/SubNav.astro';
+import ListaNoticias from '../../../../components/ListaNoticias.astro';
+import { universosActivos } from '../../../../lib/datos';
+import { noticiasDe, fechaNoticias, fuentesDe } from '../../../../lib/noticias';
+
+export async function getStaticPaths() {
+  return conIdiomas(
+    (await universosActivos()).map((universo) => ({ params: { universo: universo.id, noticias: 'noticias' }, props: { universo } })),
+    () => ({ noticias: 'news' }),
+  );
+}
+import { textos, idiomaDe, LOCALE } from '../../../../i18n';
+import { universoLoc } from '../../../../i18n/datos';
+const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+const universo = universoLoc(Astro.props.universo, idioma);
+const lista = noticiasDe(idioma, universo.id);
+const actualizado = fechaNoticias().toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' });
+---
+
+<Base
+  titulo={tx.noticias.tituloSeoUniverso(universo.data.nombre)}
+  descripcion={tx.noticias.descripcionUniverso(universo.data.nombre)}
+  universo={universo}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: tx.noticias.titulo, url: `/${universo.id}/noticias/` }]}
+>
+  <SubNav slot="subnav" universo={universo} activo="noticias" />
+  <div class="contenedor pagina-noticias">
+    <header class="cab">
+      <h1>{tx.noticias.tituloUniverso(universo.data.nombre)}</h1>
+      <p>{tx.noticias.intro} {tx.noticias.actualizado(actualizado)}</p>
+    </header>
+    <ListaNoticias noticias={lista} universos={[Astro.props.universo]} />
+    <p class="fuentes">{tx.noticias.fuentes(new Intl.ListFormat(LOCALE[idioma], { type: 'conjunction' }).format(fuentesDe(idioma)))}</p>
+  </div>
+</Base>
+
+<style>
+  .pagina-noticias {
+    padding-bottom: 48px;
+  }
+  .cab {
+    padding-top: clamp(20px, 4vw, 36px);
+  }
+  .cab p {
+    max-width: 70ch;
+    color: var(--txt-2);
+  }
+  .fuentes {
+    margin-top: 28px;
+    font-size: 0.82rem;
+    color: var(--txt-2);
+  }
+</style>

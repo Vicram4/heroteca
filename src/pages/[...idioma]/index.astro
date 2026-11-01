@@ -15,6 +15,8 @@ import TarjetaEstreno from '../../components/TarjetaEstreno.astro';
 import ListaEstrenos from '../../components/ListaEstrenos.astro';
 import { proximosEstrenos, enEmision } from '../../lib/proximamente';
 import { guiasDe, guiaLoc } from '../../config/guias';
+import ListaNoticias from '../../components/ListaNoticias.astro';
+import { noticiasDe } from '../../lib/noticias';
 import { paisDe } from '../../lib/dondever';
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
@@ -130,6 +132,20 @@ const guiasPortada = activos.flatMap((u) => guiasDe(u.id).filter((g) => g.tipo !
             <TarjetaEstreno e={e} u={activos.find((u) => u.id === e.universo)} />
           ))}
         </ListaEstrenos>
+      </section>
+    )
+  }
+
+  {
+    noticiasDe(idioma).length > 0 && (
+      <section class="contenedor proximos" aria-labelledby="t-noticias">
+        <div class="cabecera-proximos">
+          <h2 id="t-noticias">{tx.noticias.ultimas}</h2>
+          <a href="/noticias/" class="ver-todos">
+            {tx.noticias.verTodas} →
+          </a>
+        </div>
+        <ListaNoticias noticias={noticiasDe(idioma, undefined, 4)} universos={activos} compacta />
       </section>
     )
   }

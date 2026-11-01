@@ -1,0 +1,177 @@
+---
+/**
+ * Lista de noticias agrupadas por día («Hoy», «Ayer», fecha). Cada tarjeta enlaza a la noticia original
+ * (en una pestaña nueva). Con `conFiltro`, botones para ver solo las de un universo (en el navegador).
+ * Las fechas relativas («Hoy») se calculan en el navegador, porque la web se publica una vez al día.
+ */
+import type { Noticia } from '../lib/noticias';
+import type { Universo } from '../lib/datos';
+import { estiloUniverso } from '../lib/datos';
+import { textos, idiomaDe, LOCALE } from '../i18n';
+
+interface Props {
+  noticias: Noticia[];
+  universos: Universo[];
+  conFiltro?: boolean;
+  /** Versión compacta (portada y página de universo): sin resumen ni grupos */
+  compacta?: boolean;
+}
+const { noticias, universos, conFiltro = false, compacta = false } = Astro.props;
+const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+const nombreU = new Map(universos.map((u) => [u.id, u]));
+const dia = (iso: string) => iso.slice(0, 10);
+const grupos = compacta ? [{ dia: '', lista: noticias }] : [...new Set(noticias.map((n) => dia(n.fecha)))].map((d) => ({ dia: d, lista: noticias.filter((n) => dia(n.fecha) === d) }));
+const fechaLarga = (d: string) => new Date(`${d}T12:00:00Z`).toLocaleDateString(LOCALE[idioma], { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+const hora = (iso: string) => new Date(iso).toLocaleTimeString(LOCALE[idioma], { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid' });
+---
+
+<div class:list={['noticias', { compacta }]} data-noticias data-hoy={tx.noticias.hoy} data-ayer={tx.noticias.ayer}>
+  {
+    conFiltro && universos.length > 1 && (
+      <div class="filtro" role="group" aria-label={tx.proximos.universo}>
+        <button type="button" class="pastilla" data-filtro-noticias="" aria-pressed="true">
+          {tx.noticias.todas}
+        </button>
+        {universos.map((u) => (
+          <button type="button" class="pastilla" data-filtro-noticias={u.id} aria-pressed="false">
+            {u.data.nombre}
+          </button>
+        ))}
+      </div>
+    )
+  }
+  {noticias.length === 0 && <p class="vacio">{tx.noticias.vacio}</p>}
+  {
+    grupos.map((g) => (
+      <section class="dia" data-dia-grupo>
+        {g.dia && (
+          <h2 class="titulo-dia" data-dia={g.dia}>
+            {fechaLarga(g.dia)}
+          </h2>
+        )}
+        <ul>
+          {g.lista.map((n) => (
+            <li data-universos={n.universos.join(' ')}>
+              <a href={n.enlace} target="_blank" rel="noopener">
+                <span class="marcas">
+                  {n.universos.map((u) => (
+                    <span class="marca-u" style={estiloUniverso(nombreU.get(u))}>
+                      {nombreU.get(u)?.data.nombre ?? u}
+                    </span>
+                  ))}
+                </span>
+                <span class="titular">{n.titulo}</span>
+                {!compacta && n.resumen && <span class="resumen">{n.resumen}</span>}
+                <span class="pie-noticia">
+                  {n.fuente} · <time datetime={n.fecha}>{compacta ? fechaLarga(dia(n.fecha)) : hora(n.fecha)}</time>
+                  <span class="solo-lectores"> {tx.noticias.nuevaPestana}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-noticias]').forEach((raiz) => {
+    // «Hoy» y «Ayer» según la fecha del navegador
+    const local = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const hoy = local(new Date());
+    const ayer = local(new Date(Date.now() - 86400000));
+    raiz.querySelectorAll<HTMLElement>('[data-dia]').forEach((h) => {
+      if (h.dataset.dia === hoy) h.textContent = raiz.dataset.hoy ?? h.textContent;
+      else if (h.dataset.dia === ayer) h.textContent = raiz.dataset.ayer ?? h.textContent;
+    });
+    // Filtro por universo
+    const botones = raiz.querySelectorAll<HTMLButtonElement>('[data-filtro-noticias]');
+    botones.forEach((b) =>
+      b.addEventListener('click', () => {
+        const u = b.dataset.filtroNoticias ?? '';
+        botones.forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+        raiz.querySelectorAll<HTMLElement>('li[data-universos]').forEach((li) => (li.hidden = Boolean(u) && !(li.dataset.universos ?? '').split(' ').includes(u)));
+        raiz.querySelectorAll<HTMLElement>('[data-dia-grupo]').forEach((g) => (g.hidden = !g.querySelector('li:not([hidden])')));
+      }),
+    );
+  });
+</script>
+
+<style>
+  .filtro {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 8px;
+  }
+  .titulo-dia {
+    margin: 28px 0 12px;
+    font-size: 1.15rem;
+    text-transform: capitalize;
+    color: var(--txt-2);
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+    gap: 12px;
+  }
+  .compacta ul {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  }
+  li a {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--sup);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color var(--transicion), transform var(--transicion);
+  }
+  li a:hover,
+  li a:focus-visible {
+    border-color: var(--acento);
+    transform: translateY(-2px);
+  }
+  .marcas {
+    display: flex;
+    gap: 6px;
+  }
+  .marca-u {
+    padding: 1px 7px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--acento) 82%, #000);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .titular {
+    font: 700 1.05rem / 1.3 var(--f-titulo);
+  }
+  .resumen {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.88rem;
+    color: var(--txt-2);
+  }
+  .pie-noticia {
+    margin-top: auto;
+    font-size: 0.8rem;
+    color: var(--txt-2);
+  }
+  .vacio {
+    color: var(--txt-2);
+  }
+</style>

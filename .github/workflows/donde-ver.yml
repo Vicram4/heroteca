@@ -44,6 +44,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add datos/donde-ver.json datos/donde-ver-us.json datos/proximamente.json datos/novedades-plataformas.json
           git commit -m "Dónde ver y Próximamente: datos actualizados ($(date -u +%Y-%m-%d))"
+          git pull --rebase
           git push
       - name: Resumen semanal (aviso por correo)
         env:

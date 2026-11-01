@@ -216,6 +216,22 @@ JustWatch que da TMDB. Se guardan en `datos/donde-ver.json`.
   se apunta en `datos/novedades-plataformas.json` qué títulos llegan o se van de cada plataforma, por país y en dos
   modos: `plataforma` (suscripción o gratis) y `digital` (alquiler o compra). Se guardan los últimos 120 días.
 
+## Noticias
+
+Página `/noticias/` (`/en/news/`), con filtro por universo, y una por universo en `/marvel/noticias/` (pestaña
+«Noticias» del menú de cada universo). La portada y el inicio de cada universo muestran las 4 últimas.
+
+- **De dónde salen:** los RSS públicos de medios especializados (lista `FUENTES` de `scripts/sincronizar_noticias.py`).
+  En español: CinemasComics, Espinof, Fotogramas, SensaCine y La Casa de EL; en inglés: ComicBook.com, SuperHeroHype,
+  Collider y Screen Rant. Cada versión de la web usa las fuentes de su idioma.
+- **Qué se guarda:** solo el titular, un resumen breve (sin coletillas tipo «publicación original de…») y el enlace a la
+  noticia original, que se abre en una pestaña nueva. No se copian textos completos ni imágenes.
+- **Clasificación:** por palabras clave de cada universo (`CLAVES`): si el titular las menciona, o el resumen al menos
+  dos veces. Una noticia puede ser de los dos universos; las que no hablan de ninguno se descartan.
+- **Actualización:** cada día a las 06:30 UTC con GitHub Actions (`.github/workflows/noticias.yml`), que sube
+  `datos/noticias.json` y hace que Vercel vuelva a publicar la web. Se guardan los últimos 30 días (máximo 200 por
+  idioma). Si una fuente falla, las demás siguen. Para lanzarlo a mano: Actions → «Actualizar «Noticias»» → Run workflow.
+
 ## Próximamente (próximos estrenos)
 
 Página `/proximamente/` (en inglés, `/en/coming-soon/`), enlazada desde el pie y con una franja de los 4 próximos

@@ -1,0 +1,42 @@
+---
+import { conIdiomas } from '../../i18n';
+export function getStaticPaths() {
+  return conIdiomas([{ params: { noticias: 'noticias' } }], () => ({ noticias: 'news' }));
+}
+/** Noticias de Marvel y DC (todas), con filtro por universo. */
+import Base from '../../layouts/Base.astro';
+import ListaNoticias from '../../components/ListaNoticias.astro';
+import { universosActivos } from '../../lib/datos';
+import { noticiasDe, fechaNoticias, fuentesDe } from '../../lib/noticias';
+import { textos, idiomaDe, LOCALE } from '../../i18n';
+
+const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+const universos = await universosActivos();
+const lista = noticiasDe(idioma).filter((n) => n.universos.some((u) => universos.some((x) => x.id === u)));
+const actualizado = fechaNoticias().toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' });
+---
+
+<Base titulo={tx.noticias.tituloSeo} descripcion={tx.noticias.descripcion} migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: tx.noticias.titulo, url: '/noticias/' }]}>
+  <div class="contenedor pagina-noticias">
+    <h1>{tx.noticias.titulo}</h1>
+    <p class="entradilla">{tx.noticias.intro} {tx.noticias.actualizado(actualizado)}</p>
+    <ListaNoticias noticias={lista} universos={universos} conFiltro />
+    <p class="fuentes">{tx.noticias.fuentes(new Intl.ListFormat(LOCALE[idioma], { type: 'conjunction' }).format(fuentesDe(idioma)))}</p>
+  </div>
+</Base>
+
+<style>
+  .pagina-noticias {
+    padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .entradilla {
+    max-width: 70ch;
+    color: var(--txt-2);
+  }
+  .fuentes {
+    margin-top: 28px;
+    font-size: 0.82rem;
+    color: var(--txt-2);
+  }
+</style>

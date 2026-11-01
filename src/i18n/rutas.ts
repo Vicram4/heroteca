@@ -12,7 +12,7 @@ import { todosLosTitulos, universosActivos } from '../lib/datos';
 import { actores } from '../lib/actores';
 
 /** Palabras fijas de las direcciones. */
-export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon', miProgreso: 'my-progress', recomendaciones: 'recommendations', estadisticas: 'stats', actores: 'actors' } as const;
+export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon', miProgreso: 'my-progress', recomendaciones: 'recommendations', estadisticas: 'stats', actores: 'actors', noticias: 'news' } as const;
 export type Segmento = keyof typeof SEGMENTOS;
 export const segmento = (s: Segmento, idioma: 'es' | 'en') => (idioma === 'en' ? SEGMENTOS[s] : s);
 
@@ -107,6 +107,7 @@ async function calcular(): Promise<Tablas> {
     ['/recomendaciones/', `/en/${SEGMENTOS.recomendaciones}/`],
     ['/estadisticas/', `/en/${SEGMENTOS.estadisticas}/`],
     ['/actores/', `/en/${SEGMENTOS.actores}/`],
+    ['/noticias/', `/en/${SEGMENTOS.noticias}/`],
   ]);
   for (const a of await actores()) aIngles.set(`/actores/${a.id}/`, `/en/${SEGMENTOS.actores}/${a.id}/`);
   for (const u of universos) {
@@ -116,6 +117,7 @@ async function calcular(): Promise<Tablas> {
     for (const t of titulosEn.filter((x) => x.universo === U)) aIngles.set(`/${U}/${t.id}/`, `/en/${U}/${fichas.get(t.id)}/`);
     aIngles.set(`/${U}/sagas/`, `/en/${U}/sagas/`);
     aIngles.set(`/${U}/personajes/`, `/en/${U}/${SEGMENTOS.personajes}/`);
+    aIngles.set(`/${U}/noticias/`, `/en/${U}/${SEGMENTOS.noticias}/`);
     aIngles.set(`/${U}/guias/`, `/en/${U}/${SEGMENTOS.guias}/`);
     for (const s of u.data.secciones) for (const c of s.carpetas) aIngles.set(`/${U}/carpetas/${c.numero}/`, `/en/${U}/${SEGMENTOS.carpetas}/${c.numero}/`);
   }
