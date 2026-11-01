@@ -2,6 +2,6 @@
 nombre: Falcon
 universo: marvel
 identidad: Sam Wilson
-alias:
+aliasEs:
 - Halcón
 ---

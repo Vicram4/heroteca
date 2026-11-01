@@ -30,6 +30,8 @@ function minutos(t: Titulo) {
   const d = datosTmdb(t.universo, t.id, 'es');
   const caps = d?.capitulos ?? [];
   if (caps.length) return caps.reduce((n, c) => n + (c.duracion ?? d?.duracion ?? 0), 0);
+  // Una serie sin capítulos detallados solo tiene la duración de un capítulo: no se puede sumar
+  if (t.tipo === 'serie') return 0;
   return d?.duracion ?? t.m.duracion ?? 0;
 }
 const horas = (min: number) => Math.round(min / 60);

@@ -145,6 +145,8 @@ const personajes = defineCollection({
       nombreEn: z.string().optional(),
       /** Otros nombres por los que se le conoce (también sirven para el buscador). */
       alias: z.array(z.string()).default([]),
+      /** Alias que solo existen en español («Dios del Trueno»): no se muestran en la versión inglesa */
+      aliasEs: z.array(z.string()).default([]),
       identidad: z.string().optional(),
       universo: reference('universos'),
       imagen: image().optional(),

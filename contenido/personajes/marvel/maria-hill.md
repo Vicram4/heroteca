@@ -1,6 +1,6 @@
 ---
 nombre: Maria Hill
 universo: marvel
-alias:
+aliasEs:
 - Agente Hill
 ---

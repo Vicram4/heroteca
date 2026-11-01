@@ -5,5 +5,6 @@ universo: dc
 identidad: Billy Batson
 alias:
 - Shazam
+aliasEs:
 - Capitán Marvel
 ---

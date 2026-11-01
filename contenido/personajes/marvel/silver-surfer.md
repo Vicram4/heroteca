@@ -2,6 +2,6 @@
 nombre: Silver Surfer
 universo: marvel
 identidad: Norrin Radd
-alias:
+aliasEs:
 - Estela Plateada
 ---

@@ -65,7 +65,8 @@ const preguntas: Pregunta[] = [];
 const minutosDe = (t: Titulo) => {
   const dt = datosTmdb(t.universo, t.id, 'es');
   const caps = dt?.capitulos ?? [];
-  return caps.length ? caps.reduce((n, c) => n + (c.duracion ?? dt?.duracion ?? 0), 0) : (dt?.duracion ?? t.m.duracion ?? 0);
+  if (caps.length) return caps.reduce((n, c) => n + (c.duracion ?? dt?.duracion ?? 0), 0);
+  return t.tipo === 'serie' ? 0 : (dt?.duracion ?? t.m.duracion ?? 0);
 };
 
 // Carpetas de visionado (series)

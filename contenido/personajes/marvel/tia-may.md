@@ -5,5 +5,6 @@ universo: marvel
 identidad: May Parker
 alias:
 - Aunt May
+aliasEs:
 - Tia May
 ---

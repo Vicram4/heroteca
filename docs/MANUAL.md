@@ -136,6 +136,16 @@ Para que una ficha nueva reciba datos de TMDB, añade su id: `tmdb: { id: 12345,
 
 La clave de TMDB va en el archivo `.env` (no se sube a GitHub): `TMDB_API_TOKEN=…`
 
+
+**Huecos que se rellenan solos o a mano:**
+- **Sinopsis traducidas:** si TMDB solo tiene la sinopsis en inglés, se usa la traducción de
+  `datos/sinopsis-traducidas.json` (clave = id de la ficha) y la ficha lo indica («Sinopsis de TMDB traducida del inglés»).
+  Si TMDB añade la española, manda la de TMDB.
+- **Tráileres:** si no hay en español ni en inglés, se busca cualquier tráiler o teaser de YouTube en TMDB. Unas 50 fichas
+  (sobre todo animación antigua y cortos) no tienen ninguno en TMDB.
+- **Duración de series completas** (sin temporadas detalladas): la media de los capítulos de su primera temporada. Se
+  muestra como «capítulos de unos 22 min» y no cuenta en las horas totales de las estadísticas.
+
 ## Regenerar las fichas desde los documentos
 
 Los scripts de `scripts/` leen las copias de `documentos/originales/` (nunca las modifican).
@@ -481,6 +491,11 @@ La página del personaje muestra automáticamente todos los títulos en los que 
 - Manda la identidad: "Miles Morales / Spider-Man" se asigna a Miles Morales, no a Peter Parker.
 - Si un personaje no aparece en una ficha donde sí sale, añade su nombre a `alias`, o escríbelo en la ficha:
   `personajes: [thor, loki]`.
+
+
+**Alias en español:** los alias que solo existen en español («Dios del Trueno», «La Masa», «Hombre Araña») van en
+`aliasEs`, no en `alias`. En la versión española se ven todos; en la inglesa, solo `alias` (y el buscador inglés sigue
+encontrando los españoles). Los dos sirven para reconocer al personaje en el reparto de las fichas.
 
 ## Spoilers
 

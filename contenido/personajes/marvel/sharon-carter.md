@@ -2,6 +2,7 @@
 nombre: Sharon Carter
 universo: marvel
 alias:
-- Agente 13
 - Agent 13
+aliasEs:
+- Agente 13
 ---

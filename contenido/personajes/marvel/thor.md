@@ -2,6 +2,6 @@
 nombre: Thor
 universo: marvel
 identidad: Thor Odinson
-alias:
+aliasEs:
 - Dios del Trueno
 ---

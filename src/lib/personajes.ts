@@ -56,7 +56,7 @@ function crearIndice(personajes: Personaje[]): Indice {
     } else {
       poner(identidad, d.nombre, p.id);
     }
-    d.alias.forEach((a) => poner(heroe, a, p.id));
+    [...d.alias, ...d.aliasEs].forEach((a) => poner(heroe, a, p.id));
   }
   return { identidad, heroe };
 }

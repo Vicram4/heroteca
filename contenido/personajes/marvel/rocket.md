@@ -2,6 +2,6 @@
 nombre: Rocket
 universo: marvel
 identidad: Rocket Raccoon
-alias:
+aliasEs:
 - Mapache Rocket
 ---

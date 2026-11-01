@@ -51,7 +51,7 @@ export async function GET({ params }: { params: { idioma?: string } }) {
         Promise.all((await personajesDe(u.id)).map(({ p: original, apariciones }) => ({ p: personajeLoc(original, idioma), apariciones })).map(async ({ p, apariciones }) => ({
           t: p.data.nombre,
           o: p.data.identidad ?? '',
-          a: p.data.alias,
+          a: [...p.data.alias, ...p.data.aliasEs],
           r: '',
           u: await rutaEnIdioma(`/${u.id}/personajes/${p.id}/`, idioma),
           y: 0,

@@ -74,7 +74,7 @@ const items: (Item & { meta: string; durTxt?: string })[] = await Promise.all(
       nota: tmdb?.nota,
       votos: tmdb?.votos,
       meta: `${t.d.anio} · ${t.d.animada ? tx.general.animado(nombreTipo(t.tipo, idioma)) : nombreTipo(t.tipo, idioma)}`,
-      durTxt: caps ? r.capitulos(caps) : dur ? r.horas(Math.floor(dur / 60), dur % 60) : undefined,
+      durTxt: caps ? r.capitulos(caps) : dur ? (t.tipo === 'serie' ? r.porCapitulo(dur) : r.horas(Math.floor(dur / 60), dur % 60)) : undefined,
     };
   }),
 );

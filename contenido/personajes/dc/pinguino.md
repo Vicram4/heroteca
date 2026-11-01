@@ -7,5 +7,6 @@ alias:
 - Penguin
 - The Penguin
 - Oz Cobb
+aliasEs:
 - Pingüino
 ---

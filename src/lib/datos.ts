@@ -7,6 +7,8 @@ import type { ImageMetadata } from 'astro';
 import { TIPOS, type TipoTitulo } from '../config/tipos';
 import { SITE } from '../config/site';
 import { datosTmdb, type DatosTmdb } from './tmdb';
+import sinopsisTraducidas from '../../datos/sinopsis-traducidas.json';
+
 
 export type Universo = CollectionEntry<'universos'>;
 export type Saga = CollectionEntry<'sagas'>;
@@ -112,7 +114,10 @@ export async function todosLosUniversos() {
 
 const urlTitulo = (universo: string, id: string) => `/${universo}/${id}/`;
 
-function mezclar(d: TituloEntrada['data'], x?: DatosTmdb): Mezcla {
+// Sinopsis en español traducidas del inglés para las fichas que en TMDB solo la tienen en inglés
+const TRADUCIDAS = sinopsisTraducidas as Record<string, string>;
+
+function mezclar(d: TituloEntrada['data'], x?: DatosTmdb, id?: string): Mezcla {
   const deTmdb = new Set<string>();
   const elegir = <T,>(campo: string, tuyo: T | undefined, suyo: T | undefined, vacio = (v: T) => v === undefined || (Array.isArray(v) && v.length === 0)) => {
     if (tuyo !== undefined && !vacio(tuyo)) return tuyo;
@@ -142,8 +147,14 @@ function mezclar(d: TituloEntrada['data'], x?: DatosTmdb): Mezcla {
     capitulos = capsSuyos;
     deTmdb.add('capitulos');
   }
+  let argumento = elegir('argumento', d.argumento, x?.sinopsis);
+  if (!argumento && id && TRADUCIDAS[id]) {
+    argumento = TRADUCIDAS[id];
+    deTmdb.add('argumento');
+    deTmdb.add('argumento-traducido');
+  }
   return {
-    argumento: elegir('argumento', d.argumento, x?.sinopsis),
+    argumento,
     reparto: elegir('reparto', d.reparto, x?.reparto) ?? [],
     duracion: elegir('duracion', d.duracion, x?.duracion),
     direccion: elegir('direccion', d.direccion, x?.direccion) ?? [],
@@ -168,7 +179,7 @@ function preparar(t: TituloEntrada): Titulo {
   const portada = d.imagenes.find((i) => i.rol === 'portada')?.src ?? d.imagenes[0]?.src;
   const contraportada = d.imagenes.find((i) => i.rol === 'contraportada')?.src;
   const temporada = d.temporada ? `Temporada ${d.temporada}` : '';
-  const m = mezclar(d, tmdb);
+  const m = mezclar(d, tmdb, t.id);
   // Imagen principal según SITE.caratulaPrincipal: en la web pública, el cartel de TMDB (si existe) y la carátula
   // de la colección aparte en la ficha; en una versión personal, la carátula. La misma regla se aplica en inglés.
   const usarCartel = Boolean(portada && m.posterTmdb && SITE.caratulaPrincipal === 'cartel');
@@ -234,7 +245,7 @@ function prepararEn(t: Titulo): Titulo {
     fondoTmdb: x.fondo ?? t.m.fondoTmdb,
     generos: x.generos ?? [],
     creadores: x.creadores ?? t.m.creadores,
-    deTmdb: new Set([...[...t.m.deTmdb].filter((c) => !['argumento', 'reparto', 'capitulos'].includes(c)), ...deTmdb]),
+    deTmdb: new Set([...[...t.m.deTmdb].filter((c) => !['argumento', 'argumento-traducido', 'reparto', 'capitulos'].includes(c)), ...deTmdb]),
   };
   // Misma regla que en español: si allí manda la carátula de la colección, aquí también;
   // si manda el cartel, aquí el cartel inglés.

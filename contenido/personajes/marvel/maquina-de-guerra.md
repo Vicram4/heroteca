@@ -7,8 +7,9 @@ alias:
 - War Machine
 - Rhodey
 - James Rhodey
-- Cnel. James Rhodey
-- Coronel James Rhodes
 - Iron Patriot
 - James 'Rhodey' Rhodes
+aliasEs:
+- Cnel. James Rhodey
+- Coronel James Rhodes
 ---

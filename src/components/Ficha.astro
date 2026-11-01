@@ -84,7 +84,13 @@ const resumen: (string | { texto: string; url: string })[][] = [];
   else if (anterior) resumen.push([r.vaDespues, { texto: anterior.corto, url: anterior.url }, '.']);
   else if (siguiente) resumen.push([r.vaAntes, { texto: siguiente.corto, url: siguiente.url }, '.']);
   const minutos = m.duracion;
-  const largo = d.tipo === 'serie' && m.capitulos.length ? r.capitulos(m.capitulos.length) : minutos ? r.dura(tx.recomendar.horas(Math.floor(minutos / 60), minutos % 60)) : '';
+  const largo = d.tipo === 'serie' && m.capitulos.length
+    ? r.capitulos(m.capitulos.length)
+    : d.tipo === 'serie' && minutos
+      ? r.duraCapitulo(minutos)
+      : minutos
+        ? r.dura(tx.recomendar.horas(Math.floor(minutos / 60), minutos % 60))
+        : '';
   const poscreditos = d.conexiones.postCreditos.length > 0 || m.escenasCreditos.length > 0;
   if (largo) resumen.push([`${largo}${poscreditos ? r.poscreditos : ''}.`]);
   else if (poscreditos) resumen.push([`${r.soloPoscreditos}.`]);
@@ -240,7 +246,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           <section class="panel">
             <h2 class="h-panel">{t.m.deTmdb.has('argumento') ? f.sinopsis : f.argumento}</h2>
             {t.m.argumento.split(/\n\n+/).map((p) => <p>{p}</p>)}
-            {t.m.deTmdb.has('argumento') && <p class="fuente-tmdb">{f.sinopsisTmdb}</p>}
+            {t.m.deTmdb.has('argumento') && <p class="fuente-tmdb">{t.m.deTmdb.has('argumento-traducido') ? f.sinopsisTraducida : f.sinopsisTmdb}</p>}
           </section>
         )
       }

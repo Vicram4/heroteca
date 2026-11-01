@@ -45,6 +45,11 @@ def trailer(videos):
     return lista[0]['key'] if lista else None
 
 
+def trailer_cualquier_idioma(tipo, id_, refrescar):
+    """Plan B si no hay tráiler en español ni en inglés: cualquier tráiler o teaser de YouTube (en cualquier idioma)."""
+    return trailer(tmdb.get(f'/{tipo}/{id_}/videos', refrescar=refrescar, language=None))
+
+
 def fecha_espana(d):
     for pais in (d.get('release_dates') or {}).get('results', []):
         if pais.get('iso_3166_1') == 'ES':
@@ -147,6 +152,14 @@ def datos_serie(d, temporada, refrescar):
     base['reparto'] = reparto
     if not temporada:
         base['temporadas'] = d.get('number_of_seasons')
+        # Sin duración por capítulo a nivel de serie: la media de los capítulos de la primera temporada
+        if not base['duracion']:
+            primera = next((t['season_number'] for t in d.get('seasons') or [] if t.get('season_number', 0) > 0), None)
+            if primera is not None:
+                s1 = tmdb.get(f"/tv/{d['id']}/season/{primera}", refrescar=refrescar) or {}
+                minutos = [e['runtime'] for e in s1.get('episodes') or [] if e.get('runtime')]
+                if minutos:
+                    base['duracion'] = round(sum(minutos) / len(minutos))
         return base
     s = tmdb.get(f"/tv/{d['id']}/season/{temporada}", refrescar=refrescar, append_to_response='credits,videos')
     if not s:
@@ -215,6 +228,8 @@ def main(argv):
             sin_tmdb.append(ident)
             continue
         datos = datos_pelicula(d, refrescar) if ref['tipo'] == 'movie' else datos_serie(d, f.get('temporada'), refrescar)
+        if not datos.get('trailer'):
+            datos['trailer'] = trailer_cualquier_idioma(ref['tipo'], ref['id'], refrescar)
         salida[ident] = limpiar({'id': ref['id'], 'tipo': ref['tipo'], **datos})
     destino = RAIZ / 'datos' / 'tmdb' / (f'{universo}.en.json' if ingles else f'{universo}.json')
     destino.parent.mkdir(parents=True, exist_ok=True)

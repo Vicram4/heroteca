@@ -8,5 +8,6 @@ alias:
 - Arrow
 - The Arrow
 - The Hood
+aliasEs:
 - Encapuchado
 ---

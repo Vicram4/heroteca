@@ -2,6 +2,6 @@
 nombre: She-Hulk
 universo: marvel
 identidad: Jennifer Walters
-alias:
+aliasEs:
 - Hulka
 ---

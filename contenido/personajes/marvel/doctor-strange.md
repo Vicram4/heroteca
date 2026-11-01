@@ -4,5 +4,6 @@ universo: marvel
 identidad: Stephen Strange
 alias:
 - Dr. Strange
+aliasEs:
 - Doctor Extraño
 ---

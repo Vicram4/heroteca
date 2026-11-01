@@ -8,6 +8,7 @@ alias:
 - James Buchanan Barnes
 - James 'Bucky' Barnes
 - Bucky
-- Lobo Blanco
 - White Wolf
+aliasEs:
+- Lobo Blanco
 ---

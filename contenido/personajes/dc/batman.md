@@ -3,7 +3,8 @@ nombre: Batman
 universo: dc
 identidad: Bruce Wayne
 alias:
-- Caballero Oscuro
 - Dark Knight
+aliasEs:
+- Caballero Oscuro
 - El Caballero Oscuro
 ---

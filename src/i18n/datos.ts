@@ -44,8 +44,13 @@ export function sagaLoc(s: Saga, idioma: Idioma): Saga {
   };
 }
 
+/**
+ * Personaje en el idioma de la página. En español se ven todos los alias; en inglés, solo los que no son
+ * exclusivos del español. El nombre y los alias españoles quedan en `aliasEs` para que el buscador los encuentre.
+ */
 export function personajeLoc(p: Personaje, idioma: Idioma): Personaje {
-  if (idioma === 'es' || !p.data.nombreEn) return p;
-  // El nombre español pasa a ser un alias más (el buscador lo sigue encontrando)
-  return { ...p, data: { ...p.data, nombre: p.data.nombreEn, alias: [p.data.nombre, ...p.data.alias.filter((a) => a !== p.data.nombreEn)] } };
+  if (idioma === 'es') return { ...p, data: { ...p.data, alias: [...p.data.alias, ...p.data.aliasEs] } };
+  const nombre = p.data.nombreEn ?? p.data.nombre;
+  const aliasEs = [...(p.data.nombreEn ? [p.data.nombre] : []), ...p.data.aliasEs];
+  return { ...p, data: { ...p.data, nombre, alias: p.data.alias.filter((a) => a !== nombre), aliasEs } };
 }
