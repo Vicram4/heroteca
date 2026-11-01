@@ -212,6 +212,9 @@ JustWatch que da TMDB. Se guardan en `datos/donde-ver.json`.
   (Settings → Secrets and variables → Actions).
 - Para lanzarlo a mano: pestaña **Actions** del repositorio → «Actualizar «Dónde ver» y «Próximamente»» → **Run workflow**.
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_donde_ver.py`
+- **Historial de llegadas y salidas** (para la futura sección «Novedades»): cada semana se compara con la anterior y
+  se apunta en `datos/novedades-plataformas.json` qué títulos llegan o se van de cada plataforma (suscripción o gratis),
+  por país. Se guardan los últimos 120 días.
 
 ## Próximamente (próximos estrenos)
 
