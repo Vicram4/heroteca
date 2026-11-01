@@ -56,6 +56,9 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 |---|---|
 | ![Series de DC ordenadas por carpetas](docs/capturas/dc-series-carpetas.jpg) | ![Orden capítulo a capítulo de un Crossover](docs/capturas/dc-orden-crossover.jpg) |
 | ![Ficha de una película](docs/capturas/ficha.jpg) | ![Estantería del UMC en modo claro](docs/capturas/marvel-umc-claro.jpg) |
+| ![Recomendaciones del test «¿Qué veo?»](docs/capturas/que-veo.jpg) | ![Estantería con los títulos vistos marcados (Mi progreso)](docs/capturas/mi-progreso.jpg) |
+| ![Gráfico cronológico frente a estreno del UMC](docs/capturas/cronologico-estreno.jpg) | ![Estadísticas de la colección](docs/capturas/estadisticas.jpg) |
+| ![Página de un actor con sus papeles](docs/capturas/actor.jpg) | |
 
 ## Cómo está hecha
 
