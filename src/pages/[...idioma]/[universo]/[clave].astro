@@ -167,6 +167,7 @@ if (p.tipo === 'ficha') {
           huecos={p.huecos}
           cronologica={p.seccion.orden !== 'estreno'}
           nombreOrden={p.seccion.orden === 'carpetas' ? tx.estanteria.porCarpetas : undefined}
+          explicacionNumero={{ cronologico: tx.estanteria.numCrono, estreno: tx.estanteria.numEstreno, carpetas: tx.estanteria.numCarpetas }[p.seccion.orden]}
           cabeceras={p.cabeceras}
           sagas={p.sagas}
           etiqueta={tx.estanteria.deSeccion(p.seccion.nombre)}

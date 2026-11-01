@@ -20,6 +20,8 @@ const tramo = textoTramo(hueco);
 const decada = Math.floor(t.d.anio / 10) * 10;
 const porCarpetas = hueco.carpeta !== undefined;
 const enEspera = t.d.enEspera;
+const plataformas = plataformasIncluidas(t.id, paisDe(idioma));
+const tipoTexto = t.d.animada ? tx.general.animado(nombreTipo(t.tipo, idioma)) : nombreTipo(t.tipo, idioma);
 ---
 
 <li
@@ -33,7 +35,7 @@ const enEspera = t.d.enEspera;
   data-titulo={t.id}
   data-personajes={personajes.join(' ')}
   data-carpeta={hueco.carpeta}
-  data-plataformas={plataformasIncluidas(t.id, paisDe(idioma)).map(clavePlataforma).join(' ')}
+  data-plataformas={plataformas.map(clavePlataforma).join(' ')}
 >
   <a href={t.url} class="caja">
     {
@@ -64,12 +66,90 @@ const enEspera = t.d.enEspera;
       <span class="extra">
         {tramo ? <><span class="solo-lectores">{tx.general.capitulos} </span>{tramo}</> : t.d.anio}
       </span>
-      <span class="solo-lectores">, {nombreTipo(t.tipo, idioma).toLowerCase()}{enEspera ? `, ${tx.general.enEspera.toLowerCase()}` : ''}</span>
+      {/* En la estantería solo lo leen los lectores de pantalla; en la vista de lista se ve */}
+      <span class="info-lista">
+        <span class="solo-lectores">, </span>
+        {tipoTexto}
+        {enEspera && ` · ${tx.general.enEspera}`}
+        {plataformas.length > 0 && <span class="plataformas"> · {plataformas.join(', ')}</span>}
+      </span>
     </span>
   </a>
 </li>
 
 <style>
+  /* Información de la vista de lista: oculta a la vista en la estantería */
+  .info-lista {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  /* ---------- Vista de lista (la estantería lleva data-vista="lista") ---------- */
+  :global(.estanteria[data-vista='lista']) .celda {
+    padding: 0;
+  }
+  :global(.estanteria[data-vista='lista']) .celda::after {
+    display: none;
+  }
+  :global(.estanteria[data-vista='lista']) .caja {
+    display: grid;
+    grid-template-columns: 3.4em 46px 1fr;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--borde);
+    border-radius: 8px;
+  }
+  :global(.estanteria[data-vista='lista']) .caja:hover,
+  :global(.estanteria[data-vista='lista']) .caja:focus-visible {
+    transform: none;
+    background: var(--sup);
+  }
+  :global(.estanteria[data-vista='lista']) .num {
+    position: static;
+    grid-column: 1;
+    justify-self: start;
+    box-shadow: none;
+  }
+  :global(.estanteria[data-vista='lista']) .tapa {
+    grid-column: 2;
+    width: 46px;
+    border-radius: 5px;
+    box-shadow: 0 0 0 2px var(--c);
+  }
+  :global(.estanteria[data-vista='lista']) .sin-tapa {
+    padding: 2px;
+  }
+  :global(.estanteria[data-vista='lista']) .sin-tapa > :not(.tipo) {
+    display: none;
+  }
+  :global(.estanteria[data-vista='lista']) .sin-tapa .tipo {
+    font-size: 0.55rem;
+  }
+  :global(.estanteria[data-vista='lista']) .pie {
+    grid-column: 3;
+    align-items: flex-start;
+    text-align: left;
+    min-height: 0;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  :global(.estanteria[data-vista='lista']) .nombre-pie {
+    -webkit-line-clamp: 1;
+  }
+  :global(.estanteria[data-vista='lista']) .info-lista {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    color: var(--txt-2);
+    font-size: 0.82rem;
+  }
   .celda {
     position: relative;
     display: flex;

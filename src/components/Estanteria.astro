@@ -20,10 +20,12 @@ interface Props {
   cabeceras?: CabeceraCarpeta[];
   /** Texto del botón del orden propio («Orden de la historia», «Por carpetas»…) */
   nombreOrden?: string;
+  /** Qué significa el número de cada caja en esta estantería (se muestra en la leyenda) */
+  explicacionNumero?: string;
 }
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
-const { huecos, cronologica, sagas = [], etiqueta, cabeceras = [], nombreOrden = tx.estanteria.historia } = Astro.props;
+const { huecos, cronologica, sagas = [], etiqueta, cabeceras = [], nombreOrden = tx.estanteria.historia, explicacionNumero = tx.estanteria.numGenerico } = Astro.props;
 const tipos = [...new Set(huecos.map((h) => h.titulo.tipo))];
 const hayAnimadas = huecos.some((h) => h.titulo.d.animada) && huecos.some((h) => !h.titulo.d.animada);
 const decadas = [...new Set(huecos.map((h) => Math.floor(h.titulo.d.anio / 10) * 10))].sort();
@@ -43,8 +45,18 @@ const personajesPresentes = personajes
   .sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es'));
 ---
 
-<section class="estanteria" data-estanteria data-orden={cronologica ? 'historia' : 'estreno'} aria-label={etiqueta}>
+<section class="estanteria" data-estanteria data-orden={cronologica ? 'historia' : 'estreno'} data-vista="estanteria" aria-label={etiqueta}>
   <div class="herramientas">
+    <div class="grupo" role="group" aria-label={tx.estanteria.vista}>
+      <button type="button" class="pastilla" data-poner-vista="estanteria" aria-pressed="true">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1" /><rect x="9" y="1" width="6" height="6" rx="1" /><rect x="1" y="9" width="6" height="6" rx="1" /><rect x="9" y="9" width="6" height="6" rx="1" /></svg>
+        {tx.estanteria.vistaEstanteria}
+      </button>
+      <button type="button" class="pastilla" data-poner-vista="lista" aria-pressed="false">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="currentColor"><rect x="1" y="2" width="14" height="2.5" rx="1" /><rect x="1" y="6.75" width="14" height="2.5" rx="1" /><rect x="1" y="11.5" width="14" height="2.5" rx="1" /></svg>
+        {tx.estanteria.vistaLista}
+      </button>
+    </div>
     {
       cronologica && (
         <div class="grupo" role="group" aria-label={tx.estanteria.orden}>
@@ -66,6 +78,12 @@ const personajesPresentes = personajes
         </div>
       )
     }
+    {/* En móvil, los desplegables se agrupan tras este botón para no ocupar toda la pantalla */}
+    <button type="button" class="pastilla boton-filtros" data-boton-filtros aria-expanded="false">
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="currentColor"><path d="M1 3h14l-5.5 6.2V14l-3-1.5V9.2Z" /></svg>
+      {tx.estanteria.filtros}
+      <span class="activos" data-activos hidden></span>
+    </button>
     <div class="grupo selects">
       {
         hayAnimadas && (
@@ -137,6 +155,19 @@ const personajesPresentes = personajes
     <p class="cuenta" aria-live="polite" data-cuenta data-singular={tx.estanteria.titulo} data-plural={tx.estanteria.titulosPl}>{tx.general.titulos(total)}</p>
   </div>
 
+  <p class="leyenda">
+    <span class="marco">
+      {tx.estanteria.marco}
+      {tipos.map((t) => (
+        <span class:list={['muestra', `t-${t}`]}>
+          <i class="punto" aria-hidden="true" />
+          {nombreTipo(t, idioma)}
+        </span>
+      ))}
+    </span>
+    <span class="que-numero">{explicacionNumero}</span>
+  </p>
+
   <ol class="estante">
     {
       cabeceras.map((c) => (
@@ -200,10 +231,43 @@ const personajesPresentes = personajes
       cuenta.textContent = `${visibles.size} ${visibles.size === 1 ? cuenta.dataset.singular : cuenta.dataset.plural}`;
       vacio.hidden = visibles.size > 0;
       guardar();
+      // Número de desplegables con algún filtro puesto (se ve en el botón «Filtros» del móvil)
+      const activos = ['animada', 'decada', 'saga', 'personaje', 'plataforma'].filter((k) => filtros[k as keyof typeof filtros]).length;
+      const marcador = est.querySelector<HTMLElement>('[data-activos]');
+      if (marcador) {
+        marcador.textContent = String(activos);
+        marcador.hidden = activos === 0;
+      }
     }
 
     const pulsar = (grupo: string, boton: HTMLButtonElement) =>
       est.querySelectorAll(`[${grupo}]`).forEach((b) => b.setAttribute('aria-pressed', String(b === boton)));
+
+    const botonFiltros = est.querySelector<HTMLButtonElement>('[data-boton-filtros]');
+    botonFiltros?.addEventListener('click', () => {
+      const abierto = botonFiltros.getAttribute('aria-expanded') !== 'true';
+      botonFiltros.setAttribute('aria-expanded', String(abierto));
+      est.toggleAttribute('data-filtros-abiertos', abierto);
+    });
+
+    // Vista estantería / lista: preferencia general, recordada en el navegador
+    const ponerVista = (vista: string) => {
+      const boton = est.querySelector<HTMLButtonElement>(`[data-poner-vista="${vista}"]`);
+      if (!boton) return;
+      est.dataset.vista = vista;
+      pulsar('data-poner-vista', boton);
+    };
+    try {
+      ponerVista(localStorage.getItem('vista-estanteria') ?? 'estanteria');
+    } catch {}
+    est.querySelectorAll<HTMLButtonElement>('[data-poner-vista]').forEach((b) =>
+      b.addEventListener('click', () => {
+        ponerVista(b.dataset.ponerVista ?? 'estanteria');
+        try {
+          localStorage.setItem('vista-estanteria', b.dataset.ponerVista ?? 'estanteria');
+        } catch {}
+      }),
+    );
 
     est.querySelectorAll<HTMLButtonElement>('[data-poner-orden]').forEach((b) =>
       b.addEventListener('click', () => {
@@ -298,6 +362,57 @@ const personajesPresentes = personajes
     grid-template-columns: repeat(auto-fill, minmax(clamp(92px, 26vw, 160px), 1fr));
     column-gap: var(--hueco-x);
     row-gap: 18px;
+  }
+  .boton-filtros {
+    display: none;
+  }
+  .activos {
+    min-width: 1.4em;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--acento);
+    color: #fff;
+    font-size: 0.78rem;
+    line-height: 1.4em;
+    text-align: center;
+  }
+  @media (max-width: 760px) {
+    .boton-filtros {
+      display: inline-flex;
+    }
+    .estanteria:not([data-filtros-abiertos]) .selects {
+      display: none;
+    }
+    .selects {
+      width: 100%;
+    }
+  }
+  .leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+    margin: -6px 0 16px;
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .marco {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+  }
+  .muestra {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .estanteria[data-vista='lista'] .estante {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+    padding: 0;
+  }
+  .estanteria[data-vista='lista'] .cabecera {
+    margin-top: 24px;
   }
   .estanteria[data-orden='historia'] :global(.celda) {
     --orden: var(--o-h);
