@@ -142,6 +142,7 @@ export const ES = {
     leyendaTmdb: 'Los datos marcados con ᵀ o «de TMDB» proceden de TMDB y solo completan lo que falta en el archivo de la colección.',
     notas: 'Notas del archivo',
     pasarAria: 'Siguiente y anterior en la estantería',
+    volver: 'Volver',
     anterior: 'Anterior',
     siguiente: 'Siguiente',
     carpetaDisco: (n: string) => `Carpeta del disco ${n}`,
@@ -165,6 +166,8 @@ export const ES = {
     del: (f: string) => ` del ${f}`,
     cambia: '. La disponibilidad cambia con frecuencia.',
     todas: (t: string) => `Ver todas las opciones para ${t}`,
+    sinDatos: 'No tenemos datos de plataformas en España para este título.',
+    buscar: (t: string) => `Buscar ${t} en JustWatch`,
   },
   carpetas: {
     temporadasDe: (n: number) => `Temporadas de la carpeta ${n}`,
@@ -380,6 +383,7 @@ export const EN: Textos = {
     leyendaTmdb: 'Details marked with ᵀ or “from TMDB” come from TMDB and only fill in what the collection archive lacks.',
     notas: 'Archive notes (in Spanish)',
     pasarAria: 'Previous and next on the shelf',
+    volver: 'Back',
     anterior: 'Previous',
     siguiente: 'Next',
     carpetaDisco: (n) => `Drive folder ${n}`,
@@ -403,6 +407,8 @@ export const EN: Textos = {
     del: (f) => ` as of ${f}`,
     cambia: '. Availability changes often.',
     todas: (t) => `See all options for ${t}`,
+    sinDatos: 'We have no streaming data for this title in the US.',
+    buscar: (t) => `Search for ${t} on JustWatch`,
   },
   carpetas: {
     temporadasDe: (n) => `Seasons in folder ${n}`,

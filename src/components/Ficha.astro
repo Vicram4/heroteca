@@ -97,6 +97,10 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
 ---
 
 <article class:list={['ficha', `t-${t.tipo}`, `brillo-${acentoTipo}`]}>
+  <div class="arriba">
+    <a class="volver pastilla" href={seccion ? `/${universo.id}/${seccion.id}/` : `/${universo.id}/`} data-volver>
+      <span aria-hidden="true">←</span> {f.volver}
+    </a>
   <nav class="miga" aria-label={tx.general.estasEn}>
     <a href={`/${universo.id}/`}>{universo.data.nombre}</a>
     <span aria-hidden="true">›</span>
@@ -114,6 +118,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     {d.enEspera && <span class="archivo">{tx.general.enEspera}</span>}
     {d.paginaArchivador && <span class="archivo">{f.paginaArchivo(d.paginaArchivador)}</span>}
   </nav>
+  </div>
 
   <div class="rejilla">
     <div class="caratulas">
@@ -158,6 +163,22 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           {misSagas.map((s) => <li><a class="chip" href={`/${universo.id}/sagas/${s.id}/`}>{s.data.nombre}</a></li>)}
         </ul>
         {!d.fichaPropia && <p class="aviso-ficha">{f.sinFicha}</p>}
+        {
+          temporadas.length > 1 && (
+            <nav class="temporadas" aria-label={f.todasTemporadas}>
+              <span class="etiqueta-temp">{f.temporadas}:</span>
+              <ul>
+                {temporadas.map((o) => (
+                  <li>
+                    <a class="chip" href={o.url} aria-current={o.id === t.id ? 'page' : undefined}>
+                      {tx.carpetas.temporadaCorta(o.d.temporada ?? 0)}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )
+        }
       </header>
 
       {
@@ -170,9 +191,9 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
         )
       }
 
-      {t.m.trailer && <Trailer id={t.m.trailer} titulo={d.titulo} fondo={t.m.fondoTmdb} />}
+      <DondeVer id={t.id} titulo={t.corto} busqueda={d.titulo} />
 
-      <DondeVer id={t.id} titulo={t.corto} />
+      {t.m.trailer && <Trailer id={t.m.trailer} titulo={d.titulo} fondo={t.m.fondoTmdb} />}
 
       {
         tieneCuerpo && (
@@ -305,23 +326,6 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
         )
       }
 
-      {
-        temporadas.length > 1 && (
-          <section class="panel">
-            <h2 class="h-panel">{f.todasTemporadas}</h2>
-            <ul class="temporadas">
-              {temporadas.map((o) => (
-                <li>
-                  <a class="chip" href={o.url} aria-current={o.id === t.id ? 'page' : undefined}>
-                    {tx.general.temporada(o.d.temporada ?? '')}
-                    {o.d.numero !== undefined && <span class="numero">{numeroTexto(o.d.numero)}</span>}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )
-      }
 
       {hayTmdb && <p class="leyenda-tmdb">{f.leyendaTmdb}</p>}
 
@@ -356,6 +360,22 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
   </nav>
 </article>
 
+<script>
+  // «Volver»: si se llega desde otra página de Heroteca, regresa a ella; si no (Google, enlace directo),
+  // el enlace lleva a la estantería de la sección.
+  document.querySelectorAll<HTMLAnchorElement>('[data-volver]').forEach((a) => {
+    let desdeLaWeb = false;
+    try {
+      desdeLaWeb = Boolean(document.referrer) && new URL(document.referrer).origin === location.origin;
+    } catch {}
+    if (!desdeLaWeb || history.length < 2) return;
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      history.back();
+    });
+  });
+</script>
+
 <style>
   .ficha {
     position: relative;
@@ -377,6 +397,46 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
   .brillo-plata::before {
     background: radial-gradient(60% 100% at 30% 0%, var(--plata-serie), transparent 70%);
     opacity: 0.22;
+  }
+  .arriba {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    margin-bottom: 18px;
+  }
+  .arriba .miga {
+    margin-bottom: 0;
+  }
+  .volver {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+  .temporadas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    margin-top: 14px;
+  }
+  .temporadas ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .etiqueta-temp {
+    font: 700 0.85rem var(--f-titulo);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--txt-2);
+  }
+  .temporadas a[aria-current='page'] {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
   }
   .miga {
     display: flex;
@@ -481,10 +541,6 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     color: var(--txt-2);
     border-left: 3px solid var(--realce);
     padding-left: 10px;
-  }
-  .h-panel {
-    font-size: 1.4rem;
-    margin-bottom: 12px;
   }
   .cuantos {
     color: var(--txt-2);
@@ -599,22 +655,6 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     flex-wrap: wrap;
     gap: 4px 18px;
     font-size: 0.88rem;
-  }
-  .temporadas {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .temporadas .chip[aria-current='page'] {
-    background: var(--txt);
-    color: var(--fondo);
-    border-color: var(--txt);
-  }
-  .temporadas .chip[aria-current='page'] .numero {
-    color: inherit;
   }
   .fuente-tmdb,
   .leyenda-tmdb {

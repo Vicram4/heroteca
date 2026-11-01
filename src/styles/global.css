@@ -244,6 +244,11 @@ a.chip:hover {
   border-color: currentColor;
   background: transparent;
 }
+/* Título de los paneles de la ficha (Argumento, Dónde ver, Ficha técnica…) */
+.h-panel {
+  font-size: 1.4rem;
+  margin: 0 0 12px;
+}
 .chip.calidad {
   background: var(--realce);
   border-color: transparent;

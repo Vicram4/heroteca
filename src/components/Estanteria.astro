@@ -172,6 +172,13 @@ const personajesPresentes = personajes
     const cuenta = est.querySelector<HTMLElement>('[data-cuenta]')!;
     const vacio = est.querySelector<HTMLElement>('[data-vacio]')!;
     const filtros = { tipo: '', animada: '', decada: '', saga: '', personaje: '', plataforma: '' };
+    // Recuerda orden y filtros durante la sesión: al volver desde una ficha, la estantería sigue como estaba
+    const clave = `estanteria:${location.pathname}:${est.getAttribute('aria-label') ?? ''}`;
+    const guardar = () => {
+      try {
+        sessionStorage.setItem(clave, JSON.stringify({ orden: est.dataset.orden, filtros }));
+      } catch {}
+    };
 
     function aplicar() {
       const estreno = est.dataset.orden === 'estreno';
@@ -192,6 +199,7 @@ const personajesPresentes = personajes
       for (const cab of cabeceras) cab.hidden = !celdas.some((c) => !c.hidden && c.dataset.carpeta === cab.dataset.cabecera);
       cuenta.textContent = `${visibles.size} ${visibles.size === 1 ? cuenta.dataset.singular : cuenta.dataset.plural}`;
       vacio.hidden = visibles.size > 0;
+      guardar();
     }
 
     const pulsar = (grupo: string, boton: HTMLButtonElement) =>
@@ -211,12 +219,38 @@ const personajesPresentes = personajes
         aplicar();
       }),
     );
-    for (const clave of ['animada', 'decada', 'saga', 'personaje', 'plataforma'] as const) {
-      est.querySelector<HTMLSelectElement>(`[data-filtro-${clave}]`)?.addEventListener('change', (e) => {
-        filtros[clave] = (e.target as HTMLSelectElement).value;
+    const desplegables = ['animada', 'decada', 'saga', 'personaje', 'plataforma'] as const;
+    for (const c of desplegables) {
+      est.querySelector<HTMLSelectElement>(`[data-filtro-${c}]`)?.addEventListener('change', (e) => {
+        filtros[c] = (e.target as HTMLSelectElement).value;
         aplicar();
       });
     }
+
+    // Restaurar lo guardado (solo valores que existen en esta estantería)
+    try {
+      const previo = JSON.parse(sessionStorage.getItem(clave) ?? 'null');
+      if (previo) {
+        const botonOrden = est.querySelector<HTMLButtonElement>(`[data-poner-orden="${previo.orden}"]`);
+        if (botonOrden) {
+          est.dataset.orden = previo.orden;
+          pulsar('data-poner-orden', botonOrden);
+        }
+        const botonTipo = est.querySelector<HTMLButtonElement>(`[data-filtro-tipo="${previo.filtros?.tipo ?? ''}"]`);
+        if (botonTipo) {
+          filtros.tipo = previo.filtros.tipo;
+          pulsar('data-filtro-tipo', botonTipo);
+        }
+        for (const c of desplegables) {
+          const sel = est.querySelector<HTMLSelectElement>(`[data-filtro-${c}]`);
+          const valor = previo.filtros?.[c] ?? '';
+          if (sel && [...sel.options].some((o) => o.value === valor)) {
+            sel.value = valor;
+            filtros[c] = valor;
+          }
+        }
+      }
+    } catch {}
     aplicar();
   });
 </script>

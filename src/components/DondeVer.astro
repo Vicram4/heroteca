@@ -7,8 +7,10 @@ import { textos, idiomaDe, LOCALE } from '../i18n';
 interface Props {
   id: string;
   titulo: string;
+  /** Texto para buscar en JustWatch si no hay datos (por defecto, el título) */
+  busqueda?: string;
 }
-const { id, titulo } = Astro.props;
+const { id, titulo, busqueda = titulo } = Astro.props;
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
 // En español, los datos de España; en inglés, los de Estados Unidos
@@ -25,6 +27,25 @@ const grupos = d
 const fecha = fechaDondeVer(pais)?.toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
 
+{
+  // Sin datos: aviso honesto (no significa que no esté en ninguna plataforma) y búsqueda en JustWatch
+  grupos.length === 0 && (
+    <section class="panel donde-ver" aria-labelledby="titulo-donde-ver">
+      <h2 class="h-panel" id="titulo-donde-ver">
+        {tx.dondeVer.titulo}
+      </h2>
+      <p class="sin-datos">{tx.dondeVer.sinDatos}</p>
+      <p class="fuente">
+        <a
+          href={pais === 'US' ? `https://www.justwatch.com/us/search?q=${encodeURIComponent(busqueda)}` : `https://www.justwatch.com/es/buscar?q=${encodeURIComponent(busqueda)}`}
+          rel="noopener"
+        >
+          {tx.dondeVer.buscar(titulo)} →
+        </a>
+      </p>
+    </section>
+  )
+}
 {
   grupos.length > 0 && (
     <section class="panel donde-ver" aria-labelledby="titulo-donde-ver">
@@ -111,6 +132,10 @@ const fecha = fechaDondeVer(pais)?.toLocaleDateString(LOCALE[idioma], { day: 'nu
     place-items: center;
     background: var(--borde);
     font-weight: 700;
+  }
+  .sin-datos {
+    margin: 10px 0 0;
+    color: var(--txt-2);
   }
   .fuente {
     margin: 14px 0 0;

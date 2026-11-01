@@ -193,7 +193,8 @@ function prepararEn(t: Titulo): Titulo {
   const d = t.d;
   const x = datosTmdb(t.universo, t.id, 'en');
   if (!x) return t;
-  const titulo = x.titulo ?? d.tituloOriginal ?? d.titulo;
+  // Sin el prefijo «Marvel's» (Disney+ ya no lo usa): «Marvel's Agent Carter» → «Agent Carter»
+  const titulo = (x.titulo ?? d.tituloOriginal ?? d.titulo).replace(/^Marvel['’]s\s+/, '');
   const original = d.tituloOriginal && d.tituloOriginal !== titulo ? d.tituloOriginal : undefined;
   const dEn = {
     ...d,
