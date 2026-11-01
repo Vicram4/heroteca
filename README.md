@@ -33,6 +33,9 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
   EE. UU. en la inglesa), con datos de JustWatch que se **actualizan solos cada semana**.
 - **Próximamente**: calendario de los próximos estrenos de Marvel y DC (películas, series y temporadas nuevas) y de las
   series en emisión, con cuenta atrás y filtro por universo. Datos de TMDB que se **actualizan solos cada semana**.
+- **Mi progreso**: marca lo que has visto desde cada ficha; las estanterías y guías lo señalan, se puede filtrar
+  por «sin ver» y la página `/mi-progreso/` muestra el avance por sección y el siguiente título. Se guarda solo en el
+  navegador (sin cuentas), con copia de seguridad descargable.
 - **Guías de visionado**: orden del UMC (cronológico y de estreno), películas de DC y Arrowverso capítulo a capítulo.
 - **Bilingüe (español e inglés)**: interfaz, datos (títulos, sinopsis, capítulos y carteles en inglés) y direcciones
   traducidas (`/en/marvel/captain-america-the-first-avenger/`), con `hreflang` para los buscadores.

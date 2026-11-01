@@ -37,10 +37,14 @@ const { filas, cabeceraNum = tx.lista.num, conFases = false, etiqueta } = Astro.
     <tbody>
       {
         filas.map((f) => (
-          <tr class={`t-${f.t.tipo}`}>
+          <tr class={`t-${f.t.tipo}`} data-titulo={f.t.id}>
             <td class="c-num">{f.num}</td>
             <td>
               <a href={f.t.url}>{f.t.corto}</a>
+              <span class="marca-visto">
+                <span aria-hidden="true">✓</span>
+                <span class="solo-lectores">{tx.progreso.visto}</span>
+              </span>
               {f.detalle && <span class="detalle">{f.detalle}</span>}
             </td>
             <td class="c-anio">{f.t.d.anio}</td>
@@ -95,6 +99,22 @@ const { filas, cabeceraNum = tx.lista.num, conFases = false, etiqueta } = Astro.
   }
   td a:hover {
     text-decoration: underline;
+  }
+  .marca-visto {
+    display: none;
+  }
+  tr[data-visto] .marca-visto {
+    display: inline-grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    margin-left: 6px;
+    border-radius: 50%;
+    background: #1a7f45;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    vertical-align: 1px;
   }
   .detalle {
     display: block;

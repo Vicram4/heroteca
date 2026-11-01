@@ -55,10 +55,11 @@ function enlacesEnIngles() {
 export default defineConfig({
   site: SITE.url,
   integrations: [
-    // Mapa del sitio para buscadores (sitemap-index.xml): sin la página de error y, hasta publicarla, sin la versión inglesa.
+    // Mapa del sitio para buscadores (sitemap-index.xml): sin la página de error ni «Mi progreso» (personal, se rellena
+    // en el navegador) y, hasta publicarla, sin la versión inglesa.
     // La correspondencia entre idiomas la indican las etiquetas hreflang de cada página.
     sitemap({
-      filter: (pagina) => !pagina.includes('/404') && (SITE.inglesPublicado || !new URL(pagina).pathname.startsWith('/en/')),
+      filter: (pagina) => !/\/(404|mi-progreso|my-progress)(\/|\.html|$)/.test(new URL(pagina).pathname) && (SITE.inglesPublicado || !new URL(pagina).pathname.startsWith('/en/')),
     }),
     enlacesEnIngles(),
   ],

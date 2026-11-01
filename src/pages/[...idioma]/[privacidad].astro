@@ -23,7 +23,7 @@ const en = idiomaDe(Astro.url) === 'en';
         <p class="entradilla">{SITE.nombre} is a non-profit fan project. <strong>It uses no cookies, has no sign-up or forms and asks for no personal data.</strong></p>
 
         <h2>What is stored in your browser</h2>
-        <p>Only your light or dark mode choice, if you change it with the button in the header. It is stored in your own browser (<code>localStorage</code>) and is never sent anywhere.</p>
+        <p>Only your preferences and your progress, stored in your own browser (<code>localStorage</code> and <code>sessionStorage</code>) and never sent anywhere: light or dark mode, shelf or list view, the shelf filters during your visit and, if you use <a href="/mi-progreso/">My progress</a>, the titles you mark as watched. You can delete them from your browser settings or with “Clear all” on that page.</p>
 
         {
           SITE.cloudflareAnalytics && (
@@ -48,7 +48,7 @@ const en = idiomaDe(Astro.url) === 'en';
         <p class="entradilla">{SITE.nombre} es un proyecto de fans sin ánimo de lucro. <strong>No usa cookies, no tiene registro ni formularios y no pide datos personales.</strong></p>
 
         <h2>Qué se guarda en tu navegador</h2>
-        <p>Solo tu elección de modo claro u oscuro, si la cambias con el botón de la cabecera. Se guarda en el propio navegador (<code>localStorage</code>) y no se envía a ningún sitio.</p>
+        <p>Solo tus preferencias y tu progreso, guardados en el propio navegador (<code>localStorage</code> y <code>sessionStorage</code>) y sin enviarse a ningún sitio: el modo claro u oscuro, la vista de estantería o lista, los filtros de las estanterías durante la visita y, si usas <a href="/mi-progreso/">Mi progreso</a>, los títulos que marcas como vistos. Puedes borrarlos desde los ajustes del navegador o con «Borrar todo» en esa página.</p>
 
         {
           SITE.cloudflareAnalytics && (

@@ -1,0 +1,56 @@
+---
+/**
+ * Barra «Has visto 12 de 40 (30 %)» de un grupo de títulos. La rellena src/lib/vistos.ts en el navegador
+ * con lo guardado en este navegador; sin JavaScript se queda en 0.
+ */
+import { textos } from '../i18n';
+
+interface Props {
+  /** Ids de las fichas que cuentan (sin repetir) */
+  ids: string[];
+  /** Enlace a la página «Mi progreso» */
+  conEnlace?: boolean;
+  /** Texto corto («12/40») en vez de la frase */
+  corto?: boolean;
+}
+const { ids, conEnlace = false, corto = false } = Astro.props;
+const tx = textos(Astro.url);
+const plantilla = corto ? tx.progreso.corto : tx.progreso.plantilla;
+const unicos = [...new Set(ids)];
+---
+
+<div class="progreso" data-progreso data-ids={unicos.join(' ')} data-plantilla={plantilla}>
+  <span class="barra" aria-hidden="true"><span></span></span>
+  <span class="texto" data-progreso-texto>{plantilla.replace('{n}', '0').replace('{total}', String(unicos.length)).replace('{pc}', '0')}</span>
+  {conEnlace && <a href="/mi-progreso/">{tx.progreso.ver}</a>}
+</div>
+
+<style>
+  .progreso {
+    --progreso: 0%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    font-size: 0.88rem;
+    color: var(--txt-2);
+  }
+  .barra {
+    flex: 0 1 180px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--borde);
+    overflow: hidden;
+  }
+  .barra span {
+    display: block;
+    width: var(--progreso);
+    height: 100%;
+    border-radius: inherit;
+    background: var(--visto, #1f9d55);
+    transition: width 0.4s ease;
+  }
+  a {
+    font-weight: 600;
+  }
+</style>

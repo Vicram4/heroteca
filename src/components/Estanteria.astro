@@ -9,6 +9,7 @@ import { sagaLoc, personajeLoc } from '../i18n/datos';
 import type { CabeceraCarpeta, Hueco, Saga } from '../lib/datos';
 import { apariciones } from '../lib/personajes';
 import { clavePlataforma, plataformasIncluidas, paisDe } from '../lib/dondever';
+import Progreso from './Progreso.astro';
 
 interface Props {
   huecos: Hueco[];
@@ -85,6 +86,14 @@ const personajesPresentes = personajes
       <span class="activos" data-activos hidden></span>
     </button>
     <div class="grupo selects">
+      <label>
+        <span class="solo-lectores">{tx.progreso.filtro}</span>
+        <select data-filtro-visto>
+          <option value="">{tx.progreso.filtroTodos}</option>
+          <option value="no">{tx.progreso.filtroSinVer}</option>
+          <option value="si">{tx.progreso.filtroVistos}</option>
+        </select>
+      </label>
       {
         hayAnimadas && (
           <label>
@@ -155,6 +164,8 @@ const personajesPresentes = personajes
     <p class="cuenta" aria-live="polite" data-cuenta data-singular={tx.estanteria.titulo} data-plural={tx.estanteria.titulosPl}>{tx.general.titulos(total)}</p>
   </div>
 
+  <Progreso ids={huecos.map((h) => h.titulo.id)} conEnlace />
+
   <p class="leyenda">
     <span class="marco">
       {tx.estanteria.marco}
@@ -197,12 +208,13 @@ const personajesPresentes = personajes
 </section>
 
 <script>
+  import { leerVistos, EVENTO } from '../lib/vistos';
   document.querySelectorAll<HTMLElement>('[data-estanteria]').forEach((est) => {
     const celdas = [...est.querySelectorAll<HTMLLIElement>('.celda')];
     const cabeceras = [...est.querySelectorAll<HTMLLIElement>('[data-cabecera]')];
     const cuenta = est.querySelector<HTMLElement>('[data-cuenta]')!;
     const vacio = est.querySelector<HTMLElement>('[data-vacio]')!;
-    const filtros = { tipo: '', animada: '', decada: '', saga: '', personaje: '', plataforma: '' };
+    const filtros = { tipo: '', animada: '', decada: '', saga: '', personaje: '', plataforma: '', visto: '' };
     // Recuerda orden y filtros durante la sesión: al volver desde una ficha, la estantería sigue como estaba
     const clave = `estanteria:${location.pathname}:${est.getAttribute('aria-label') ?? ''}`;
     const guardar = () => {
@@ -214,6 +226,7 @@ const personajesPresentes = personajes
     function aplicar() {
       const estreno = est.dataset.orden === 'estreno';
       const visibles = new Set<string>();
+      const vistos = leerVistos();
       for (const c of celdas) {
         const ok =
           !(estreno && c.dataset.repetido) &&
@@ -222,7 +235,8 @@ const personajesPresentes = personajes
           (!filtros.decada || c.dataset.decada === filtros.decada) &&
           (!filtros.saga || (c.dataset.sagas ?? '').split(' ').includes(filtros.saga)) &&
           (!filtros.personaje || (c.dataset.personajes ?? '').split(' ').includes(filtros.personaje)) &&
-          (!filtros.plataforma || (c.dataset.plataformas ?? '').split(' ').includes(filtros.plataforma));
+          (!filtros.plataforma || (c.dataset.plataformas ?? '').split(' ').includes(filtros.plataforma)) &&
+          (!filtros.visto || vistos.has(c.dataset.titulo ?? '') === (filtros.visto === 'si'));
         c.hidden = !ok;
         if (ok) visibles.add(c.dataset.titulo ?? '');
       }
@@ -232,7 +246,7 @@ const personajesPresentes = personajes
       vacio.hidden = visibles.size > 0;
       guardar();
       // Número de desplegables con algún filtro puesto (se ve en el botón «Filtros» del móvil)
-      const activos = ['animada', 'decada', 'saga', 'personaje', 'plataforma'].filter((k) => filtros[k as keyof typeof filtros]).length;
+      const activos = ['animada', 'decada', 'saga', 'personaje', 'plataforma', 'visto'].filter((k) => filtros[k as keyof typeof filtros]).length;
       const marcador = est.querySelector<HTMLElement>('[data-activos]');
       if (marcador) {
         marcador.textContent = String(activos);
@@ -283,7 +297,7 @@ const personajesPresentes = personajes
         aplicar();
       }),
     );
-    const desplegables = ['animada', 'decada', 'saga', 'personaje', 'plataforma'] as const;
+    const desplegables = ['animada', 'decada', 'saga', 'personaje', 'plataforma', 'visto'] as const;
     for (const c of desplegables) {
       est.querySelector<HTMLSelectElement>(`[data-filtro-${c}]`)?.addEventListener('change', (e) => {
         filtros[c] = (e.target as HTMLSelectElement).value;
@@ -316,6 +330,8 @@ const personajesPresentes = personajes
       }
     } catch {}
     aplicar();
+    // Si marcas o desmarcas algo (aquí o en otra pestaña), el filtro de vistos se recalcula
+    window.addEventListener(EVENTO, () => filtros.visto && aplicar());
   });
 </script>
 
@@ -386,6 +402,9 @@ const personajesPresentes = personajes
     .selects {
       width: 100%;
     }
+  }
+  .estanteria > :global(.progreso) {
+    margin: -4px 0 12px;
   }
   .leyenda {
     display: flex;

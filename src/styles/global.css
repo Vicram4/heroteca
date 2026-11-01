@@ -89,14 +89,18 @@
 body,
 [style*='--u-txt'] {
   --acento-txt: var(--u-txt-claro, #c8161d);
+  /* Verde de «visto» (Mi progreso) para texto */
+  --visto-txt: #1a7f45;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema='claro']) :is(body, [style*='--u-txt']) {
     --acento-txt: var(--u-txt-oscuro, #ff5a61);
+    --visto-txt: #4cc38a;
   }
 }
 :root[data-tema='oscuro'] :is(body, [style*='--u-txt']) {
   --acento-txt: var(--u-txt-oscuro, #ff5a61);
+  --visto-txt: #4cc38a;
 }
 
 

@@ -1,0 +1,223 @@
+---
+import { conIdiomas, idiomaDe, textos } from '../../i18n';
+export function getStaticPaths() {
+  return conIdiomas([{ params: { miProgreso: 'mi-progreso' } }], () => ({ miProgreso: 'my-progress' }));
+}
+/**
+ * «Mi progreso»: cuánto llevas visto de cada universo y sección, y el siguiente título sin ver en el orden de la
+ * colección. Todo se calcula en el navegador con lo guardado en localStorage (src/lib/vistos.ts); la página
+ * solo trae la lista de títulos de cada sección en orden. No se indexa ni va en el mapa del sitio.
+ */
+import Base from '../../layouts/Base.astro';
+import Progreso from '../../components/Progreso.astro';
+import { universosActivos, titulosDe, huecosDeSeccion, huecosPorCarpetas, estiloUniverso, localizar, type Titulo } from '../../lib/datos';
+import { seccionLoc } from '../../i18n/datos';
+
+const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+const universos = await Promise.all(
+  (await universosActivos()).map(async (u) => {
+    const titulos = await titulosDe(u.id);
+    const secciones = u.data.secciones.map((s) => {
+      const deSeccion = titulos.filter((t) => t.d.seccion === s.id);
+      const { huecos } = s.orden === 'carpetas' ? huecosPorCarpetas(deSeccion, s) : { huecos: huecosDeSeccion(deSeccion, s) };
+      // Orden de la colección, sin repetir las temporadas troceadas
+      const orden: Titulo[] = [];
+      for (const h of huecos) if (!orden.includes(h.titulo)) orden.push(h.titulo);
+      return { s: seccionLoc(s, idioma), orden: orden.map((t) => localizar(t, idioma)) };
+    });
+    return { u, secciones };
+  }),
+);
+---
+
+<Base
+  titulo={tx.progreso.tituloSeo}
+  descripcion={tx.progreso.descripcion}
+  noIndexar
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: tx.progreso.titulo, url: '/mi-progreso/' }]}
+>
+  <div class="contenedor mi-progreso" data-mi-progreso>
+    <h1>{tx.progreso.titulo}</h1>
+    <p class="entradilla">{tx.progreso.intro}</p>
+
+    {
+      universos.map(({ u, secciones }) => (
+        <section class="universo" style={estiloUniverso(u)} aria-labelledby={`u-${u.id}`}>
+          <div class="cab-universo">
+            <h2 id={`u-${u.id}`}>
+              <a href={`/${u.id}/`}>{u.data.nombre}</a>
+            </h2>
+            <Progreso ids={secciones.flatMap((x) => x.orden.map((t) => t.id))} />
+          </div>
+          <ul class="secciones">
+            {secciones.map(({ s, orden }) => (
+              <li class="seccion panel" data-seccion>
+                <h3>
+                  <a href={`/${u.id}/${s.id}/`}>{s.nombre}</a>
+                </h3>
+                <Progreso ids={orden.map((t) => t.id)} corto />
+                <p class="siguiente" data-siguiente>
+                  {tx.progreso.siguiente}{' '}
+                  {orden.map((t, i) => (
+                    <a href={t.url} data-candidato={t.id} hidden={i > 0}>
+                      {t.corto}
+                    </a>
+                  ))}
+                </p>
+                <p class="completo" data-completo hidden>
+                  ✓ {tx.progreso.completo}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    <section class="copia panel" aria-labelledby="t-copia">
+      <h2 id="t-copia">{tx.progreso.copia}</h2>
+      <p>{tx.progreso.privado}</p>
+      <div class="botones">
+        <button type="button" class="pastilla" data-exportar>{tx.progreso.exportar}</button>
+        <label class="pastilla">
+          {tx.progreso.importar}
+          <input type="file" accept="application/json,.json" data-importar class="solo-lectores" />
+        </label>
+        <button type="button" class="pastilla" data-borrar data-confirmar={tx.progreso.confirmarBorrar}>{tx.progreso.borrar}</button>
+      </div>
+      <p class="estado" role="status" data-estado data-importado={tx.progreso.importado(999)} data-error={tx.progreso.errorImportar}></p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { leerVistos, guardarVistos, EVENTO } from '../../lib/vistos';
+
+  const raiz = document.querySelector<HTMLElement>('[data-mi-progreso]')!;
+
+  // En cada sección, el primer título sin ver en el orden de la colección
+  function siguientes() {
+    const vistos = leerVistos();
+    raiz.querySelectorAll<HTMLElement>('[data-seccion]').forEach((s) => {
+      const candidatos = [...s.querySelectorAll<HTMLAnchorElement>('[data-candidato]')];
+      const primero = candidatos.find((a) => !vistos.has(a.dataset.candidato ?? ''));
+      candidatos.forEach((a) => (a.hidden = a !== primero));
+      s.querySelector<HTMLElement>('[data-siguiente]')!.hidden = !primero;
+      s.querySelector<HTMLElement>('[data-completo]')!.hidden = Boolean(primero);
+    });
+  }
+  siguientes();
+  window.addEventListener(EVENTO, siguientes);
+
+  // Copia de seguridad: un archivo JSON con los ids vistos
+  const estado = raiz.querySelector<HTMLElement>('[data-estado]')!;
+  raiz.querySelector('[data-exportar]')?.addEventListener('click', () => {
+    const datos = { app: 'heroteca', version: 1, fecha: new Date().toISOString(), vistos: [...leerVistos()].sort() };
+    const enlace = document.createElement('a');
+    enlace.href = URL.createObjectURL(new Blob([JSON.stringify(datos, null, 1)], { type: 'application/json' }));
+    enlace.download = `heroteca-progreso-${datos.fecha.slice(0, 10)}.json`;
+    enlace.click();
+    URL.revokeObjectURL(enlace.href);
+  });
+  raiz.querySelector<HTMLInputElement>('[data-importar]')?.addEventListener('change', async (e) => {
+    const input = e.target as HTMLInputElement;
+    const archivo = input.files?.[0];
+    if (!archivo) return;
+    try {
+      const datos = JSON.parse(await archivo.text());
+      const lista = Array.isArray(datos) ? datos : datos?.app === 'heroteca' ? datos.vistos : null;
+      if (!Array.isArray(lista)) throw new Error();
+      // Se suman a lo que ya hubiera
+      const vistos = leerVistos();
+      lista.filter((x: unknown) => typeof x === 'string').forEach((x: string) => vistos.add(x));
+      guardarVistos(vistos);
+      estado.textContent = (estado.dataset.importado ?? '').replace('999', String(vistos.size));
+    } catch {
+      estado.textContent = estado.dataset.error ?? '';
+    }
+    input.value = '';
+  });
+  raiz.querySelector<HTMLButtonElement>('[data-borrar]')?.addEventListener('click', (e) => {
+    if (confirm((e.currentTarget as HTMLElement).dataset.confirmar)) guardarVistos(new Set());
+  });
+</script>
+
+<style>
+  .mi-progreso {
+    padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .entradilla {
+    max-width: 70ch;
+    color: var(--txt-2);
+  }
+  .universo {
+    margin-top: 32px;
+  }
+  .cab-universo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 24px;
+    margin-bottom: 14px;
+  }
+  .cab-universo h2 {
+    margin: 0;
+  }
+  .cab-universo h2 a {
+    color: inherit;
+    text-decoration: none;
+    box-shadow: inset 0 -0.13em 0 var(--acento);
+  }
+  .secciones {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 14px;
+  }
+  .seccion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .seccion h3 {
+    margin: 0;
+    font: 700 1.15rem var(--f-titulo);
+  }
+  .seccion h3 a {
+    color: inherit;
+  }
+  .siguiente,
+  .completo {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .siguiente a {
+    font-weight: 600;
+  }
+  .completo {
+    color: var(--visto-txt);
+    font-weight: 700;
+  }
+  .copia {
+    margin-top: 40px;
+    max-width: 760px;
+  }
+  .copia h2 {
+    margin-top: 0;
+  }
+  .botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .botones label:focus-within {
+    outline: 2px solid var(--acento);
+    outline-offset: 2px;
+  }
+  .estado:empty {
+    display: none;
+  }
+</style>

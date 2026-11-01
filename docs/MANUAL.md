@@ -231,6 +231,22 @@ lo que ya se haya estrenado desde la última actualización.
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_proximamente.py`
 - Textos de la página: apartado `proximos` de `src/i18n/textos.ts`.
 
+## Mi progreso (vistos)
+
+Cada ficha tiene un botón **«Marcar como visto»**. Lo marcado se ve en toda la web:
+
+- **Estanterías:** marca verde ✓ en la carátula, barra «Has visto 12 de 90» y filtro «Vistos y sin ver / Solo sin ver /
+  Solo vistos» (junto a los demás desplegables).
+- **Guías:** ✓ junto a cada título visto.
+- **Página `/mi-progreso/`** (`/en/my-progress/`, enlazada en el pie y en cada barra): avance por universo y sección y el
+  **siguiente** título sin ver en el orden de la colección. Tiene **copia de seguridad** (descargar y cargar un archivo
+  JSON) y **Borrar todo**. No se indexa en buscadores ni va en el mapa del sitio.
+
+Cómo funciona: los ids de las fichas vistas se guardan en `localStorage` (clave `heroteca:vistos`), solo en ese navegador;
+no hay cuentas ni servidor. Son los mismos en español e inglés. El código está en `src/lib/vistos.ts`: cualquier elemento
+con `data-titulo="<id>"` recibe `data-visto` si está visto, los botones `data-alternar-visto` marcan y desmarcan y las barras
+son el componente `Progreso.astro`. Textos: apartado `progreso` de `src/i18n/textos.ts`.
+
 ## Versión en inglés (/en/)
 
 - Todas las páginas están en `src/pages/[...idioma]/` y generan su versión española y la inglesa.

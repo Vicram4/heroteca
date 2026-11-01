@@ -49,6 +49,7 @@ const tipoTexto = t.d.animada ? tx.general.animado(nombreTipo(t.tipo, idioma)) :
       )
     }
     <span class="tapa">
+      <span class="marca-visto"><span aria-hidden="true">✓</span><span class="solo-lectores">{tx.progreso.visto}</span></span>
       {
         t.portada || t.m.posterTmdb ? (
           <Caratula t={t} ancho={160} cargaInmediata={prioridad} />
@@ -207,6 +208,7 @@ const tipoTexto = t.d.animada ? tx.general.animado(nombreTipo(t.tipo, idioma)) :
     display: none;
   }
   .tapa {
+    position: relative;
     display: block;
     aspect-ratio: 3 / 4;
     border-radius: var(--radio-s);
@@ -215,6 +217,33 @@ const tipoTexto = t.d.animada ? tx.general.animado(nombreTipo(t.tipo, idioma)) :
     box-shadow:
       0 0 0 3px var(--c),
       0 14px 22px -12px rgb(0 0 0 / 0.65);
+  }
+  /* Marca de «visto» (Mi progreso): oculta hasta que src/lib/vistos.ts pone data-visto en la celda */
+  .marca-visto {
+    display: none;
+  }
+  .celda[data-visto] .marca-visto {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #1f9d55;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.9rem;
+    box-shadow: 0 0 0 2px #fff, 0 2px 6px rgb(0 0 0 / 0.4);
+  }
+  :global(.estanteria[data-vista='lista']) .celda[data-visto] .marca-visto {
+    top: 2px;
+    right: 2px;
+    width: 18px;
+    height: 18px;
+    font-size: 0.65rem;
   }
   .tapa :global(img) {
     width: 100%;

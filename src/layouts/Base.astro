@@ -163,6 +163,7 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
             <ul>
               {universos.map((u) => <li><a href={`/${u.id}/`}>{u.data.nombre}</a></li>)}
               <li><a href="/proximamente/">{tx.proximos.pie}</a></li>
+              <li><a href="/mi-progreso/">{tx.progreso.pie}</a></li>
               {universos.filter((u) => guiasDe(u.id).length).map((u) => <li><a href={`/${u.id}/guias/`}>{tx.pie.guiasDe(u.data.nombre)}</a></li>)}
             </ul>
           </nav>
@@ -217,6 +218,10 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
       )
     }
     <script>
+      // «Mi progreso»: marcas de visto, botones y contadores (src/lib/vistos.ts)
+      import { iniciarVistos } from '../lib/vistos';
+      iniciarVistos();
+
       // Spoilers en línea (||texto|| en las fichas): se revelan con clic, Intro o espacio
       document.querySelectorAll<HTMLElement>('.spoiler-linea').forEach((s) => {
         const alternar = () => s.setAttribute('aria-pressed', String(s.getAttribute('aria-pressed') !== 'true'));

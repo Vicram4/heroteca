@@ -162,6 +162,11 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           {d.calidad.map((c) => <li><span class="chip calidad">{c === '4k' ? '4K' : c.toUpperCase()}</span></li>)}
           {misSagas.map((s) => <li><a class="chip" href={`/${universo.id}/sagas/${s.id}/`}>{s.data.nombre}</a></li>)}
         </ul>
+        <button type="button" class="pastilla boton-visto" data-alternar-visto={t.id} aria-pressed="false">
+          <span class="si-visto" aria-hidden="true">✓</span>
+          <span class="no-visto">{tx.progreso.marcar}</span>
+          <span class="si-visto">{tx.progreso.visto}</span>
+        </button>
         {!d.fichaPropia && <p class="aviso-ficha">{f.sinFicha}</p>}
         {
           temporadas.length > 1 && (
@@ -530,6 +535,19 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     color: var(--txt-2);
     font-size: 1.15rem;
     margin: 8px 0 0;
+  }
+  /* Botón «Marcar como visto» (Mi progreso): el texto cambia con aria-pressed */
+  .boton-visto {
+    margin-top: 14px;
+  }
+  .boton-visto[aria-pressed='true'] {
+    background: #1a7f45;
+    border-color: #1a7f45;
+    color: #fff;
+  }
+  .boton-visto[aria-pressed='true'] .no-visto,
+  .boton-visto:not([aria-pressed='true']) .si-visto {
+    display: none;
   }
   .chips {
     list-style: none;
