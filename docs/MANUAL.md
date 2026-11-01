@@ -239,6 +239,20 @@ lo que ya se haya estrenado desde la última actualización.
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_proximamente.py`
 - Textos de la página: apartado `proximos` de `src/i18n/textos.ts`.
 
+## Órdenes de las estanterías
+
+Todas las estanterías (secciones, sagas y personajes) tienen estos órdenes; en el móvil van en un desplegable:
+
+- **El propio de la sección** («Orden de la historia» o «Por carpetas»), solo en las secciones que lo tienen.
+- **Orden de estreno**, del más antiguo al más reciente.
+- **Más recientes**: el de estreno al revés.
+- **Mejor valoradas**: por la nota media de TMDB, que se muestra en cada caja («★ 7,6»). Solo cuentan las notas con al
+  menos 50 votos (`VOTOS_MIN` en `Caja.astro`); el resto va al final. En las series se usa la nota de cada temporada.
+
+Fuera del orden propio, cada título sale una sola vez (sin repetir los tramos de una temporada), se ocultan las
+cabeceras de carpeta y se ve el número de la colección, como ya pasaba en el orden de estreno. El orden elegido se
+recuerda al volver desde una ficha.
+
 ## ¿Qué veo? (recomendaciones)
 
 Página `/recomendaciones/` (`/en/recommendations/`), enlazada desde la portada («¿No sabes qué ver?») y el pie. Hace

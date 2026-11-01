@@ -58,14 +58,23 @@ const personajesPresentes = personajes
         {tx.estanteria.vistaLista}
       </button>
     </div>
-    {
-      cronologica && (
-        <div class="grupo" role="group" aria-label={tx.estanteria.orden}>
-          <button type="button" class="pastilla" data-poner-orden="historia" aria-pressed="true">{nombreOrden}</button>
-          <button type="button" class="pastilla" data-poner-orden="estreno" aria-pressed="false">{tx.estanteria.estreno}</button>
-        </div>
-      )
-    }
+    {/* Orden: el propio de la sección (si lo tiene), estreno, más recientes y mejor valoradas (nota de TMDB) */}
+    <div class="grupo grupo-orden" role="group" aria-label={tx.estanteria.orden}>
+      {cronologica && <button type="button" class="pastilla" data-poner-orden="historia" aria-pressed="true">{nombreOrden}</button>}
+      <button type="button" class="pastilla" data-poner-orden="estreno" aria-pressed={cronologica ? "false" : "true"}>{tx.estanteria.estreno}</button>
+      <button type="button" class="pastilla" data-poner-orden="recientes" aria-pressed="false">{tx.estanteria.recientes}</button>
+      <button type="button" class="pastilla" data-poner-orden="nota" aria-pressed="false">{tx.estanteria.mejorValoradas}</button>
+    </div>
+    {/* En el móvil, el orden va en un desplegable (sincronizado con los botones) para no ocupar media pantalla */}
+    <label class="orden-movil">
+      <span class="solo-lectores">{tx.estanteria.orden}</span>
+      <select data-orden-select>
+        {cronologica && <option value="historia">{nombreOrden}</option>}
+        <option value="estreno">{tx.estanteria.estreno}</option>
+        <option value="recientes">{tx.estanteria.recientes}</option>
+        <option value="nota">{tx.estanteria.mejorValoradas}</option>
+      </select>
+    </label>
     {
       tipos.length > 1 && (
         <div class="grupo" role="group" aria-label={tx.estanteria.tipo}>
@@ -223,13 +232,18 @@ const personajesPresentes = personajes
       } catch {}
     };
 
+    const selectOrden = est.querySelector<HTMLSelectElement>('[data-orden-select]');
+    selectOrden?.addEventListener('change', () => est.querySelector<HTMLButtonElement>(`[data-poner-orden="${selectOrden.value}"]`)?.click());
+
     function aplicar() {
-      const estreno = est.dataset.orden === 'estreno';
+      if (selectOrden) selectOrden.value = est.dataset.orden ?? '';
+      // Fuera del orden de la historia, cada título una sola vez (sin repetir los tramos de una temporada)
+      const unaVez = est.dataset.orden !== 'historia';
       const visibles = new Set<string>();
       const vistos = leerVistos();
       for (const c of celdas) {
         const ok =
-          !(estreno && c.dataset.repetido) &&
+          !(unaVez && c.dataset.repetido) &&
           (!filtros.tipo || c.dataset.tipo === filtros.tipo) &&
           (!filtros.animada || c.dataset.animada === filtros.animada) &&
           (!filtros.decada || c.dataset.decada === filtros.decada) &&
@@ -425,6 +439,17 @@ const personajesPresentes = personajes
     align-items: center;
     gap: 5px;
   }
+  .orden-movil {
+    display: none;
+  }
+  @media (max-width: 760px) {
+    .grupo-orden {
+      display: none;
+    }
+    .orden-movil {
+      display: block;
+    }
+  }
   .estanteria[data-vista='lista'] .estante {
     grid-template-columns: 1fr;
     row-gap: 0;
@@ -438,6 +463,13 @@ const personajesPresentes = personajes
   }
   .estanteria[data-orden='estreno'] :global(.celda) {
     --orden: var(--o-e);
+  }
+  .estanteria[data-orden='recientes'] :global(.celda) {
+    --orden: calc(-1 * var(--o-e));
+  }
+  /* --nota es la nota ×10 (0 si no hay nota fiable): las mejor valoradas primero; a igual nota, el orden de la colección */
+  .estanteria[data-orden='nota'] :global(.celda) {
+    --orden: calc(-1 * var(--nota, 0));
   }
   .cabecera {
     grid-column: 1 / -1;
@@ -467,7 +499,7 @@ const personajesPresentes = personajes
   .estanteria[data-orden='historia'] .cabecera {
     --orden: var(--o-h);
   }
-  .estanteria[data-orden='estreno'] .cabecera {
+  .estanteria:not([data-orden='historia']) .cabecera {
     display: none;
   }
   .vacio {

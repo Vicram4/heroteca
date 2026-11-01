@@ -153,6 +153,9 @@ def datos_serie(d, temporada, refrescar):
         return base
     if s.get('poster_path'):
         base['poster'] = s['poster_path']
+    # Nota de la temporada (si TMDB la tiene); los votos siguen siendo los de la serie, que miden lo conocida que es
+    if s.get('vote_average') and base.get('nota'):
+        base['nota'] = round(s['vote_average'], 1)
     base['fecha'] = s.get('air_date') or base['fecha']
     if (s.get('overview') or '').strip():
         base['sinopsis'] = s['overview'].strip()

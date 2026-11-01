@@ -27,6 +27,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **423 fichas** (246 de Marvel, 177 de DC), **171 personajes**, **42 sagas y agrupaciones**.
 - **Estanterías** con la numeración original y orden alternable (historia o estreno), leyenda de colores y **vista de lista** compacta; en móvil, los filtros se agrupan en un botón.
 - **Orden por carpetas** para las series de DC (Pre-Crossover, Crossover…), con páginas que muestran el orden de visionado capítulo a capítulo entre varias series.
+- **Cuatro órdenes** en cada estantería: el de la colección (historia o carpetas), estreno, más recientes y mejor valoradas.
 - **Filtros** por tipo, década, personaje y saga; **búsqueda instantánea** (atajo `/`) que también encuentra títulos originales y alternativos.
 - **Fichas completas**: datos del archivo original, completados con sinopsis, reparto, carteles y tráileres de TMDB. Cada dato de TMDB queda marcado. La imagen principal es el cartel oficial y cada ficha muestra también la carátula de la edición de la colección.
 - **Dónde ver**: plataformas de suscripción, alquiler y compra de cada título (España en la versión española,
