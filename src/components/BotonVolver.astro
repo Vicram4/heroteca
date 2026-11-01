@@ -1,0 +1,66 @@
+---
+/**
+ * Botón «← Volver» con la miga de pan al lado (fichas, personajes, sagas, actores, carpetas y guías).
+ * Si se llega desde otra página de Heroteca en el mismo idioma, vuelve a ella; si no (Google, enlace directo,
+ * cambio de idioma), el enlace lleva a `href` (la lista a la que pertenece la página).
+ * La miga de pan va en el slot.
+ */
+import { textos } from '../i18n';
+
+interface Props {
+  /** Adónde lleva si no hay página anterior de Heroteca */
+  href: string;
+  /** Margen superior (no hace falta en las fichas, que ya lo tienen) */
+  conEspacio?: boolean;
+}
+const { href, conEspacio = true } = Astro.props;
+const tx = textos(Astro.url);
+---
+
+<div class:list={['arriba-volver', { 'con-espacio': conEspacio }]}>
+  <a class="volver pastilla" href={href} data-volver>
+    <span aria-hidden="true">←</span>
+    {tx.ficha.volver}
+  </a>
+  <slot />
+</div>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('[data-volver]').forEach((a) => {
+    // Solo se vuelve atrás si la página anterior es de Heroteca y está en el mismo idioma. Si se acaba de
+    // cambiar de idioma, «atrás» sería la misma página en el otro idioma: entonces se usa el enlace.
+    const enIngles = (ruta: string) => ruta === '/en' || ruta.startsWith('/en/');
+    let mismaWebEIdioma = false;
+    try {
+      const anterior = document.referrer ? new URL(document.referrer) : undefined;
+      mismaWebEIdioma = Boolean(anterior) && anterior!.origin === location.origin && enIngles(anterior!.pathname) === enIngles(location.pathname);
+    } catch {}
+    if (!mismaWebEIdioma || history.length < 2) return;
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      history.back();
+    });
+  });
+</script>
+
+<style>
+  .arriba-volver {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    margin-bottom: 18px;
+  }
+  .con-espacio {
+    padding-top: clamp(18px, 3vw, 28px);
+  }
+  /* La miga de pan va alineada con el botón (sin los márgenes que tenga en cada página) */
+  .arriba-volver :global(.miga) {
+    margin: 0;
+    padding: 0;
+  }
+  .volver {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+</style>

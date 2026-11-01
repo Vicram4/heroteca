@@ -3,6 +3,7 @@ import { tablasEn } from '../../../../i18n/rutas';
 import { conIdiomas } from '../../../../i18n';
 /** Página de personaje: todos los títulos donde aparece y quién lo ha interpretado. */
 import Base from '../../../../layouts/Base.astro';
+import BotonVolver from '../../../../components/BotonVolver.astro';
 import SubNav from '../../../../components/SubNav.astro';
 import Estanteria from '../../../../components/Estanteria.astro';
 import { universosActivos, sagasDe, huecosDeSeccion } from '../../../../lib/datos';
@@ -54,7 +55,9 @@ const anios = titulos.map((t) => t.d.anio);
 >
   <SubNav slot="subnav" universo={universo} activo="personajes" />
   <div class="contenedor">
-    <nav class="miga" aria-label={tx.general.estasEn}><a href={`/${universo.id}/personajes/`}>{tx.personajes.titulo}</a></nav>
+    <BotonVolver href={`/${universo.id}/personajes/`}>
+      <nav class="miga" aria-label={tx.general.estasEn}><a href={`/${universo.id}/personajes/`}>{tx.personajes.titulo}</a></nav>
+    </BotonVolver>
     <header class="cab">
       <div class="cartel">
         <h1>{p.data.nombre}</h1>

@@ -5,6 +5,7 @@ import { conIdiomas } from '../../../../i18n';
  * tu orden capítulo a capítulo entre series (los bloques Crossover).
  */
 import Base from '../../../../layouts/Base.astro';
+import BotonVolver from '../../../../components/BotonVolver.astro';
 import SubNav from '../../../../components/SubNav.astro';
 import Caja from '../../../../components/Caja.astro';
 import {
@@ -97,11 +98,13 @@ const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
   <SubNav slot="subnav" universo={universo} activo={seccion.id} />
   <div class="contenedor">
     <header class="cab">
-      <nav class="miga" aria-label={tx.general.estasEn}>
-        <a href={`/${universo.id}/${seccion.id}/`}>{seccion.nombre}</a>
-        <span aria-hidden="true">›</span>
-        <span>{tx.general.carpeta(carpeta.numero)}</span>
-      </nav>
+      <BotonVolver href={`/${universo.id}/${seccion.id}/`} conEspacio={false}>
+        <nav class="miga" aria-label={tx.general.estasEn}>
+          <a href={`/${universo.id}/${seccion.id}/`}>{seccion.nombre}</a>
+          <span aria-hidden="true">›</span>
+          <span>{tx.general.carpeta(carpeta.numero)}</span>
+        </nav>
+      </BotonVolver>
       <h1>
         {tx.general.carpeta(carpeta.numero)} <span class="etapa">· {carpeta.etapa}</span>
       </h1>

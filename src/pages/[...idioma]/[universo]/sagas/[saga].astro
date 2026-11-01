@@ -3,6 +3,7 @@ import { tablasEn } from '../../../../i18n/rutas';
 import { conIdiomas } from '../../../../i18n';
 /** Estantería de una saga, fase o «Relacionada», incluyendo sus subsagas. */
 import Base from '../../../../layouts/Base.astro';
+import BotonVolver from '../../../../components/BotonVolver.astro';
 import SubNav from '../../../../components/SubNav.astro';
 import Estanteria from '../../../../components/Estanteria.astro';
 import { universosActivos, sagasDe, titulosDe, huecosDeSeccion, localizar, type Saga } from '../../../../lib/datos';
@@ -64,10 +65,12 @@ const descripcionSaga =
   <SubNav slot="subnav" universo={universo} activo="sagas" />
   <div class="contenedor">
     <header class="cab">
-      <nav class="miga" aria-label={tx.general.estasEn}>
-        <a href={`/${universo.id}/sagas/`}>{tx.sagas.titulo}</a>
-        {padre && <><span aria-hidden="true">›</span><a href={`/${universo.id}/sagas/${padre.id}/`}>{padre.data.nombre}</a></>}
-      </nav>
+      <BotonVolver href={padre ? `/${universo.id}/sagas/${padre.id}/` : `/${universo.id}/sagas/`} conEspacio={false}>
+        <nav class="miga" aria-label={tx.general.estasEn}>
+          <a href={`/${universo.id}/sagas/`}>{tx.sagas.titulo}</a>
+          {padre && <><span aria-hidden="true">›</span><a href={`/${universo.id}/sagas/${padre.id}/`}>{padre.data.nombre}</a></>}
+        </nav>
+      </BotonVolver>
       <h1>{saga.data.nombre}</h1>
       {saga.data.descripcion && <p>{saga.data.descripcion}</p>}
       {

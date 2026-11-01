@@ -3,6 +3,7 @@ import { tablasEn } from '../../../../i18n/rutas';
 import { conIdiomas } from '../../../../i18n';
 /** Una guía de visionado: listas en orden generadas a partir de las fichas. */
 import Base from '../../../../layouts/Base.astro';
+import BotonVolver from '../../../../components/BotonVolver.astro';
 import SubNav from '../../../../components/SubNav.astro';
 import ListaOrden from '../../../../components/ListaOrden.astro';
 import ComparaOrden from '../../../../components/ComparaOrden.astro';
@@ -250,9 +251,11 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
   <SubNav slot="subnav" universo={universo} activo="guias" />
   <article class="contenedor guia">
     <header class="cab">
-      <nav class="miga" aria-label="Estás en">
-        <a href={`/${universo.id}/guias/`}>{tx.guias.titulo}</a>
-      </nav>
+      <BotonVolver href={`/${universo.id}/guias/`} conEspacio={false}>
+        <nav class="miga" aria-label={tx.general.estasEn}>
+          <a href={`/${universo.id}/guias/`}>{tx.guias.titulo}</a>
+        </nav>
+      </BotonVolver>
       <h1>{guia.titulo}</h1>
       {guia.intro.map((p) => <p class="intro">{p}</p>)}
     </header>

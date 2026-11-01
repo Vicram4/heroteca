@@ -239,6 +239,12 @@ lo que ya se haya estrenado desde la última actualización.
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_proximamente.py`
 - Textos de la página: apartado `proximos` de `src/i18n/textos.ts`.
 
+## Botón «Volver»
+
+Fichas, personajes, sagas, actores, carpetas y guías tienen el botón **«← Volver»** junto a la miga de pan (componente
+`BotonVolver.astro`). Si se llega desde otra página de Heroteca en el mismo idioma, vuelve a ella; si no (Google, enlace
+directo o recién cambiado de idioma), lleva a la lista a la que pertenece la página.
+
 ## Órdenes de las estanterías
 
 Todas las estanterías (secciones, sagas y personajes) tienen estos órdenes; en el móvil van en un desplegable:

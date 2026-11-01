@@ -12,6 +12,7 @@ export async function getStaticPaths() {
  * con el personaje que interpreta. Foto y enlace de TMDB si los hay.
  */
 import Base from '../../../layouts/Base.astro';
+import BotonVolver from '../../../components/BotonVolver.astro';
 import { SITE } from '../../../config/site';
 import { universosActivos, localizar, type Titulo } from '../../../lib/datos';
 import { imagenTmdb, datosTmdb } from '../../../lib/tmdb';
@@ -87,9 +88,11 @@ const datos = {
   ]}
 >
   <article class="contenedor actor">
-    <nav class="miga" aria-label={tx.general.estasEn}>
-      <a href="/actores/">{ta.titulo}</a>
-    </nav>
+    <BotonVolver href="/actores/">
+      <nav class="miga" aria-label={tx.general.estasEn}>
+        <a href="/actores/">{ta.titulo}</a>
+      </nav>
+    </BotonVolver>
     <header class="cab">
       <span class="foto">
         {a.foto ? <img src={imagenTmdb(a.foto, 'w185')} alt="" width="185" height="278" /> : <span aria-hidden="true">{a.nombre.split(' ').map((p) => p[0]).slice(0, 2).join('')}</span>}

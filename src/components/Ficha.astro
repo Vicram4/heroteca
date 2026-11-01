@@ -9,6 +9,7 @@ import { numeroTexto, todosLosTitulos, urlCarpeta, localizar, type Titulo, type 
 import { apariciones, enlacesRepartoEn } from '../lib/personajes';
 import { paginaDeActor, claveActor } from '../lib/actores';
 import { leerEpoca } from '../lib/lineaTemporal';
+import BotonVolver from './BotonVolver.astro';
 import { plataformasIncluidas, paisDe } from '../lib/dondever';
 import { datosTmdb } from '../lib/tmdb';
 import { GUIAS } from '../config/guias';
@@ -132,10 +133,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
 ---
 
 <article class:list={['ficha', `t-${t.tipo}`, `brillo-${acentoTipo}`]}>
-  <div class="arriba">
-    <a class="volver pastilla" href={seccion ? `/${universo.id}/${seccion.id}/` : `/${universo.id}/`} data-volver>
-      <span aria-hidden="true">←</span> {f.volver}
-    </a>
+  <BotonVolver href={seccion ? `/${universo.id}/${seccion.id}/` : `/${universo.id}/`} conEspacio={false}>
   <nav class="miga" aria-label={tx.general.estasEn}>
     <a href={`/${universo.id}/`}>{universo.data.nombre}</a>
     <span aria-hidden="true">›</span>
@@ -153,7 +151,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     {d.enEspera && <span class="archivo">{tx.general.enEspera}</span>}
     {d.paginaArchivador && <span class="archivo">{f.paginaArchivo(d.paginaArchivador)}</span>}
   </nav>
-  </div>
+  </BotonVolver>
 
   <div class="rejilla">
     <div class="caratulas">
@@ -417,25 +415,6 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
   </nav>
 </article>
 
-<script>
-  // «Volver»: si se llega desde otra página de Heroteca, regresa a ella; si no (Google, enlace directo,
-  // cambio de idioma), el enlace lleva a la estantería de la sección.
-  document.querySelectorAll<HTMLAnchorElement>('[data-volver]').forEach((a) => {
-    // Solo se vuelve atrás si la página anterior es de Heroteca y está en el mismo idioma. Si se acaba de
-    // cambiar de idioma, «atrás» sería la misma ficha en el otro idioma: entonces se va a la estantería.
-    const enIngles = (ruta: string) => ruta === '/en' || ruta.startsWith('/en/');
-    let mismaWebEIdioma = false;
-    try {
-      const anterior = document.referrer ? new URL(document.referrer) : undefined;
-      mismaWebEIdioma = Boolean(anterior) && anterior!.origin === location.origin && enIngles(anterior!.pathname) === enIngles(location.pathname);
-    } catch {}
-    if (!mismaWebEIdioma || history.length < 2) return;
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      history.back();
-    });
-  });
-</script>
 
 <style>
   .ficha {
@@ -458,20 +437,6 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
   .brillo-plata::before {
     background: radial-gradient(60% 100% at 30% 0%, var(--plata-serie), transparent 70%);
     opacity: 0.22;
-  }
-  .arriba {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px 16px;
-    margin-bottom: 18px;
-  }
-  .arriba .miga {
-    margin-bottom: 0;
-  }
-  .volver {
-    padding: 6px 12px;
-    font-size: 0.9rem;
   }
   .temporadas {
     display: flex;
