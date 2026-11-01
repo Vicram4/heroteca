@@ -6,6 +6,7 @@ import Marca from '../components/Marca.astro';
 import BotonTema from '../components/BotonTema.astro';
 import Buscador from '../components/Buscador.astro';
 import ArchivoRojo from '../components/ArchivoRojo.astro';
+import { guiasDe } from '../config/guias';
 // Tipografías principales: se precargan para que el texto no cambie de tamaño al llegar la fuente
 import barlow400 from '@fontsource/barlow/files/barlow-latin-400-normal.woff2?url';
 import barlow600 from '@fontsource/barlow/files/barlow-latin-600-normal.woff2?url';
@@ -114,29 +115,62 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     <footer class="pie">
       <div class="contenedor">
         <p class="pie-marca"><strong>{SITE.nombre}</strong> · {SITE.lema}</p>
-        <nav class="pie-enlaces" aria-label="Información">
-          <a href="/acerca/">Acerca de Heroteca</a>
-          <a href="/privacidad/">Privacidad</a>
-          <span>Actualizado el {actualizado}</span>
-        </nav>
-        <p>{AVISOS.fans}</p>
-        <p class="tmdb">
-          <a href="https://www.themoviedb.org/" rel="noopener" class="logo-tmdb" aria-label="The Movie Database (TMDB)">
-            <img src="/tmdb.svg" alt="TMDB" width="110" height="14" loading="lazy" />
-          </a>
-          <span>{AVISOS.tmdb}</span>
-        </p>
+        <div class="pie-columnas">
+          <nav aria-labelledby="pie-explorar">
+            <h2 id="pie-explorar">Explorar</h2>
+            <ul>
+              {universos.map((u) => <li><a href={`/${u.id}/`}>{u.data.nombre}</a></li>)}
+              {universos.filter((u) => guiasDe(u.id).length).map((u) => <li><a href={`/${u.id}/guias/`}>Guías de {u.data.nombre}</a></li>)}
+            </ul>
+          </nav>
+          <nav aria-labelledby="pie-proyecto">
+            <h2 id="pie-proyecto">Proyecto</h2>
+            <ul>
+              <li><a href="/acerca/">Acerca de Heroteca</a></li>
+              <li><a href="/privacidad/">Privacidad</a></li>
+              <li><a href={`${SITE.repositorio}/issues`} rel="noopener">Avisar de un error</a></li>
+              <li><a href={SITE.repositorio} rel="noopener">Código en GitHub</a></li>
+            </ul>
+          </nav>
+          <section aria-labelledby="pie-datos">
+            <h2 id="pie-datos">Datos</h2>
+            <ul class="fuentes">
+              <li>
+                <a href="https://www.themoviedb.org/" rel="noopener" class="logo-tmdb" aria-label="The Movie Database (TMDB)">
+                  <img src="/tmdb.svg" alt="TMDB" width="110" height="14" loading="lazy" />
+                </a>
+                <span>Fichas, carteles y tráileres</span>
+              </li>
+              <li>
+                <a href="https://www.justwatch.com/es" rel="noopener" class="justwatch">JustWatch</a>
+                <span>Dónde ver en España</span>
+              </li>
+            </ul>
+          </section>
+        </div>
+        <div class="pie-legal">
+          <p>{AVISOS.fans}</p>
+          <p lang="en">{AVISOS.tmdb}</p>
+          <p>Actualizado el {actualizado}</p>
+        </div>
       </div>
     </footer>
     <ArchivoRojo />
     {
       SITE.cloudflareAnalytics && (
+        // Estadísticas sin cookies; solo se cargan desde la dirección pública (no en pruebas locales)
         <script
           is:inline
-          type="module"
-          src="https://static.cloudflareinsights.com/beacon.min.js"
-          data-cf-beacon={JSON.stringify({ token: SITE.cloudflareAnalytics })}
-        />
+          define:vars={{ host: new URL(SITE.url).hostname, token: SITE.cloudflareAnalytics }}
+        >
+          if (location.hostname === host) {
+            const s = document.createElement('script');
+            s.type = 'module';
+            s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+            s.dataset.cfBeacon = JSON.stringify({ token });
+            document.body.append(s);
+          }
+        </script>
       )
     }
     <script>
@@ -211,25 +245,54 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     color: var(--txt);
     font-size: 1rem;
   }
-  .pie-enlaces {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 18px;
-    margin: -4px 0 14px;
+  .pie-columnas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 22px 40px;
+    margin: 18px 0 26px;
   }
-  .pie-enlaces a {
-    color: var(--txt);
+  .pie-columnas h2 {
+    margin: 0 0 10px;
+    font: 700 0.8rem var(--f-titulo);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--txt-2);
   }
-  .tmdb {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
+  .pie-columnas ul {
+    list-style: none;
     margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .pie-columnas a {
+    color: var(--txt);
+    text-decoration: none;
+  }
+  .pie-columnas a:hover {
+    text-decoration: underline;
+  }
+  .fuentes li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
   .logo-tmdb img {
     height: 14px;
     width: auto;
+    display: block;
+    margin: 3px 0;
+  }
+  .justwatch {
+    font-weight: 700;
+  }
+  .pie-legal {
+    border-top: 1px solid var(--borde);
+    padding-top: 16px;
+    font-size: 0.82rem;
+  }
+  .pie-legal p {
+    margin: 0 0 6px;
   }
   @media (max-width: 560px) {
     .universos a {
