@@ -1,4 +1,5 @@
 // @ts-check
+import { readFileSync } from 'node:fs';
 import { readdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -56,6 +57,17 @@ function enlacesEnIngles() {
 }
 
 // https://astro.build/config
+/** Páginas de estrenos que no se indexan (ver src/lib/proximamente.ts): redirigen a su ficha o no tienen sinopsis. */
+const estrenosSinIndexar = (() => {
+  const { estrenos, archivo = [] } = JSON.parse(readFileSync(new URL('./datos/proximamente.json', import.meta.url), 'utf8'));
+  return new Set(
+    [...estrenos, ...archivo].flatMap((e) => [
+      ...(e.ficha || !e.es.sinopsis ? [`/proximamente/${e.ruta?.es}/`] : []),
+      ...(e.ficha || !e.en.sinopsis ? [`/en/coming-soon/${e.ruta?.en}/`] : []),
+    ]),
+  );
+})();
+
 export default defineConfig({
   site: SITE.url,
   integrations: [
@@ -63,7 +75,7 @@ export default defineConfig({
     // en el navegador) y, hasta publicarla, sin la versión inglesa.
     // La correspondencia entre idiomas la indican las etiquetas hreflang de cada página.
     sitemap({
-      filter: (pagina) => !/\/(404|mi-progreso|my-progress|mi-ano|my-year)(\/|\.html|$)/.test(new URL(pagina).pathname) && (SITE.inglesPublicado || !new URL(pagina).pathname.startsWith('/en/')),
+      filter: (pagina) => !estrenosSinIndexar.has(new URL(pagina).pathname) && !/\/(404|mi-progreso|my-progress|mi-ano|my-year)(\/|\.html|$)/.test(new URL(pagina).pathname) && (SITE.inglesPublicado || !new URL(pagina).pathname.startsWith('/en/')),
     }),
     enlacesEnIngles(),
   ],

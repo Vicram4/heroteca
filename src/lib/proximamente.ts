@@ -3,7 +3,8 @@
  * Los genera scripts/sincronizar_proximamente.py en datos/proximamente.json; GitHub Actions los actualiza
  * cada semana. Como la web se compila de vez en cuando, la página oculta en el navegador lo que ya se ha estrenado.
  * Las películas llevan su fecha de estreno en cines en España y EE. UU. (`cines`): cada versión usa la de su país.
- * El archivo guarda también las películas estrenadas en cines hace poco (para «En cines» en Novedades).
+ * El archivo guarda también las películas estrenadas en cines hace poco (para «En cines» en Novedades) y, en `archivo`,
+ * los estrenos que ya no salen en la lista, para que su página siga existiendo.
  */
 import archivo from '../../datos/proximamente.json';
 import type { Idioma } from '../i18n';
@@ -12,6 +13,9 @@ interface Textos {
   titulo: string;
   sinopsis: string;
   poster?: string | null;
+  fondo?: string | null;
+  /** Clave de YouTube del tráiler oficial */
+  trailer?: string | null;
 }
 export interface Estreno {
   clave: string;
@@ -26,13 +30,20 @@ export interface Estreno {
   episodio?: number | null;
   /** «universo/ficha» si ya está en la colección */
   ficha?: string | null;
+  /** Dirección de su página en cada idioma. No cambia aunque cambie el título */
+  ruta: Record<Idioma, string>;
   es: Textos;
   en: Textos;
 }
 
-const estrenos = (archivo as { estrenos: Estreno[] }).estrenos;
+const datos = archivo as unknown as { fecha: string; estrenos: Estreno[]; archivo?: Estreno[] };
+const estrenos = datos.estrenos;
+const archivados = new Set((datos.archivo ?? []).map((e) => e.clave));
 
-export const fechaProximamente = () => new Date(`${(archivo as { fecha: string }).fecha}T00:00:00Z`);
+/** Todos los que tienen página: los de la lista y los archivados. */
+export const todosLosEstrenos = () => [...estrenos, ...(datos.archivo ?? [])];
+
+export const fechaProximamente = () => new Date(`${datos.fecha}T00:00:00Z`);
 
 /** Serie con un episodio que no es el primero de la temporada: está en emisión. */
 export const enEmision = (e: Estreno) => e.tipo === 'serie' && (e.episodio ?? 1) > 1;
@@ -47,6 +58,19 @@ export function proximosEstrenos(pais: 'ES' | 'US', universo?: string) {
     .filter((e) => fechaDe(e, pais) >= hoy && (!universo || e.universo === universo))
     .sort((a, b) => fechaDe(a, pais).localeCompare(fechaDe(b, pais)));
 }
+
+/**
+ * Situación al compilar. Un archivado con fecha futura dejó de salir en TMDB sin estrenarse (retrasado, sin fecha o
+ * cancelado), así que su fecha ya no es de fiar.
+ */
+export function estadoEstreno(e: Estreno, pais: 'ES' | 'US'): 'proximo' | 'estrenado' | 'sinFecha' {
+  const hoy = new Date().toISOString().slice(0, 10);
+  if (fechaDe(e, pais) < hoy) return 'estrenado';
+  return archivados.has(e.clave) ? 'sinFecha' : 'proximo';
+}
+
+/** Adónde lleva una tarjeta: a la ficha si está en la colección; si no, a su página. Dirección española (ver i18n/rutas). */
+export const enlaceEstreno = (e: Estreno) => (e.ficha ? `/${e.ficha}/` : `/proximamente/${e.ruta.es}/`);
 
 export const textosEstreno = (e: Estreno, idioma: Idioma) => ({
   ...e[idioma],

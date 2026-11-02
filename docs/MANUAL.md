@@ -265,9 +265,16 @@ Arriba, un **contador grande** del próximo estreno de cine (días, horas, minut
 fondo; componente `CuentaAtras.astro`, también en la portada). Cada tarjeta lleva un **anillo** con los días que faltan,
 que se cierra a medida que se acerca el estreno (y brilla el día del estreno). Las animaciones se desactivan si el
 sistema pide reducir el movimiento. Luego salen las series **en emisión** (próximo episodio) y debajo los **estrenos por año**. Si el estreno ya tiene ficha
-en la colección, la tarjeta lleva a la ficha; si no, a TMDB. La cuenta atrás se calcula en el navegador, que además oculta
+en la colección, la tarjeta lleva a la ficha; si no, a su página dentro de Heroteca. La cuenta atrás se calcula en el navegador, que además oculta
 lo que ya se haya estrenado desde la última actualización.
 
+- **Página de cada estreno:** `/proximamente/<ruta>/` y `/en/coming-soon/<ruta>/`, con cuenta atrás, sinopsis, tráiler oficial
+  (si TMDB lo tiene), datos y otros estrenos del universo. Sale sola de los datos, sin escribir nada a mano.
+  - La dirección (`ruta`) se fija la primera vez y no cambia aunque cambie el título.
+  - Si tiene ficha en la colección, la página redirige a la ficha.
+  - Lo que deja de salir en TMDB pasa a `archivo` y su página sigue existiendo. Si la fecha ya pasó, avisa de que está
+    estrenado; si era futura, de que puede haberse retrasado o cancelado.
+  - No se indexan en buscadores las que no tienen sinopsis en ese idioma ni las que redirigen a una ficha.
 - **Se actualiza sola cada lunes** con la misma tarea de GitHub Actions que «Dónde ver».
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_proximamente.py`
 - Textos de la página: apartado `proximos` de `src/i18n/textos.ts`.

@@ -1,4 +1,5 @@
 {
+ "archivo": [],
  "estrenos": [
   {
    "cines": {
@@ -7,17 +8,25 @@
    },
    "clave": "movie-1400940",
    "en": {
+    "fondo": "/xSDoxv4pHvs4xZjvTb0Iqg1A6ro.jpg",
     "poster": "/9l1NuFjel2j89hiuiJbsxfblqjy.jpg",
     "sinopsis": "Matt Hagen's meteoric rise from Gotham street kid to Hollywood leading man is tragically cut short when a local crime boss's actions leave him horribly disfigured. Abandoned by his team and with nothing left, Matt seeks out a cutting edge treatment that miraculously returns him to his former self… but also unexpectedly affects his grip on reality, spiraling him down a destructive path of all-consuming revenge.",
-    "titulo": "Clayface"
+    "titulo": "Clayface",
+    "trailer": "OGO4Mqvo3jI"
    },
    "es": {
+    "fondo": "/xSDoxv4pHvs4xZjvTb0Iqg1A6ro.jpg",
     "poster": "/6ihSDJlBNcvoTWzSA0jonZyOXTs.jpg",
     "sinopsis": "Una criatura cambiante hecha de arcilla mágica acecha Ciudad Gótica, alternando entre villano y aliado de Batman. Varias figuras trágicas han asumido el manto de Cara de Barro a lo largo de los años.",
-    "titulo": "Clayface"
+    "titulo": "Clayface",
+    "trailer": "WGOv9Pzh9cE"
    },
    "fecha": "2026-10-19",
    "ficha": null,
+   "ruta": {
+    "en": "clayface",
+    "es": "clayface"
+   },
    "tipo": "pelicula",
    "tmdb": {
     "id": 1400940,
@@ -28,18 +37,26 @@
   {
    "clave": "tv-213375-t1",
    "en": {
+    "fondo": "/58v1KFe3rxvHrYM1hLH5ScpwqNR.jpg",
     "poster": "/xK27l5uwaVyZSlENWnmLlWwDQNS.jpg",
     "sinopsis": "The Vision, rebooted and having escaped from those who sought to weaponize him, has been in hiding. Searching for new meaning, he consults the AI personas embedded in his programming, including Friday, Edith, Jarvis, and the infamous Ultron. His discreet existence ends when a bounty placed on his head thrusts him on the run with Thomas Shepherd, a mysterious boy who may be Vision's son reincarnate. As Vision evades capture, he must confront his nature, resist Ultron's influence, and unravel the enigma that is his young companion if he's to survive.",
-    "titulo": "VisionQuest"
+    "titulo": "VisionQuest",
+    "trailer": "u76kq1gjHzw"
    },
    "episodio": 7,
    "es": {
+    "fondo": "/58v1KFe3rxvHrYM1hLH5ScpwqNR.jpg",
     "poster": "/nNm8aY8OjAm0Lyn1khmoPNPNvmh.jpg",
     "sinopsis": "Con una recompensa por su cabeza, Visión debe enfrentarse a su propia naturaleza y resistir la influencia de Ultrón para sobrevivir.",
-    "titulo": "VisionQuest"
+    "titulo": "VisionQuest",
+    "trailer": "u76kq1gjHzw"
    },
    "fecha": "2026-11-03",
    "ficha": null,
+   "ruta": {
+    "en": "visionquest",
+    "es": "visionquest"
+   },
    "temporada": 1,
    "tipo": "serie",
    "tmdb": {
@@ -51,18 +68,26 @@
   {
    "clave": "tv-231801-t1",
    "en": {
+    "fondo": "/xe6wbOPKuSMOze4rl48NFWy8PNe.jpg",
     "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
     "sinopsis": "In a post-apocalyptic, near-future Los Angeles where culinary culture reigns supreme, the world's most powerful figures are chefs, and food is both currency and a demarcation of class, the mysterious sushi chef Jiro sets out on a quest for vengeance.",
-    "titulo": "GET JIRO"
+    "titulo": "GET JIRO",
+    "trailer": null
    },
    "episodio": 7,
    "es": {
+    "fondo": "/xe6wbOPKuSMOze4rl48NFWy8PNe.jpg",
     "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
     "sinopsis": "En una futurista Los Ángeles, el misterioso chef de sushi JIRO busca venganza. Basada en la exitosa novela gráfica de Anthony Bourdain y Joel Rose.",
-    "titulo": "¡A por Jiro!"
+    "titulo": "¡A por Jiro!",
+    "trailer": null
    },
    "fecha": "2026-11-08",
    "ficha": null,
+   "ruta": {
+    "en": "get-jiro",
+    "es": "a-por-jiro"
+   },
    "temporada": 1,
    "tipo": "serie",
    "tmdb": {
@@ -74,18 +99,26 @@
   {
    "clave": "tv-274388-t1",
    "en": {
+    "fondo": "/tHWW3xDD49UZuoirqzUQT046dWi.jpg",
     "poster": "/3NlFaIdOkBg2VC3Imi1kbeeGynw.jpg",
     "sinopsis": "Follow the adventures (and misadventures) of best friends and super geniuses, Tony Stark, Riri Williams and Amadeus Cho as they work together to solve problems both big and small and protect their city.",
-    "titulo": "Iron Man and His Awesome Friends"
+    "titulo": "Iron Man and His Awesome Friends",
+    "trailer": null
    },
    "episodio": 71,
    "es": {
+    "fondo": "/tHWW3xDD49UZuoirqzUQT046dWi.jpg",
     "poster": "/wSioGvQrx3L410VTSVivwCNhxdm.jpg",
     "sinopsis": "La primera temporada sigue a un joven Iron Man que, junto a Ironheart y Iron Hulk, forma un superequipo para proteger la ciudad mientras aprenden a usar sus habilidades. Cada aventura mezcla tecnología, humor y pequeños momentos de aprendizaje.\n\nEntre inventos que salen mal, villanos curiosos y misiones sencillas, el trío demuestra que la amistad y el trabajo en equipo son su verdadera fuerza, siempre con un tono ligero y pensado para los más pequeños.",
-    "titulo": "Iron Man y su superequipo"
+    "titulo": "Iron Man y su superequipo",
+    "trailer": null
    },
    "fecha": "2026-11-13",
    "ficha": null,
+   "ruta": {
+    "en": "iron-man-and-his-awesome-friends",
+    "es": "iron-man-y-su-superequipo"
+   },
    "temporada": 1,
    "tipo": "serie",
    "tmdb": {
@@ -97,17 +130,25 @@
   {
    "clave": "movie-1389765",
    "en": {
+    "fondo": "/jOvZD4VpU4Wx4XmNG2uTDNjUdDT.jpg",
     "poster": "/4zWHei7BJ4dP0DDK4FJ7em9ET7e.jpg",
     "sinopsis": "Batman lies broken at the hands of the villainous mastermind Bane. With Bruce Wayne paralyzed from the waist down and unable to continue as Batman, a new successor must be chosen to defend Gotham City. Jean-Paul Valley, the man also known as Azrael, must take up the mantle of the Batman. But will his more violent methods be enough to stop Bane?",
-    "titulo": "Batman: Knightfall Part 2: Knightquest"
+    "titulo": "Batman: Knightfall Part 2: Knightquest",
+    "trailer": "9NApbwwm4aU"
    },
    "es": {
+    "fondo": "/jOvZD4VpU4Wx4XmNG2uTDNjUdDT.jpg",
     "poster": "/4zWHei7BJ4dP0DDK4FJ7em9ET7e.jpg",
     "sinopsis": "",
-    "titulo": "Batman: Knightfall Part 2: Knightquest"
+    "titulo": "Batman: Knightfall Part 2: Knightquest",
+    "trailer": "9NApbwwm4aU"
    },
    "fecha": "2026-12-08",
    "ficha": null,
+   "ruta": {
+    "en": "batman-knightfall-part-2-knightquest",
+    "es": "batman-knightfall-part-2-knightquest"
+   },
    "tipo": "pelicula",
    "tmdb": {
     "id": 1389765,
@@ -122,17 +163,25 @@
    },
    "clave": "movie-1003596",
    "en": {
+    "fondo": "/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
     "poster": "/jzPwsojjFStf5lR5Nm07w2hH56G.jpg",
     "sinopsis": "Beloved heroes from three distinct universes are set on a deadly collision course and face an existential threat unlike anything they've ever encountered.",
-    "titulo": "Avengers: Doomsday"
+    "titulo": "Avengers: Doomsday",
+    "trailer": "irVNGjRFZGk"
    },
    "es": {
+    "fondo": "/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
     "poster": "/7bQczUMnjz8iwxNP9YrmLkfI8od.jpg",
-    "sinopsis": "Quinta entrega de la saga 'Vengadores' incluida en el Universo Cinematográfico Marvel (UCM). Sinopsis desconocido.",
-    "titulo": "Vengadores: Doomsday"
+    "sinopsis": "Quinta entrega de la saga 'Vengadores' incluida en el Universo Cinematográfico Marvel (UCM).",
+    "titulo": "Vengadores: Doomsday",
+    "trailer": "kZ2Nhqkx3-I"
    },
    "fecha": "2026-12-16",
    "ficha": null,
+   "ruta": {
+    "en": "avengers-doomsday",
+    "es": "vengadores-doomsday"
+   },
    "tipo": "pelicula",
    "tmdb": {
     "id": 1003596,
@@ -143,18 +192,26 @@
   {
    "clave": "tv-138503-t2",
    "en": {
+    "fondo": "/kkT2B2gmynoh9kZMo1gromLNeqy.jpg",
     "poster": "/rAgl03cfcLgPSzeozownXAdhDkw.jpg",
     "sinopsis": "Peter Parker is on his way to becoming a hero, but his path to get there is anything but ordinary.",
-    "titulo": "Your Friendly Neighborhood Spider-Man"
+    "titulo": "Your Friendly Neighborhood Spider-Man",
+    "trailer": null
    },
    "episodio": 1,
    "es": {
+    "fondo": "/kkT2B2gmynoh9kZMo1gromLNeqy.jpg",
     "poster": "/rAgl03cfcLgPSzeozownXAdhDkw.jpg",
     "sinopsis": "Peter Parker está destinado a ser un héroe, pero antes tendrá que recorrer un insólito camino.",
-    "titulo": "Tu amigo y vecino Spider-Man"
+    "titulo": "Tu amigo y vecino Spider-Man",
+    "trailer": null
    },
    "fecha": "2027-01-13",
    "ficha": "marvel/tu-amigo-y-vecino-spider-man",
+   "ruta": {
+    "en": "your-friendly-neighborhood-spider-man-season-2",
+    "es": "tu-amigo-y-vecino-spider-man-temporada-2"
+   },
    "temporada": 2,
    "tipo": "serie",
    "tmdb": {
@@ -169,17 +226,25 @@
    },
    "clave": "movie-911916",
    "en": {
+    "fondo": "/fUcT8bcJD3SZsy84Z9QRP6kOS7v.jpg",
     "poster": "/9KAe39xqyZnv9J4W3DRGdQqX82h.jpg",
     "sinopsis": "Hunted by Miguel O'Hara's Spider Society and betrayed by his friends, Miles finds himself in the darkest corners of the Spider-Verse in search of a way home. Knowing that his family has been not only fractured but endangered by his calling, it's a race against the clock for Miles to travel across the wildest reaches of time and space to fight for and reunite everything he holds most dear.",
-    "titulo": "Spider-Man: Beyond the Spider-Verse"
+    "titulo": "Spider-Man: Beyond the Spider-Verse",
+    "trailer": null
    },
    "es": {
+    "fondo": "/fUcT8bcJD3SZsy84Z9QRP6kOS7v.jpg",
     "poster": "/9KAe39xqyZnv9J4W3DRGdQqX82h.jpg",
     "sinopsis": "La historia continua de Miles Morales y los muchos otros Spider-People de diferentes realidades.",
-    "titulo": "Spider-Man: Beyond the Spider-Verse"
+    "titulo": "Spider-Man: Beyond the Spider-Verse",
+    "trailer": null
    },
    "fecha": "2027-06-16",
    "ficha": null,
+   "ruta": {
+    "en": "spider-man-beyond-the-spider-verse",
+    "es": "spider-man-beyond-the-spider-verse"
+   },
    "tipo": "pelicula",
    "tmdb": {
     "id": 911916,
@@ -194,17 +259,25 @@
    },
    "clave": "movie-1523140",
    "en": {
+    "fondo": "/lX2TpAZxdIus6cnMCDBOrs96NBY.jpg",
     "poster": "/ms7BhVucvjxV74HkX8JLmFlQ6p2.jpg",
     "sinopsis": "Superman and Lex Luthor find themselves forced to work together—to a certain degree—against a much, much bigger threat when Brainiac sets his sights on Earth.",
-    "titulo": "Man of Tomorrow"
+    "titulo": "Man of Tomorrow",
+    "trailer": null
    },
    "es": {
+    "fondo": "/lX2TpAZxdIus6cnMCDBOrs96NBY.jpg",
     "poster": "/ms7BhVucvjxV74HkX8JLmFlQ6p2.jpg",
     "sinopsis": "Superman y Lex Luthor se ven obligados a trabajar juntos, hasta cierto punto, contra una amenaza mucho, mucho mayor cuando Brainiac pone sus ojos en la Tierra.",
-    "titulo": "El Hombre del Mañana"
+    "titulo": "El Hombre del Mañana",
+    "trailer": null
    },
    "fecha": "2027-07-07",
    "ficha": null,
+   "ruta": {
+    "en": "man-of-tomorrow",
+    "es": "el-hombre-del-manana"
+   },
    "tipo": "pelicula",
    "tmdb": {
     "id": 1523140,
@@ -219,17 +292,25 @@
    },
    "clave": "movie-1003598",
    "en": {
+    "fondo": "/rytc6Lf4447C0CDncwFa4gxe0vY.jpg",
     "poster": "/f0YBuh4hyiAheXhh4JnJWoKi9g5.jpg",
     "sinopsis": "An upcoming film in Phase Six of the Marvel Cinematic Universe (MCU) and the finale of The Multiverse Saga.",
-    "titulo": "Avengers: Secret Wars"
+    "titulo": "Avengers: Secret Wars",
+    "trailer": null
    },
    "es": {
+    "fondo": "/rytc6Lf4447C0CDncwFa4gxe0vY.jpg",
     "poster": "/f0YBuh4hyiAheXhh4JnJWoKi9g5.jpg",
     "sinopsis": "Segunda de las dos películas de Los Vengadores para la Fase 6 del MCU.",
-    "titulo": "Vengadores: Secret Wars"
+    "titulo": "Vengadores: Secret Wars",
+    "trailer": null
    },
    "fecha": "2027-12-15",
    "ficha": null,
+   "ruta": {
+    "en": "avengers-secret-wars",
+    "es": "vengadores-secret-wars"
+   },
    "tipo": "pelicula",
    "tmdb": {
     "id": 1003598,
@@ -244,17 +325,25 @@
    },
    "clave": "movie-806704",
    "en": {
+    "fondo": "/4uaHnYDDpUTj0nCg6YqBKab50YW.jpg",
     "poster": "/r5fl4aMsmTjgc8DdDqQaM84roWp.jpg",
     "sinopsis": "Sequel to the 2022 film The Batman.",
-    "titulo": "The Batman: Part II"
+    "titulo": "The Batman: Part II",
+    "trailer": null
    },
    "es": {
+    "fondo": "/4uaHnYDDpUTj0nCg6YqBKab50YW.jpg",
     "poster": "/r5fl4aMsmTjgc8DdDqQaM84roWp.jpg",
     "sinopsis": "Secuela de la película de 2022 'The Batman'.",
-    "titulo": "The Batman: Part II"
+    "titulo": "The Batman: Part II",
+    "trailer": null
    },
    "fecha": "2028-02-17",
    "ficha": null,
+   "ruta": {
+    "en": "the-batman-part-ii",
+    "es": "the-batman-part-ii"
+   },
    "tipo": "pelicula",
    "tmdb": {
     "id": 806704,
@@ -268,17 +357,25 @@
    },
    "clave": "movie-1293690",
    "en": {
+    "fondo": "/30avL0vOOqlbN5kODDZZHDwbkr8.jpg",
     "poster": "/jSn3jOzI91dOx4aVdfMrirWXH6R.jpg",
     "sinopsis": "A film set in the Marvel Cinematic Universe (MCU) based on the Marvel Comics team. Plot TBA.",
-    "titulo": "Untitled X-Men Film"
+    "titulo": "Untitled X-Men Film",
+    "trailer": null
    },
    "es": {
+    "fondo": "/30avL0vOOqlbN5kODDZZHDwbkr8.jpg",
     "poster": "/jSn3jOzI91dOx4aVdfMrirWXH6R.jpg",
     "sinopsis": "Película ambientada en el Universo Cinematográfico de Marvel (MCU) basada en el equipo de Marvel Comics. Argumento por confirmar.",
-    "titulo": "Untitled X-Men Film"
+    "titulo": "Untitled X-Men Film",
+    "trailer": null
    },
    "fecha": "2028-05-04",
    "ficha": null,
+   "ruta": {
+    "en": "untitled-x-men-film",
+    "es": "untitled-x-men-film"
+   },
    "tipo": "pelicula",
    "tmdb": {
     "id": 1293690,
@@ -292,17 +389,25 @@
    },
    "clave": "movie-1738010",
    "en": {
+    "fondo": "/8ZuU1bCXvqcHdFIIiJAtkGRPw1j.jpg",
     "poster": "/zgC1zo3lyujoEiIMnUrHltvPmZg.jpg",
     "sinopsis": "A film set in the Marvel Cinematic Universe (MCU) based on the Marvel Comics character of the same name. Plot TBA.",
-    "titulo": "Ghost Rider"
+    "titulo": "Ghost Rider",
+    "trailer": null
    },
    "es": {
+    "fondo": "/8ZuU1bCXvqcHdFIIiJAtkGRPw1j.jpg",
     "poster": "/zgC1zo3lyujoEiIMnUrHltvPmZg.jpg",
     "sinopsis": "Película ambientada en el Universo Cinematográfico de Marvel (MCU) basada en el personaje de Marvel Comics del mismo nombre. Argumento por confirmar.",
-    "titulo": "Ghost Rider"
+    "titulo": "Ghost Rider",
+    "trailer": null
    },
    "fecha": "2028-07-27",
    "ficha": null,
+   "ruta": {
+    "en": "ghost-rider",
+    "es": "ghost-rider"
+   },
    "tipo": "pelicula",
    "tmdb": {
     "id": 1738010,
@@ -316,17 +421,25 @@
    },
    "clave": "movie-1364797",
    "en": {
+    "fondo": "/3HJtQ5Z04d1Gx4UQBPSOTgXsfwL.jpg",
     "poster": "/byZZQsE933kaBCq6i2yGQnJF6TN.jpg",
     "sinopsis": "Follow the early days of Dick Grayson and Jason Todd and explore how their friendship becomes tested by their diverging ideas for what their future should be.",
-    "titulo": "Dynamic Duo"
+    "titulo": "Dynamic Duo",
+    "trailer": null
    },
    "es": {
+    "fondo": "/3HJtQ5Z04d1Gx4UQBPSOTgXsfwL.jpg",
     "poster": "/byZZQsE933kaBCq6i2yGQnJF6TN.jpg",
     "sinopsis": "",
-    "titulo": "Dynamic Duo"
+    "titulo": "Dynamic Duo",
+    "trailer": null
    },
    "fecha": "2028-09-21",
    "ficha": null,
+   "ruta": {
+    "en": "dynamic-duo",
+    "es": "dynamic-duo"
+   },
    "tipo": "pelicula",
    "tmdb": {
     "id": 1364797,
@@ -340,17 +453,25 @@
    },
    "clave": "movie-1386618",
    "en": {
+    "fondo": "/5b8t06v1cTd9H5IgWs6gj6987JM.jpg",
     "poster": "/zJc9fYZxgq4yzI0Oru2e1Cf3a3V.jpg",
     "sinopsis": "T'Challa's son, T'Challa, comes of age with eyes on the crown of Wakanda.",
-    "titulo": "Black Panther 3"
+    "titulo": "Black Panther 3",
+    "trailer": null
    },
    "es": {
+    "fondo": "/5b8t06v1cTd9H5IgWs6gj6987JM.jpg",
     "poster": "/zJc9fYZxgq4yzI0Oru2e1Cf3a3V.jpg",
     "sinopsis": "El hijo de T'Challa, también llamado T'Challa, alcanza la mayoría de edad con la mirada puesta en la corona de Wakanda.",
-    "titulo": "Black Panther 3"
+    "titulo": "Black Panther 3",
+    "trailer": null
    },
    "fecha": "2028-12-13",
    "ficha": null,
+   "ruta": {
+    "en": "black-panther-3",
+    "es": "black-panther-3"
+   },
    "tipo": "pelicula",
    "tmdb": {
     "id": 1386618,

@@ -11,6 +11,7 @@ import { GUIAS } from '../config/guias';
 import { todosLosTitulos, universosActivos } from '../lib/datos';
 import { actores } from '../lib/actores';
 import { JUEGOS } from '../config/juegos';
+import { todosLosEstrenos } from '../lib/proximamente';
 
 /** Palabras fijas de las direcciones. */
 export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon', miProgreso: 'my-progress', miAno: 'my-year',recomendaciones: 'recommendations', estadisticas: 'stats', actores: 'actors', noticias: 'news', pasatiempos: 'games', maraton: 'marathon', rankings: 'rankings', poscreditos: 'post-credits', wiki: 'wiki' } as const;
@@ -122,6 +123,7 @@ async function calcular(): Promise<Tablas> {
     ['/rankings/', `/en/${SEGMENTOS.rankings}/`],
     ['/poscreditos/', `/en/${SEGMENTOS.poscreditos}/`],
   ]);
+  for (const e of todosLosEstrenos()) aIngles.set(`/proximamente/${e.ruta.es}/`, `/en/${SEGMENTOS.proximamente}/${e.ruta.en}/`);
   for (const a of await actores()) aIngles.set(`/actores/${a.id}/`, `/en/${SEGMENTOS.actores}/${a.id}/`);
   for (const j of JUEGOS) aIngles.set(`/pasatiempos/${j.id}/`, `/en/${SEGMENTOS.pasatiempos}/${j.idEn}/`);
   for (const u of universos) {

@@ -1,0 +1,181 @@
+---
+import { conIdiomas, idiomaDe, textos, LOCALE, nombreTipo } from '../../../i18n';
+import { todosLosEstrenos, type Estreno } from '../../../lib/proximamente';
+export function getStaticPaths() {
+  return conIdiomas(
+    todosLosEstrenos().map((e) => ({ params: { proximamente: 'proximamente', estreno: e.ruta.es }, props: { e } })),
+    (r) => ({ proximamente: 'coming-soon', estreno: (r.props as { e: Estreno }).e.ruta.en }),
+  );
+}
+/**
+ * Página de un próximo estreno, generada a partir de datos/proximamente.json: cuenta atrás, sinopsis, tráiler y datos.
+ * Si el título ya está en la colección, redirige a su ficha. Lo que ya se estrenó o dejó de tener fecha conserva su
+ * página con un aviso, para no dejar enlaces rotos.
+ */
+import Base from '../../../layouts/Base.astro';
+import CuentaAtras from '../../../components/CuentaAtras.astro';
+import ListaEstrenos from '../../../components/ListaEstrenos.astro';
+import TarjetaEstreno from '../../../components/TarjetaEstreno.astro';
+import Trailer from '../../../components/Trailer.astro';
+import { universosActivos, estiloUniverso } from '../../../lib/datos';
+import { enEmision, estadoEstreno, enlaceEstreno, enlaceTmdb, fechaDe, fechaProximamente, proximosEstrenos, textosEstreno } from '../../../lib/proximamente';
+import { paisDe } from '../../../lib/dondever';
+import { imagenTmdb } from '../../../lib/tmdb';
+import { rutaEnIdioma } from '../../../i18n/rutas';
+import { universoLoc } from '../../../i18n/datos';
+
+const { e } = Astro.props as { e: Estreno };
+const idioma = idiomaDe(Astro.url);
+if (e.ficha) return Astro.redirect(await rutaEnIdioma(`/${e.ficha}/`, idioma));
+
+const tx = textos(Astro.url);
+const p = tx.proximos;
+const pais = paisDe(idioma);
+const x = textosEstreno(e, idioma);
+const universos = await universosActivos();
+const uBase = universos.find((u) => u.id === e.universo);
+const u = uBase && universoLoc(uBase, idioma);
+const estado = estadoEstreno(e, pais);
+const larga = (dia: string) => new Date(`${dia}T00:00:00Z`).toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const dia = fechaDe(e, pais);
+const tipoTexto = e.tipo === 'pelicula' ? nombreTipo('pelicula', idioma) : enEmision(e) ? p.enEmision : (e.temporada ?? 1) > 1 ? p.temporadaNueva(e.temporada ?? 1) : p.serieNueva;
+const masEstrenos = proximosEstrenos(pais, e.universo)
+  .filter((o) => o.clave !== e.clave)
+  .slice(0, 4);
+const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
+---
+
+<Base
+  titulo={p.tituloEstreno(x.titulo)}
+  descripcion={x.sinopsis || p.descEstreno(x.titulo, larga(dia))}
+  universo={uBase}
+  imagen={x.poster ? imagenTmdb(x.poster, 'w780') : undefined}
+  tipoOg={e.tipo === 'pelicula' ? 'video.movie' : 'video.tv_show'}
+  noIndexar={!x.sinopsis || estado === 'sinFecha'}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: p.titulo, url: '/proximamente/' }, { nombre: x.titulo, url: enlaceEstreno(e) }]}
+  datos={{
+    '@context': 'https://schema.org',
+    '@type': e.tipo === 'pelicula' ? 'Movie' : 'TVSeries',
+    name: x.titulo,
+    ...(x.sinopsis ? { description: x.sinopsis } : {}),
+    ...(x.poster ? { image: imagenTmdb(x.poster, 'w780') } : {}),
+    ...(estado === 'sinFecha' ? {} : { datePublished: dia }),
+  }}
+>
+  <div class="contenedor estreno-pagina" style={estiloUniverso(uBase)}>
+    {
+      estado === 'proximo' ? (
+        <CuentaAtras e={e} u={uBase} propia />
+      ) : (
+        <header class="cab">
+          {x.poster && <img src={imagenTmdb(x.poster, 'w342')} alt="" width="342" height="513" decoding="async" />}
+          <div>
+            <h1>{x.titulo}</h1>
+            <p class="aviso">{estado === 'estrenado' ? p.estrenadoAviso : p.sinFechaAviso}</p>
+          </div>
+        </header>
+      )
+    }
+
+    <section class="panel">
+      <h2 class="h-panel">{p.sinopsis}</h2>
+      <p>{x.sinopsis || p.sinSinopsis}</p>
+    </section>
+
+    {
+      x.trailer && (
+        <section class="panel">
+          <h2 class="h-panel">{p.trailer}</h2>
+          <Trailer id={x.trailer} titulo={x.titulo} fondo={x.fondo ?? undefined} />
+        </section>
+      )
+    }
+
+    <section class="panel">
+      <h2 class="h-panel">{p.datos}</h2>
+      <dl class="datos">
+        {u && <><dt>{p.universoDato}</dt><dd>{u.data.nombre}</dd></>}
+        <dt>{p.tipoDato}</dt><dd>{tipoTexto}</dd>
+        {
+          e.cines?.ES || e.cines?.US ? (
+            <>
+              {e.cines?.ES && <><dt>{p.cinesEspana}</dt><dd><time datetime={e.cines.ES}>{larga(e.cines.ES)}</time></dd></>}
+              {e.cines?.US && <><dt>{p.cinesEeuu}</dt><dd><time datetime={e.cines.US}>{larga(e.cines.US)}</time></dd></>}
+            </>
+          ) : (
+            <><dt>{estado === 'sinFecha' ? p.fechaUltima : p.fechaDato}</dt><dd><time datetime={dia}>{larga(dia)}</time></dd></>
+          )
+        }
+      </dl>
+      <p class="nota">{p.nota(actualizado)}</p>
+      <p class="nota"><a href={enlaceTmdb(e, idioma)} rel="noopener">{p.enTmdb} ↗</a></p>
+    </section>
+
+    {
+      masEstrenos.length > 0 && (
+        <section class="mas" data-bloque>
+          <h2>{u ? p.masDe(u.data.nombre) : p.estrenos}</h2>
+          <ListaEstrenos>
+            {masEstrenos.map((o) => <TarjetaEstreno e={o} u={uBase} />)}
+          </ListaEstrenos>
+          <p class="todos"><a href="/proximamente/">{p.verTodos}</a></p>
+        </section>
+      )
+    }
+  </div>
+</Base>
+
+<style>
+  .estreno-pagina {
+    display: grid;
+    gap: 20px;
+    padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .estreno-pagina > * {
+    min-width: 0;
+  }
+  .cab {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 3vw, 28px);
+  }
+  .cab img {
+    flex: none;
+    width: clamp(96px, 16vw, 170px);
+    height: auto;
+    border-radius: var(--radio);
+  }
+  .cab .aviso {
+    margin: 10px 0 0;
+    max-width: 60ch;
+    color: var(--txt-2);
+  }
+  .panel p {
+    max-width: 70ch;
+  }
+  .datos {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 7px 16px;
+    margin: 0;
+  }
+  .datos dt {
+    color: var(--txt-2);
+  }
+  .datos dd {
+    margin: 0;
+    font-weight: 500;
+  }
+  .nota {
+    margin: 12px 0 0;
+    font-size: 0.88rem;
+    color: var(--txt-2);
+  }
+  .mas h2 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+  }
+  .todos {
+    margin: 14px 0 0;
+  }
+</style>

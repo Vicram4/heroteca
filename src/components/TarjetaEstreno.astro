@@ -1,11 +1,11 @@
 ---
 /**
  * Tarjeta de un próximo estreno (página «Próximamente» y portada). Enlaza con la ficha si ya está en la colección;
- * si no, con TMDB. La cuenta atrás (anillo con los días que faltan) la pone el script de ListaEstrenos en el navegador.
+ * si no, con la página del estreno. La cuenta atrás (anillo con los días que faltan) la pone el script de ListaEstrenos en el navegador.
  */
 import type { Universo } from '../lib/datos';
 import { estiloUniverso } from '../lib/datos';
-import { type Estreno, enEmision, textosEstreno, enlaceTmdb, fechaDe } from '../lib/proximamente';
+import { type Estreno, enEmision, textosEstreno, enlaceEstreno, fechaDe } from '../lib/proximamente';
 import { paisDe } from '../lib/dondever';
 import { imagenTmdb } from '../lib/tmdb';
 import { textos, idiomaDe, LOCALE } from '../i18n';
@@ -28,11 +28,10 @@ const que = enEmision(e)
     : (e.temporada ?? 1) > 1
       ? tx.proximos.temporadaNueva(e.temporada ?? 1)
       : tx.proximos.serieNueva;
-const href = e.ficha ? `/${e.ficha}/` : enlaceTmdb(e, idioma);
 ---
 
 <li class="estreno" data-fecha={dia} data-universo={e.universo} style={estiloUniverso(u)}>
-  <a href={href} rel={e.ficha ? undefined : 'noopener'}>
+  <a href={enlaceEstreno(e)}>
     <span class="cartel">
       {
         x.poster ? (
@@ -66,7 +65,7 @@ const href = e.ficha ? `/${e.ficha}/` : enlaceTmdb(e, idioma);
       {enEmision(e) ? que : <>{que} · <time datetime={dia}>{fecha}</time></>}
     </span>
     {conSinopsis && x.sinopsis && <span class="sinopsis">{x.sinopsis}</span>}
-    <span class="destino">{e.ficha ? tx.proximos.enColeccion : `${tx.proximos.enTmdb} ↗`}</span>
+    <span class="destino">{e.ficha ? tx.proximos.enColeccion : tx.proximos.verEstreno}</span>
   </a>
 </li>
 

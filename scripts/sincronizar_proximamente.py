@@ -6,18 +6,21 @@ De dónde salen:
   - Películas y series con fecha futura de las productoras de cada universo (PRODUCTORAS).
   - Series que ya están en la colección y tienen un episodio programado (temporada nueva o en emisión).
 Si un estreno ya tiene ficha en la colección, se enlaza con ella.
+Cada estreno tiene su página en la web: su dirección (`ruta`) se fija la primera vez y no cambia aunque cambie el título.
+Lo que deja de salir en la lista pasa a `archivo`, para que su página siga existiendo.
 
 Se ejecuta cada semana desde GitHub Actions (.github/workflows/donde-ver.yml), junto con «Dónde ver».
 
 Uso:
     .venv/Scripts/python.exe scripts/sincronizar_proximamente.py
-Salida: datos/proximamente.json (también las películas estrenadas en los últimos DIAS_EN_CINES días,
+Salida: datos/proximamente.json (también el archivo de los que ya no salen y las películas estrenadas en los últimos DIAS_EN_CINES días,
 con su fecha de estreno en cines en España y EE. UU., para el bloque «En cines» de Novedades)
 """
 import datetime
 import json
 import re
 import sys
+import unicodedata
 from pathlib import Path
 
 import yaml
@@ -79,8 +82,21 @@ def ficha_de(fichas, tipo, id_, temporada=None):
     return f'{candidatas[0][0]}/{candidatas[0][1]}' if candidatas else None
 
 
+def trailer_de(tipo, id_, temporada, corto, idioma):
+    """Tráiler o teaser oficial de YouTube, en ese idioma si lo hay. Solo oficiales: de lo no estrenado abundan los montajes de aficionados."""
+    ruta = f'/tv/{id_}/season/{temporada}/videos' if temporada else f'/{tipo}/{id_}/videos'
+    resultados = []
+    for lengua in (idioma, None):
+        resultados = (tmdb.get(ruta, refrescar=True, language=lengua) or {}).get('results') or []
+        resultados = [v for v in resultados if v.get('site') == 'YouTube' and v.get('type') in ('Trailer', 'Teaser') and v.get('official')]
+        if resultados:
+            break
+    resultados.sort(key=lambda v: (v.get('iso_639_1') != corto, v.get('type') != 'Trailer', v.get('published_at', '')))
+    return resultados[0]['key'] if resultados else None
+
+
 def textos_de(tipo, id_, temporada=None):
-    """Título, sinopsis y cartel en cada idioma (la temporada, si tiene cartel propio)."""
+    """Título, sinopsis, imágenes y tráiler en cada idioma (la temporada, si tiene cartel propio)."""
     salida = {}
     for corto, idioma in IDIOMAS.items():
         x = tmdb.get(f'/{tipo}/{id_}', refrescar=True, language=idioma) or {}
@@ -90,12 +106,49 @@ def textos_de(tipo, id_, temporada=None):
             t = next((s for s in x.get('seasons') or [] if s.get('season_number') == temporada), {})
             poster = t.get('poster_path') or poster
             sinopsis = t.get('overview') or sinopsis
-        salida[corto] = {'titulo': x.get('title') or x.get('name') or '', 'sinopsis': sinopsis, 'poster': poster}
+        # TMDB deja a veces este relleno al final de la sinopsis
+        sinopsis = re.sub(r'\s*Sinopsis desconocid[ao]\.?\s*$', '', sinopsis, flags=re.I)
+        salida[corto] = {
+            'titulo': x.get('title') or x.get('name') or '',
+            'sinopsis': sinopsis,
+            'poster': poster,
+            'fondo': x.get('backdrop_path'),
+            'trailer': trailer_de(tipo, id_, temporada, corto, idioma),
+        }
     return salida
+
+
+def slug(texto):
+    """Igual que slug() de src/i18n/rutas.ts: «Vengadores: Doomsday» → vengadores-doomsday."""
+    texto = unicodedata.normalize('NFKD', texto)
+    texto = ''.join(c for c in texto if not unicodedata.combining(c)).lower()
+    texto = texto.replace('.', '').replace('&', ' and ').replace("'", '').replace('’', '')
+    return re.sub(r'[^a-z0-9]+', '-', texto).strip('-')
+
+
+def asignar_rutas(lista, anteriores):
+    """Dirección de cada estreno en cada idioma: la que ya tuviera o, si es nuevo, una libre a partir de su título."""
+    usadas = {'es': set(), 'en': set()}
+    for r in anteriores.values():
+        for corto in usadas:
+            usadas[corto].add(r[corto])
+    for e in lista:
+        if e['clave'] in anteriores:
+            e['ruta'] = anteriores[e['clave']]
+            continue
+        e['ruta'] = {}
+        for corto, sufijo in (('es', 'temporada'), ('en', 'season')):
+            base = slug(e[corto]['titulo'] or e['es']['titulo'] or e['en']['titulo']) or e['clave']
+            if (e.get('temporada') or 1) > 1:
+                base += f"-{sufijo}-{e['temporada']}"
+            ruta = base if base not in usadas[corto] else f"{base}-{e['tmdb']['id']}"
+            usadas[corto].add(ruta)
+            e['ruta'][corto] = ruta
 
 
 def main():
     hoy = datetime.date.today().isoformat()
+    previo = json.loads(DESTINO.read_text(encoding='utf-8')) if DESTINO.exists() else {}
     desde_cines = (datetime.date.today() - datetime.timedelta(days=DIAS_EN_CINES)).isoformat()
     fichas = fichas_de_la_coleccion()
     vistos, lista = set(), []
@@ -150,7 +203,15 @@ def main():
             serie(lista_fichas[0][0], id_)
 
     lista.sort(key=lambda e: (e['fecha'], e['clave']))
-    salida = {'fecha': hoy, 'fuente': 'TMDB', 'estrenos': lista}
+
+    # Lo que ya no sale se archiva con sus últimos datos, para que su página siga existiendo
+    anteriores = previo.get('estrenos', []) + previo.get('archivo', [])
+    archivo = {e['clave']: e for e in anteriores if e['clave'] not in vistos}
+    for e in archivo.values():
+        e['ficha'] = ficha_de(fichas, e['tmdb']['tipo'], e['tmdb']['id'], e.get('temporada'))
+    asignar_rutas(lista + list(archivo.values()), {e['clave']: e['ruta'] for e in anteriores if e.get('ruta')})
+
+    salida = {'fecha': hoy, 'fuente': 'TMDB', 'estrenos': lista, 'archivo': sorted(archivo.values(), key=lambda e: e['clave'])}
     DESTINO.write_text(json.dumps(salida, ensure_ascii=False, indent=1, sort_keys=True), encoding='utf-8', newline='\n')
     print(f'{len(lista)} próximos estrenos · ' + ' · '.join(f"{u}: {sum(1 for e in lista if e['universo'] == u)}" for u in PRODUCTORAS))
 

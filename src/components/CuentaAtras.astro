@@ -2,9 +2,10 @@
 /**
  * Contador grande del próximo estreno de cine: cartel de fondo, título, fecha y cuenta atrás en directo
  * (días, horas, minutos y segundos) con una animación al cambiar cada cifra. Sin JavaScript se ven los días
- * calculados al publicar la web. Respeta «reducir movimiento».
+ * calculados al publicar la web. Respeta «reducir movimiento». En la página del propio estreno (`propia`) el título
+ * es el encabezado principal y no enlaza a ningún sitio.
  */
-import { type Estreno, textosEstreno, fechaDe, enlaceTmdb } from '../lib/proximamente';
+import { type Estreno, enEmision, textosEstreno, fechaDe, enlaceEstreno } from '../lib/proximamente';
 import type { Universo } from '../lib/datos';
 import { estiloUniverso } from '../lib/datos';
 import { paisDe } from '../lib/dondever';
@@ -14,8 +15,9 @@ import { textos, idiomaDe, LOCALE } from '../i18n';
 interface Props {
   e: Estreno;
   u?: Universo;
+  propia?: boolean;
 }
-const { e, u } = Astro.props;
+const { e, u, propia = false } = Astro.props;
 const tx = textos(Astro.url);
 const p = tx.proximos;
 const idioma = idiomaDe(Astro.url);
@@ -23,7 +25,16 @@ const x = textosEstreno(e, idioma);
 const dia = fechaDe(e, paisDe(idioma));
 const fecha = new Date(`${dia}T00:00:00Z`).toLocaleDateString(LOCALE[idioma], { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 const diasAlPublicar = Math.max(0, Math.ceil((Date.parse(`${dia}T00:00:00Z`) - Date.now()) / 86400000));
-const href = e.ficha ? `/${e.ficha}/` : enlaceTmdb(e, idioma);
+const antetitulo = !propia
+  ? p.proximoGran
+  : e.tipo === 'pelicula'
+    ? p.pelicula
+    : enEmision(e)
+      ? p.enEmision
+      : (e.temporada ?? 1) > 1
+      ? p.temporadaNueva(e.temporada ?? 1)
+      : p.serieNueva;
+const rotuloFecha = e.tipo === 'pelicula' ? p.enCines : enEmision(e) ? p.proximoEpisodio(e.temporada ?? 1, e.episodio ?? 1) : p.seEstrena;
 const unidades = [
   ['dias', p.unidades.dias, String(diasAlPublicar)],
   ['horas', p.unidades.horas, '00'],
@@ -32,17 +43,23 @@ const unidades = [
 ] as const;
 ---
 
-<section class="cuenta-atras" style={estiloUniverso(u)} data-cuenta-atras data-objetivo={dia} data-hoy={p.hoy} aria-labelledby="t-cuenta-atras">
+<section class="cuenta-atras" style={estiloUniverso(u)} data-cuenta-atras data-objetivo={dia} data-hoy={p.hoy} data-ya={p.yaEstrenado} aria-labelledby="t-cuenta-atras">
   {x.poster && <img class="fondo" src={imagenTmdb(x.poster, 'w780')} alt="" width="780" height="1170" loading="eager" decoding="async" />}
   <div class="contenido">
     {x.poster && <img class="cartel" src={imagenTmdb(x.poster, 'w342')} alt="" width="342" height="513" loading="eager" decoding="async" />}
     <div class="texto">
-      <p class="antetitulo">{p.proximoGran}</p>
-      <h2 id="t-cuenta-atras">
-        <a href={href} rel={e.ficha ? undefined : 'noopener'}>{x.titulo}</a>
-      </h2>
+      <p class="antetitulo">{antetitulo}</p>
+      {
+        propia ? (
+          <h1 id="t-cuenta-atras">{x.titulo}</h1>
+        ) : (
+          <h2 id="t-cuenta-atras">
+            <a href={enlaceEstreno(e)}>{x.titulo}</a>
+          </h2>
+        )
+      }
       <p class="fecha">
-        {p.enCines} <time datetime={dia}>{fecha}</time>
+        {rotuloFecha} <time datetime={dia}>{fecha}</time>
       </p>
       <div role="timer" aria-live="off" aria-label={p.faltan(diasAlPublicar)}>
       <ol class="cifras">
@@ -82,7 +99,10 @@ const unidades = [
       const resto = objetivo - Date.now();
       if (resto <= 0) {
         caja.classList.add('estrenada');
-        caja.querySelector<HTMLElement>('[data-es-hoy]')!.hidden = false;
+        const aviso = caja.querySelector<HTMLElement>('[data-es-hoy]')!;
+        // La web se compila cada semana: pasado el día del estreno, «hoy» ya no sería verdad
+        if (resto < -86400000) aviso.textContent = caja.dataset.ya ?? '';
+        aviso.hidden = false;
         caja.querySelector<HTMLElement>('.cifras')!.hidden = true;
         return false;
       }
@@ -152,6 +172,7 @@ const unidades = [
     text-transform: uppercase;
     color: #ffd166;
   }
+  h1,
   h2 {
     margin: 4px 0 2px;
     font: 800 clamp(1.6rem, 4.4vw, 3rem) / 1.05 var(--f-titulo);
