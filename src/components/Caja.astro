@@ -147,6 +147,12 @@ const tipoTexto = t.d.animada ? tx.general.animado(nombreTipo(t.tipo, idioma)) :
   :global(.estanteria[data-vista='lista']) .nombre-pie {
     -webkit-line-clamp: 1;
   }
+  @media (max-width: 600px) {
+    /* En móvil una línea corta casi todos los títulos largos */
+    :global(.estanteria[data-vista='lista']) .nombre-pie {
+      -webkit-line-clamp: 2;
+    }
+  }
   :global(.estanteria[data-vista='lista']) .info-lista {
     position: static;
     width: auto;

@@ -201,7 +201,8 @@ const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
     list-style: none;
     padding: 0;
     margin: 18px 0 0;
-    columns: 2 380px;
+    /* Dos columnas solo si cada una deja sitio al título del capítulo */
+    columns: 2 520px;
     column-gap: 28px;
   }
   .lista li {
@@ -215,6 +216,15 @@ const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
     border-left: 4px solid var(--c-serie);
     border-bottom: 1px solid var(--borde);
     font-size: 0.93rem;
+  }
+  @media (max-width: 600px) {
+    /* En móvil no caben cuatro columnas: el título del capítulo baja a su propia línea */
+    .lista li {
+      grid-template-columns: 2.2em minmax(0, 1fr) auto;
+    }
+    .cap {
+      grid-column: 2 / -1;
+    }
   }
   .lista li.mega {
     background: color-mix(in srgb, var(--realce) 14%, transparent);
