@@ -1,0 +1,535 @@
+---
+import { conIdiomas, idiomaDe, textos } from '../../i18n';
+export function getStaticPaths() {
+  return conIdiomas([{ params: { maraton: 'maraton' } }], () => ({ maraton: 'marathon' }));
+}
+/**
+ * Calculadora y planificador de maratones: cuántas horas son una sección, saga o selección, y cómo repartirlas en
+ * sesiones con descansos. El reparto se hace en el navegador (src/lib/maraton.ts) y el plan se guarda en la propia
+ * dirección para poder compartirlo sin servidor. La tabla de horas por sección va en el HTML, para los buscadores.
+ */
+import Base from '../../layouts/Base.astro';
+import { universosActivos, titulosDe, sagasDe, huecosDeSeccion, huecosPorCarpetas, localizar, type Titulo } from '../../lib/datos';
+import { datosTmdb } from '../../lib/tmdb';
+import { textoDuracion } from '../../lib/maraton';
+import { seccionLoc, sagaLoc } from '../../i18n/datos';
+import { rutaEnIdioma } from '../../i18n/rutas';
+import { guiasDe } from '../../config/guias';
+
+const tx = textos(Astro.url);
+const m = tx.maraton;
+const idioma = idiomaDe(Astro.url);
+
+/** Duración de cada capítulo (temporadas) o la de la película. Vacío si no se sabe. */
+function partesDe(t: Titulo): number[] {
+  const tmdb = datosTmdb(t.universo, t.id, 'es');
+  const caps = tmdb?.capitulos?.length ? tmdb.capitulos : t.m.capitulos;
+  if (t.tipo !== 'serie') {
+    const d = tmdb?.duracion ?? t.m.duracion;
+    return d ? [d] : [];
+  }
+  const conocidas = caps.map((c) => c.duracion).filter((d): d is number => Boolean(d));
+  const habitual = tmdb?.duracion ?? t.m.duracion ?? (conocidas.length ? Math.round(conocidas.reduce((a, b) => a + b, 0) / conocidas.length) : 0);
+  return habitual || conocidas.length ? caps.map((c) => c.duracion || habitual) : [];
+}
+
+const items: { id: string; n: string; a: number; p: number[]; url: string }[] = [];
+const posicion = new Map<string, number>();
+const grupos: { nombre: string; opciones: { n: string; i: number[] }[] }[] = [];
+const filas: { universo: string; seccion: string; titulos: number; minutos: number; grupo: string }[] = [];
+const claves = new Map<string, number[]>(); // valor de cada opción del desplegable → títulos
+
+for (const u of await universosActivos()) {
+  const titulos = await titulosDe(u.id);
+  const secciones = u.data.secciones.map((s) => {
+    const deSeccion = titulos.filter((t) => t.d.seccion === s.id);
+    const { huecos } = s.orden === 'carpetas' ? huecosPorCarpetas(deSeccion, s) : { huecos: huecosDeSeccion(deSeccion, s) };
+    // Orden de la colección, sin repetir las temporadas troceadas
+    const orden: Titulo[] = [];
+    for (const h of huecos) if (!orden.includes(h.titulo)) orden.push(h.titulo);
+    return { s: seccionLoc(s, idioma), orden };
+  });
+  for (const t of secciones.flatMap((x) => x.orden)) {
+    const l = localizar(t, idioma);
+    posicion.set(t.id, items.length);
+    items.push({ id: t.id, n: l.corto, a: t.d.anio, p: partesDe(t), url: await rutaEnIdioma(l.url, idioma) });
+  }
+  const indices = (lista: { id: string }[]) => lista.map((t) => posicion.get(t.id)).filter((i): i is number => i !== undefined);
+
+  const opcionesSecciones = secciones.map(({ s, orden }) => {
+    const i = indices(orden);
+    filas.push({ universo: u.data.nombre, seccion: s.nombre, titulos: i.length, minutos: i.reduce((n, x) => n + items[x].p.reduce((a, b) => a + b, 0), 0), grupo: `${u.id}/${s.id}` });
+    claves.set(`${u.id}/${s.id}`, i);
+    return { n: s.nombre, i };
+  });
+  grupos.push({ nombre: m.grupoSecciones(u.data.nombre), opciones: [{ n: m.todo(u.data.nombre), i: indices(secciones.flatMap((x) => x.orden)) }, ...opcionesSecciones] });
+
+  // Cada saga con sus subsagas, en el orden de la colección
+  const sagas = await sagasDe(u.id);
+  const opcionesSagas = sagas.flatMap((saga) => {
+    const ids = new Set([saga.id]);
+    for (const _ of sagas) sagas.filter((s) => s.data.padre && ids.has(s.data.padre.id)).forEach((s) => ids.add(s.id));
+    const i = indices(titulos.filter((t) => t.d.sagas.some((r) => ids.has(r.id)))).sort((a, b) => a - b);
+    return i.length > 1 ? [{ n: sagaLoc(saga, idioma).data.nombre, i }] : [];
+  });
+  if (opcionesSagas.length) grupos.push({ nombre: m.grupoSagas(u.data.nombre), opciones: opcionesSagas });
+
+  const rutas = guiasDe(u.id).flatMap((g) => g.rutas ?? []);
+  if (rutas.length) grupos.push({ nombre: m.grupoRutas(u.data.nombre), opciones: rutas.map((r) => ({ n: (idioma === 'en' && r.en?.titulo) || r.titulo, i: indices(r.ids.map((id) => ({ id }))) })) });
+}
+
+// Textos que necesita el script
+const textosCliente = {
+  capitulo: m.capitulo('{n}'),
+  capitulos: m.capitulos('{a}', '{b}'),
+  sesion: m.sesion('{n}'),
+  dia: m.dia('{n}'),
+  resumen: m.resumen('{v}', '{t}', '{s}', '{d}'),
+  sinDuracion: m.sinDuracion('{n}'),
+  subir: m.subir('{t}'),
+  bajar: m.bajar('{t}'),
+  quitar: m.quitar('{t}'),
+  copiado: m.copiado,
+  vacio: m.vacio,
+};
+---
+
+<Base titulo={m.tituloSeo} descripcion={m.descripcion} migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: m.titulo, url: '/maraton/' }]}>
+  <div class="contenedor maraton" data-maraton>
+    <h1>{m.titulo}</h1>
+    <p class="entradilla">{m.intro}</p>
+
+    <div class="columnas">
+      <section class="panel" aria-labelledby="t-que">
+        <h2 id="t-que">{m.que}</h2>
+        <form class="anadir" data-anadir-grupo>
+          <label for="grupo">{m.coleccion}</label>
+          <div class="fila">
+            <select id="grupo" data-grupo>
+              {grupos.map((g, x) => (
+                <optgroup label={g.nombre}>
+                  {g.opciones.map((o, y) => <option value={`${x}/${y}`}>{o.n}</option>)}
+                </optgroup>
+              ))}
+            </select>
+            <button type="submit" class="pastilla">{m.anadir}</button>
+          </div>
+        </form>
+        <form class="anadir" data-anadir-titulo>
+          <label for="titulo">{m.unTitulo}</label>
+          <div class="fila">
+            <input id="titulo" list="titulos" autocomplete="off" data-titulo-texto />
+            <datalist id="titulos">
+              {items.map((i) => <option value={`${i.n} (${i.a})`} />)}
+            </datalist>
+            <button type="submit" class="pastilla">{m.anadir}</button>
+          </div>
+        </form>
+        <ol class="lista" data-lista></ol>
+        <p class="vacio" data-vacio>{m.vacio}</p>
+        <button type="button" class="pastilla" data-vaciar hidden>{m.vaciar}</button>
+      </section>
+
+      <section class="panel" aria-labelledby="t-como">
+        <h2 id="t-como">{m.como}</h2>
+        <div class="opciones">
+          <label>{m.horasSesion} <input type="number" min="1" max="12" step="1" data-opcion="horas" /></label>
+          <label>{m.pausa} <input type="number" min="0" max="60" step="5" data-opcion="pausa" /></label>
+          <label>{m.porDia} <input type="number" min="1" max="4" step="1" data-opcion="porDia" /></label>
+          <label class="casilla"><input type="checkbox" data-sin-vistos /> {m.sinVistos}</label>
+        </div>
+      </section>
+    </div>
+
+    <section class="plan" aria-labelledby="t-plan" data-plan hidden>
+      <h2 id="t-plan">{m.plan}</h2>
+      <p class="resumen" role="status" data-resumen></p>
+      <p class="aviso" data-aviso hidden></p>
+      <p class="compartir">
+        <button type="button" class="pastilla" data-compartir>{m.compartir}</button>
+        <span role="status" data-copiado></span>
+      </p>
+      <div data-sesiones></div>
+    </section>
+
+    <section class="horas" aria-labelledby="t-horas">
+      <h2 id="t-horas">{m.cuanto}</h2>
+      <div class="tabla">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">{m.columnaSeccion}</th>
+              <th scope="col">{m.columnaTitulos}</th>
+              <th scope="col">{m.columnaHoras}</th>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody>
+            {filas.map((f) => (
+              <tr>
+                <th scope="row">{f.universo} · {f.seccion}</th>
+                <td>{f.titulos}</td>
+                <td>{textoDuracion(f.minutos)}</td>
+                <td><button type="button" class="pastilla" data-planificar={JSON.stringify(claves.get(f.grupo))} aria-label={m.planificarDe(`${f.universo} · ${f.seccion}`)}>{m.planificar}</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="nota">{m.notaTabla}</p>
+    </section>
+
+    <script type="application/json" data-items set:html={JSON.stringify(items)} />
+    <script type="application/json" data-grupos set:html={JSON.stringify(grupos.map((g) => g.opciones.map((o) => o.i)))} />
+    <script type="application/json" data-textos set:html={JSON.stringify(textosCliente)} />
+  </div>
+</Base>
+
+<script>
+  import { repartir, textoDuracion, aDireccion, deDireccion, type Opciones } from '../../lib/maraton';
+  import { leerVistos, EVENTO } from '../../lib/vistos';
+
+  interface ItemPagina { id: string; n: string; a: number; p: number[]; url: string }
+
+  const raiz = document.querySelector<HTMLElement>('[data-maraton]')!;
+  const leer = (sel: string) => JSON.parse(raiz.querySelector(sel)!.textContent ?? '[]');
+  const items: ItemPagina[] = leer('[data-items]');
+  const grupos: number[][][] = leer('[data-grupos]');
+  const tx = leer('[data-textos]');
+  const porId = new Map(items.map((i, x) => [i.id, x]));
+  const $ = <T extends HTMLElement>(sel: string) => raiz.querySelector<T>(sel)!;
+  const horas = (min: number) => textoDuracion(min);
+
+  // El plan: posiciones en `items`, en el orden elegido
+  let plan: number[] = [];
+  let opciones: Opciones;
+  const sinVistos = $<HTMLInputElement>('[data-sin-vistos]');
+
+  function efectivos() {
+    const vistos = sinVistos.checked ? leerVistos() : new Set<string>();
+    return plan.filter((x) => !vistos.has(items[x].id));
+  }
+
+  function fila(x: number, pos: number) {
+    const i = items[x];
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = i.url;
+    a.textContent = i.n;
+    const dur = document.createElement('span');
+    dur.className = 'dur';
+    dur.textContent = i.p.length ? horas(i.p.reduce((n, d) => n + d, 0)) : '—';
+    const botones = document.createElement('span');
+    botones.className = 'acciones';
+    for (const [accion, signo, texto] of [['subir', '↑', tx.subir], ['bajar', '↓', tx.bajar], ['quitar', '✕', tx.quitar]] as const) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = signo;
+      b.dataset.accion = accion;
+      b.dataset.pos = String(pos);
+      b.setAttribute('aria-label', texto.replace('{t}', i.n));
+      b.disabled = (accion === 'subir' && pos === 0) || (accion === 'bajar' && pos === plan.length - 1);
+      botones.append(b);
+    }
+    li.append(a, dur, botones);
+    return li;
+  }
+
+  function textoBloque(b: { desde: number; hasta: number; total: number }, serie: boolean) {
+    if (!serie || (b.desde === 1 && b.hasta === b.total)) return '';
+    return b.desde === b.hasta ? tx.capitulo.replace('{n}', String(b.desde)) : tx.capitulos.replace('{a}', String(b.desde)).replace('{b}', String(b.hasta));
+  }
+
+  function pintarPlan() {
+    const lista = efectivos();
+    const r = repartir(lista.map((x) => ({ id: items[x].id, partes: items[x].p })), opciones);
+    const desconocidos = lista.filter((x) => !items[x].p.length).length;
+    $('[data-plan]').hidden = r.sesiones.length === 0 && desconocidos === 0;
+    $('[data-resumen]').textContent = tx.resumen.replace('{v}', horas(r.visionado)).replace('{t}', horas(r.conPausas)).replace('{s}', String(r.sesiones.length)).replace('{d}', String(r.dias));
+    const aviso = $('[data-aviso]');
+    aviso.hidden = !desconocidos;
+    aviso.textContent = tx.sinDuracion.replace('{n}', String(desconocidos));
+
+    const cont = $('[data-sesiones]');
+    cont.replaceChildren();
+    let dia = 0;
+    let ol: HTMLOListElement | undefined;
+    r.sesiones.forEach((s, n) => {
+      if (s.dia !== dia) {
+        dia = s.dia;
+        const h = document.createElement('h3');
+        h.textContent = tx.dia.replace('{n}', String(dia));
+        ol = document.createElement('ol');
+        ol.className = 'sesiones';
+        ol.start = n + 1;
+        cont.append(h, ol);
+      }
+      const li = document.createElement('li');
+      li.className = 'sesion panel';
+      const cab = document.createElement('p');
+      cab.className = 'cab';
+      const nombre = document.createElement('strong');
+      nombre.textContent = tx.sesion.replace('{n}', String(n + 1));
+      cab.append(nombre, ` · ${horas(s.minutos)}`);
+      const ul = document.createElement('ul');
+      for (const b of s.bloques) {
+        const i = items[porId.get(b.id)!];
+        const el = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = i.url;
+        a.textContent = i.n;
+        const extra = textoBloque(b, i.p.length > 1);
+        el.append(a, `${extra ? ` · ${extra}` : ''} (${horas(b.minutos)})`);
+        ul.append(el);
+      }
+      li.append(cab, ul);
+      ol!.append(li);
+    });
+  }
+
+  function pintar() {
+    $('[data-lista]').replaceChildren(...plan.map(fila));
+    $('[data-vacio]').hidden = plan.length > 0;
+    $('[data-vaciar]').hidden = plan.length === 0;
+    raiz.querySelectorAll<HTMLInputElement>('[data-opcion]').forEach((c) => (c.value = String(opciones[c.dataset.opcion as keyof Opciones])));
+    pintarPlan();
+    $('[data-copiado]').textContent = '';
+  }
+
+  /** El enlace lleva lo que se ve en el plan: quien lo abra no tiene por qué haber visto lo mismo. */
+  function guardar() {
+    const hash = plan.length ? aDireccion(efectivos().map((x) => items[x].id), opciones) : '';
+    history.replaceState(null, '', hash || location.pathname);
+  }
+
+  function cambiar(nuevo: number[]) {
+    plan = nuevo;
+    guardar();
+    pintar();
+  }
+
+  function cargar() {
+    const { ids, opciones: o } = deDireccion(location.hash);
+    opciones = o;
+    plan = [...new Set(ids.map((id) => porId.get(id)).filter((x): x is number => x !== undefined))];
+    pintar();
+  }
+
+  const anadir = (nuevos: number[]) => cambiar([...plan, ...nuevos.filter((x) => !plan.includes(x))]);
+
+  $('[data-anadir-grupo]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const [g, o] = $<HTMLSelectElement>('[data-grupo]').value.split('/').map(Number);
+    anadir(grupos[g][o]);
+  });
+
+  $('[data-anadir-titulo]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const campo = $<HTMLInputElement>('[data-titulo-texto]');
+    const x = items.findIndex((i) => `${i.n} (${i.a})` === campo.value);
+    if (x < 0) return;
+    anadir([x]);
+    campo.value = '';
+  });
+
+  $('[data-lista]').addEventListener('click', (e) => {
+    const b = (e.target as Element).closest<HTMLButtonElement>('[data-accion]');
+    if (!b) return;
+    const pos = Number(b.dataset.pos);
+    const nuevo = [...plan];
+    const accion = b.dataset.accion;
+    if (accion === 'quitar') nuevo.splice(pos, 1);
+    else {
+      const otro = accion === 'subir' ? pos - 1 : pos + 1;
+      [nuevo[pos], nuevo[otro]] = [nuevo[otro], nuevo[pos]];
+    }
+    cambiar(nuevo);
+    // Al repintar la lista se perdería el foco: vuelve al mismo botón de la fila que corresponda
+    const destino = accion === 'quitar' ? Math.min(pos, plan.length - 1) : accion === 'subir' ? pos - 1 : pos + 1;
+    const siguiente = raiz.querySelector<HTMLButtonElement>(`[data-accion="${accion}"][data-pos="${destino}"]:not(:disabled)`) ?? raiz.querySelector<HTMLButtonElement>(`[data-accion="quitar"][data-pos="${destino}"]`);
+    (siguiente ?? $('[data-grupo]')).focus();
+  });
+
+  $('[data-vaciar]').addEventListener('click', () => {
+    cambiar([]);
+    $('[data-grupo]').focus();
+  });
+
+  raiz.querySelectorAll<HTMLInputElement>('[data-opcion]').forEach((c) =>
+    c.addEventListener('change', () => {
+      // Pasa por la misma validación que un enlace: los límites y valores iniciales están en un solo sitio
+      const campo = c.dataset.opcion as keyof Opciones;
+      const claveDe = { horas: 'h', pausa: 'p', porDia: 'd' };
+      opciones = { ...opciones, [campo]: deDireccion(`${claveDe[campo]}=${c.value}`).opciones[campo] };
+      guardar();
+      pintar();
+    }),
+  );
+
+  sinVistos.addEventListener('change', () => {
+    guardar();
+    pintarPlan();
+  });
+  window.addEventListener(EVENTO, pintarPlan);
+  window.addEventListener('hashchange', cargar);
+
+  raiz.querySelectorAll<HTMLButtonElement>('[data-planificar]').forEach((b) =>
+    b.addEventListener('click', () => {
+      cambiar(JSON.parse(b.dataset.planificar ?? '[]'));
+      const titulo = $('#t-plan');
+      titulo.tabIndex = -1;
+      titulo.focus();
+      titulo.scrollIntoView({ block: 'start' });
+    }),
+  );
+
+  $('[data-compartir]').addEventListener('click', async () => {
+    const aviso = $('[data-copiado]');
+    try {
+      await navigator.clipboard.writeText(location.href);
+      aviso.textContent = tx.copiado;
+    } catch {
+      // Sin permiso para el portapapeles: se muestra el enlace para copiarlo a mano
+      aviso.textContent = location.href;
+    }
+  });
+
+  cargar();
+</script>
+
+<style>
+  .maraton {
+    padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .entradilla {
+    max-width: 70ch;
+    color: var(--txt-2);
+  }
+  .columnas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 14px;
+    align-items: start;
+    margin-top: 20px;
+  }
+  .columnas h2,
+  .plan h2,
+  .horas h2 {
+    margin-top: 0;
+  }
+  .anadir {
+    margin-bottom: 14px;
+  }
+  .anadir label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .fila {
+    display: flex;
+    gap: 8px;
+  }
+  .fila select,
+  .fila input {
+    flex: 1;
+    min-width: 0;
+    min-height: 40px;
+  }
+  .lista {
+    margin: 0 0 12px;
+    padding-left: 2.2em;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+  .lista :global(li) {
+    padding: 4px 0;
+  }
+  .lista :global(.dur) {
+    margin-left: 8px;
+    color: var(--txt-2);
+    font-size: 0.85rem;
+  }
+  .lista :global(li)::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+  .lista :global(.acciones) {
+    float: right;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+  .lista :global(button) {
+    min-width: 28px;
+    min-height: 28px;
+    margin-left: 2px;
+  }
+  .vacio {
+    color: var(--txt-2);
+  }
+  .opciones {
+    display: grid;
+    gap: 12px;
+  }
+  .opciones label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .opciones input[type='number'] {
+    width: 5em;
+    min-height: 36px;
+  }
+  .opciones .casilla {
+    justify-content: flex-start;
+  }
+  .plan,
+  .horas {
+    margin-top: 32px;
+  }
+  .resumen {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .aviso,
+  .nota {
+    color: var(--txt-2);
+    font-size: 0.9rem;
+  }
+  .compartir span {
+    margin-left: 10px;
+    overflow-wrap: anywhere;
+  }
+  .plan :global(.sesiones) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 12px;
+  }
+  .plan :global(.cab) {
+    margin: 0 0 6px;
+  }
+  .plan :global(.sesion ul) {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  .tabla {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th,
+  td {
+    padding: 6px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--borde, currentColor);
+  }
+  tbody th {
+    font-weight: 500;
+  }
+</style>

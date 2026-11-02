@@ -48,6 +48,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Estadísticas**: horas para verlo todo, maratón del UMC, horas por sección, estrenos por década, personajes y
   actores que más aparecen y récords, con gráficos accesibles (leyenda, tabla de datos y colores comprobados para
   daltonismo en modo claro y oscuro).
+- **Planificador de maratones**: calcula las horas de una sección, saga o lista propia y las reparte en sesiones con
+  descansos, partiendo las temporadas entre capítulos. El plan viaja en el enlace, sin servidor.
 - **Mi progreso**: marca lo que has visto desde cada ficha; las estanterías y guías lo señalan, se puede filtrar
   por «sin ver» y la página `/mi-progreso/` muestra el avance por sección y el siguiente título. Se guarda solo en el
   navegador (sin cuentas), con el día en que marcaste cada título y copia de seguridad descargable.

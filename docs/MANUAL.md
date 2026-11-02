@@ -402,6 +402,23 @@ la web, sin cuentas:
 
 La lista de juegos, su orden y las **ideas para más adelante** que se muestran en la página están en `src/config/juegos.ts`.
 
+## Planificador de maratones
+
+Página `/maraton/` (`/en/marathon/`, enlazada en el pie). Tiene una lista de títulos, tres opciones (horas por sesión,
+descanso entre títulos y sesiones al día) y el plan resultante, además de una tabla con las horas de cada sección.
+
+- **Qué se puede añadir:** un universo, sección, saga (con sus subsagas) o selección de «Por dónde empezar», o un título
+  suelto. Los títulos no se repiten y se pueden reordenar. La casilla «Quitar lo que ya he visto» usa Mi progreso.
+- **Reparto** (`src/lib/maraton.ts`): las películas no se parten y las temporadas sí, entre capítulos. Lo que no cabe pasa a
+  la sesión siguiente; un título más largo que la sesión ocupa una él solo. El descanso cuenta solo entre títulos distintos.
+- **Duraciones:** las de TMDB y, si faltan, las de la ficha. Los títulos sin duración quedan fuera del reparto y la página
+  avisa de cuántos son.
+- **Compartir:** el plan se guarda en la dirección (`#t=id1,id2&h=4&p=15&d=1`), sin servidor. Los ids son los mismos en los
+  dos idiomas. Los ids desconocidos se ignoran y los números fuera de rango se ajustan.
+
+Las secciones, sagas y selecciones salen solas de los datos y de `src/config/guias.ts`. Textos: apartado `maraton` de
+`src/i18n/textos.ts`.
+
 ## Mi progreso (vistos)
 
 Cada ficha tiene un botón **«Marcar como visto»**. Lo marcado se ve en toda la web:
