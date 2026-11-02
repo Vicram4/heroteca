@@ -11,10 +11,14 @@ versión inglesa de la web y los guarda en datos/tmdb/<universo>.en.json.
 
 - Solo se usa para RELLENAR lo que falte: lo de tus documentos siempre manda (se decide al compilar).
 - Las respuestas de TMDB se guardan en cache/tmdb/ (no se sube); --refrescar las vuelve a pedir.
+- El reparto se corta en MAX_REPARTO personas. De las demás (y de los invitados de cada temporada) solo se guardan,
+  en «cameos», las que importan: quien interpreta a un personaje de la colección o quien tiene papel principal en
+  otras obras. El resto (figurantes, voces adicionales) se descarta para no llenar la web de papeles menores.
 """
 import json
 import re
 import sys
+import unicodedata
 from pathlib import Path
 
 import yaml
@@ -24,6 +28,11 @@ import tmdb  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parent.parent
 MAX_REPARTO = 12
+# Otras obras con papel principal que hacen falta para guardar un papel menor como cameo
+MIN_OBRAS_PRINCIPAL = 2
+PAPEL_GENERICO = re.compile(r'^(additional voices?|voces adicionales|various|voices?)\b', re.I)
+# Alias que en un papel suelto casi siempre son otra persona: la Wanda de la serie de Hulk de 1977, un tal Howard en Runaways…
+ALIAS_AMBIGUOS = {'wanda', 'howard', 'skye', 'phoenix', 'guardian', 'enigma'}
 # Idioma de los vídeos preferido para el tráiler (se cambia con --ingles)
 IDIOMA_VIDEO = 'es'
 
@@ -125,6 +134,7 @@ def datos_pelicula(d, refrescar):
         'direccion': nombres(cred.get('crew'), 'Director'),
         'guion': nombres(cred.get('crew'), 'Screenplay', 'Writer', 'Story'),
         'reparto': [actor(c, c.get('character')) for c in (cred.get('cast') or [])[:MAX_REPARTO]],
+        'cameos': [actor(c, c.get('character')) for c in (cred.get('cast') or [])[MAX_REPARTO:]],
         'trailer': trailer(d.get('videos')),
         'generos': [g['name'] for g in d.get('genres', [])],
         'edad': edad_pelicula(d),
@@ -151,6 +161,8 @@ def datos_serie(d, temporada, refrescar):
                for c in (agg.get('cast') or (d.get('credits') or {}).get('cast') or [])[:MAX_REPARTO]]
     base['reparto'] = reparto
     if not temporada:
+        base['cameos'] = [actor(c, ' / '.join(r.get('character', '') for r in c.get('roles', [])))
+                          for c in (agg.get('cast') or [])[MAX_REPARTO:]]
         base['temporadas'] = d.get('number_of_seasons')
         # Sin duración por capítulo a nivel de serie: la media de los capítulos de la primera temporada
         if not base['duracion']:
@@ -175,6 +187,9 @@ def datos_serie(d, temporada, refrescar):
     reparto_t = [actor(c, c.get('character')) for c in ((s.get('credits') or {}).get('cast') or [])[:MAX_REPARTO]]
     if reparto_t:
         base['reparto'] = reparto_t
+    # Los cameos de una serie suelen ser invitados de un capítulo, que TMDB no incluye en el reparto de la temporada
+    base['cameos'] = [actor(c, c.get('character')) for c in ((s.get('credits') or {}).get('cast') or [])[MAX_REPARTO:]]
+    base['cameos'] += [actor(c, c.get('character')) for ep in s.get('episodes', []) for c in ep.get('guest_stars') or []]
     base['trailer'] = trailer(s.get('videos')) or base['trailer']
     caps = []
     for ep in s.get('episodes', []):
@@ -201,6 +216,59 @@ def limpiar(obj):
     if isinstance(obj, list):
         return [limpiar(v) for v in obj]
     return obj
+
+
+def normal(texto):
+    """Como normal() de src/lib/personajes.ts: sin tildes ni signos, para reconocer a un personaje por su nombre."""
+    sin_tildes = ''.join(c for c in unicodedata.normalize('NFD', texto) if not unicodedata.combining(c))
+    palabras = re.sub(r'[^a-z0-9]+', ' ', re.sub(r"""[´'’"“”]""", '', sin_tildes.lower())).split()
+    while len(palabras) > 1 and palabras[0] in ('dr', 'dra', 'doctor', 'doctora', 'gral', 'general', 'cnel', 'coronel', 'sr', 'sra', 'el', 'la'):
+        palabras.pop(0)
+    return ' '.join(palabras)
+
+
+def nombres_personajes(universo):
+    """Nombres, identidades y alias de los personajes de un universo."""
+    conocidos = set()
+    for archivo in (RAIZ / 'contenido' / 'personajes' / universo).glob('*.md'):
+        p = leer_ficha(archivo)
+        conocidos.update(normal(str(n)) for n in [p.get('nombre'), p.get('identidad'), *(p.get('alias') or []), *(p.get('aliasEs') or [])] if n)
+    return conocidos
+
+
+def obras_principales(salida, universo, ingles):
+    """Id de cada persona → obras en las que tiene papel principal, contando los otros universos ya sincronizados."""
+    fichas = list(salida.values())
+    for otro in (RAIZ / 'datos' / 'tmdb').glob('*.json'):
+        if otro.name.endswith('.en.json') == ingles and otro.name.split('.')[0] != universo:
+            fichas += json.loads(otro.read_text(encoding='utf-8')).values()
+    obras = {}
+    for f in fichas:
+        for r in f.get('reparto', []):
+            obras.setdefault(r.get('idTmdb'), set()).add(f['id'])
+    return obras
+
+
+def filtrar_cameos(salida, universo, ingles):
+    """Deja en «cameos» solo a quien interpreta a un personaje de la colección o tiene papel principal en otras obras."""
+    obras = obras_principales(salida, universo, ingles)
+    personajes = nombres_personajes(universo)
+    for f in salida.values():
+        ya = {r.get('idTmdb') for r in f.get('reparto', [])}
+        cameos = {}
+        for c in f.pop('cameos', []):
+            texto = c.get('personaje', '')
+            if c.get('idTmdb') in ya or not texto or PAPEL_GENERICO.match(texto):
+                continue
+            partes = {normal(p) for p in re.split(r'[/()]', texto)}
+            if partes & ALIAS_AMBIGUOS and not (partes & personajes) - ALIAS_AMBIGUOS:
+                continue
+            # Las voces conocidas hacen muchos papeles sueltos («Reporter #1 (voice)»): con voz, solo si es un personaje de la colección
+            conocido = len(obras.get(c.get('idTmdb'), set()) - {f['id']}) >= MIN_OBRAS_PRINCIPAL and '(voice)' not in texto
+            if partes & personajes or conocido:
+                cameos.setdefault(c.get('idTmdb'), {'actor': c['actor'], 'personaje': texto})
+        if cameos:
+            f['cameos'] = list(cameos.values())
 
 
 def main(argv):
@@ -231,12 +299,13 @@ def main(argv):
         if not datos.get('trailer'):
             datos['trailer'] = trailer_cualquier_idioma(ref['tipo'], ref['id'], refrescar)
         salida[ident] = limpiar({'id': ref['id'], 'tipo': ref['tipo'], **datos})
+    filtrar_cameos(salida, universo, ingles)
     destino = RAIZ / 'datos' / 'tmdb' / (f'{universo}.en.json' if ingles else f'{universo}.json')
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_text(json.dumps(salida, ensure_ascii=False, separators=(',', ':'), sort_keys=True), encoding='utf-8', newline='\n')
     con = lambda k: sum(1 for v in salida.values() if v.get(k))  # noqa: E731
     print(f'{len(salida)} fichas con datos de TMDB → {destino.relative_to(RAIZ)} ({destino.stat().st_size // 1024} KB)')
-    print(f"  carátula: {con('poster')} · sinopsis: {con('sinopsis')} · reparto: {con('reparto')} · tráiler: {con('trailer')} · capítulos: {con('capitulos')}")
+    print(f"  carátula: {con('poster')} · sinopsis: {con('sinopsis')} · reparto: {con('reparto')} · tráiler: {con('trailer')} · capítulos: {con('capitulos')} · con cameos: {con('cameos')}")
     if sin_tmdb:
         print(f'  Sin TMDB ({len(sin_tmdb)}): {", ".join(sin_tmdb)}')
 

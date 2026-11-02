@@ -130,6 +130,9 @@ async function calcular(): Promise<Resultado> {
           if (r.personaje) deTexto(r.personaje, indice).forEach((pid) => anotar(pid, { titulo: t, actor: r.actor, como: r.personaje }));
         });
       }
+      (t.tmdb?.cameos ?? []).forEach((r) => {
+        if (r.personaje) deTexto(r.personaje, indice).forEach((pid) => anotar(pid, { titulo: t, actor: r.actor, como: r.personaje }));
+      });
     }
     // Apariciones escritas a mano en la ficha
     t.d.personajes.forEach((a) => anotar(a.personaje.id, { titulo: t, actor: a.actor }));

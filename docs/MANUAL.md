@@ -364,6 +364,11 @@ Los tramos de una misma temporada cuentan una sola vez, en su primera aparición
   cuentan como una sola obra). Con 2 había más de 300 páginas casi vacías, que no aportan y restan en buscadores.
 - **De dónde salen los papeles:** el reparto de TMDB (`datos/tmdb/`, que ahora guarda también el id y la foto de cada
   intérprete) y el reparto escrito en las fichas. El mismo nombre con otra escritura (tildes, mayúsculas) cuenta igual.
+- **Cameos:** el reparto de TMDB se corta en 12 personas (`MAX_REPARTO`). `scripts/sincronizar_tmdb.py` guarda aparte, en
+  el campo `cameos`, a quien queda fuera (también los invitados de cada temporada) solo si interpreta a un personaje de
+  la colección o tiene papel principal en otras 2 obras (`MIN_OBRAS_PRINCIPAL`), sin contar sus voces sueltas. No dan
+  derecho a página ni suman a los títulos del actor: salen ocultos como spoiler en «Otras apariciones breves» y cuentan
+  en las apariciones de los personajes y en su línea de tiempo. Se calculan con lo ya descargado en `cache/tmdb/`.
 - **Personajes:** se limpian las anotaciones de TMDB («(voice)», «(archive footage)»…) y se quitan los papeles
   genéricos («Additional Voices», «Himself»). En inglés se usa el reparto inglés.
 - **Enlaces:** en cada ficha, el nombre del intérprete enlaza a su página si la tiene; también el gráfico de actores

@@ -1,7 +1,8 @@
 /**
  * Actores y actrices: sus papeles en la colección, a partir del reparto de TMDB y del escrito en las fichas.
  * Tienen página los que aparecen en al menos MIN_OBRAS obras distintas (las temporadas de una serie cuentan
- * como una sola obra), para no llenar la web de páginas casi vacías.
+ * como una sola obra), para no llenar la web de páginas casi vacías. Los cameos no cuentan para eso ni se mezclan
+ * con los papeles: van aparte, en la página de quien ya la tiene.
  */
 import { todosLosTitulos, universosActivos, type Titulo } from './datos';
 import { datosTmdb } from './tmdb';
@@ -21,6 +22,8 @@ export interface Actor {
   idTmdb?: number;
   /** Papeles ordenados por año */
   papeles: Papel[];
+  /** Títulos en los que está fuera del reparto principal, ordenados por año */
+  cameos: Papel[];
   /** Obras distintas (una serie cuenta una vez) */
   obras: number;
   /** Títulos por universo */
@@ -86,12 +89,20 @@ async function calcular(): Promise<Actor[]> {
       else if (!previo.personaje && personaje) previo.personaje = personaje;
     }
   }
-  const lista = [...porClave.values()]
-    .map((a) => {
-      const papeles = [...a.papeles.values()].sort((x, y) => x.t.d.anio - y.t.d.anio || (x.t.d.temporada ?? 0) - (y.t.d.temporada ?? 0));
+  const porAnio = (x: Papel, y: Papel) => x.t.d.anio - y.t.d.anio || (x.t.d.temporada ?? 0) - (y.t.d.temporada ?? 0);
+  const cameos = new Map<string, Papel[]>();
+  for (const t of titulos) {
+    for (const r of datosTmdb(t.universo, t.id, 'es')?.cameos ?? []) {
+      const clave = claveActor(r.actor);
+      if (!porClave.get(clave)?.papeles.has(t.id)) cameos.set(clave, [...(cameos.get(clave) ?? []), { t, personaje: limpiarPersonaje(r.personaje) }]);
+    }
+  }
+  const lista = [...porClave.entries()]
+    .map(([clave, a]) => {
+      const papeles = [...a.papeles.values()].sort(porAnio);
       const porUniverso: Record<string, number> = {};
       for (const p of papeles) porUniverso[p.t.universo] = (porUniverso[p.t.universo] ?? 0) + 1;
-      return { nombre: a.nombre, foto: a.foto, idTmdb: a.idTmdb, papeles, obras: new Set(papeles.map((p) => obraDe(p.t))).size, porUniverso };
+      return { nombre: a.nombre, foto: a.foto, idTmdb: a.idTmdb, papeles, cameos: (cameos.get(clave) ?? []).sort(porAnio), obras: new Set(papeles.map((p) => obraDe(p.t))).size, porUniverso };
     })
     .filter((a) => a.obras >= MIN_OBRAS)
     .sort((a, b) => b.obras - a.obras || b.papeles.length - a.papeles.length || a.nombre.localeCompare(b.nombre, 'es'));

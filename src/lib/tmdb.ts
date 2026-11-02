@@ -27,6 +27,8 @@ export interface DatosTmdb {
   creadores?: string[];
   /** Reparto; idTmdb y foto, para las páginas de actores */
   reparto?: { actor: string; personaje?: string; idTmdb?: number; foto?: string }[];
+  /** Personas fuera del reparto principal que importan: personajes de la colección y gente conocida por otras obras */
+  cameos?: { actor: string; personaje?: string }[];
   trailer?: string;
   generos?: string[];
   temporadas?: number;
