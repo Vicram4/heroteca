@@ -6,9 +6,11 @@
  *  - Se compara cada parte del texto (separadas por «/») completa, no por trozos:
  *    «She-Hulk» no cuenta como «Hulk».
  *  - Manda la identidad: en «Miles Morales / Spider-Man» se asigna Miles Morales, no Peter Parker.
+ *  - Las anotaciones de TMDB no cuentan: «Thanos (voice)» es Thanos.
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { todosLosTitulos, type Titulo } from './datos';
+import { limpiarPersonaje } from './actores';
 
 export type Personaje = CollectionEntry<'personajes'>;
 
@@ -63,7 +65,7 @@ function crearIndice(personajes: Personaje[]): Indice {
 
 /** Personajes que corresponden a un texto del reparto. */
 function deTexto(texto: string, indice: Indice): string[] {
-  const partes = texto.split('/').map(normal).filter(Boolean);
+  const partes = (limpiarPersonaje(texto) ?? '').split('/').map(normal).filter(Boolean);
   const porIdentidad = new Set(partes.flatMap((p) => [...(indice.identidad.get(p) ?? [])]));
   if (porIdentidad.size) return [...porIdentidad];
   return [...new Set(partes.flatMap((p) => [...(indice.heroe.get(p) ?? [])]))];
