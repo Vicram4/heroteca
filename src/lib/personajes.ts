@@ -7,6 +7,7 @@
  *    «She-Hulk» no cuenta como «Hulk».
  *  - Manda la identidad: en «Miles Morales / Spider-Man» se asigna Miles Morales, no Peter Parker.
  *  - Las anotaciones de TMDB no cuentan: «Thanos (voice)» es Thanos.
+ *  - Lo que va entre paréntesis es otra parte más: «Batman (Bruce Wayne)» se lee como «Batman / Bruce Wayne».
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { todosLosTitulos, type Titulo } from './datos';
@@ -19,6 +20,8 @@ export interface Aparicion {
   actor?: string;
   /** Texto del reparto tal cual («Steve Rogers / Capitán América») */
   como?: string;
+  /** Todos los que lo interpretan en este título: en «Spider-Man: No Way Home» son tres */
+  interpretes: { actor: string; como?: string }[];
 }
 
 const TRATAMIENTOS = new Set(['dr', 'dra', 'doctor', 'doctora', 'gral', 'general', 'cnel', 'coronel', 'sr', 'sra', 'el', 'la']);
@@ -65,7 +68,7 @@ function crearIndice(personajes: Personaje[]): Indice {
 
 /** Personajes que corresponden a un texto del reparto. */
 function deTexto(texto: string, indice: Indice): string[] {
-  const partes = (limpiarPersonaje(texto) ?? '').split('/').map(normal).filter(Boolean);
+  const partes = (limpiarPersonaje(texto) ?? '').split(/[/()]/).map(normal).filter(Boolean);
   const porIdentidad = new Set(partes.flatMap((p) => [...(indice.identidad.get(p) ?? [])]));
   if (porIdentidad.size) return [...porIdentidad];
   return [...new Set(partes.flatMap((p) => [...(indice.heroe.get(p) ?? [])]))];
@@ -97,10 +100,16 @@ async function calcular(): Promise<Resultado> {
   const porTitulo = new Map<string, Set<string>>();
   const enlaceReparto = new Map<string, string>();
 
-  const anotar = (pid: string, ap: Aparicion) => {
+  const anotar = (pid: string, ap: Omit<Aparicion, 'interpretes'>) => {
     const lista = porPersonaje.get(pid);
-    if (!lista || lista.some((a) => a.titulo.id === ap.titulo.id)) return;
-    lista.push(ap);
+    if (!lista) return;
+    const interprete = ap.actor ? [{ actor: ap.actor, como: ap.como }] : [];
+    const previa = lista.find((a) => a.titulo.id === ap.titulo.id);
+    if (previa) {
+      previa.interpretes.push(...interprete);
+      return;
+    }
+    lista.push({ ...ap, interpretes: interprete });
     if (!porTitulo.has(ap.titulo.id)) porTitulo.set(ap.titulo.id, new Set());
     porTitulo.get(ap.titulo.id)!.add(pid);
   };

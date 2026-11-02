@@ -555,11 +555,22 @@ conocidos sobre todo como villanos, aunque hayan cambiado de bando: entran en el
 
 **Cómo se asigna un personaje a una ficha:** se compara cada línea del `reparto` de la ficha
 ("Steve Rogers / Capitán América") con el `nombre`, la `identidad` y los `alias` de cada personaje.
-- Se compara cada parte completa (separadas por `/`): "She-Hulk" no cuenta como "Hulk".
+- Se compara cada parte completa (separadas por `/` o entre paréntesis): "She-Hulk" no cuenta como "Hulk", y
+  "Batman (Bruce Wayne)" se lee como "Batman / Bruce Wayne".
 - Manda la identidad: "Miles Morales / Spider-Man" se asigna a Miles Morales, no a Peter Parker.
 - Si un personaje no aparece en una ficha donde sí sale, añade su nombre a `alias`, o escríbelo en la ficha:
   `personajes: [thor, loki]`.
 
+
+**Evolución del personaje** (`src/lib/evolucion.ts`, `EvolucionPersonaje.astro`): la página de cada personaje
+muestra una fila por intérprete sobre un eje de años común, separando imagen real y animación, con sus obras debajo y
+la primera y la última aparición. Sale sola del reparto; no hay nada que escribir.
+- Un título puede sumar varios intérpretes: en *Spider-Man: No Way Home* cuentan los tres.
+- Las anotaciones de TMDB se respetan: «(voice)» en imagen real se indica como voz, y «(archive footage)» se dibuja como
+  punto hueco y no alarga la etapa del actor ni cuenta como primera o última aparición.
+- De TMDB solo se guarda el reparto principal (12 personas), así que pueden faltar cameos, como Ben Affleck en *Flash*.
+  La página lo avisa. Para añadir uno, escríbelo en el `reparto` de la ficha.
+- No se usan imágenes del personaje ni de sus trajes, por los derechos de imagen.
 
 **Alias en español:** los alias que solo existen en español («Dios del Trueno», «La Masa», «Hombre Araña») van en
 `aliasEs`, no en `alias`. En la versión española se ven todos; en la inglesa, solo `alias` (y el buscador inglés sigue

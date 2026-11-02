@@ -45,6 +45,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
   Funciona entera en el navegador.
 - **Actores y actrices**: página para cada intérprete con al menos tres obras en la colección (277), con foto,
   todos sus papeles agrupados por obra y sus personajes; los nombres del reparto de cada ficha enlazan a ella.
+- **Evolución de cada personaje**: línea de tiempo con quién lo ha interpretado y cuándo, separando imagen real y
+  animación, generada a partir del reparto de cada ficha.
 - **Estadísticas**: horas para verlo todo, maratón del UMC, horas por sección, estrenos por década, personajes y
   actores que más aparecen y récords, con gráficos accesibles (leyenda, tabla de datos y colores comprobados para
   daltonismo en modo claro y oscuro).

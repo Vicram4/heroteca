@@ -1,0 +1,185 @@
+---
+/**
+ * Evolución de un personaje: una fila por intérprete sobre un eje de años común, con sus obras debajo.
+ * El dibujo de puntos es decorativo (aria-hidden): los lectores de pantalla tienen los mismos datos en texto.
+ */
+import { textos } from '../i18n';
+import { claveActor, paginaDeActor } from '../lib/actores';
+import type { Evolucion } from '../lib/evolucion';
+
+const { evolucion: e } = Astro.props as { evolucion: Evolucion };
+const tx = textos(Astro.url).personajes;
+const paginas = await paginaDeActor();
+const grupos = [
+  { nombre: tx.imagenReal, etapas: e.real },
+  { nombre: tx.animacion, etapas: e.animacion },
+].filter((g) => g.etapas.length);
+const lugar = (anio: number) => (e.hasta === e.desde ? 50 : ((anio - e.desde) / (e.hasta - e.desde)) * 100);
+---
+
+<section class="panel evolucion" aria-labelledby="t-evolucion">
+  <h2 id="t-evolucion">{tx.evolucion}</h2>
+  <dl class="hitos">
+    {e.debut && <div><dt>{tx.debut}</dt><dd><a href={e.debut.url}>{e.debut.corto}</a> ({e.debut.d.anio})</dd></div>}
+    {e.ultima && e.ultima.id !== e.debut?.id && <div><dt>{tx.ultima}</dt><dd><a href={e.ultima.url}>{e.ultima.corto}</a> ({e.ultima.d.anio})</dd></div>}
+    {e.principal && <div><dt>{tx.principal}</dt><dd>{e.principal.actor} ({tx.obras(e.principal.obras)})</dd></div>}
+  </dl>
+
+  {
+    grupos.map((g) => (
+      <div class="grupo">
+        <div class="fila cabecera">
+          <h3>{g.nombre}</h3>
+          <div class="pista eje" aria-hidden="true">
+            {e.marcas.map((m) => <span class="marca" style={`left:${lugar(m)}%`}>{m}</span>)}
+          </div>
+        </div>
+        <ol class="etapas" aria-label={`${tx.evolucionEje}: ${g.nombre}`}>
+          {g.etapas.map((et) => {
+            const pagina = paginas.get(claveActor(et.actor));
+            return (
+              <li class="fila">
+                <div class="quien">
+                  {pagina ? <a href={`/actores/${pagina}/`}>{et.actor}</a> : <strong>{et.actor}</strong>}
+                  <span>{et.desde === et.hasta ? et.desde : `${et.desde}–${et.hasta}`} · {tx.obras(et.obras.length)}</span>
+                </div>
+                <div class="pista" aria-hidden="true">
+                  <span class="tramo" style={`left:${lugar(et.desde)}%;width:${lugar(et.hasta) - lugar(et.desde)}%`} />
+                  {et.puntos.map((p) => <span class:list={['punto', { hueco: p.archivo }]} style={`left:${lugar(p.anio)}%`} title={p.nombres} />)}
+                </div>
+                <ul class="obras">
+                  {et.obras.map((o) => (
+                    <li>
+                      <a href={o.t.url}>{o.nombre}</a> ({o.anios}){o.archivo ? `, ${tx.archivo}` : o.voz && !o.t.d.animada ? `, ${tx.voz}` : ''}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    ))
+  }
+
+  {e.sinInterprete > 0 && <p class="nota">{tx.sinInterprete(e.sinInterprete)}</p>}
+  <p class="nota">{tx.evolucionNota}</p>
+</section>
+
+<style>
+  .evolucion h2 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+  }
+  .hitos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 32px;
+    margin: 0 0 18px;
+  }
+  .hitos dt {
+    color: var(--txt-2);
+    font-size: 0.85rem;
+  }
+  .hitos dd {
+    margin: 0;
+  }
+  .grupo + .grupo {
+    margin-top: 22px;
+  }
+  .fila {
+    display: grid;
+    grid-template-columns: minmax(150px, 230px) 1fr;
+    gap: 2px 16px;
+    align-items: center;
+  }
+  h3 {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+  .etapas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .etapas > li {
+    padding: 9px 0;
+    border-top: 1px solid var(--borde);
+  }
+  .quien {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .quien a {
+    font-weight: 700;
+  }
+  .quien span {
+    color: var(--txt-2);
+    font-size: 0.85rem;
+  }
+  /* El margen deja sitio a medio punto en cada extremo del eje */
+  .pista {
+    position: relative;
+    height: 18px;
+    margin-inline: 8px;
+  }
+  .pista:not(.eje)::before {
+    content: '';
+    position: absolute;
+    inset: 8px 0 auto;
+    height: 2px;
+    background: var(--borde);
+  }
+  .eje {
+    height: 22px;
+  }
+  .marca {
+    position: absolute;
+    bottom: 2px;
+    transform: translateX(-50%);
+    font-size: 0.78rem;
+    color: var(--txt-2);
+  }
+  .tramo {
+    position: absolute;
+    top: 7px;
+    height: 4px;
+    background: var(--acento);
+    opacity: 0.55;
+  }
+  .punto {
+    position: absolute;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    border-radius: 50%;
+    background: var(--acento);
+    border: 2px solid var(--acento);
+  }
+  .punto.hueco {
+    background: var(--sup);
+  }
+  .obras {
+    grid-column: 1 / -1;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 14px;
+    margin: 4px 0 0;
+    padding: 0;
+    color: var(--txt-2);
+    font-size: 0.88rem;
+  }
+  .nota {
+    margin: 12px 0 0;
+    font-size: 0.82rem;
+    color: var(--txt-2);
+  }
+  @media (max-width: 600px) {
+    .fila {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
