@@ -414,7 +414,10 @@ Cada ficha tiene un botón **«Marcar como visto»**. Lo marcado se ve en toda l
   JSON) y **Borrar todo**. No se indexa en buscadores ni va en el mapa del sitio.
 
 Cómo funciona: los ids de las fichas vistas se guardan en `localStorage` (clave `heroteca:vistos`), solo en ese navegador;
-no hay cuentas ni servidor. Son los mismos en español e inglés. El código está en `src/lib/vistos.ts`: cualquier elemento
+no hay cuentas ni servidor. Son los mismos en español e inglés. El día en que se marca cada título se
+guarda aparte (`heroteca:vistos-fechas`, `{ id: 'AAAA-MM-DD' }`) para un futuro resumen del año; aún no se muestra en ninguna
+página y lo marcado antes de existir esta clave no tiene fecha. La copia de seguridad (versión 2) lleva `vistos` y `fechas`, y se
+siguen pudiendo cargar las copias antiguas, sin fechas; al cargar, si un título ya tenía fecha, se queda la más antigua. El código está en `src/lib/vistos.ts`: cualquier elemento
 con `data-titulo="<id>"` recibe `data-visto` si está visto, los botones `data-alternar-visto` marcan y desmarcan y las barras
 son el componente `Progreso.astro`. Textos: apartado `progreso` de `src/i18n/textos.ts`.
 

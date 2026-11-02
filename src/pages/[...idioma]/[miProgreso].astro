@@ -92,7 +92,7 @@ const universos = await Promise.all(
 </Base>
 
 <script>
-  import { leerVistos, guardarVistos, EVENTO } from '../../lib/vistos';
+  import { leerVistos, guardarVistos, copiaDeVistos, importarVistos, EVENTO } from '../../lib/vistos';
 
   const raiz = document.querySelector<HTMLElement>('[data-mi-progreso]')!;
 
@@ -110,10 +110,10 @@ const universos = await Promise.all(
   siguientes();
   window.addEventListener(EVENTO, siguientes);
 
-  // Copia de seguridad: un archivo JSON con los ids vistos
+  // Copia de seguridad: un archivo JSON con los ids vistos y sus fechas
   const estado = raiz.querySelector<HTMLElement>('[data-estado]')!;
   raiz.querySelector('[data-exportar]')?.addEventListener('click', () => {
-    const datos = { app: 'heroteca', version: 1, fecha: new Date().toISOString(), vistos: [...leerVistos()].sort() };
+    const datos = copiaDeVistos();
     const enlace = document.createElement('a');
     enlace.href = URL.createObjectURL(new Blob([JSON.stringify(datos, null, 1)], { type: 'application/json' }));
     enlace.download = `heroteca-progreso-${datos.fecha.slice(0, 10)}.json`;
@@ -125,14 +125,8 @@ const universos = await Promise.all(
     const archivo = input.files?.[0];
     if (!archivo) return;
     try {
-      const datos = JSON.parse(await archivo.text());
-      const lista = Array.isArray(datos) ? datos : datos?.app === 'heroteca' ? datos.vistos : null;
-      if (!Array.isArray(lista)) throw new Error();
-      // Se suman a lo que ya hubiera
-      const vistos = leerVistos();
-      lista.filter((x: unknown) => typeof x === 'string').forEach((x: string) => vistos.add(x));
-      guardarVistos(vistos);
-      estado.textContent = (estado.dataset.importado ?? '').replace('999', String(vistos.size));
+      const total = importarVistos(JSON.parse(await archivo.text()));
+      estado.textContent = (estado.dataset.importado ?? '').replace('999', String(total));
     } catch {
       estado.textContent = estado.dataset.error ?? '';
     }
