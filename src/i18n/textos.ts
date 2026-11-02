@@ -51,6 +51,7 @@ export const ES = {
     datosJustwatch: 'Dónde ver en España',
     fans: 'Proyecto de fans sin ánimo de lucro y no oficial. No tiene relación con Marvel, DC, Disney ni Warner Bros. Todos los personajes y marcas pertenecen a sus respectivos propietarios.',
     actualizado: (f: string) => `Actualizado el ${f}`,
+    hechoPor: 'Hecho por',
   },
   subnav: { aria: (u: string) => `Secciones de ${u}`, estanterias: 'Inicio', sagas: 'Relacionadas y sagas', personajes: 'Personajes', guias: 'Guías', noticias: 'Noticias', wiki: 'Wiki' },
   estanteria: {
@@ -851,6 +852,7 @@ export const EN: Textos = {
     datosJustwatch: 'Where to watch in the US',
     fans: 'Unofficial, non-profit fan project. Not affiliated with Marvel, DC, Disney or Warner Bros. All characters and trademarks belong to their respective owners.',
     actualizado: (f) => `Updated ${f}`,
+    hechoPor: 'Made by',
   },
   subnav: { aria: (u) => `${u} sections`, estanterias: 'Overview', sagas: 'Sagas & collections', personajes: 'Characters', guias: 'Guides', noticias: 'News', wiki: 'Wiki' },
   estanteria: {

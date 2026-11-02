@@ -22,6 +22,12 @@ y abre http://localhost:4321 en el navegador.
 
 Edita [`src/config/site.ts`](../src/config/site.ts). Se actualizan en toda la web.
 
+## Cambiar el autor o el portfolio
+
+Edita `autor` en [`src/config/site.ts`](../src/config/site.ts): el nombre y la dirección del portfolio en cada idioma.
+Se actualizan el pie de todas las páginas, la sección «Quién hay detrás» de «Acerca de» y los datos para buscadores de
+la portada.
+
 ## Dónde están los datos
 
 ```

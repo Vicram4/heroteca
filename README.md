@@ -149,6 +149,8 @@ El manual completo (añadir fichas, regenerar desde los documentos, sincronizar 
 
 ## Créditos y aviso legal
 
+Hecho por [Víctor Ramos](https://victorramos.vercel.app/es).
+
 Proyecto de fans sin ánimo de lucro y no oficial. No tiene relación con Marvel, DC, Disney ni Warner Bros.
 Todos los personajes y marcas pertenecen a sus respectivos propietarios.
 

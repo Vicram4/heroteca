@@ -55,6 +55,7 @@ const guiasPortada = activos.flatMap((u) => guiasDe(u.id).filter((g) => g.tipo !
     url: SITE.url,
     inLanguage: tx.idioma,
     description: tx.descripcion,
+    author: { '@type': 'Person', name: SITE.autor.nombre, url: SITE.autor.portfolio[idioma], sameAs: [SITE.github] },
   }}
 >
   <section class="contenedor portada">

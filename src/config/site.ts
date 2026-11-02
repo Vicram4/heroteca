@@ -19,6 +19,11 @@ export const SITE = {
   /** URL pública en Vercel. Si cambia la dirección, actualízala aquí (enlaces canónicos y vista previa al compartir). */
   url: 'https://heroteca.vercel.app',
   github: 'https://github.com/Vicram4',
+  /** Quién ha hecho la web: sale en el pie, en «Acerca de» y en los datos para buscadores. */
+  autor: {
+    nombre: 'Víctor Ramos',
+    portfolio: { es: 'https://victorramos.vercel.app/es', en: 'https://victorramos.vercel.app/en' },
+  },
   /** Repositorio del proyecto (para avisar de errores). */
   repositorio: 'https://github.com/Vicram4/heroteca',
   /**
