@@ -11,6 +11,7 @@ export function getStaticPaths() {
 import Base from '../../layouts/Base.astro';
 import GraficoBarras, { type Serie } from '../../components/GraficoBarras.astro';
 import GraficoColumnas from '../../components/GraficoColumnas.astro';
+import AvisoGrafico from '../../components/AvisoGrafico.astro';
 import { universosActivos, titulosDe, localizar, type Titulo } from '../../lib/datos';
 import { datosTmdb } from '../../lib/tmdb';
 import { apariciones } from '../../lib/personajes';
@@ -189,22 +190,8 @@ const records = [
       </ul>
     </section>
   </div>
-  <div class="aviso-grafico" role="tooltip" hidden data-aviso-grafico></div>
+  <AvisoGrafico />
 </Base>
-
-<script>
-  // Aviso al pasar el ratón por las barras y columnas (data-tip): sigue al puntero
-  const aviso = document.querySelector<HTMLElement>('[data-aviso-grafico]')!;
-  document.querySelectorAll<HTMLElement>('[data-tip]').forEach((el) => {
-    el.addEventListener('pointermove', (ev) => {
-      aviso.textContent = el.dataset.tip ?? '';
-      aviso.hidden = false;
-      const x = Math.min(ev.clientX + 14, innerWidth - aviso.offsetWidth - 8);
-      aviso.style.transform = `translate(${x}px, ${ev.clientY + 16}px)`;
-    });
-    el.addEventListener('pointerleave', () => (aviso.hidden = true));
-  });
-</script>
 
 <style>
   .estadisticas {
@@ -314,21 +301,6 @@ const records = [
   .r-dato {
     font-size: 0.9rem;
     color: var(--txt-2);
-  }
-  .aviso-grafico {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    max-width: 320px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: var(--txt);
-    color: var(--fondo);
-    font-size: 0.82rem;
-    font-weight: 600;
-    pointer-events: none;
-    box-shadow: var(--sombra);
   }
   @media (max-width: 760px) {
     .cifras {

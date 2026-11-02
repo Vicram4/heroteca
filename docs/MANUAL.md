@@ -402,6 +402,18 @@ la web, sin cuentas:
 
 La lista de juegos, su orden y las **ideas para más adelante** que se muestran en la página están en `src/config/juegos.ts`.
 
+## Rankings
+
+Página `/rankings/` (`/en/rankings/`, enlazada en el pie).
+
+- **Notas de TMDB:** con al menos 100 votos (`MIN_VOTOS` en la página). Se filtra por universo, tipo y década, se puede invertir
+  el orden y se ven 25 filas hasta pulsar «Ver todos». Las temporadas de una serie comparten los votos de la serie, así que
+  cada serie cuenta una vez, con la media de las notas de sus temporadas y en la década en que empezó.
+- **Actores:** los 20 con más títulos; cada temporada cuenta y solo entran los que tienen página propia.
+- **Villanos:** los 20 con más títulos entre los personajes marcados con `villano: true` (ver «Añadir un personaje»).
+
+Todo se calcula al compilar. Textos: apartado `rankings` de `src/i18n/textos.ts`.
+
 ## Planificador de maratones
 
 Página `/maraton/` (`/en/marathon/`, enlazada en el pie). Tiene una lista de títulos, tres opciones (horas por sesión,
@@ -524,7 +536,8 @@ universo: marvel
 Texto opcional sobre el personaje.
 ```
 
-La página del personaje muestra automáticamente todos los títulos en los que aparece.
+La página del personaje muestra automáticamente todos los títulos en los que aparece. Añade `villano: true` a los
+conocidos sobre todo como villanos, aunque hayan cambiado de bando: entran en el ranking de villanos.
 
 **Cómo se asigna un personaje a una ficha:** se compara cada línea del `reparto` de la ficha
 ("Steve Rogers / Capitán América") con el `nombre`, la `identidad` y los `alias` de cada personaje.

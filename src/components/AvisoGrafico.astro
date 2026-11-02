@@ -1,0 +1,36 @@
+---
+/** Aviso que sigue al puntero sobre las barras y columnas de los gráficos (data-tip). Va una vez por página. */
+---
+
+<div class="aviso-grafico" role="tooltip" hidden data-aviso-grafico></div>
+
+<script>
+  const aviso = document.querySelector<HTMLElement>('[data-aviso-grafico]')!;
+  document.querySelectorAll<HTMLElement>('[data-tip]').forEach((el) => {
+    el.addEventListener('pointermove', (ev) => {
+      aviso.textContent = el.dataset.tip ?? '';
+      aviso.hidden = false;
+      const x = Math.min(ev.clientX + 14, innerWidth - aviso.offsetWidth - 8);
+      aviso.style.transform = `translate(${x}px, ${ev.clientY + 16}px)`;
+    });
+    el.addEventListener('pointerleave', () => (aviso.hidden = true));
+  });
+</script>
+
+<style>
+  .aviso-grafico {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    max-width: 320px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--txt);
+    color: var(--fondo);
+    font-size: 0.82rem;
+    font-weight: 600;
+    pointer-events: none;
+    box-shadow: var(--sombra);
+  }
+</style>

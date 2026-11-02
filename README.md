@@ -48,6 +48,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Estadísticas**: horas para verlo todo, maratón del UMC, horas por sección, estrenos por década, personajes y
   actores que más aparecen y récords, con gráficos accesibles (leyenda, tabla de datos y colores comprobados para
   daltonismo en modo claro y oscuro).
+- **Rankings**: títulos por nota de TMDB con filtros de universo, tipo y década (cada serie cuenta una vez, con la
+  media de sus temporadas) y los actores y villanos con más apariciones.
 - **Planificador de maratones**: calcula las horas de una sección, saga o lista propia y las reparte en sesiones con
   descansos, partiendo las temporadas entre capítulos. El plan viaja en el enlace, sin servidor.
 - **Mi progreso**: marca lo que has visto desde cada ficha; las estanterías y guías lo señalan, se puede filtrar

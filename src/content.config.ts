@@ -149,6 +149,8 @@ const personajes = defineCollection({
       aliasEs: z.array(z.string()).default([]),
       identidad: z.string().optional(),
       universo: reference('universos'),
+      /** Conocido sobre todo como villano, aunque haya cambiado de bando (ranking de villanos) */
+      villano: z.boolean().default(false),
       imagen: image().optional(),
       notas: z.string().optional(),
     }),

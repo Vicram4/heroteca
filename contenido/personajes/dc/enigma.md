@@ -2,6 +2,7 @@
 nombre: Enigma
 nombreEn: The Riddler
 universo: dc
+villano: true
 identidad: Edward Nygma
 alias:
 - The Riddler
