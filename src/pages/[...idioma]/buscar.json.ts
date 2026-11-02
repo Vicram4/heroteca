@@ -13,7 +13,8 @@ import { actores, limpiarPersonaje } from '../../lib/actores';
 import { imagenTmdb } from '../../lib/tmdb';
 import { nombreTipo, textosDe, type Idioma } from '../../i18n';
 import { rutaEnIdioma } from '../../i18n/rutas';
-import { seccionLoc, personajeLoc } from '../../i18n/datos';
+import { seccionLoc, personajeLoc, entradaWikiLoc } from '../../i18n/datos';
+import { entradasWikiDe } from '../../lib/wiki';
 
 export async function GET({ params }: { params: { idioma?: string } }) {
   const idioma: Idioma = params.idioma === 'en' ? 'en' : 'es';
@@ -63,6 +64,27 @@ export async function GET({ params }: { params: { idioma?: string } }) {
       ),
     )
   ).flat();
+  const entradasWiki = (
+    await Promise.all(
+      [...activos.values()].map(async (u) =>
+        Promise.all((await entradasWikiDe(u.id, idioma)).map(async (e) => {
+          const { data } = entradaWikiLoc(e, idioma);
+          return {
+            t: data.nombre,
+            o: '',
+            a: data.alias,
+            r: '',
+            u: await rutaEnIdioma(`/${u.id}/wiki/${e.id}/`, idioma),
+            y: 0,
+            k: tx.wiki.tipoBuscador,
+            c: 'wiki',
+            n: '',
+            s: `${u.data.nombre} · ${tx.wiki.tipo[data.tipo]}`,
+          };
+        })),
+      ),
+    )
+  ).flat();
   // Actores y actrices con página: se encuentran por nombre (y por sus personajes, con menos prioridad)
   const interpretes = await Promise.all(
     (await actores()).map(async (a) => ({
@@ -79,5 +101,5 @@ export async function GET({ params }: { params: { idioma?: string } }) {
       i: a.foto ? imagenTmdb(a.foto, 'w92') : undefined,
     })),
   );
-  return new Response(JSON.stringify([...personajes, ...interpretes, ...items]), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
+  return new Response(JSON.stringify([...personajes, ...entradasWiki, ...interpretes, ...items]), { headers: { 'Content-Type': 'application/json; charset=utf-8' } });
 }

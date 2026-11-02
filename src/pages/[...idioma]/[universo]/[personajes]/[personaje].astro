@@ -10,6 +10,9 @@ import EvolucionPersonaje from '../../../../components/EvolucionPersonaje.astro'
 import { universosActivos, sagasDe, huecosDeSeccion } from '../../../../lib/datos';
 import { personajesDe } from '../../../../lib/personajes';
 import { evolucionDe } from '../../../../lib/evolucion';
+import TextoWiki from '../../../../components/TextoWiki.astro';
+import FuentesWiki from '../../../../components/FuentesWiki.astro';
+import { textoWikiDe, entradasDePersonaje } from '../../../../lib/wiki';
 
 export async function getStaticPaths() {
   const en = await tablasEn();
@@ -25,7 +28,7 @@ export async function getStaticPaths() {
 })(), (r) => ({ personajes: 'characters', personaje: en.personajes.get(r.params.personaje) }));
 }
 import { textos, idiomaDe } from '../../../../i18n';
-import { personajeLoc } from '../../../../i18n/datos';
+import { personajeLoc, entradaWikiLoc } from '../../../../i18n/datos';
 import { localizar } from '../../../../lib/datos';
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
@@ -36,11 +39,13 @@ const titulos = apariciones.map((a) => a.titulo);
 const huecos = huecosDeSeccion(titulos, { id: p.id, nombre: p.data.nombre, orden: 'estreno', carpetas: [] });
 const evolucion = evolucionDe(apariciones);
 const anios = titulos.map((t) => t.d.anio);
+const texto = await textoWikiDe('personajes', Astro.props.p, idioma);
+const enWiki = (await entradasDePersonaje(p.id, idioma)).map((e) => entradaWikiLoc(e, idioma));
 ---
 
 <Base
   titulo={tx.personajes.fichaSeo(`${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}`, universo.data.nombre)}
-  descripcion={tx.personajes.fichaDescripcion(`${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}`, universo.data.nombre)}
+  descripcion={p.data.resumen ?? tx.personajes.fichaDescripcion(`${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}`, universo.data.nombre)}
   universo={universo}
   migas={[
     { nombre: 'Heroteca', url: '/' },
@@ -67,12 +72,24 @@ const anios = titulos.map((t) => t.d.anio);
       </dl>
     </header>
 
+    {texto && <TextoWiki entrada={texto} />}
+    {
+      enWiki.length > 0 && (
+        <nav class="en-wiki" aria-label={tx.wiki.relacionadas}>
+          <span>{tx.wiki.relacionadas}:</span>
+          {enWiki.map((e) => <a href={`/${universo.id}/wiki/${e.id}/`}>{e.data.nombre}</a>)}
+        </nav>
+      )
+    }
+
     {evolucion.interpretes > 0 && <EvolucionPersonaje evolucion={evolucion} />}
 
     <section class="titulos">
       <h2>{tx.personajes.dondeAparece}</h2>
       {titulos.length ? <Estanteria huecos={huecos} cronologica={false} sagas={sagas} etiqueta={tx.personajes.titulosCon(p.data.nombre)} /> : <p class="vacio">{tx.personajes.todavia}</p>}
     </section>
+
+    {texto && <FuentesWiki fuentes={p.data.fuentes} />}
   </div>
 </Base>
 
@@ -119,6 +136,14 @@ const anios = titulos.map((t) => t.d.anio);
     margin: 0;
     font: 800 2.2rem/1 var(--f-titulo);
     color: var(--acento-txt);
+  }
+  .en-wiki {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-top: 14px;
+    color: var(--txt-2);
+    font-size: 0.95rem;
   }
   .titulos h2 {
     font-size: 1.5rem;

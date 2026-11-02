@@ -1,0 +1,131 @@
+---
+import { conIdiomas } from '../../../../i18n';
+/** Índice de la Wiki de un universo: los personajes con texto y las demás entradas, por tipo. */
+import { getCollection } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import SubNav from '../../../../components/SubNav.astro';
+import { universosActivos } from '../../../../lib/datos';
+import { entradasWikiDe } from '../../../../lib/wiki';
+import { TIPOS_WIKI } from '../../../../config/tipos';
+
+export async function getStaticPaths() {
+  return conIdiomas((await universosActivos()).map((universo) => ({ params: { universo: universo.id }, props: { universo } })));
+}
+import { textos, idiomaDe } from '../../../../i18n';
+import { personajeLoc, entradaWikiLoc } from '../../../../i18n/datos';
+const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+const { universo } = Astro.props;
+const personajes = await getCollection('personajes', (p) => p.data.universo.id === universo.id);
+const conTexto = personajes
+  .filter((p) => p.body?.trim())
+  .map((p) => personajeLoc(p, idioma))
+  .sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, idioma));
+const entradas = (await entradasWikiDe(universo.id, idioma)).map((e) => entradaWikiLoc(e, idioma));
+const grupos = TIPOS_WIKI.map((tipo) => ({ tipo, lista: entradas.filter((e) => e.data.tipo === tipo) })).filter((g) => g.lista.length);
+---
+
+<Base
+  titulo={tx.wiki.tituloSeo(universo.data.nombre)}
+  descripcion={tx.wiki.descripcionSeo(universo.data.nombre)}
+  universo={universo}
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: tx.wiki.titulo, url: `/${universo.id}/wiki/` }]}
+>
+  <SubNav slot="subnav" universo={universo} activo="wiki" />
+  <div class="contenedor">
+    <header class="cab">
+      <h1>{tx.wiki.titulo}</h1>
+      <p>{tx.wiki.resumen(universo.data.nombre)}</p>
+      <p class="aviso">{tx.wiki.aviso}</p>
+    </header>
+
+    <section>
+      <h2>{tx.wiki.personajes}</h2>
+      <ul class="rejilla">
+        {
+          conTexto.map((p) => (
+            <li>
+              <a class="tarjeta" href={`/${universo.id}/personajes/${p.id}/`}>
+                <span class="nombre">{p.data.nombre}</span>
+                <span class="resumen">{p.data.resumen}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="todos"><a href={`/${universo.id}/personajes/`}>{tx.wiki.verPersonajes(personajes.length)}</a></p>
+    </section>
+
+    {
+      grupos.map((g) => (
+        <section>
+          <h2>{tx.wiki.tipos[g.tipo]}</h2>
+          <ul class="rejilla">
+            {g.lista.map((e) => (
+              <li>
+                <a class="tarjeta" href={`/${universo.id}/wiki/${e.id}/`}>
+                  <span class="nombre">{e.data.nombre}</span>
+                  <span class="resumen">{e.data.resumen}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .cab {
+    padding: clamp(18px, 3vw, 28px) 0 8px;
+  }
+  .cab p {
+    color: var(--txt-2);
+    max-width: 70ch;
+    margin: 10px 0 0;
+  }
+  .cab .aviso {
+    font-size: 0.92rem;
+  }
+  section {
+    margin-top: 28px;
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+  }
+  .rejilla {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 12px;
+  }
+  .tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .tarjeta:hover {
+    border-color: var(--acento);
+  }
+  .nombre {
+    font: 700 1.2rem/1.15 var(--f-titulo);
+    color: var(--txt);
+  }
+  .resumen {
+    color: var(--txt-2);
+    font-size: 0.92rem;
+  }
+  .todos {
+    margin: 14px 0 0;
+  }
+</style>

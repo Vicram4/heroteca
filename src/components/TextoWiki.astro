@@ -1,0 +1,34 @@
+---
+/** Texto de una entrada de la Wiki, con sus apartados y spoilers ocultos. */
+import { render, type CollectionEntry } from 'astro:content';
+
+interface Props {
+  entrada: CollectionEntry<'personajes' | 'wiki' | 'textosEn'>;
+}
+const { Content } = await render(Astro.props.entrada);
+---
+
+<section class="panel texto-wiki">
+  <Content />
+</section>
+
+<style>
+  .texto-wiki {
+    max-width: 78ch;
+    line-height: 1.65;
+  }
+  .texto-wiki :global(h2) {
+    font-size: 1.5rem;
+    margin: 1.4em 0 0.4em;
+  }
+  .texto-wiki :global(h3) {
+    font-size: 1.15rem;
+    margin: 1.1em 0 0.3em;
+  }
+  .texto-wiki :global(p) {
+    margin: 0 0 0.9em;
+  }
+  .texto-wiki :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

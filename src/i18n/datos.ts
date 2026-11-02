@@ -10,6 +10,7 @@ type Universo = CollectionEntry<'universos'>;
 type Seccion = Universo['data']['secciones'][number];
 type Saga = CollectionEntry<'sagas'>;
 type Personaje = CollectionEntry<'personajes'>;
+type EntradaWiki = CollectionEntry<'wiki'>;
 
 export function seccionLoc(s: Seccion, idioma: Idioma): Seccion {
   if (idioma === 'es') return s;
@@ -52,5 +53,12 @@ export function personajeLoc(p: Personaje, idioma: Idioma): Personaje {
   if (idioma === 'es') return { ...p, data: { ...p.data, alias: [...p.data.alias, ...p.data.aliasEs] } };
   const nombre = p.data.nombreEn ?? p.data.nombre;
   const aliasEs = [...(p.data.nombreEn ? [p.data.nombre] : []), ...p.data.aliasEs];
-  return { ...p, data: { ...p.data, nombre, alias: p.data.alias.filter((a) => a !== nombre), aliasEs } };
+  return { ...p, data: { ...p.data, nombre, alias: p.data.alias.filter((a) => a !== nombre), aliasEs, resumen: p.data.resumenEn } };
+}
+
+/** Entrada de la Wiki en el idioma pedido. */
+export function entradaWikiLoc(e: EntradaWiki, idioma: Idioma): EntradaWiki {
+  if (idioma === 'es') return { ...e, data: { ...e.data, alias: [...e.data.alias, ...e.data.aliasEs] } };
+  const nombre = e.data.nombreEn ?? e.data.nombre;
+  return { ...e, data: { ...e.data, nombre, alias: e.data.alias.filter((a) => a !== nombre), resumen: e.data.resumenEn } };
 }

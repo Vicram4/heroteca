@@ -1,0 +1,144 @@
+---
+import { tablasEn } from '../../../../i18n/rutas';
+import { conIdiomas } from '../../../../i18n';
+/** Entrada de la Wiki: equipo, lugar, objeto o concepto, con sus personajes y títulos relacionados. */
+import { getCollection } from 'astro:content';
+import Base from '../../../../layouts/Base.astro';
+import BotonVolver from '../../../../components/BotonVolver.astro';
+import SubNav from '../../../../components/SubNav.astro';
+import Estanteria from '../../../../components/Estanteria.astro';
+import TextoWiki from '../../../../components/TextoWiki.astro';
+import FuentesWiki from '../../../../components/FuentesWiki.astro';
+import { universosActivos, sagasDe, huecosDeSeccion, titulosDe, localizar } from '../../../../lib/datos';
+import { entradasWikiDe, textoWikiDe } from '../../../../lib/wiki';
+
+export async function getStaticPaths() {
+  const en = await tablasEn();
+  const rutas = [];
+  for (const universo of await universosActivos()) {
+    const sagas = await sagasDe(universo.id);
+    const titulos = await titulosDe(universo.id);
+    for (const e of await entradasWikiDe(universo.id, 'es')) {
+      const ids = new Set(e.data.titulos.map((t) => t.id));
+      rutas.push({ params: { universo: universo.id, entrada: e.id }, props: { universo, e, sagas, suyos: titulos.filter((t) => ids.has(t.id)) } });
+    }
+  }
+  return conIdiomas(rutas, (r) => ({ entrada: en.wiki.get(r.params.entrada) }));
+}
+import { textos, idiomaDe } from '../../../../i18n';
+import { personajeLoc, entradaWikiLoc } from '../../../../i18n/datos';
+const tx = textos(Astro.url);
+const idioma = idiomaDe(Astro.url);
+const { universo, sagas } = Astro.props;
+const e = entradaWikiLoc(Astro.props.e, idioma);
+const texto = await textoWikiDe('wiki', Astro.props.e, idioma);
+const titulos = Astro.props.suyos.map((t) => localizar(t, idioma));
+const huecos = huecosDeSeccion(titulos, { id: e.id, nombre: e.data.nombre, orden: 'estreno', carpetas: [] });
+const idsP = new Set(e.data.personajes.map((p) => p.id));
+const personajes = (await getCollection('personajes', (p) => idsP.has(p.id))).map((p) => personajeLoc(p, idioma)).sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, idioma));
+const idsW = new Set(e.data.relacionadas.map((r) => r.id));
+const relacionadas = (await entradasWikiDe(universo.id, idioma)).filter((x) => idsW.has(x.id)).map((x) => entradaWikiLoc(x, idioma));
+---
+
+<Base
+  titulo={tx.wiki.entradaSeo(e.data.nombre, universo.data.nombre)}
+  descripcion={e.data.resumen}
+  universo={universo}
+  migas={[
+    { nombre: 'Heroteca', url: '/' },
+    { nombre: universo.data.nombre, url: `/${universo.id}/` },
+    { nombre: tx.wiki.titulo, url: `/${universo.id}/wiki/` },
+    { nombre: e.data.nombre, url: `/${universo.id}/wiki/${e.id}/` },
+  ]}
+>
+  <SubNav slot="subnav" universo={universo} activo="wiki" />
+  <div class="contenedor">
+    <BotonVolver href={`/${universo.id}/wiki/`}>
+      <nav class="miga" aria-label={tx.general.estasEn}><a href={`/${universo.id}/wiki/`}>{tx.wiki.titulo}</a></nav>
+    </BotonVolver>
+    <header class="cab">
+      <h1>{e.data.nombre}</h1>
+      <p class="tipo">{tx.wiki.tipo[e.data.tipo]}</p>
+      {e.data.alias.length > 0 && <p class="alias">{tx.personajes.tambien}: {e.data.alias.join(' · ')}</p>}
+    </header>
+
+    {texto && <TextoWiki entrada={texto} />}
+
+    {
+      personajes.length > 0 && (
+        <nav class="enlaces" aria-label={tx.wiki.miembros}>
+          <h2>{tx.wiki.miembros}</h2>
+          <ul>
+            {personajes.map((p) => <li><a href={`/${universo.id}/personajes/${p.id}/`}>{p.data.nombre}</a></li>)}
+          </ul>
+        </nav>
+      )
+    }
+    {
+      relacionadas.length > 0 && (
+        <nav class="enlaces" aria-label={tx.wiki.relacionadas}>
+          <h2>{tx.wiki.relacionadas}</h2>
+          <ul>
+            {relacionadas.map((x) => <li><a href={`/${universo.id}/wiki/${x.id}/`}>{x.data.nombre}</a></li>)}
+          </ul>
+        </nav>
+      )
+    }
+    {
+      titulos.length > 0 && (
+        <section class="titulos">
+          <h2>{tx.wiki.dondeAparece}</h2>
+          <Estanteria huecos={huecos} cronologica={false} sagas={sagas} etiqueta={tx.wiki.titulosCon(e.data.nombre)} />
+        </section>
+      )
+    }
+
+    <FuentesWiki fuentes={e.data.fuentes} />
+  </div>
+</Base>
+
+<style>
+  .miga {
+    padding-top: clamp(18px, 3vw, 28px);
+    font-size: 0.92rem;
+    color: var(--txt-2);
+  }
+  .miga a {
+    text-decoration: none;
+  }
+  .cab {
+    padding: 10px 0 20px;
+  }
+  .cab h1 {
+    box-shadow: inset 0 -0.12em 0 var(--acento);
+    display: inline;
+  }
+  .tipo {
+    font-size: 1.1rem;
+    color: var(--txt-2);
+    margin: 12px 0 0;
+  }
+  .alias {
+    color: var(--txt-2);
+    font-size: 0.92rem;
+    margin: 6px 0 0;
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+  }
+  .enlaces {
+    margin-top: 28px;
+  }
+  .enlaces ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+  }
+  .titulos {
+    margin-top: 30px;
+  }
+</style>

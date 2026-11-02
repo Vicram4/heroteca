@@ -16,12 +16,14 @@ export function comprobarIntegridad() {
 }
 
 async function ejecutar() {
-  const [universos, sagas, personajes, titulos, visionados] = await Promise.all([
+  const [universos, sagas, personajes, titulos, visionados, wiki, textosEn] = await Promise.all([
     getCollection('universos'),
     getCollection('sagas'),
     getCollection('personajes'),
     getCollection('titulos'),
     getCollection('visionados'),
+    getCollection('wiki'),
+    getCollection('textosEn'),
   ]);
 
   const ids = {
@@ -29,6 +31,7 @@ async function ejecutar() {
     sagas: new Set(sagas.map((s) => s.id)),
     personajes: new Set(personajes.map((p) => p.id)),
     titulos: new Set(titulos.map((t) => t.id)),
+    wiki: new Set(wiki.map((e) => e.id)),
   };
   const secciones = new Map(universos.map((u) => [u.id, new Set(u.data.secciones.map((s) => s.id))]));
   const porCarpetas = new Set(universos.flatMap((u) => u.data.secciones.filter((s) => s.orden === 'carpetas').map((s) => `${u.id}/${s.id}`)));
@@ -45,8 +48,25 @@ async function ejecutar() {
 
   for (const p of personajes) existe(`personajes/${p.id}`, 'universos', p.data.universo);
 
+  // Wiki: enlaces correctos y texto en los dos idiomas
+  for (const e of wiki) {
+    const donde = `wiki/${e.id}`;
+    existe(donde, 'universos', e.data.universo);
+    e.data.personajes.forEach((r) => existe(donde, 'personajes', r));
+    e.data.titulos.forEach((r) => existe(donde, 'titulos', r));
+    e.data.relacionadas.forEach((r) => existe(donde, 'wiki', r));
+  }
+  const conTextoEn = new Set(textosEn.filter((t) => t.body?.trim()).map((t) => t.id));
+  for (const [carpeta, entradas] of [['personajes', personajes], ['wiki', wiki]] as const) {
+    for (const e of entradas) {
+      if (!e.body?.trim()) continue;
+      if (!conTextoEn.has(`${carpeta}/${e.id}`)) errores.push(`${carpeta}/${e.id}: falta el texto inglés en contenido/en/${carpeta}/`);
+      if (!e.data.resumen || !e.data.resumenEn) errores.push(`${carpeta}/${e.id}: tiene texto de la Wiki pero le falta resumen o resumenEn`);
+    }
+  }
+
   const numeros = new Map<string, { id: string; grupo: string }>();
-  const ocupadas = new Set(['sagas', 'personajes', 'cronologia', 'buscar', 'carpetas', 'guias', ...universos.flatMap((u) => u.data.secciones.map((s) => s.id))]);
+  const ocupadas = new Set(['sagas', 'personajes', 'wiki', 'cronologia', 'buscar', 'carpetas', 'guias', ...universos.flatMap((u) => u.data.secciones.map((s) => s.id))]);
   for (const t of titulos) {
     const d = t.data;
     const donde = `titulos/${t.id}`;

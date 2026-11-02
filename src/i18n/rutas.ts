@@ -13,7 +13,7 @@ import { actores } from '../lib/actores';
 import { JUEGOS } from '../config/juegos';
 
 /** Palabras fijas de las direcciones. */
-export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon', miProgreso: 'my-progress', miAno: 'my-year',recomendaciones: 'recommendations', estadisticas: 'stats', actores: 'actors', noticias: 'news', pasatiempos: 'games', maraton: 'marathon', rankings: 'rankings', poscreditos: 'post-credits' } as const;
+export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon', miProgreso: 'my-progress', miAno: 'my-year',recomendaciones: 'recommendations', estadisticas: 'stats', actores: 'actors', noticias: 'news', pasatiempos: 'games', maraton: 'marathon', rankings: 'rankings', poscreditos: 'post-credits', wiki: 'wiki' } as const;
 export type Segmento = keyof typeof SEGMENTOS;
 export const segmento = (s: Segmento, idioma: 'es' | 'en') => (idioma === 'en' ? SEGMENTOS[s] : s);
 
@@ -34,6 +34,7 @@ interface Tablas {
   fichas: Map<string, string>;
   secciones: Map<string, string>; // "universo/id" → idEn
   personajes: Map<string, string>;
+  wiki: Map<string, string>;
   sagas: Map<string, string>;
   guias: Map<string, string>;
   /** Dirección española completa → inglesa, y al revés */
@@ -90,6 +91,12 @@ async function calcular(): Promise<Tablas> {
     const base = slug(p.data.nombreEn ?? p.data.nombre);
     personajes.set(p.id, libre(usadosP, [base, `${base}-${p.data.universo.id}`, p.id]));
   }
+  const wiki = new Map<string, string>();
+  const usadosW = new Set<string>();
+  for (const e of (await getCollection('wiki')).sort((a, b) => a.id.localeCompare(b.id))) {
+    const base = slug(e.data.nombreEn ?? e.data.nombre);
+    wiki.set(e.id, libre(usadosW, [base, `${base}-${e.data.universo.id}`, e.id]));
+  }
   const sagas = new Map<string, string>();
   const usadosS = new Set<string>();
   for (const s of (await getCollection('sagas')).sort((a, b) => a.id.localeCompare(b.id))) {
@@ -126,18 +133,22 @@ async function calcular(): Promise<Tablas> {
     aIngles.set(`/${U}/personajes/`, `/en/${U}/${SEGMENTOS.personajes}/`);
     aIngles.set(`/${U}/noticias/`, `/en/${U}/${SEGMENTOS.noticias}/`);
     aIngles.set(`/${U}/guias/`, `/en/${U}/${SEGMENTOS.guias}/`);
+    aIngles.set(`/${U}/wiki/`, `/en/${U}/${SEGMENTOS.wiki}/`);
     for (const s of u.data.secciones) for (const c of s.carpetas) aIngles.set(`/${U}/carpetas/${c.numero}/`, `/en/${U}/${SEGMENTOS.carpetas}/${c.numero}/`);
   }
   for (const p of await getCollection('personajes')) {
     if (activos.has(p.data.universo.id))
       aIngles.set(`/${p.data.universo.id}/personajes/${p.id}/`, `/en/${p.data.universo.id}/${SEGMENTOS.personajes}/${personajes.get(p.id)}/`);
   }
+  for (const e of await getCollection('wiki')) {
+    if (activos.has(e.data.universo.id)) aIngles.set(`/${e.data.universo.id}/wiki/${e.id}/`, `/en/${e.data.universo.id}/${SEGMENTOS.wiki}/${wiki.get(e.id)}/`);
+  }
   for (const s of await getCollection('sagas')) {
     if (activos.has(s.data.universo.id)) aIngles.set(`/${s.data.universo.id}/sagas/${s.id}/`, `/en/${s.data.universo.id}/sagas/${sagas.get(s.id)}/`);
   }
   for (const g of GUIAS) aIngles.set(`/${g.universo}/guias/${g.id}/`, `/en/${g.universo}/${SEGMENTOS.guias}/${guias.get(g.id)}/`);
   const aEspanol = new Map([...aIngles].map(([es, en]) => [en, es]));
-  return { fichas, secciones, personajes, sagas, guias, aIngles, aEspanol };
+  return { fichas, secciones, personajes, wiki, sagas, guias, aIngles, aEspanol };
 }
 
 /** Dirección inglesa de una dirección española (si no está en las tablas, se le pone /en delante). */

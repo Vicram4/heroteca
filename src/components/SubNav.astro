@@ -18,6 +18,7 @@ const enlaces = [
   ...universo.data.secciones.map((s) => ({ id: s.id, texto: s.nombre, url: `/${universo.id}/${s.id}/` })),
   { id: 'sagas', texto: tx.subnav.sagas, url: `/${universo.id}/sagas/` },
   { id: 'personajes', texto: tx.subnav.personajes, url: `/${universo.id}/personajes/` },
+  { id: 'wiki', texto: tx.subnav.wiki, url: `/${universo.id}/wiki/` },
   ...(guiasDe(universo.id).length ? [{ id: 'guias', texto: tx.subnav.guias, url: `/${universo.id}/guias/` }] : []),
   { id: 'noticias', texto: tx.subnav.noticias, url: `/${universo.id}/noticias/` },
 ];

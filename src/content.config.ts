@@ -7,6 +7,8 @@
  *   contenido/titulos/<universo>/<id>/index.md → una ficha (película, temporada, One-Shot…) con sus imágenes al lado
  *   contenido/personajes/<universo>/<id>.md
  *   contenido/visionados/<universo>/<id>.yaml   → órdenes capítulo a capítulo entre series (Crossover de DC)
+ *   contenido/wiki/<universo>/<id>.md           → Wiki: equipos, lugares, objetos y conceptos
+ *   contenido/en/{personajes,wiki}/<universo>/<id>.md → versión inglesa de los textos de la Wiki
  *
  * El identificador de cada entrada es el nombre del archivo, o el de la carpeta
  * si el archivo se llama `index.md` (p. ej. `iron-man`). También es el final de su URL.
@@ -17,7 +19,7 @@
 import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { CALIDADES, CLAVES_TIPO, ORDENES_SECCION, PAPELES, TIPOS_SAGA } from './config/tipos';
+import { CALIDADES, CLAVES_TIPO, ORDENES_SECCION, PAPELES, TIPOS_SAGA, TIPOS_WIKI } from './config/tipos';
 
 /** El id es el nombre del archivo (o de su carpeta si es index.md), sin extensión. */
 const idPorNombreDeArchivo = ({ entry }: { entry: string }) => {
@@ -143,6 +145,9 @@ const sagas = defineCollection({
 /* ------------------------------------------------------------------ */
 /* Personajes                                                        */
 /* ------------------------------------------------------------------ */
+/** Fuentes consultadas de verdad para un texto de la Wiki: se muestran al pie. */
+const fuentesWiki = z.array(z.object({ nombre: z.string(), url: z.string().url() })).default([]);
+
 const personajes = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './contenido/personajes', generateId: idPorNombreDeArchivo }),
   schema: ({ image }) =>
@@ -160,7 +165,47 @@ const personajes = defineCollection({
       villano: z.boolean().default(false),
       imagen: image().optional(),
       notas: z.string().optional(),
+      /** Una frase sin spoilers para el índice de la Wiki y los buscadores. El texto de la Wiki es el cuerpo del archivo. */
+      resumen: z.string().optional(),
+      resumenEn: z.string().optional(),
+      fuentes: fuentesWiki,
     }),
+});
+
+/* ------------------------------------------------------------------ */
+/* Wiki: equipos, lugares, objetos y conceptos                         */
+/* ------------------------------------------------------------------ */
+const wiki = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './contenido/wiki', generateId: idPorNombreDeArchivo }),
+  schema: z.object({
+    nombre: z.string(),
+    nombreEn: z.string().optional(),
+    universo: reference('universos'),
+    tipo: z.enum(TIPOS_WIKI),
+    alias: z.array(z.string()).default([]),
+    /** Alias que solo existen en español: no se muestran en la versión inglesa */
+    aliasEs: z.array(z.string()).default([]),
+    /** Una frase sin spoilers para el índice de la Wiki y los buscadores */
+    resumen: z.string(),
+    resumenEn: z.string(),
+    personajes: z.array(reference('personajes')).default([]),
+    titulos: z.array(reference('titulos')).default([]),
+    relacionadas: z.array(reference('wiki')).default([]),
+    fuentes: fuentesWiki,
+  }),
+});
+
+/** Versión inglesa de los textos de la Wiki. El id es «personajes/thor» o «wiki/vengadores». */
+const textosEn = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: './contenido/en',
+    generateId: ({ entry }) => {
+      const partes = entry.replace(/\.md$/i, '').split('/');
+      return `${partes[0]}/${partes[partes.length - 1]}`;
+    },
+  }),
+  schema: z.object({}),
 });
 
 /* ------------------------------------------------------------------ */
@@ -338,4 +383,4 @@ const visionados = defineCollection({
   }),
 });
 
-export const collections = { universos, sagas, personajes, titulos, visionados };
+export const collections = { universos, sagas, personajes, wiki, textosEn, titulos, visionados };

@@ -1,0 +1,40 @@
+---
+/** Fuentes consultadas para un texto de la Wiki, al pie de la página. */
+import { textos } from '../i18n';
+const tx = textos(Astro.url);
+
+interface Props {
+  fuentes: { nombre: string; url: string }[];
+}
+const { fuentes } = Astro.props;
+---
+
+<footer class="fuentes">
+  <p>{tx.wiki.original}</p>
+  {
+    fuentes.length > 0 && (
+      <p>
+        {tx.wiki.fuentes}:{' '}
+        {fuentes.map((f, i) => (
+          <>
+            {i > 0 && ' · '}
+            <a href={f.url} rel="noopener noreferrer">{f.nombre}</a>
+          </>
+        ))}
+      </p>
+    )
+  }
+</footer>
+
+<style>
+  .fuentes {
+    margin-top: 34px;
+    padding-top: 14px;
+    border-top: 1px solid var(--borde);
+    color: var(--txt-2);
+    font-size: 0.88rem;
+  }
+  .fuentes p {
+    margin: 0 0 6px;
+  }
+</style>

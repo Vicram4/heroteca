@@ -37,9 +37,13 @@ function enlacesEnIngles() {
             if (e.isDirectory()) await recorrer(ruta);
             else if (e.name.endsWith('.html')) {
               const html = await readFile(ruta, 'utf8');
-              const nuevo = html.replace(/href="\/(?!\/|en\/|en"|_astro\/)([^"]*)"/g, (todo, destino) =>
-                /\.[a-z0-9]+$/i.test(destino.split(/[?#]/)[0].split('/').pop() ?? '') ? todo : `href="${traducir(destino)}"`,
-              );
+              const nuevo = html
+                .replace(/href="\/(?!\/|en\/|en"|_astro\/)([^"]*)"/g, (todo, destino) =>
+                  /\.[a-z0-9]+$/i.test(destino.split(/[?#]/)[0].split('/').pop() ?? '') ? todo : `href="${traducir(destino)}"`,
+                )
+                // Los avisos de los spoilers del Markdown se escriben en español (src/lib/markdown-spoilers.mjs)
+                .replaceAll('title="Spoiler: pulsa para mostrar"', 'title="Spoiler: select to reveal"')
+                .replaceAll('Spoiler oculto. ', 'Hidden spoiler. ');
               if (nuevo !== html) await writeFile(ruta, nuevo);
             }
           }

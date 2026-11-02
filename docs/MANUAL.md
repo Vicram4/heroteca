@@ -575,6 +575,25 @@ elemento a esa lista.
 - No se usa `lastmod` en el mapa del sitio: solo podría poner la fecha de cada publicación en todas las páginas, y Google
   ignora las fechas que no son fiables.
 
+## Wiki
+
+Cada universo tiene una Wiki en `/marvel/wiki/` y `/dc/wiki/`, con pestaña propia. Su índice reúne los personajes que ya
+tienen texto y las demás entradas, agrupadas en equipos, lugares, objetos y conceptos. También salen en el buscador.
+
+- **Personaje:** el texto español es el cuerpo de `contenido/personajes/<universo>/<id>.md`; aparece en su página de siempre.
+  Hay que añadir `resumen` y `resumenEn` (una frase sin spoilers) y `fuentes`.
+- **Otra entrada:** `contenido/wiki/<universo>/<id>.md`, con `nombre`, `nombreEn`, `universo`, `tipo` (`equipo`, `lugar`,
+  `objeto` o `concepto`), `alias`, `aliasEs`, `resumen`, `resumenEn`, `personajes`, `titulos`, `relacionadas` y `fuentes`.
+  Quien aparezca en `personajes` enlaza a la entrada desde su propia página.
+- **Inglés:** el mismo camino bajo `contenido/en/` (`contenido/en/wiki/marvel/vengadores.md`), solo con el texto. La compilación
+  falla si un texto no tiene su versión inglesa o su resumen.
+- **Forma del texto:** introducción sin spoilers, `## Origen en los cómics` y `## En pantalla`, con un apartado por versión.
+  Los giros de la trama van entre `||…||`. Los enlaces se escriben con la dirección española también en el texto inglés
+  (`/marvel/iron-man-2008/`): se traducen solos. Un enlace no funciona dentro de `||…||`.
+- **Textos originales:** Wikipedia solo sirve como fuente y nunca se copia. En `fuentes` figura solo lo que se ha consultado de
+  verdad. Después de escribir, ejecuta `node scripts/comprobar_wiki.mjs [id…]`: busca secuencias de 7 palabras iguales a las
+  del artículo de Wikipedia del mismo idioma. Una coincidencia puede ser inocente (un título), pero hay que leerla.
+
 ## Añadir un personaje
 
 `contenido/personajes/marvel/thor.md`:
@@ -586,7 +605,7 @@ identidad: Thor Odinson
 alias: [Dios del Trueno]
 universo: marvel
 ---
-Texto opcional sobre el personaje.
+Texto de la Wiki (opcional, ver «Wiki»).
 ```
 
 La página del personaje muestra automáticamente todos los títulos en los que aparece. Añade `villano: true` a los

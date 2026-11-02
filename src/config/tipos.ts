@@ -29,3 +29,7 @@ export const TIPOS_SAGA = ['multiverso', 'saga', 'fase', 'trilogia', 'otro'] as 
 
 /** Importancia de un personaje dentro de un título. */
 export const PAPELES = ['protagonista', 'principal', 'secundario', 'cameo', 'voz', 'mencion'] as const;
+
+/** Tipos de entrada de la Wiki que no son personajes, en el orden en que salen en su índice. */
+export const TIPOS_WIKI = ['equipo', 'lugar', 'objeto', 'concepto'] as const;
+export type TipoWiki = (typeof TIPOS_WIKI)[number];
