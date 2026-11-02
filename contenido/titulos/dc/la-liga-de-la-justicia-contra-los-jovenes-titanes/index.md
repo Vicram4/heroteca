@@ -16,4 +16,10 @@ tmdb:
   id: 379291
   tipo: movie
 fuente: animacion/Animación/025/Liga de la Justicia vs.docx
+conexiones:
+  # Fuente: https://en.wikipedia.org/wiki/Justice_League_vs._Teen_Titans
+  postCreditos:
+  - momento: durante
+    texto: "Una chica misteriosa con traje se dirige hacia la Torre de los Titanes."
+    textoEn: "A mysterious costumed girl heads towards Titans Tower."
 ---

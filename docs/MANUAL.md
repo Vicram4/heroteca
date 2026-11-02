@@ -469,7 +469,7 @@ por año.
   ponen sus usuarios y a veces faltan, por eso la página avisa de que no estar en la lista no significa no tener escena. TMDB
   solo las da para películas, así que las series no aparecen salvo que tengan la escena escrita a mano.
 - **Escenas escritas a mano:** si una ficha tiene `conexiones.postCreditos`, aparece aunque TMDB no la marque, y el texto se
-  muestra oculto como spoiler. Es la forma de añadir un título que falta. Hay 16 añadidos así (11 películas o cortos y 5
+  muestra oculto como spoiler. Es la forma de añadir un título que falta. Hay 20 añadidos así (15 películas o cortos y 5
   series), cada uno con su fuente en un comentario de la ficha. Solo se añade lo confirmado en una fuente fiable.
   ```yaml
   conexiones:
