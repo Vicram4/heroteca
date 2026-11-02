@@ -476,11 +476,23 @@ Cada ficha tiene un botón **«Marcar como visto»**. Lo marcado se ve en toda l
 
 Cómo funciona: los ids de las fichas vistas se guardan en `localStorage` (clave `heroteca:vistos`), solo en ese navegador;
 no hay cuentas ni servidor. Son los mismos en español e inglés. El día en que se marca cada título se
-guarda aparte (`heroteca:vistos-fechas`, `{ id: 'AAAA-MM-DD' }`) para un futuro resumen del año; aún no se muestra en ninguna
-página y lo marcado antes de existir esta clave no tiene fecha. La copia de seguridad (versión 2) lleva `vistos` y `fechas`, y se
+guarda aparte (`heroteca:vistos-fechas`, `{ id: 'AAAA-MM-DD' }`) para el resumen del año; lo marcado antes de existir esta
+clave no tiene fecha. La copia de seguridad (versión 2) lleva `vistos` y `fechas`, y se
 siguen pudiendo cargar las copias antiguas, sin fechas; al cargar, si un título ya tenía fecha, se queda la más antigua. El código está en `src/lib/vistos.ts`: cualquier elemento
 con `data-titulo="<id>"` recibe `data-visto` si está visto, los botones `data-alternar-visto` marcan y desmarcan y las barras
 son el componente `Progreso.astro`. Textos: apartado `progreso` de `src/i18n/textos.ts`.
+
+### Mi año en Heroteca (Wrapped)
+
+Página `/mi-ano/` (`/en/my-year/`, enlazada desde Mi progreso): resumen de cada año con títulos, horas, mes y día más
+intensos, mejor racha, personaje más visto, títulos por mes, por universo, primero, último y más antiguo, y la lista completa.
+Tiene selector de año y botón para copiar un resumen. Se calcula en el navegador (`src/lib/wrapped.ts`) y no se indexa.
+
+- **Qué cuenta:** solo lo que sigue marcado como visto y tiene fecha. Lo marcado sin fecha queda fuera y la página dice
+  cuántos son. La fecha es el día en que se marcó, no necesariamente cuando se vio.
+- **Horas:** es un mínimo: los títulos sin duración conocida no suman, y la página avisa. La duración sale de `partesDe`
+  (`src/lib/datos.ts`), la misma del planificador de maratones.
+- **Textos:** apartado `miAno` de `src/i18n/textos.ts`.
 
 ## Aviso semanal por correo
 

@@ -60,6 +60,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Mi progreso**: marca lo que has visto desde cada ficha; las estanterías y guías lo señalan, se puede filtrar
   por «sin ver» y la página `/mi-progreso/` muestra el avance por sección y el siguiente título. Se guarda solo en el
   navegador (sin cuentas), con el día en que marcaste cada título y copia de seguridad descargable.
+- **Mi año en Heroteca**: resumen anual al estilo Wrapped (`/mi-ano/`): títulos, horas, mes más intenso, racha y
+  personaje más visto, calculado en el navegador con las fechas guardadas, sin enviar nada a ningún servidor.
 - **Línea temporal del UMC**: cada título en el año en que transcurre (cronología oficial), con el dato en cada ficha.
 - **Guías de visionado**: «Por dónde empezar» (rutas para quien no ha visto nada, en Marvel y en DC), orden del UMC (cronológico y de estreno, con un gráfico que compara cuánto cambia cada
   título entre los dos órdenes), películas de DC y Arrowverso capítulo a capítulo.

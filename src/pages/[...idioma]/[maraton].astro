@@ -9,8 +9,7 @@ export function getStaticPaths() {
  * dirección para poder compartirlo sin servidor. La tabla de horas por sección va en el HTML, para los buscadores.
  */
 import Base from '../../layouts/Base.astro';
-import { universosActivos, titulosDe, sagasDe, huecosDeSeccion, huecosPorCarpetas, localizar, type Titulo } from '../../lib/datos';
-import { datosTmdb } from '../../lib/tmdb';
+import { universosActivos, titulosDe, sagasDe, huecosDeSeccion, huecosPorCarpetas, localizar, partesDe, type Titulo } from '../../lib/datos';
 import { textoDuracion } from '../../lib/maraton';
 import { seccionLoc, sagaLoc } from '../../i18n/datos';
 import { rutaEnIdioma } from '../../i18n/rutas';
@@ -19,19 +18,6 @@ import { guiasDe } from '../../config/guias';
 const tx = textos(Astro.url);
 const m = tx.maraton;
 const idioma = idiomaDe(Astro.url);
-
-/** Duración de cada capítulo (temporadas) o la de la película. Vacío si no se sabe. */
-function partesDe(t: Titulo): number[] {
-  const tmdb = datosTmdb(t.universo, t.id, 'es');
-  const caps = tmdb?.capitulos?.length ? tmdb.capitulos : t.m.capitulos;
-  if (t.tipo !== 'serie') {
-    const d = tmdb?.duracion ?? t.m.duracion;
-    return d ? [d] : [];
-  }
-  const conocidas = caps.map((c) => c.duracion).filter((d): d is number => Boolean(d));
-  const habitual = tmdb?.duracion ?? t.m.duracion ?? (conocidas.length ? Math.round(conocidas.reduce((a, b) => a + b, 0) / conocidas.length) : 0);
-  return habitual || conocidas.length ? caps.map((c) => c.duracion || habitual) : [];
-}
 
 const items: { id: string; n: string; a: number; p: number[]; url: string }[] = [];
 const posicion = new Map<string, number>();

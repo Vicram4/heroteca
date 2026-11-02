@@ -13,7 +13,7 @@ import { actores } from '../lib/actores';
 import { JUEGOS } from '../config/juegos';
 
 /** Palabras fijas de las direcciones. */
-export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon', miProgreso: 'my-progress', recomendaciones: 'recommendations', estadisticas: 'stats', actores: 'actors', noticias: 'news', pasatiempos: 'games', maraton: 'marathon', rankings: 'rankings', poscreditos: 'post-credits' } as const;
+export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon', miProgreso: 'my-progress', miAno: 'my-year',recomendaciones: 'recommendations', estadisticas: 'stats', actores: 'actors', noticias: 'news', pasatiempos: 'games', maraton: 'marathon', rankings: 'rankings', poscreditos: 'post-credits' } as const;
 export type Segmento = keyof typeof SEGMENTOS;
 export const segmento = (s: Segmento, idioma: 'es' | 'en') => (idioma === 'en' ? SEGMENTOS[s] : s);
 
@@ -105,6 +105,7 @@ async function calcular(): Promise<Tablas> {
     ['/privacidad/', `/en/${SEGMENTOS.privacidad}/`],
     ['/proximamente/', `/en/${SEGMENTOS.proximamente}/`],
     ['/mi-progreso/', `/en/${SEGMENTOS.miProgreso}/`],
+    ['/mi-ano/', `/en/${SEGMENTOS.miAno}/`],
     ['/recomendaciones/', `/en/${SEGMENTOS.recomendaciones}/`],
     ['/estadisticas/', `/en/${SEGMENTOS.estadisticas}/`],
     ['/actores/', `/en/${SEGMENTOS.actores}/`],

@@ -280,6 +280,19 @@ export async function titulosDe(universo: string, idioma: 'es' | 'en' = 'es') {
 }
 
 /** La misma ficha en el idioma pedido (las páginas reciben las españolas desde getStaticPaths). */
+/** Duración de cada capítulo (temporadas) o la de la película. Vacío si no se sabe. */
+export function partesDe(t: Titulo): number[] {
+  const tmdb = datosTmdb(t.universo, t.id, 'es');
+  const caps = tmdb?.capitulos?.length ? tmdb.capitulos : t.m.capitulos;
+  if (t.tipo !== 'serie') {
+    const d = tmdb?.duracion ?? t.m.duracion;
+    return d ? [d] : [];
+  }
+  const conocidas = caps.map((c) => c.duracion).filter((d): d is number => Boolean(d));
+  const habitual = tmdb?.duracion ?? t.m.duracion ?? (conocidas.length ? Math.round(conocidas.reduce((a, b) => a + b, 0) / conocidas.length) : 0);
+  return habitual || conocidas.length ? caps.map((c) => c.duracion || habitual) : [];
+}
+
 export function localizar<T extends Titulo | undefined>(t: T, idioma: 'es' | 'en'): T {
   if (!t || idioma === 'es') return t;
   if (!cacheTitulosEn) cacheTitulosEn = new Map((cacheTitulos ?? []).map((x) => [x.id, prepararEn(x)]));

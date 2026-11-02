@@ -59,7 +59,7 @@ export default defineConfig({
     // en el navegador) y, hasta publicarla, sin la versión inglesa.
     // La correspondencia entre idiomas la indican las etiquetas hreflang de cada página.
     sitemap({
-      filter: (pagina) => !/\/(404|mi-progreso|my-progress)(\/|\.html|$)/.test(new URL(pagina).pathname) && (SITE.inglesPublicado || !new URL(pagina).pathname.startsWith('/en/')),
+      filter: (pagina) => !/\/(404|mi-progreso|my-progress|mi-ano|my-year)(\/|\.html|$)/.test(new URL(pagina).pathname) && (SITE.inglesPublicado || !new URL(pagina).pathname.startsWith('/en/')),
     }),
     enlacesEnIngles(),
   ],

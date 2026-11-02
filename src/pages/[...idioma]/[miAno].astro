@@ -1,0 +1,412 @@
+---
+import { conIdiomas, idiomaDe, textos, LOCALE } from '../../i18n';
+export function getStaticPaths() {
+  return conIdiomas([{ params: { miAno: 'mi-ano' } }], () => ({ miAno: 'my-year' }));
+}
+/**
+ * «Mi año en Heroteca» (Wrapped): resumen de lo visto cada año. Todo se calcula en el navegador (src/lib/wrapped.ts)
+ * con lo guardado en localStorage (src/lib/vistos.ts); la página solo trae el catálogo. No se indexa ni va en el mapa
+ * del sitio. Las barras de los meses van en el HTML para que AvisoGrafico las encuentre; su altura la pone el script.
+ */
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import AvisoGrafico from '../../components/AvisoGrafico.astro';
+import { universosActivos, todosLosTitulos, localizar, partesDe } from '../../lib/datos';
+import { imagenTmdb } from '../../lib/tmdb';
+import { apariciones } from '../../lib/personajes';
+import { rutaEnIdioma } from '../../i18n/rutas';
+import { personajeLoc } from '../../i18n/datos';
+import type { ItemWrapped } from '../../lib/wrapped';
+
+const tx = textos(Astro.url);
+const a = tx.miAno;
+const idioma = idiomaDe(Astro.url);
+const universos = await universosActivos();
+const activos = new Set(universos.map((u) => u.id));
+const { porTitulo, personajes } = await apariciones();
+
+const titulos = (await todosLosTitulos('es')).filter((t) => activos.has(t.universo));
+const items: ItemWrapped[] = await Promise.all(
+  titulos.map(async (es) => {
+    const t = localizar(es, idioma);
+    const img = t.portada ? (await getImage({ src: t.portada, width: 92, format: 'webp' })).src : t.m.posterTmdb ? imagenTmdb(t.m.posterTmdb, 'w92') : undefined;
+    return {
+      id: t.id,
+      u: t.universo,
+      n: t.corto,
+      url: await rutaEnIdioma(t.url, idioma),
+      img,
+      tipo: t.tipo,
+      a: t.d.anio,
+      min: partesDe(es).reduce((s, m) => s + m, 0),
+      pj: [...(porTitulo.get(t.id) ?? [])],
+    };
+  }),
+);
+
+const usados = new Set(items.flatMap((i) => i.pj));
+const nombres = {
+  personajes: Object.fromEntries(personajes.filter((p) => usados.has(p.id)).map((p) => [p.id, personajeLoc(p, idioma).data.nombre])),
+  universos: Object.fromEntries(universos.map((u) => [u.id, u.data.nombre])),
+};
+const locale = LOCALE[idioma];
+const meses = Array.from({ length: 12 }, (_, i) => new Intl.DateTimeFormat(locale, { month: 'long', timeZone: 'UTC' }).format(Date.UTC(2024, i, 1)));
+const mesesCortos = meses.map((m) => m.slice(0, 1).toUpperCase());
+// Textos para el navegador: 7777, 8888, 9999 y {m} son huecos que se rellenan allí
+const textosCliente = {
+  locale,
+  meses,
+  uno: { peliculas: a.peliculas(1), series: a.series(1), titulos: a.titulos(1), rachaDias: a.rachaDias(1), enTitulos: a.enTitulos(1), sinDuracion: a.sinDuracion(1), sinFecha: a.sinFecha(1), tipMes: a.tipMes('{m}', 1), resumen: a.resumen(9999, 1, 8888) },
+  varios: { peliculas: a.peliculas(7777), series: a.series(7777), titulos: a.titulos(2), rachaDias: a.rachaDias(7777), enTitulos: a.enTitulos(7777), sinDuracion: a.sinDuracion(7777), sinFecha: a.sinFecha(7777), tipMes: a.tipMes('{m}', 7777), resumen: a.resumen(9999, 7777, 8888) },
+  copiado: a.copiado,
+  errorCopiar: a.errorCopiar,
+};
+---
+
+<Base
+  titulo={a.tituloSeo}
+  descripcion={a.descripcion}
+  noIndexar
+  migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: tx.progreso.titulo, url: '/mi-progreso/' }, { nombre: a.titulo, url: '/mi-ano/' }]}
+>
+  <div class="contenedor mi-ano" data-mi-ano>
+    <script type="application/json" data-items set:html={JSON.stringify(items).replace(/</g, '\\u003c')} />
+    <script type="application/json" data-nombres set:html={JSON.stringify(nombres).replace(/</g, '\\u003c')} />
+    <script type="application/json" data-textos set:html={JSON.stringify(textosCliente).replace(/</g, '\\u003c')} />
+
+    <h1>{a.titulo}</h1>
+    <p class="entradilla">{a.intro}</p>
+
+    <div class="vacio panel" data-vacio>
+      <p>{a.vacio}</p>
+      <p><a href="/mi-progreso/">{a.irProgreso}</a></p>
+    </div>
+
+    <div data-resumen hidden>
+      <label class="selector">
+        {a.anio}
+        <select data-anio></select>
+      </label>
+
+      <section class="cifras" aria-live="polite">
+        <p class="cifra"><strong data-total></strong> <span data-total-txt></span></p>
+        <p class="cifra"><strong data-horas></strong> <span>{a.horas}</span></p>
+      </section>
+      <p class="desglose" data-desglose></p>
+
+      <ul class="datos">
+        <li class="panel"><span class="rotulo">{a.mesTop}</span><strong data-mes-top></strong></li>
+        <li class="panel" data-caja-dia><span class="rotulo">{a.diaTop}</span><strong data-dia-top></strong></li>
+        <li class="panel"><span class="rotulo">{a.racha}</span><strong data-racha></strong></li>
+        <li class="panel" data-caja-personaje><span class="rotulo">{a.personaje}</span><strong data-personaje></strong><span class="detalle" data-personaje-n></span></li>
+      </ul>
+
+      <section aria-labelledby="t-meses">
+        <h2 id="t-meses">{a.porMes}</h2>
+        <ol class="meses">
+          {
+            meses.map((m, i) => (
+              <li data-mes={i} data-tip={m}>
+                <span class="barra" data-barra><span class="valor" data-valor /></span>
+                <span class="etiqueta" aria-hidden="true">{mesesCortos[i]}</span>
+                <span class="solo-lectores">{m}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <section aria-labelledby="t-universos" data-caja-universos>
+        <h2 id="t-universos">{a.universos}</h2>
+        <p data-universos></p>
+      </section>
+
+      <ul class="destacados">
+        <li><span class="rotulo">{a.primero}</span><a data-primero></a></li>
+        <li><span class="rotulo">{a.ultimo}</span><a data-ultimo></a></li>
+        <li><span class="rotulo">{a.antiguo}</span><a data-antiguo></a></li>
+      </ul>
+
+      <button type="button" class="pastilla" data-copiar>{a.copiar}</button>
+      <span class="estado" role="status" data-estado></span>
+
+      <section aria-labelledby="t-lista">
+        <h2 id="t-lista">{a.lista}</h2>
+        <ol class="lista" data-lista></ol>
+      </section>
+
+      <p class="nota">{a.nota} <span data-sin-duracion></span> <span data-sin-fecha></span></p>
+      <p><a href="/mi-progreso/">{a.irProgreso}</a></p>
+    </div>
+  </div>
+  <AvisoGrafico />
+</Base>
+
+<script>
+  import { leerVistos, leerFechas, EVENTO } from '../../lib/vistos';
+  import { aniosConDatos, resumirAnio, sinFecha, type ItemWrapped } from '../../lib/wrapped';
+
+  const raiz = document.querySelector<HTMLElement>('[data-mi-ano]')!;
+  const leer = (attr: string) => JSON.parse(raiz.querySelector(`[${attr}]`)!.textContent ?? 'null');
+  const items: ItemWrapped[] = leer('data-items');
+  const nombres: { personajes: Record<string, string>; universos: Record<string, string> } = leer('data-nombres');
+  const tx = leer('data-textos');
+  const el = <T extends HTMLElement = HTMLElement>(attr: string) => raiz.querySelector<T>(`[${attr}]`)!;
+  const selector = el<HTMLSelectElement>('data-anio');
+  const num = (n: number) => n.toLocaleString(tx.locale);
+  const mayuscula = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+  const fechaLarga = (dia: string) => new Intl.DateTimeFormat(tx.locale, { day: 'numeric', month: 'long', timeZone: 'UTC' }).format(new Date(`${dia}T00:00:00Z`));
+  /** Texto con su singular o plural; 7777 es el hueco del número en los textos que trae la página. */
+  const plural = (clave: string, n: number) => (n === 1 ? tx.uno[clave] : tx.varios[clave].replace('7777', num(n)));
+
+  function enlazar(a: HTMLAnchorElement, i: ItemWrapped) {
+    a.href = i.url;
+    a.replaceChildren();
+    if (i.img) {
+      const img = document.createElement('img');
+      img.src = i.img;
+      img.alt = '';
+      img.width = 46;
+      img.height = 69;
+      img.loading = 'lazy';
+      a.append(img);
+    }
+    a.append(document.createTextNode(i.n));
+  }
+
+  let textoCopia = '';
+
+  function pintar() {
+    const vistos = leerVistos();
+    const fechas = leerFechas();
+    const anios = aniosConDatos(items, vistos, fechas);
+    el('data-vacio').hidden = anios.length > 0;
+    el('data-resumen').hidden = anios.length === 0;
+    if (!anios.length) return;
+
+    const elegido = anios.includes(Number(selector.value)) ? Number(selector.value) : anios[0];
+    selector.replaceChildren(...anios.map((x) => new Option(String(x), String(x), x === elegido, x === elegido)));
+    const r = resumirAnio(elegido, items, vistos, fechas)!;
+    const n = r.vistos.length;
+    const horas = Math.round(r.minutos / 60);
+
+    el('data-total').textContent = num(n);
+    el('data-total-txt').textContent = n === 1 ? tx.uno.titulos : tx.varios.titulos;
+    el('data-horas').textContent = num(horas);
+    const series = r.porTipo.serie ?? 0;
+    const pelis = n - series;
+    el('data-desglose').textContent = [pelis && plural('peliculas', pelis), series && plural('series', series)].filter(Boolean).join(' · ');
+
+    el('data-mes-top').textContent = `${mayuscula(tx.meses[r.mesTop])} (${r.porMes[r.mesTop]})`;
+    // Con un título por día no hay ningún día que destacar
+    el('data-caja-dia').hidden = r.diaTop.n < 2;
+    el('data-dia-top').textContent = `${fechaLarga(r.diaTop.dia)} (${r.diaTop.n})`;
+    el('data-racha').textContent = plural('rachaDias', r.racha);
+    el('data-caja-personaje').hidden = !r.personajeTop;
+    if (r.personajeTop) {
+      el('data-personaje').textContent = nombres.personajes[r.personajeTop.id] ?? '';
+      el('data-personaje-n').textContent = plural('enTitulos', r.personajeTop.n);
+    }
+
+    const maximo = Math.max(...r.porMes);
+    raiz.querySelectorAll<HTMLElement>('[data-mes]').forEach((li) => {
+      const m = Number(li.dataset.mes);
+      const v = r.porMes[m];
+      li.querySelector<HTMLElement>('[data-barra]')!.style.height = `${(v / maximo) * 100}%`;
+      li.querySelector<HTMLElement>('[data-valor]')!.textContent = v ? String(v) : '';
+      li.dataset.tip = plural('tipMes', v).replace('{m}', mayuscula(tx.meses[m]));
+      li.toggleAttribute('data-sin', !v);
+    });
+
+    const unis = Object.entries(r.porUniverso).sort((x, y) => y[1] - x[1]);
+    el('data-caja-universos').hidden = unis.length < 2;
+    el('data-universos').textContent = unis.map(([u, c]) => `${nombres.universos[u] ?? u}: ${num(c)}`).join(' · ');
+
+    enlazar(el<HTMLAnchorElement>('data-primero'), r.vistos[0].item);
+    enlazar(el<HTMLAnchorElement>('data-ultimo'), r.vistos[n - 1].item);
+    enlazar(el<HTMLAnchorElement>('data-antiguo'), r.masAntiguo);
+
+    el('data-lista').replaceChildren(
+      ...r.vistos.map(({ item, dia }) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = item.url;
+        a.textContent = item.n;
+        const fecha = document.createElement('span');
+        fecha.textContent = fechaLarga(dia);
+        li.append(a, ' ', fecha);
+        return li;
+      }),
+    );
+
+    el('data-sin-duracion').textContent = r.sinDuracion ? plural('sinDuracion', r.sinDuracion) : '';
+    const fuera = sinFecha(items, vistos, fechas);
+    el('data-sin-fecha').textContent = fuera ? plural('sinFecha', fuera) : '';
+    textoCopia = plural('resumen', n).replace('9999', String(elegido)).replace('8888', num(horas));
+    el('data-estado').textContent = '';
+  }
+
+  selector.addEventListener('change', pintar);
+  window.addEventListener(EVENTO, pintar);
+  el('data-copiar').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(textoCopia);
+      el('data-estado').textContent = tx.copiado;
+    } catch {
+      el('data-estado').textContent = tx.errorCopiar;
+    }
+  });
+  pintar();
+</script>
+
+<style>
+  .mi-ano {
+    padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .entradilla {
+    max-width: 70ch;
+    color: var(--txt-2);
+  }
+  .vacio {
+    max-width: 640px;
+  }
+  .selector {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+  }
+  .cifras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 40px;
+    margin-top: 20px;
+  }
+  .cifra {
+    margin: 0;
+  }
+  .cifra strong {
+    display: block;
+    font: 800 clamp(2.8rem, 8vw, 4.4rem) / 1 var(--f-titulo);
+  }
+  .desglose {
+    color: var(--txt-2);
+  }
+  .datos {
+    list-style: none;
+    margin: 20px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+    gap: 12px;
+  }
+  .datos > li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .datos > li[hidden] {
+    display: none;
+  }
+  .rotulo,
+  .detalle {
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .datos strong {
+    font: 700 1.2rem / 1.2 var(--f-titulo);
+  }
+  section {
+    margin-top: 32px;
+  }
+  .meses {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 4px;
+    max-width: 640px;
+    height: 180px;
+    padding-top: 20px;
+  }
+  .meses li {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) 20px;
+    justify-items: center;
+    min-width: 0;
+    position: relative;
+  }
+  .valor {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: var(--txt-2);
+  }
+  .barra {
+    position: relative;
+    align-self: end;
+    width: min(100%, 24px);
+    min-height: 2px;
+    border-radius: 4px 4px 0 0;
+    background: var(--acento);
+  }
+  .meses li[data-sin] .barra {
+    background: var(--borde);
+    height: 2px !important;
+    border-radius: 0;
+  }
+  .etiqueta {
+    font-size: 0.8rem;
+    color: var(--txt-2);
+  }
+  .destacados {
+    list-style: none;
+    margin: 32px 0 24px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 32px;
+  }
+  .destacados li {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .destacados a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    max-width: 280px;
+  }
+  .destacados :global(img) {
+    flex: none;
+    border-radius: 4px;
+  }
+  .estado {
+    margin-left: 10px;
+    color: var(--txt-2);
+  }
+  .lista {
+    margin: 0;
+    padding-left: 2em;
+    columns: 2 300px;
+    column-gap: 32px;
+  }
+  .lista :global(li) {
+    margin-block: 4px;
+    break-inside: avoid;
+  }
+  .lista :global(span) {
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .nota {
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+</style>

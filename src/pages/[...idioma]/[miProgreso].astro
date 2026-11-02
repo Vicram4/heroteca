@@ -40,6 +40,7 @@ const universos = await Promise.all(
   <div class="contenedor mi-progreso" data-mi-progreso>
     <h1>{tx.progreso.titulo}</h1>
     <p class="entradilla">{tx.progreso.intro}</p>
+    <p><a href="/mi-ano/">{tx.progreso.verAno}</a></p>
 
     {
       universos.map(({ u, secciones }) => (
