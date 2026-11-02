@@ -414,6 +414,20 @@ Página `/rankings/` (`/en/rankings/`, enlazada en el pie).
 
 Todo se calcula al compilar. Textos: apartado `rankings` de `src/i18n/textos.ts`.
 
+## Escenas poscréditos
+
+Página `/poscreditos/` (`/en/post-credits/`, enlazada en el pie y desde la etiqueta «Post-créditos» de cada ficha). Dice qué
+películas tienen escena durante o después de los créditos, sin contar qué pasa. Se filtra por universo y momento, y se ordena
+por año.
+
+- **De dónde salen los datos:** de las palabras clave de TMDB (`escenasCreditos`, de `scripts/sincronizar_tmdb.py`). Las
+  ponen sus usuarios y a veces faltan, por eso la página avisa de que no estar en la lista no significa no tener escena. TMDB
+  solo las da para películas, así que las series no aparecen salvo que tengan la escena escrita a mano.
+- **Escenas escritas a mano:** si una ficha tiene `conexiones.postCreditos`, aparece aunque TMDB no la marque, y el texto se
+  muestra oculto como spoiler. Es la forma de añadir una película que falta.
+
+Textos: apartado `poscreditos` de `src/i18n/textos.ts`.
+
 ## Planificador de maratones
 
 Página `/maraton/` (`/en/marathon/`, enlazada en el pie). Tiene una lista de títulos, tres opciones (horas por sesión,

@@ -198,7 +198,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           <li><span class="chip">{d.anioFin ? `${d.anio}–${d.anioFin}` : d.anio}</span></li>
           {m.duracion && <li><span class="chip">{m.duracion} min</span></li>}
           {epoca && <li>{guiaLinea ? <a class="chip" href={`/${universo.id}/guias/${guiaLinea.id}/#a-${epoca.desde}`}>{tx.guias.linea.transcurre(epoca.texto)}</a> : <span class="chip">{tx.guias.linea.transcurre(epoca.texto)}</span>}</li>}
-          {tienePostCreditos && <li><span class="chip postcreditos">{f.postCreditos}</span></li>}
+          {tienePostCreditos && <li><a class="chip postcreditos" href="/poscreditos/">{f.postCreditos}</a></li>}
           {d.calidad.map((c) => <li><span class="chip calidad">{c === '4k' ? '4K' : c.toUpperCase()}</span></li>)}
           {misSagas.map((s) => <li><a class="chip" href={`/${universo.id}/sagas/${s.id}/`}>{s.data.nombre}</a></li>)}
         </ul>

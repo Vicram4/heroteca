@@ -1,0 +1,235 @@
+---
+import { conIdiomas, idiomaDe, textos, LOCALE } from '../../i18n';
+export function getStaticPaths() {
+  return conIdiomas([{ params: { poscreditos: 'poscreditos' } }], () => ({ poscreditos: 'post-credits' }));
+}
+/**
+ * Escenas poscréditos: qué películas tienen escena durante o después de los créditos, sin contar qué pasa en ellas.
+ * Los momentos salen de las palabras clave de TMDB (escenasCreditos). Si la ficha tiene la escena escrita a mano
+ * (conexiones.postCreditos), se añade oculta como spoiler. La lista va en el HTML y se filtra en el navegador.
+ *
+ * Las palabras clave las ponen los usuarios de TMDB y a veces faltan: no estar en la lista no significa no tener escena.
+ */
+import Base from '../../layouts/Base.astro';
+import Spoiler from '../../components/Spoiler.astro';
+import { universosActivos, titulosDe, localizar, type Titulo } from '../../lib/datos';
+import { datosTmdb, imagenTmdb } from '../../lib/tmdb';
+
+const tx = textos(Astro.url);
+const p = tx.poscreditos;
+const idioma = idiomaDe(Astro.url);
+const universos = await universosActivos();
+const nombreUniverso = new Map(universos.map((u) => [u.id, u.data.nombre]));
+const titulos: Titulo[] = (await Promise.all(universos.map((u) => titulosDe(u.id)))).flat();
+
+const filas = titulos
+  .filter((t) => t.d.conexiones.postCreditos.length > 0 || t.m.escenasCreditos.length > 0)
+  .map((t) => {
+    const l = localizar(t, idioma);
+    return {
+      t: l,
+      nombre: l.d.serie ? l.d.titulo : l.corto,
+      poster: (datosTmdb(t.universo, t.id, idioma) ?? datosTmdb(t.universo, t.id, 'es'))?.poster,
+      momentos: t.m.escenasCreditos,
+      escritas: t.d.conexiones.postCreditos,
+    };
+  })
+  // De la más reciente a la más antigua
+  .sort((a, b) => b.t.d.anio - a.t.d.anio || a.nombre.localeCompare(b.nombre, LOCALE[idioma]));
+
+const ambas = filas.filter((f) => f.momentos.length === 2).length;
+const soloFinal = filas.filter((f) => f.momentos.length === 1 && f.momentos[0] === 'despues').length;
+const soloDurante = filas.filter((f) => f.momentos.length === 1 && f.momentos[0] === 'durante').length;
+---
+
+<Base titulo={p.tituloSeo} descripcion={p.descripcion} migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: p.titulo, url: '/poscreditos/' }]}>
+  <div class="contenedor poscreditos">
+    <h1>{p.titulo}</h1>
+    <p class="entradilla">{p.intro}</p>
+    <p class="resumen">{p.resumen(filas.length, ambas, soloFinal, soloDurante)}</p>
+
+    <section class="panel bloque" aria-labelledby="t-lista" data-escenas data-mostrando={p.mostrando('{n}', '{total}')}>
+      <h2 id="t-lista">{p.lista}</h2>
+      <p class="explica">{p.nota}</p>
+
+      <form class="filtros">
+        <label>
+          {p.universo}
+          <select data-filtro="universo">
+            <option value="">{p.todos}</option>
+            {universos.map((u) => <option value={u.id}>{u.data.nombre}</option>)}
+          </select>
+        </label>
+        <label>
+          {p.cuando}
+          <select data-filtro="momento">
+            <option value="">{p.cualquiera}</option>
+            <option value="durante">{p.durante}</option>
+            <option value="despues">{p.despues}</option>
+          </select>
+        </label>
+        <label>
+          {p.orden}
+          <select data-orden>
+            <option value="recientes">{p.recientes}</option>
+            <option value="antiguas">{p.antiguas}</option>
+          </select>
+        </label>
+      </form>
+
+      <p class="contador" role="status" data-contador>{p.mostrando(filas.length, filas.length)}</p>
+
+      <ul class="lista" data-lista>
+        {
+          filas.map((f) => (
+            <li class="fila" data-universo={f.t.universo} data-momento={f.momentos.join(' ')}>
+              {f.poster ? <img src={imagenTmdb(f.poster, 'w92')} alt="" width="46" height="69" loading="lazy" decoding="async" /> : <span class="sin-poster" />}
+              <span class="datos">
+                <a href={f.t.url}>{f.nombre}</a>
+                <span class="meta">{f.t.d.anio} · {nombreUniverso.get(f.t.universo)}</span>
+                <span class="momentos">
+                  {f.momentos.includes('durante') && <span class="chip postcreditos">{p.durante}</span>}
+                  {f.momentos.includes('despues') && <span class="chip postcreditos">{p.despues}</span>}
+                  {f.momentos.length === 0 && <span class="chip postcreditos">{tx.ficha.postCreditos}</span>}
+                </span>
+              </span>
+              {f.escritas.length > 0 && (
+                <div class="escritas">
+                  {f.escritas.map((e) => (e.spoiler ? <Spoiler que={tx.ficha.spoilerEscena}><p>{e.texto}</p></Spoiler> : <p>{e.texto}</p>))}
+                </div>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <p class="vacio" hidden data-vacio>{p.sinResultados}</p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  // Filtra y ordena la lista ya escrita en la página
+  const caja = document.querySelector<HTMLElement>('[data-escenas]')!;
+  const lista = caja.querySelector<HTMLElement>('[data-lista]')!;
+  const filas = [...lista.children] as HTMLElement[];
+  const filtros = [...caja.querySelectorAll<HTMLSelectElement>('[data-filtro]')];
+  const orden = caja.querySelector<HTMLSelectElement>('[data-orden]')!;
+  const contador = caja.querySelector<HTMLElement>('[data-contador]')!;
+  const vacio = caja.querySelector<HTMLElement>('[data-vacio]')!;
+
+  function pintar() {
+    // Una película con las dos escenas cuenta en los dos momentos
+    const coinciden = filas.filter((f) => filtros.every((s) => !s.value || (f.dataset[s.dataset.filtro!] ?? '').split(' ').includes(s.value)));
+    const elegidas = new Set(coinciden);
+    filas.forEach((f) => (f.hidden = !elegidas.has(f)));
+    lista.replaceChildren(...(orden.value === 'antiguas' ? [...filas].reverse() : filas));
+    contador.textContent = (caja.dataset.mostrando ?? '').replace('{n}', String(coinciden.length)).replace('{total}', String(filas.length));
+    vacio.hidden = coinciden.length > 0;
+  }
+
+  [...filtros, orden].forEach((s) => s.addEventListener('change', pintar));
+  // El navegador puede recordar los desplegables al volver atrás
+  pintar();
+</script>
+
+<style>
+  .poscreditos {
+    padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .entradilla {
+    max-width: 70ch;
+    color: var(--txt-2);
+  }
+  .resumen {
+    max-width: 70ch;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .bloque {
+    margin-top: 18px;
+  }
+  .bloque h2 {
+    margin-top: 0;
+  }
+  .explica {
+    margin: 4px 0 14px;
+    font-size: 0.88rem;
+    color: var(--txt-2);
+  }
+  .filtros {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  .filtros label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .filtros select {
+    font: 500 0.92rem var(--f-texto);
+    color: var(--txt);
+    background: var(--sup);
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    padding: 8px 12px;
+  }
+  .contador {
+    margin: 14px 0 6px;
+    font-size: 0.88rem;
+    color: var(--txt-2);
+  }
+  .lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .fila {
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-top: 1px solid var(--borde);
+  }
+  .fila[hidden] {
+    display: none;
+  }
+  .fila img,
+  .sin-poster {
+    display: block;
+    width: 46px;
+    height: 69px;
+    border-radius: 4px;
+    background: var(--borde);
+    object-fit: cover;
+  }
+  .datos {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .datos a {
+    font-weight: 700;
+    color: inherit;
+  }
+  .meta {
+    font-size: 0.82rem;
+    color: var(--txt-2);
+  }
+  .momentos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .escritas {
+    grid-column: 1 / -1;
+  }
+  .vacio {
+    margin: 12px 0 0;
+    color: var(--txt-2);
+  }
+</style>
