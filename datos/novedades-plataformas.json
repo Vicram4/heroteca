@@ -1,0 +1,182 @@
+{
+ "ES": {
+  "llegadas": [
+   {
+    "fecha": "2026-11-02",
+    "id": "blade-1998",
+    "modo": "plataforma",
+    "plataforma": "Atres Player"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "blade-1998",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "blade-1998",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "el-escuadron-suicida",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "venom",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   }
+  ],
+  "salidas": [
+   {
+    "fecha": "2026-11-02",
+    "id": "el-hombre-de-acero",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "el-increible-hulk-2008",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "men-in-black-ii",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "the-amazing-spider-man",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   }
+  ]
+ },
+ "US": {
+  "llegadas": [
+   {
+    "fecha": "2026-11-02",
+    "id": "constantine",
+    "modo": "plataforma",
+    "plataforma": "ViX Premium"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "ghost-rider-el-motorista-fantasma",
+    "modo": "plataforma",
+    "plataforma": "Fandango at Home Free"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "kick-ass",
+    "modo": "plataforma",
+    "plataforma": "Howdy"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "los-nuevos-mutantes",
+    "modo": "plataforma",
+    "plataforma": "FXNow"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "men-in-black-ii",
+    "modo": "plataforma",
+    "plataforma": "Philo"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "shazam",
+    "modo": "plataforma",
+    "plataforma": "TBS"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "shazam",
+    "modo": "plataforma",
+    "plataforma": "TNT"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "shazam",
+    "modo": "plataforma",
+    "plataforma": "tru TV"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "the-batman",
+    "modo": "plataforma",
+    "plataforma": "TBS"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "the-batman",
+    "modo": "plataforma",
+    "plataforma": "TNT"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "the-batman",
+    "modo": "plataforma",
+    "plataforma": "tru TV"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "venom-habra-matanza",
+    "modo": "plataforma",
+    "plataforma": "FXNow"
+   }
+  ],
+  "salidas": [
+   {
+    "fecha": "2026-11-02",
+    "id": "constantine",
+    "modo": "plataforma",
+    "plataforma": "AMC+"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "constantine",
+    "modo": "plataforma",
+    "plataforma": "Philo"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "ghost-rider-el-motorista-fantasma",
+    "modo": "plataforma",
+    "plataforma": "Philo"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "ghost-rider-espiritu-de-venganza",
+    "modo": "plataforma",
+    "plataforma": "Philo"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "los-nuevos-mutantes",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "spider-man-lejos-de-casa",
+    "modo": "plataforma",
+    "plataforma": "Tubi TV"
+   },
+   {
+    "fecha": "2026-11-02",
+    "id": "venom-habra-matanza",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   }
+  ]
+ }
+}

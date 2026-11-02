@@ -26,29 +26,6 @@
    "universo": "dc"
   },
   {
-   "clave": "tv-231801-t1",
-   "en": {
-    "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
-    "sinopsis": "In a post-apocalyptic, near-future Los Angeles where culinary culture reigns supreme, the world's most powerful figures are chefs, and food is both currency and a demarcation of class, the mysterious sushi chef Jiro sets out on a quest for vengeance.",
-    "titulo": "GET JIRO"
-   },
-   "episodio": 6,
-   "es": {
-    "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
-    "sinopsis": "En una futurista Los Ángeles, el misterioso chef de sushi JIRO busca venganza. Basada en la exitosa novela gráfica de Anthony Bourdain y Joel Rose.",
-    "titulo": "¡A por Jiro!"
-   },
-   "fecha": "2026-11-01",
-   "ficha": null,
-   "temporada": 1,
-   "tipo": "serie",
-   "tmdb": {
-    "id": 231801,
-    "tipo": "tv"
-   },
-   "universo": "dc"
-  },
-  {
    "clave": "tv-213375-t1",
    "en": {
     "poster": "/xK27l5uwaVyZSlENWnmLlWwDQNS.jpg",
@@ -70,6 +47,29 @@
     "tipo": "tv"
    },
    "universo": "marvel"
+  },
+  {
+   "clave": "tv-231801-t1",
+   "en": {
+    "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
+    "sinopsis": "In a post-apocalyptic, near-future Los Angeles where culinary culture reigns supreme, the world's most powerful figures are chefs, and food is both currency and a demarcation of class, the mysterious sushi chef Jiro sets out on a quest for vengeance.",
+    "titulo": "GET JIRO"
+   },
+   "episodio": 7,
+   "es": {
+    "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
+    "sinopsis": "En una futurista Los Ángeles, el misterioso chef de sushi JIRO busca venganza. Basada en la exitosa novela gráfica de Anthony Bourdain y Joel Rose.",
+    "titulo": "¡A por Jiro!"
+   },
+   "fecha": "2026-11-08",
+   "ficha": null,
+   "temporada": 1,
+   "tipo": "serie",
+   "tmdb": {
+    "id": 231801,
+    "tipo": "tv"
+   },
+   "universo": "dc"
   },
   {
    "clave": "tv-274388-t1",
@@ -95,13 +95,34 @@
    "universo": "marvel"
   },
   {
+   "clave": "movie-1389765",
+   "en": {
+    "poster": "/4zWHei7BJ4dP0DDK4FJ7em9ET7e.jpg",
+    "sinopsis": "Batman lies broken at the hands of the villainous mastermind Bane. With Bruce Wayne paralyzed from the waist down and unable to continue as Batman, a new successor must be chosen to defend Gotham City. Jean-Paul Valley, the man also known as Azrael, must take up the mantle of the Batman. But will his more violent methods be enough to stop Bane?",
+    "titulo": "Batman: Knightfall Part 2: Knightquest"
+   },
+   "es": {
+    "poster": "/4zWHei7BJ4dP0DDK4FJ7em9ET7e.jpg",
+    "sinopsis": "",
+    "titulo": "Batman: Knightfall Part 2: Knightquest"
+   },
+   "fecha": "2026-12-08",
+   "ficha": null,
+   "tipo": "pelicula",
+   "tmdb": {
+    "id": 1389765,
+    "tipo": "movie"
+   },
+   "universo": "dc"
+  },
+  {
    "cines": {
     "ES": "2026-12-18",
     "US": "2026-12-18"
    },
    "clave": "movie-1003596",
    "en": {
-    "poster": "/bqAHPSEyRkM4BpkncGFCKjBXf9p.jpg",
+    "poster": "/jzPwsojjFStf5lR5Nm07w2hH56G.jpg",
     "sinopsis": "Beloved heroes from three distinct universes are set on a deadly collision course and face an existential threat unlike anything they've ever encountered.",
     "titulo": "Avengers: Doomsday"
    },
@@ -173,12 +194,12 @@
    },
    "clave": "movie-1523140",
    "en": {
-    "poster": "/tYLgfKk3cEk7LskgxWyW37Nty01.jpg",
+    "poster": "/ms7BhVucvjxV74HkX8JLmFlQ6p2.jpg",
     "sinopsis": "Superman and Lex Luthor find themselves forced to work together—to a certain degree—against a much, much bigger threat when Brainiac sets his sights on Earth.",
     "titulo": "Man of Tomorrow"
    },
    "es": {
-    "poster": "/tYLgfKk3cEk7LskgxWyW37Nty01.jpg",
+    "poster": "/ms7BhVucvjxV74HkX8JLmFlQ6p2.jpg",
     "sinopsis": "Superman y Lex Luthor se ven obligados a trabajar juntos, hasta cierto punto, contra una amenaza mucho, mucho mayor cuando Brainiac pone sus ojos en la Tierra.",
     "titulo": "El Hombre del Mañana"
    },
@@ -338,6 +359,6 @@
    "universo": "marvel"
   }
  ],
- "fecha": "2026-11-01",
+ "fecha": "2026-11-02",
  "fuente": "TMDB"
 }
