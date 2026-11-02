@@ -201,7 +201,7 @@ export const ES = {
     del: (f: string) => ` del ${f}`,
     cambia: '. La disponibilidad cambia con frecuencia.',
     todas: (t: string) => `Ver todas las opciones para ${t}`,
-    sinDatos: 'No tenemos datos de plataformas en España para este título.',
+    sinDatos: 'JustWatch no registra plataformas en España para este título. Puede que no esté disponible o que falte el dato.',
     buscar: (t: string) => `Buscar ${t} en JustWatch`,
   },
   carpetas: {
@@ -957,7 +957,7 @@ export const EN: Textos = {
     del: (f) => ` as of ${f}`,
     cambia: '. Availability changes often.',
     todas: (t) => `See all options for ${t}`,
-    sinDatos: 'We have no streaming data for this title in the US.',
+    sinDatos: 'JustWatch lists no platforms in the US for this title. It may be unavailable, or the data may be missing.',
     buscar: (t) => `Search for ${t} on JustWatch`,
   },
   carpetas: {

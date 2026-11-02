@@ -11,5 +11,6 @@ anio: 2018
 tmdb:
   id: 383498
   tipo: movie
+personajes: [juggernaut]
 fuente: 001 Índices.pptx · diapositiva 20
 ---

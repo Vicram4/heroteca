@@ -14,6 +14,7 @@ anio: 2018
 tmdb:
   id: 567604
   tipo: movie
+personajes: [juggernaut]
 fuente: 001 Índices.pptx · diapositiva 20
 conexiones:
   # Fuente: https://www.mentalfloss.com/entertainment/movies/once-upon-a-deadpool-emotional-post-credits-scene

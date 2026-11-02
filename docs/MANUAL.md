@@ -597,6 +597,8 @@ conocidos sobre todo como villanos, aunque hayan cambiado de bando: entran en el
 - Se compara cada parte completa (separadas por `/` o entre paréntesis): "She-Hulk" no cuenta como "Hulk", y
   "Batman (Bruce Wayne)" se lee como "Batman / Bruce Wayne".
 - Manda la identidad: "Miles Morales / Spider-Man" se asigna a Miles Morales, no a Peter Parker.
+- En una línea con varios papeles, si uno coincide con una identidad, los nombres de héroe de esa línea no cuentan: «Wade Wilson /
+  Deadpool / Juggernaut» solo se asigna a Deadpool. Por eso conviene dar `identidad` también a los personajes sin nombre civil.
 - Si un personaje no aparece en una ficha donde sí sale, añade su nombre a `alias`, o escríbelo en la ficha:
   `personajes: [thor, loki]`.
 
@@ -619,8 +621,9 @@ encontrando los españoles). Los dos sirven para reconocer al personaje en el re
 
 - En el texto libre de una ficha (debajo de las líneas `---`), escribe `||texto||` y se mostrará
   difuminado hasta que se pulse: `Al final ||muere alguien importante||.`
-- Las escenas post-créditos (`conexiones.postCreditos`) y los cameos se ocultan siempre como spoiler
-  (salvo que pongas `spoiler: false`).
+- En las fichas y en las páginas de actores, las escenas post-créditos (`conexiones.postCreditos`) y los cameos se ocultan
+  como spoiler (salvo que pongas `spoiler: false`). La línea de tiempo de cada personaje, que lo avisa, y el filtro de personajes
+  de las estanterías sí muestran los cameos. La página «Acerca de» lo explica.
 - Si no has escrito la escena, la ficha avisa de que la hay (sin contar nada) cuando TMDB la marca.
 - «Ver antes / ver después»: si la ficha no los tiene, se ponen solos con sus vecinas en tus trilogías y dulogías.
 

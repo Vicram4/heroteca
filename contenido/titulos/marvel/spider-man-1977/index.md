@@ -29,13 +29,15 @@ reparto:
   personaje: Judy Tyler
 - actor: Jeff Donnell
   personaje: May Parker
-- actor: Robert Hastings
+- actor: Bob Hastings
   personaje: Monahan
 - actor: Ivor Francis
   personaje: Profesor Noah Tyler
 tmdb:
   id: 225914
   tipo: movie
+notas: 'En los documentos de la colección ponía «Robert Hastings» (errata corregida: Bob Hastings)'
+notasEn: 'The collection documents said “Robert Hastings” (typo corrected: Bob Hastings).'
 fuente: 004 PRE-UMC Fichas PELÍCULAS.pptx · diapositiva 3; 001 Índices.pptx · diapositiva 16
 imagenes:
 - src: ./portada.jpg
