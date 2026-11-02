@@ -578,13 +578,18 @@ elemento a esa lista.
 ## Wiki
 
 Cada universo tiene una Wiki en `/marvel/wiki/` y `/dc/wiki/`, con pestaña propia. Su índice reúne los personajes que ya
-tienen texto y las demás entradas, agrupadas en equipos, lugares, objetos y conceptos. También salen en el buscador.
+tienen texto y las demás entradas, agrupadas en equipos, lugares, objetos y conceptos, con un filtro por tipo y otro por
+texto (busca en el nombre, los alias y el resumen). También salen en el buscador.
+
+En total son 273 textos en los dos idiomas: los 180 personajes (99 de Marvel, 81 de DC) y 93 entradas más (47 de Marvel, 46 de
+DC). El alcance se limita a lo que aparece en la colección.
 
 - **Personaje:** el texto español es el cuerpo de `contenido/personajes/<universo>/<id>.md`; aparece en su página de siempre.
   Hay que añadir `resumen` y `resumenEn` (una frase sin spoilers) y `fuentes`.
 - **Otra entrada:** `contenido/wiki/<universo>/<id>.md`, con `nombre`, `nombreEn`, `universo`, `tipo` (`equipo`, `lugar`,
   `objeto` o `concepto`), `alias`, `aliasEs`, `resumen`, `resumenEn`, `personajes`, `titulos`, `relacionadas` y `fuentes`.
-  Quien aparezca en `personajes` enlaza a la entrada desde su propia página.
+  Quien aparezca en `personajes` enlaza a la entrada desde su propia página, y cada título de `titulos` lo hace desde su ficha
+  (apartado «En la Wiki»). El enlace va por temporada: hay que citar cada una para que salga en todas.
 - **Inglés:** el mismo camino bajo `contenido/en/` (`contenido/en/wiki/marvel/vengadores.md`), solo con el texto. La compilación
   falla si un texto no tiene su versión inglesa o su resumen.
 - **Forma del texto:** introducción sin spoilers, `## Origen en los cómics` y `## En pantalla`, con un apartado por versión.

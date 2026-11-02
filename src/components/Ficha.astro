@@ -13,7 +13,8 @@ import BotonVolver from './BotonVolver.astro';
 import { plataformasIncluidas, paisDe } from '../lib/dondever';
 import { datosTmdb } from '../lib/tmdb';
 import { GUIAS } from '../config/guias';
-import { universoLoc, sagaLoc } from '../i18n/datos';
+import { universoLoc, sagaLoc, entradaWikiLoc } from '../i18n/datos';
+import { entradasDeTitulo } from '../lib/wiki';
 import { textos, idiomaDe, nombreTipo, LOCALE } from '../i18n';
 
 interface Props {
@@ -117,6 +118,7 @@ for (const s of misSagas.filter((s) => s.data.tipo === 'trilogia')) {
   if (antes || despues) sagasVecinas.push(s.data.nombre);
 }
 const refs = (lista: { id: string }[]) => lista.map((r) => buscarTitulo(r.id)).filter((x): x is Titulo => Boolean(x));
+const enWiki = (await entradasDeTitulo(t.id, idioma)).map((e) => entradaWikiLoc(e, idioma));
 const verAntes = refs(d.conexiones.verAntes);
 const verDespues = refs(d.conexiones.verDespues);
 const automaticas = !verAntes.length && !verDespues.length && sagasVecinas.length > 0;
@@ -364,6 +366,19 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
                 </>
               ))}
             </dl>
+          </section>
+        )
+      }
+
+      {
+        enWiki.length > 0 && (
+          <section class="panel">
+            <h2 class="h-panel">{tx.wiki.relacionadas}</h2>
+            <p class="enlaces">
+              {enWiki.map((e) => (
+                <a class="chip" href={`/${universo.id}/wiki/${e.id}/`}>{e.data.nombre}</a>
+              ))}
+            </p>
           </section>
         )
       }

@@ -1,12 +1,13 @@
 ---
 import { conIdiomas } from '../../../../i18n';
-/** Índice de la Wiki de un universo: los personajes con texto y las demás entradas, por tipo. */
+/** Índice de la Wiki de un universo: los personajes con texto y las demás entradas, por tipo, con filtro por tipo y por texto. */
 import { getCollection } from 'astro:content';
 import Base from '../../../../layouts/Base.astro';
 import SubNav from '../../../../components/SubNav.astro';
 import { universosActivos } from '../../../../lib/datos';
 import { entradasWikiDe } from '../../../../lib/wiki';
 import { TIPOS_WIKI } from '../../../../config/tipos';
+import { claveActor } from '../../../../lib/actores';
 
 export async function getStaticPaths() {
   return conIdiomas((await universosActivos()).map((universo) => ({ params: { universo: universo.id }, props: { universo } })));
@@ -23,6 +24,8 @@ const conTexto = personajes
   .sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, idioma));
 const entradas = (await entradasWikiDe(universo.id, idioma)).map((e) => entradaWikiLoc(e, idioma));
 const grupos = TIPOS_WIKI.map((tipo) => ({ tipo, lista: entradas.filter((e) => e.data.tipo === tipo) })).filter((g) => g.lista.length);
+/** Texto en el que busca el filtro: nombre, alias y resumen, sin acentos ni mayúsculas */
+const clave = (...partes: (string | undefined)[]) => claveActor(partes.filter(Boolean).join(' '));
 ---
 
 <Base
@@ -32,19 +35,28 @@ const grupos = TIPOS_WIKI.map((tipo) => ({ tipo, lista: entradas.filter((e) => e
   migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: universo.data.nombre, url: `/${universo.id}/` }, { nombre: tx.wiki.titulo, url: `/${universo.id}/wiki/` }]}
 >
   <SubNav slot="subnav" universo={universo} activo="wiki" />
-  <div class="contenedor">
+  <div class="contenedor" data-wiki>
     <header class="cab">
       <h1>{tx.wiki.titulo}</h1>
       <p>{tx.wiki.resumen(universo.data.nombre)}</p>
       <p class="aviso">{tx.wiki.aviso}</p>
     </header>
 
-    <section>
+    <div class="controles">
+      <input type="search" aria-label={tx.wiki.filtrar} placeholder={tx.wiki.filtrar} data-filtrar autocomplete="off" />
+      <div class="tipos" role="group" aria-label={tx.wiki.filtroTipo}>
+        <button type="button" class="pastilla" data-tipo="" aria-pressed="true">{tx.wiki.todos}</button>
+        <button type="button" class="pastilla" data-tipo="personajes" aria-pressed="false">{tx.wiki.personajes}</button>
+        {grupos.map((g) => <button type="button" class="pastilla" data-tipo={g.tipo} aria-pressed="false">{tx.wiki.tipos[g.tipo]}</button>)}
+      </div>
+    </div>
+
+    <section data-bloque="personajes">
       <h2>{tx.wiki.personajes}</h2>
       <ul class="rejilla">
         {
           conTexto.map((p) => (
-            <li>
+            <li data-clave={clave(p.data.nombre, p.data.identidad, ...p.data.alias, p.data.resumen)}>
               <a class="tarjeta" href={`/${universo.id}/personajes/${p.id}/`}>
                 <span class="nombre">{p.data.nombre}</span>
                 <span class="resumen">{p.data.resumen}</span>
@@ -58,11 +70,11 @@ const grupos = TIPOS_WIKI.map((tipo) => ({ tipo, lista: entradas.filter((e) => e
 
     {
       grupos.map((g) => (
-        <section>
+        <section data-bloque={g.tipo}>
           <h2>{tx.wiki.tipos[g.tipo]}</h2>
           <ul class="rejilla">
             {g.lista.map((e) => (
-              <li>
+              <li data-clave={clave(e.data.nombre, ...e.data.alias, e.data.resumen)}>
                 <a class="tarjeta" href={`/${universo.id}/wiki/${e.id}/`}>
                   <span class="nombre">{e.data.nombre}</span>
                   <span class="resumen">{e.data.resumen}</span>
@@ -73,10 +85,72 @@ const grupos = TIPOS_WIKI.map((tipo) => ({ tipo, lista: entradas.filter((e) => e
         </section>
       ))
     }
+    <p class="vacio" data-vacio hidden>{tx.wiki.sinResultados}</p>
   </div>
 </Base>
 
+<script>
+  // Filtro por tipo y por texto. Se combinan: un bloque sin tarjetas visibles se oculta entero.
+  const raiz = document.querySelector<HTMLElement>('[data-wiki]')!;
+  const bloques = [...raiz.querySelectorAll<HTMLElement>('[data-bloque]')];
+  const botones = [...raiz.querySelectorAll<HTMLButtonElement>('[data-tipo]')];
+  const entrada = raiz.querySelector<HTMLInputElement>('[data-filtrar]')!;
+  const vacio = raiz.querySelector<HTMLElement>('[data-vacio]')!;
+  const normal = (s: string) =>
+    s
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim();
+  let tipo = '';
+  function aplicar() {
+    const q = normal(entrada.value);
+    let visibles = 0;
+    for (const b of bloques) {
+      let aqui = 0;
+      for (const li of b.querySelectorAll<HTMLElement>('li[data-clave]')) {
+        li.hidden = Boolean(q) && !(li.dataset.clave ?? '').includes(q);
+        if (!li.hidden) aqui++;
+      }
+      b.hidden = aqui === 0 || (tipo !== '' && b.dataset.bloque !== tipo);
+      if (!b.hidden) visibles += aqui;
+    }
+    vacio.hidden = visibles > 0;
+  }
+  entrada.addEventListener('input', aplicar);
+  botones.forEach((b) =>
+    b.addEventListener('click', () => {
+      tipo = b.dataset.tipo ?? '';
+      botones.forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+      aplicar();
+    }),
+  );
+</script>
+
 <style>
+  .controles {
+    margin-top: 20px;
+  }
+  .controles input {
+    width: min(100%, 360px);
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--borde);
+    background: var(--sup);
+    color: inherit;
+    font-size: 1rem;
+  }
+  .tipos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .vacio {
+    margin-top: 28px;
+    color: var(--txt-2);
+  }
   .cab {
     padding: clamp(18px, 3vw, 28px) 0 8px;
   }

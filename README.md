@@ -24,7 +24,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 
 ## Características
 
-- **423 fichas** (246 de Marvel, 177 de DC), **180 personajes**, **42 sagas y agrupaciones**.
+- **426 fichas** (247 de Marvel, 179 de DC), **180 personajes**, **42 sagas y agrupaciones**.
 - **Estanterías** con la numeración original y orden alternable (historia o estreno), leyenda de colores y **vista de lista** compacta; en móvil, los filtros se agrupan en un botón.
 - **Orden por carpetas** para las series de DC (Pre-Crossover, Crossover…), con páginas que muestran el orden de visionado capítulo a capítulo entre varias series.
 - **Cuatro órdenes** en cada estantería: el de la colección (historia o carpetas), estreno, más recientes y mejor valoradas.
@@ -43,7 +43,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **¿Qué veo?**: encuesta de 7 preguntas (universo, tiempo, tono, imagen real o animación, plataformas, personaje
   favorito y nivel) que recomienda títulos con la nota de TMDB, la calificación por edades y lo que ya has visto.
   Funciona entera en el navegador.
-- **Wiki** de Marvel y DC: textos originales en los dos idiomas sobre personajes, equipos, lugares, objetos y conceptos, con cada versión de pantalla por separado y los giros ocultos como spoiler. Se está escribiendo por etapas.
+- **Wiki** de Marvel y DC: textos originales en los dos idiomas sobre personajes, equipos, lugares, objetos y conceptos, con cada versión de pantalla por separado y los giros ocultos como spoiler. Son 273 textos: los 180 personajes y 93 entradas más (47 de Marvel, 46 de DC), con filtro por tipo y por texto en su índice y enlaces desde cada ficha relacionada.
 - **Actores y actrices**: página para cada intérprete con al menos tres obras en la colección (287), con foto,
   todos sus papeles agrupados por obra y sus personajes; los nombres del reparto de cada ficha enlazan a ella. Los
   cameos van aparte, ocultos como spoiler, y no generan páginas nuevas.

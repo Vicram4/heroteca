@@ -22,6 +22,10 @@ titulos:
 - joker
 - the-batman
 - gotham-t1
+relacionadas:
+- arkham
+- batcueva
+- corte-de-los-buhos
 fuentes:
 - nombre: Wikipedia (en), «Gotham City»
   url: https://en.wikipedia.org/wiki/Gotham_City
