@@ -573,6 +573,9 @@ elemento a esa lista.
 
 - Cada universo y cada sección de `contenido/universos/*.yaml` admite `tituloSeo` (el título que muestra Google).
 - Los grupos de la página «Relacionadas y sagas» se definen en `gruposSagas` del mismo archivo.
+- **Favicon:** el dibujo está en `public/favicon.svg`. Si se cambia, `node scripts/generar_favicon.mjs` rehace
+  `favicon.ico` y `apple-touch-icon.png`. Google lo actualiza por su cuenta, y puede tardar días o semanas; se puede
+  acelerar pidiendo la indexación de la portada en Search Console.
 
 
 ### Textos generados para buscadores

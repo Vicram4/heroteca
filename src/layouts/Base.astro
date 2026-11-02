@@ -93,7 +93,9 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
     }
     <link rel="sitemap" href="/sitemap-index.xml" />
     {SITE.googleVerificacion && <meta name="google-site-verification" content={SITE.googleVerificacion} />}
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:title" content={tituloPagina} />
     <meta property="og:description" content={descripcion} />
     <meta property="og:type" content={tipoOg} />
