@@ -1,0 +1,215 @@
+---
+/**
+ * «Ordena la cronología»: cinco títulos del UMC al azar, desordenados; se ordenan con los botones subir/bajar
+ * (accesibles con teclado) según el orden de la historia de la colección. Al comprobar se marca cada posición
+ * y se muestra el orden correcto con el año en que transcurre cada uno.
+ */
+import { textos } from '../i18n';
+
+export interface TituloOrden {
+  n: string;
+  /** Posición en el orden de la historia de la colección */
+  p: number;
+  /** Año o intervalo en que transcurre (si se conoce) */
+  e?: string;
+  url: string;
+}
+interface Props {
+  titulos: TituloOrden[];
+}
+const { titulos } = Astro.props;
+const tx = textos(Astro.url);
+const j = tx.juegos;
+const plantillas = { subir: j.subir('{x}'), bajar: j.bajar('{x}'), resultado: j.resultadoOrden(91, 92), correcto: j.ordenCorrecto };
+---
+
+<div class="juego panel" data-ordena>
+  <ol class="lista" data-lista></ol>
+  <div class="acciones">
+    <button type="button" class="pastilla principal" data-comprobar>{j.comprobar}</button>
+    <button type="button" class="pastilla" data-otra-vez hidden>{j.otraVez}</button>
+  </div>
+  <p class="resultado" data-resultado role="status"></p>
+  <ol class="solucion" data-solucion hidden></ol>
+  <script type="application/json" data-datos set:html={JSON.stringify(titulos)} />
+  <script type="application/json" data-plantillas set:html={JSON.stringify(plantillas)} />
+</div>
+
+<script>
+  import type { TituloOrden } from './JuegoOrdena.astro';
+  const N = 5;
+  document.querySelectorAll<HTMLElement>('[data-ordena]').forEach((caja) => {
+    const todos: TituloOrden[] = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '[]');
+    const t = JSON.parse(caja.querySelector('[data-plantillas]')!.textContent ?? '{}');
+    const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
+    let actuales: TituloOrden[] = [];
+    let comprobado = false;
+    function pintar(enfocar?: number) {
+      const ol = $('[data-lista]');
+      ol.replaceChildren(
+        ...actuales.map((x, i) => {
+          const li = document.createElement('li');
+          li.className = 'fila';
+          const nombre = document.createElement('span');
+          nombre.className = 'nombre';
+          nombre.textContent = x.n;
+          const botones = document.createElement('span');
+          botones.className = 'botones';
+          for (const [dir, simbolo, plantilla] of [[-1, '↑', t.subir], [1, '↓', t.bajar]] as const) {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'mover';
+            b.textContent = simbolo;
+            b.setAttribute('aria-label', plantilla.replace('{x}', x.n));
+            b.disabled = comprobado || (dir === -1 && i === 0) || (dir === 1 && i === actuales.length - 1);
+            b.dataset.i = String(i);
+            b.dataset.dir = String(dir);
+            b.addEventListener('click', () => {
+              const k = i + dir;
+              [actuales[i], actuales[k]] = [actuales[k], actuales[i]];
+              pintar(k * 2 + (dir === -1 ? 0 : 1));
+            });
+            botones.append(b);
+          }
+          li.append(nombre, botones);
+          return li;
+        }),
+      );
+      if (enfocar !== undefined) {
+        const b = ol.querySelectorAll<HTMLButtonElement>('.mover')[enfocar];
+        (b && !b.disabled ? b : ol.querySelector<HTMLButtonElement>('.mover:not(:disabled)'))?.focus();
+      }
+    }
+    function empezar() {
+      comprobado = false;
+      // De años distintos: dos del mismo año no se podrían deducir
+      const elegidos: TituloOrden[] = [];
+      for (const x of [...todos].sort(() => Math.random() - 0.5)) {
+        const anio = (y: TituloOrden) => y.e?.slice(0, 4);
+        if (elegidos.length < N && !elegidos.some((y) => anio(y) === anio(x))) elegidos.push(x);
+      }
+      actuales = [...elegidos].sort(() => Math.random() - 0.5);
+      // Que no salga ya ordenado
+      if (actuales.every((x, i) => i === 0 || actuales[i - 1].p < x.p)) actuales.reverse();
+      $('[data-resultado]').textContent = '';
+      $('[data-solucion]').hidden = true;
+      $<HTMLButtonElement>('[data-comprobar]').hidden = false;
+      $<HTMLButtonElement>('[data-otra-vez]').hidden = true;
+      pintar();
+    }
+    $('[data-comprobar]').addEventListener('click', () => {
+      comprobado = true;
+      const bueno = [...actuales].sort((a, b) => a.p - b.p);
+      let aciertos = 0;
+      pintar();
+      $('[data-lista]').querySelectorAll('li').forEach((li, i) => {
+        const ok = actuales[i] === bueno[i];
+        if (ok) aciertos++;
+        li.classList.add(ok ? 'bien' : 'mal');
+      });
+      $('[data-resultado]').textContent = t.resultado.replace('91', String(aciertos)).replace('92', String(N));
+      const sol = $('[data-solucion]');
+      sol.replaceChildren(
+        ...bueno.map((x) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = x.url;
+          a.textContent = x.n;
+          li.append(a, document.createTextNode(x.e ? ` · ${x.e}` : ''));
+          return li;
+        }),
+      );
+      sol.hidden = false;
+      sol.setAttribute('aria-label', t.correcto);
+      $<HTMLButtonElement>('[data-comprobar]').hidden = true;
+      const otra = $<HTMLButtonElement>('[data-otra-vez]');
+      otra.hidden = false;
+      otra.focus();
+    });
+    $('[data-otra-vez]').addEventListener('click', empezar);
+    empezar();
+  });
+</script>
+
+<style>
+  .juego {
+    max-width: 760px;
+  }
+  .lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    counter-reset: puesto;
+  }
+  .lista :global(.fila) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radio);
+    border: 1px solid var(--borde);
+    background: var(--sup-2, var(--sup));
+    counter-increment: puesto;
+  }
+  .lista :global(.fila)::before {
+    content: counter(puesto);
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--borde);
+    font-weight: 800;
+  }
+  .lista :global(.nombre) {
+    flex: 1;
+    font: 700 1rem / 1.25 var(--f-titulo);
+  }
+  .lista :global(.botones) {
+    display: flex;
+    gap: 6px;
+  }
+  .lista :global(.mover) {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+    background: var(--sup);
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  .lista :global(.mover:disabled) {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .lista :global(.fila.bien) {
+    border-color: #1a7f45;
+    box-shadow: inset 4px 0 0 #1a7f45;
+  }
+  .lista :global(.fila.mal) {
+    border-color: #b3261e;
+    box-shadow: inset 4px 0 0 #b3261e;
+  }
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .principal {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
+  }
+  .resultado {
+    margin: 14px 0 6px;
+    font: 800 1.2rem var(--f-titulo);
+  }
+  .solucion {
+    color: var(--txt-2);
+  }
+</style>

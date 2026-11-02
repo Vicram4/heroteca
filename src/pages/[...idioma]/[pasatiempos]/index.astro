@@ -5,18 +5,13 @@ export function getStaticPaths() {
 }
 /** Pasatiempos: los juegos disponibles y las ideas para más adelante. */
 import Base from '../../../layouts/Base.astro';
-import { JUEGOS, IDEAS } from '../../../config/juegos';
+import { JUEGOS, IDEAS, textoJuego } from '../../../config/juegos';
 import { textos, idiomaDe } from '../../../i18n';
 
 const tx = textos(Astro.url);
 const j = tx.juegos;
 const idioma = idiomaDe(Astro.url);
-const fichas = JUEGOS.map((g) => ({
-  id: g.id,
-  nombre: { adivina: j.adivina, quien: j.quien, antes: j.antes }[g.clave],
-  texto: { adivina: j.adivinaTexto, quien: j.quienTexto, antes: j.antesTexto }[g.clave],
-  icono: { adivina: '?', quien: '★', antes: '⇄' }[g.clave],
-}));
+const fichas = JUEGOS.map((g) => ({ id: g.id, icono: g.icono, ...textoJuego(j, g.clave) }));
 ---
 
 <Base titulo={j.tituloSeo} descripcion={j.descripcion} migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: j.titulo, url: '/pasatiempos/' }]}>
@@ -29,7 +24,6 @@ const fichas = JUEGOS.map((g) => ({
           <li>
             <a href={`/pasatiempos/${f.id}/`}>
               <span class="icono" aria-hidden="true">{f.icono}</span>
-              <span class="etiqueta">{j.demo}</span>
               <span class="nombre">{f.nombre}</span>
               <span class="texto">{f.texto}</span>
               <span class="jugar">{j.jugar} →</span>
@@ -99,19 +93,6 @@ const fichas = JUEGOS.map((g) => ({
     background: color-mix(in srgb, var(--acento) 82%, #000);
     color: #fff;
     font: 800 1.6rem var(--f-titulo);
-  }
-  .etiqueta {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    padding: 2px 8px;
-    border-radius: 999px;
-    border: 1px solid var(--borde);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--txt-2);
   }
   .nombre {
     font: 800 1.35rem / 1.15 var(--f-titulo);

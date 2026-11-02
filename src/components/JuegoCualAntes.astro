@@ -1,28 +1,31 @@
 ---
 /**
- * «¿Cuál se estrenó antes?»: dos títulos al azar (de años distintos); se elige el que se estrenó primero.
- * Cada acierto suma a la racha; un fallo la reinicia. La mejor racha se guarda en el navegador.
+ * Duelo de dos títulos al azar: «¿Cuál se estrenó antes?» (gana el valor menor: la fecha) o «Duelo de notas»
+ * (gana el mayor: la nota de TMDB). Cada acierto suma a la racha; un fallo la reinicia. La mejor racha de cada
+ * modo se guarda en el navegador.
  */
 import { textos } from '../i18n';
 
 export interface TituloJuego {
   n: string;
-  /** AAAA-MM-DD (o solo el año) */
-  f: string;
-  anio: number;
+  /** Valor que se compara (fecha como AAAAMMDD, o nota) */
+  v: number;
+  /** Cómo se muestra el valor al resolver («2015», «★ 7,6») */
+  vt: string;
   img?: string;
   url: string;
-  u: string;
 }
 interface Props {
   titulos: TituloJuego[];
+  /** 'antes': gana el valor menor (fecha); 'nota': gana el mayor */
+  modo?: 'antes' | 'nota';
 }
-const { titulos } = Astro.props;
+const { titulos, modo = 'antes' } = Astro.props;
 const tx = textos(Astro.url);
 const j = tx.juegos;
 ---
 
-<div class="juego panel" data-cual-antes data-correcto={j.correcto} data-incorrecto={j.incorrecto('{x}')} data-elegir={j.elegir('{x}')}>
+<div class="juego panel" data-cual-antes data-modo={modo} data-correcto={j.correcto} data-incorrecto={j.incorrecto('{x}')} data-elegir={j.elegir('{x}')}>
   <div class="marcador">
     <span>{j.racha}: <strong data-racha>0</strong></span>
     <span>{j.mejor}: <strong data-mejor>0</strong></span>
@@ -38,7 +41,8 @@ const j = tx.juegos;
   document.querySelectorAll<HTMLElement>('[data-cual-antes]').forEach((caja) => {
     const todos: TituloJuego[] = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '[]');
     const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
-    const CLAVE = 'heroteca:racha-cual-antes';
+    const modo = caja.dataset.modo === 'nota' ? 'nota' : 'antes';
+    const CLAVE = modo === 'nota' ? 'heroteca:racha-duelo-notas' : 'heroteca:racha-cual-antes';
     let racha = 0;
     let mejor = 0;
     try {
@@ -49,7 +53,9 @@ const j = tx.juegos;
     function ronda() {
       const a = azar();
       let b = azar();
-      for (let i = 0; i < 50 && (b.anio === a.anio || b.n === a.n); i++) b = azar();
+      // Valores distintos (en fechas, años distintos) para que siempre haya un ganador claro
+      const igual = (x: TituloJuego, y: TituloJuego) => (modo === 'antes' ? x.vt === y.vt : Math.abs(x.v - y.v) < 0.15) || x.n === y.n;
+      for (let i = 0; i < 80 && igual(a, b); i++) b = azar();
       const pareja = $('[data-pareja]');
       pareja.replaceChildren(
         ...[a, b].map((t) => {
@@ -59,7 +65,7 @@ const j = tx.juegos;
           boton.setAttribute('aria-label', (caja.dataset.elegir ?? '').replace('{x}', t.n));
           boton.innerHTML = `<span class="cartel">${t.img ? `<img src="${t.img}" alt="" width="185" height="278" loading="eager">` : ''}</span><span class="nombre"></span><span class="anio" hidden></span>`;
           boton.querySelector('.nombre')!.textContent = t.n;
-          boton.querySelector('.anio')!.textContent = String(t.anio);
+          boton.querySelector('.anio')!.textContent = t.vt;
           boton.addEventListener('click', () => elegir(t, a, b));
           return boton;
         }),
@@ -69,7 +75,7 @@ const j = tx.juegos;
       $<HTMLButtonElement>('[data-siguiente]').hidden = true;
     }
     function elegir(t: TituloJuego, a: TituloJuego, b: TituloJuego) {
-      const antes = a.f <= b.f ? a : b;
+      const antes = modo === 'antes' ? (a.v <= b.v ? a : b) : a.v >= b.v ? a : b;
       const bien = t === antes;
       caja.querySelectorAll<HTMLButtonElement>('.carta').forEach((c, i) => {
         c.disabled = true;
@@ -86,7 +92,7 @@ const j = tx.juegos;
       $('[data-racha]').textContent = String(racha);
       $('[data-mejor]').textContent = String(mejor);
       const r = $('[data-resultado]');
-      r.textContent = bien ? (caja.dataset.correcto ?? '') : (caja.dataset.incorrecto ?? '').replace('{x}', `${antes.n} (${antes.anio})`);
+      r.textContent = bien ? (caja.dataset.correcto ?? '') : (caja.dataset.incorrecto ?? '').replace('{x}', `${antes.n} (${antes.vt})`);
       r.className = `resultado ${bien ? 'bien' : 'mal'}`;
       const sig = $<HTMLButtonElement>('[data-siguiente]');
       sig.hidden = false;

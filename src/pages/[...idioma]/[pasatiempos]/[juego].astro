@@ -1,6 +1,6 @@
 ---
 import { conIdiomas } from '../../../i18n';
-import { JUEGOS, type Juego } from '../../../config/juegos';
+import { JUEGOS, textoJuego, type Juego } from '../../../config/juegos';
 export function getStaticPaths() {
   return conIdiomas(
     JUEGOS.map((j) => ({ params: { pasatiempos: 'pasatiempos', juego: j.id as string }, props: { juego: j } })),
@@ -14,10 +14,15 @@ import BotonVolver from '../../../components/BotonVolver.astro';
 import JuegoAdivina, { type PersonajeJuego } from '../../../components/JuegoAdivina.astro';
 import JuegoQuienEres from '../../../components/JuegoQuienEres.astro';
 import JuegoCualAntes, { type TituloJuego } from '../../../components/JuegoCualAntes.astro';
-import { universosActivos, todosLosTitulos, localizar } from '../../../lib/datos';
+import JuegoHeroedle, { type PersonajeHeroedle } from '../../../components/JuegoHeroedle.astro';
+import JuegoPixelado, { type CartelJuego } from '../../../components/JuegoPixelado.astro';
+import JuegoOrdena, { type TituloOrden } from '../../../components/JuegoOrdena.astro';
+import JuegoInterpretes, { type ParejaInterprete } from '../../../components/JuegoInterpretes.astro';
+import { LINEA_TEMPORAL, leerEpoca } from '../../../lib/lineaTemporal';
+import { universosActivos, todosLosTitulos, huecosDeSeccion, localizar, type Titulo } from '../../../lib/datos';
 import { apariciones } from '../../../lib/personajes';
-import { imagenTmdb } from '../../../lib/tmdb';
-import { textos, idiomaDe } from '../../../i18n';
+import { imagenTmdb, datosTmdb } from '../../../lib/tmdb';
+import { textos, idiomaDe, LOCALE } from '../../../i18n';
 import { rutaEnIdioma } from '../../../i18n/rutas';
 import { personajeLoc } from '../../../i18n/datos';
 
@@ -27,8 +32,7 @@ const j = tx.juegos;
 const idioma = idiomaDe(Astro.url);
 const universos = await universosActivos();
 const activos = new Map(universos.map((u) => [u.id, u]));
-const nombre = { adivina: j.adivina, quien: j.quien, antes: j.antes }[juego.clave];
-const texto = { adivina: j.adivinaTexto, quien: j.quienTexto, antes: j.antesTexto }[juego.clave];
+const { nombre, texto } = textoJuego(j, juego.clave);
 
 // «Adivina el personaje»: los que salen en al menos 4 títulos
 let personajes: PersonajeJuego[] = [];
@@ -58,20 +62,103 @@ if (juego.clave === 'adivina') {
   );
 }
 
-// «¿Cuál se estrenó antes?»: películas y primeras temporadas con imagen
+// Heroedle: los mismos personajes, con sus datos comparables
+let heroedle: PersonajeHeroedle[] = [];
+if (juego.clave === 'heroedle') {
+  const { personajes: todos, porPersonaje } = await apariciones();
+  heroedle = await Promise.all(
+    todos
+      .filter((p) => activos.has(p.data.universo.id) && (porPersonaje.get(p.id)?.length ?? 0) >= 4)
+      .map(async (original) => {
+        const p = personajeLoc(original, idioma);
+        const aps = porPersonaje.get(p.id) ?? [];
+        return {
+          id: p.id,
+          n: p.data.nombre,
+          u: activos.get(p.data.universo.id)!.data.nombre,
+          a: Math.min(...aps.map((a) => a.titulo.d.anio)),
+          t: aps.length,
+          i: new Set(aps.map((a) => a.actor).filter(Boolean)).size,
+          url: await rutaEnIdioma(`/${p.data.universo.id}/personajes/${p.id}/`, idioma),
+        };
+      }),
+  );
+}
+
+// ¿Quién lo interpretó?: personajes con un intérprete claro (al menos 3 títulos con el mismo)
+let parejas: ParejaInterprete[] = [];
+if (juego.clave === 'interpretes') {
+  const { personajes: todos, porPersonaje } = await apariciones();
+  const lista = todos.filter((p) => activos.has(p.data.universo.id)).map((original) => {
+    const cuenta = new Map<string, number>();
+    for (const a of porPersonaje.get(original.id) ?? []) if (a.actor) cuenta.set(a.actor, (cuenta.get(a.actor) ?? 0) + 1);
+    const [actor, veces] = [...cuenta].sort((x, y) => y[1] - x[1])[0] ?? ['', 0];
+    return { original, actor, veces };
+  });
+  parejas = await Promise.all(
+    lista
+      .filter((x) => x.veces >= 3)
+      .map(async (x) => ({
+        p: personajeLoc(x.original, idioma).data.nombre,
+        a: x.actor,
+        url: await rutaEnIdioma(`/${x.original.data.universo.id}/personajes/${x.original.id}/`, idioma),
+      })),
+  );
+}
+
+// Los juegos de títulos: películas y primeras temporadas con imagen (de la colección o de TMDB)
+const titulosConImagen = ['antes', 'duelo', 'pixelado', 'ordena'].includes(juego.clave)
+  ? (await todosLosTitulos(idioma)).filter((t) => activos.has(t.universo) && (t.portada || t.m.posterTmdb) && (t.d.temporada ?? 1) === 1)
+  : [];
+const imagen = async (t: Titulo, ancho: 'w185' | 'w342') =>
+  t.portada ? (await getImage({ src: t.portada, width: ancho === 'w185' ? 185 : 342, format: 'webp' })).src : imagenTmdb(t.m.posterTmdb!, ancho);
+const votosDe = (t: Titulo) => datosTmdb(t.universo, t.id, 'es')?.votos ?? 0;
+
+// ¿Cuál se estrenó antes?: gana la fecha menor
 let titulosJuego: TituloJuego[] = [];
 if (juego.clave === 'antes') {
-  const lista = (await todosLosTitulos(idioma)).filter((t) => activos.has(t.universo) && (t.portada || t.m.posterTmdb) && (t.d.temporada ?? 1) === 1);
   titulosJuego = await Promise.all(
-    lista.map(async (t) => ({
-      n: t.corto,
-      f: t.m.fecha ? t.m.fecha.toISOString().slice(0, 10) : `${t.d.anio}-06-30`,
-      anio: t.m.fecha ? t.m.fecha.getUTCFullYear() : t.d.anio,
-      img: t.portada ? (await getImage({ src: t.portada, width: 185, format: 'webp' })).src : imagenTmdb(t.m.posterTmdb!, 'w185'),
-      url: await rutaEnIdioma(t.url, idioma),
-      u: t.universo,
-    })),
+    titulosConImagen.map(async (t) => {
+      const f = t.m.fecha ? t.m.fecha.toISOString().slice(0, 10) : `${t.d.anio}-06-30`;
+      return { n: t.corto, v: Number(f.replaceAll('-', '')), vt: f.slice(0, 4), img: await imagen(t, 'w185'), url: await rutaEnIdioma(t.url, idioma) };
+    }),
   );
+}
+// Duelo de notas: títulos con al menos 500 votos (notas fiables); gana la mayor
+if (juego.clave === 'duelo') {
+  titulosJuego = await Promise.all(
+    titulosConImagen
+      .filter((t) => votosDe(t) >= 500)
+      .map(async (t) => {
+        const nota = datosTmdb(t.universo, t.id, 'es')!.nota ?? 0;
+        return { n: t.corto, v: nota, vt: `★ ${nota.toLocaleString(LOCALE[idioma], { minimumFractionDigits: 1 })}`, img: await imagen(t, 'w185'), url: await rutaEnIdioma(t.url, idioma) };
+      }),
+  );
+}
+// Cartel pixelado: títulos conocidos (al menos 1000 votos) sin repetir nombre
+let carteles: CartelJuego[] = [];
+if (juego.clave === 'pixelado') {
+  carteles = await Promise.all(
+    titulosConImagen.filter((t) => votosDe(t) >= 1000).map(async (t) => ({ n: t.corto, img: await imagen(t, 'w342'), url: await rutaEnIdioma(t.url, idioma) })),
+  );
+  carteles = carteles.filter((c, i) => carteles.findIndex((x) => x.n === c.n) === i);
+}
+// Ordena la cronología: las películas del UMC, con su puesto en el orden de la colección
+let paraOrdenar: TituloOrden[] = [];
+if (juego.clave === 'ordena') {
+  const marvel = universos.find((u) => u.id === LINEA_TEMPORAL.universo);
+  const seccion = marvel?.data.secciones.find((s) => s.id === LINEA_TEMPORAL.seccion);
+  if (seccion) {
+    const enOrden: Titulo[] = [];
+    for (const h of huecosDeSeccion(titulosConImagen.filter((t) => t.universo === marvel!.id && t.d.seccion === seccion.id), seccion)) if (!enOrden.includes(h.titulo)) enOrden.push(h.titulo);
+    paraOrdenar = await Promise.all(
+      enOrden
+        .map((t, p) => ({ t, p }))
+        // Con año conocido y del universo principal (estas dos transcurren en otros universos)
+        .filter(({ t }) => t.tipo === 'pelicula' && leerEpoca(t.d.epoca) && !['los-cuatro-fantasticos-primeros-pasos', 'deadpool-y-wolverine'].includes(t.id))
+        .map(async ({ t, p }) => ({ n: t.corto, p, e: leerEpoca(t.d.epoca)?.texto, url: await rutaEnIdioma(t.url, idioma) })),
+    );
+  }
 }
 ---
 
@@ -93,6 +180,11 @@ if (juego.clave === 'antes') {
     {juego.clave === 'adivina' && <JuegoAdivina personajes={personajes} />}
     {juego.clave === 'quien' && <JuegoQuienEres />}
     {juego.clave === 'antes' && <JuegoCualAntes titulos={titulosJuego} />}
+    {juego.clave === 'duelo' && <JuegoCualAntes titulos={titulosJuego} modo="nota" />}
+    {juego.clave === 'heroedle' && <JuegoHeroedle personajes={heroedle} />}
+    {juego.clave === 'pixelado' && <JuegoPixelado carteles={carteles} />}
+    {juego.clave === 'ordena' && <JuegoOrdena titulos={paraOrdenar} />}
+    {juego.clave === 'interpretes' && <JuegoInterpretes parejas={parejas} />}
   </div>
 </Base>
 

@@ -127,6 +127,11 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
               </a>
             ))
           }
+          {/* Pasatiempos, siempre a la vista (en el móvil solo el icono) */}
+          <a href="/pasatiempos/" class="nav-juegos" aria-current={Astro.url.pathname.includes('/pasatiempos/') || Astro.url.pathname.includes('/games/') ? 'true' : undefined}>
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11h4M8 9v4M15 12h.01M18 10h.01" /><path d="M17.3 5H6.7a4 4 0 0 0-3.96 3.43l-.9 6.32A2.5 2.5 0 0 0 4.31 17.6c.7 0 1.36-.3 1.83-.82L8 14.7h8l1.86 2.08c.47.52 1.13.82 1.83.82a2.5 2.5 0 0 0 2.47-2.85l-.9-6.32A4 4 0 0 0 17.3 5Z" /></svg>
+            <span class="txt-juegos">{tx.juegos.cabecera}</span>
+          </a>
         </nav>
         <div class="acciones">
           <Buscador />
@@ -267,6 +272,19 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
     display: flex;
     gap: 4px;
   }
+  .universos .nav-juegos {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 6px;
+    color: var(--txt);
+    background: color-mix(in srgb, var(--acento) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--acento) 45%, transparent);
+  }
+  .universos .nav-juegos:hover,
+  .universos .nav-juegos[aria-current] {
+    background: color-mix(in srgb, var(--acento) 28%, transparent);
+  }
   .universos a {
     font: 700 1.15rem var(--f-titulo);
     text-transform: uppercase;
@@ -388,9 +406,34 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
     }
   }
   /* Móviles estrechos: cabecera más compacta para que quepa todo en una fila */
+  @media (max-width: 760px) {
+    .txt-juegos {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+    .universos .nav-juegos {
+      margin-left: 2px;
+      padding: 5px 7px;
+    }
+  }
   @media (max-width: 430px) {
     .fila {
-      gap: 8px;
+      gap: 6px;
+    }
+    .fila :global(.marca .nombre) {
+      font-size: 1.5rem;
+    }
+    .universos .nav-juegos {
+      margin-left: 0;
+      padding: 4px 5px;
+    }
+    .nav-juegos svg {
+      width: 18px;
+      height: 18px;
     }
     .acciones {
       gap: 5px;
@@ -406,8 +449,24 @@ const verBotonIdioma = SITE.inglesPublicado || idioma === 'en';
       padding: 8px 10px;
     }
   }
+  /* Móviles de 320 px: marca más pequeña y botones al mínimo */
+  @media (max-width: 340px) {
+    .fila :global(.marca .nombre) {
+      font-size: 1.2rem !important;
+    }
+    .universos a {
+      padding: 3px 2px !important;
+      font-size: 0.8rem !important;
+    }
+    .acciones :global(.pastilla) {
+      padding: 6px 6px !important;
+    }
+  }
   /* Móviles muy estrechos (360 px): un poco más compacta todavía */
   @media (max-width: 380px) {
+    .universos .nav-juegos {
+      padding: 4px;
+    }
     .fila {
       gap: 6px;
     }

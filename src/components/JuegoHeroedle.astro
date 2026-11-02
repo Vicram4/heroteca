@@ -1,0 +1,272 @@
+---
+/**
+ * «Heroedle»: el personaje del día, el mismo para todo el mundo (se elige con la fecha). Seis intentos; cada intento
+ * se compara con el del día en universo, año de su primera aparición, número de títulos y número de intérpretes
+ * (con flechas: el del día tiene más o menos). La partida del día se guarda en el navegador y el resultado se
+ * puede copiar con cuadraditos de colores.
+ */
+import { textos } from '../i18n';
+
+export interface PersonajeHeroedle {
+  id: string;
+  n: string;
+  /** Universo (nombre) */
+  u: string;
+  /** Año de su primera aparición, títulos e intérpretes */
+  a: number;
+  t: number;
+  i: number;
+  url: string;
+}
+interface Props {
+  personajes: PersonajeHeroedle[];
+}
+const { personajes } = Astro.props;
+const tx = textos(Astro.url);
+const j = tx.juegos;
+const textosCliente = {
+  intentos: j.intentos(91, 92),
+  ganado: j.ganado(93),
+  perdido: j.perdido('{x}'),
+  noExiste: j.noExiste,
+  yaProbado: j.yaProbado,
+  copiado: j.copiado,
+  mas: j.mas,
+  menos: j.menos,
+};
+---
+
+<div class="juego panel" data-heroedle>
+  <div class="marcador">
+    <span data-intentos></span>
+    <span data-fecha></span>
+  </div>
+  <form class="probar" data-formulario>
+    <label class="solo-lectores" for="heroedle-entrada">{j.escribe}</label>
+    <input id="heroedle-entrada" list="heroedle-lista" autocomplete="off" placeholder={j.escribe} data-entrada />
+    <datalist id="heroedle-lista">{personajes.map((p) => <option value={p.n} />)}</datalist>
+    <button type="submit" class="pastilla principal">{j.probar}</button>
+  </form>
+  <p class="aviso" data-aviso role="status"></p>
+  <div class="tabla-desliza">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">{j.colPersonaje}</th>
+          <th scope="col">{j.colUniverso}</th>
+          <th scope="col">{j.colDesde}</th>
+          <th scope="col">{j.colTitulos}</th>
+          <th scope="col">{j.colInterpretes}</th>
+        </tr>
+      </thead>
+      <tbody data-filas></tbody>
+    </table>
+  </div>
+  <div class="fin" data-fin hidden>
+    <p class="mensaje" data-mensaje></p>
+    <div class="acciones">
+      <a data-enlace>{j.verFicha} →</a>
+      <button type="button" class="pastilla" data-compartir>{j.compartir}</button>
+    </div>
+    <p class="manana">{j.manana}</p>
+  </div>
+  <script type="application/json" data-datos set:html={JSON.stringify(personajes)} />
+  <script type="application/json" data-textos set:html={JSON.stringify(textosCliente)} />
+</div>
+
+<script>
+  import type { PersonajeHeroedle } from './JuegoHeroedle.astro';
+  const MAX = 6;
+  document.querySelectorAll<HTMLElement>('[data-heroedle]').forEach((caja) => {
+    const lista: PersonajeHeroedle[] = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '[]');
+    const t = JSON.parse(caja.querySelector('[data-textos]')!.textContent ?? '{}');
+    const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
+    const normal = (s: string) => s.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+    // Personaje del día: el mismo para todos (orden fijo barajado con una semilla y el número de día)
+    const hoy = new Date();
+    const fecha = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+    const dia = Math.floor(Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()) / 86400000);
+    const orden = [...lista].sort((a, b) => (a.id < b.id ? -1 : 1));
+    let semilla = 20261101;
+    const aleatorio = () => ((semilla = (semilla * 16807) % 2147483647) / 2147483647);
+    for (let i = orden.length - 1; i > 0; i--) {
+      const k = Math.floor(aleatorio() * (i + 1));
+      [orden[i], orden[k]] = [orden[k], orden[i]];
+    }
+    const secreto = orden[dia % orden.length];
+    $('[data-fecha]').textContent = hoy.toLocaleDateString(document.documentElement.lang, { day: 'numeric', month: 'long' });
+
+    const CLAVE = 'heroteca:heroedle';
+    let estado: { fecha: string; intentos: string[] } = { fecha, intentos: [] };
+    try {
+      const guardado = JSON.parse(localStorage.getItem(CLAVE) ?? 'null');
+      if (guardado?.fecha === fecha) estado = guardado;
+    } catch {}
+    const guardar = () => {
+      try {
+        localStorage.setItem(CLAVE, JSON.stringify(estado));
+      } catch {}
+    };
+
+    const comparar = (v: number, s: number) => (v === s ? 'igual' : s > v ? 'mas' : 'menos');
+    const celda = (texto: string, ok: boolean, flecha?: string) => {
+      const td = document.createElement('td');
+      td.className = ok ? 'bien' : flecha ? 'cerca' : 'mal';
+      td.textContent = texto + (flecha === 'mas' ? ' ↑' : flecha === 'menos' ? ' ↓' : '');
+      if (flecha && flecha !== 'igual') {
+        const sr = document.createElement('span');
+        sr.className = 'solo-lectores';
+        sr.textContent = ` (${flecha === 'mas' ? t.mas : t.menos})`;
+        td.append(sr);
+      }
+      return td;
+    };
+    function fila(p: PersonajeHeroedle) {
+      const tr = document.createElement('tr');
+      const nombre = document.createElement('th');
+      nombre.scope = 'row';
+      nombre.textContent = p.n;
+      nombre.className = p.id === secreto.id ? 'bien' : '';
+      const ca = comparar(p.a, secreto.a);
+      const ct = comparar(p.t, secreto.t);
+      const ci = comparar(p.i, secreto.i);
+      tr.append(nombre, celda(p.u, p.u === secreto.u), celda(String(p.a), ca === 'igual', ca), celda(String(p.t), ct === 'igual', ct), celda(String(p.i), ci === 'igual', ci));
+      return tr;
+    }
+    function pintar() {
+      const filas = estado.intentos.map((id) => lista.find((p) => p.id === id)!).filter(Boolean);
+      $('[data-filas]').replaceChildren(...filas.map(fila).reverse());
+      $('[data-intentos]').textContent = t.intentos.replace('91', String(filas.length)).replace('92', String(MAX));
+      const ganado = estado.intentos.includes(secreto.id);
+      const terminado = ganado || filas.length >= MAX;
+      $('[data-formulario]').hidden = terminado;
+      $('[data-fin]').hidden = !terminado;
+      if (terminado) {
+        $('[data-mensaje]').textContent = ganado ? t.ganado.replace('93', String(filas.length)) : t.perdido.replace('{x}', secreto.n);
+        $<HTMLAnchorElement>('[data-enlace]').href = secreto.url;
+      }
+    }
+    $('[data-formulario]').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const entrada = $<HTMLInputElement>('[data-entrada]');
+      const p = lista.find((x) => normal(x.n) === normal(entrada.value));
+      const aviso = $('[data-aviso]');
+      if (!p) return void (aviso.textContent = t.noExiste);
+      if (estado.intentos.includes(p.id)) return void (aviso.textContent = t.yaProbado);
+      aviso.textContent = '';
+      estado.intentos.push(p.id);
+      guardar();
+      entrada.value = '';
+      pintar();
+    });
+    // Compartir: cuadraditos por intento (universo, año, títulos, intérpretes)
+    $('[data-compartir]').addEventListener('click', async () => {
+      const filas = estado.intentos.map((id) => lista.find((p) => p.id === id)!);
+      const cuadro = (ok: boolean) => (ok ? '🟩' : '⬛');
+      const texto = [
+        `Heroedle ${fecha} · ${estado.intentos.includes(secreto.id) ? filas.length : 'X'}/${MAX}`,
+        ...filas.map((p) => [p.u === secreto.u, p.a === secreto.a, p.t === secreto.t, p.i === secreto.i].map(cuadro).join('')),
+        location.href,
+      ].join('\n');
+      try {
+        await navigator.clipboard.writeText(texto);
+        $('[data-aviso]').textContent = t.copiado;
+      } catch {}
+    });
+    pintar();
+  });
+</script>
+
+<style>
+  .juego {
+    max-width: 820px;
+  }
+  .marcador {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--txt-2);
+  }
+  .probar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 16px 0 6px;
+  }
+  .probar input {
+    flex: 1 1 220px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--borde);
+    background: var(--sup-2, var(--sup));
+    color: inherit;
+    font-size: 1rem;
+  }
+  .principal {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
+  }
+  .aviso {
+    min-height: 1.3em;
+    margin: 4px 0;
+    color: var(--txt-2);
+  }
+  .tabla-desliza {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 4px;
+    font-size: 0.9rem;
+  }
+  thead th {
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--txt-2);
+    text-align: center;
+  }
+  tbody :global(th),
+  tbody :global(td) {
+    padding: 10px 8px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 700;
+    background: var(--sup-2, var(--borde));
+  }
+  tbody :global(th) {
+    text-align: left;
+  }
+  tbody :global(.bien) {
+    background: #1a7f45;
+    color: #fff;
+  }
+  tbody :global(.cerca) {
+    background: #8a5a00;
+    color: #fff;
+  }
+  tbody :global(.mal) {
+    background: #4a4f5c;
+    color: #fff;
+  }
+  .mensaje {
+    font: 800 1.4rem var(--f-titulo);
+    margin: 18px 0 8px;
+  }
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+  }
+  .manana {
+    color: var(--txt-2);
+    font-size: 0.88rem;
+  }
+</style>

@@ -1,0 +1,160 @@
+---
+/**
+ * «¿Quién lo interpretó?»: cuatro personajes y, para cada uno, un desplegable con los cuatro intérpretes (el que
+ * más veces lo ha interpretado en la colección). Al comprobar se marca cada uno y se muestra la respuesta.
+ */
+import { textos } from '../i18n';
+
+export interface ParejaInterprete {
+  /** Personaje, su intérprete principal y la página del personaje */
+  p: string;
+  a: string;
+  url: string;
+}
+interface Props {
+  parejas: ParejaInterprete[];
+}
+const { parejas } = Astro.props;
+const tx = textos(Astro.url);
+const j = tx.juegos;
+const plantillas = { ver: j.verFicha, elige: j.eligeActor, aciertos: j.aciertosInterpretes(91, 92), era: j.era('{x}') };
+---
+
+<div class="juego panel" data-interpretes>
+  <ul class="lista" data-lista></ul>
+  <div class="acciones">
+    <button type="button" class="pastilla principal" data-comprobar>{j.comprobar}</button>
+    <button type="button" class="pastilla" data-otra-vez hidden>{j.otraVez}</button>
+  </div>
+  <p class="resultado" data-resultado role="status"></p>
+  <script type="application/json" data-datos set:html={JSON.stringify(parejas)} />
+  <script type="application/json" data-plantillas set:html={JSON.stringify(plantillas)} />
+</div>
+
+<script>
+  import type { ParejaInterprete } from './JuegoInterpretes.astro';
+  const N = 4;
+  document.querySelectorAll<HTMLElement>('[data-interpretes]').forEach((caja) => {
+    const todos: ParejaInterprete[] = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '[]');
+    const t = JSON.parse(caja.querySelector('[data-plantillas]')!.textContent ?? '{}');
+    const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
+    const mezclar = <T,>(l: T[]) => [...l].sort(() => Math.random() - 0.5);
+    let ronda: ParejaInterprete[] = [];
+    function empezar() {
+      // Cuatro personajes con intérpretes distintos
+      ronda = [];
+      for (const x of mezclar(todos)) if (ronda.length < N && !ronda.some((r) => r.a === x.a)) ronda.push(x);
+      const actores = mezclar(ronda.map((r) => r.a));
+      $('[data-lista]').replaceChildren(
+        ...ronda.map((r, i) => {
+          const li = document.createElement('li');
+          const etiqueta = document.createElement('label');
+          etiqueta.htmlFor = `interprete-${i}`;
+          etiqueta.textContent = r.p;
+          const sel = document.createElement('select');
+          sel.id = `interprete-${i}`;
+          sel.append(new Option(t.elige, ''), ...actores.map((a) => new Option(a, a)));
+          const nota = document.createElement('span');
+          nota.className = 'nota';
+          li.append(etiqueta, sel, nota);
+          return li;
+        }),
+      );
+      $('[data-resultado]').textContent = '';
+      $<HTMLButtonElement>('[data-comprobar]').hidden = false;
+      $<HTMLButtonElement>('[data-otra-vez]').hidden = true;
+    }
+    $('[data-comprobar]').addEventListener('click', () => {
+      let aciertos = 0;
+      $('[data-lista]').querySelectorAll('li').forEach((li, i) => {
+        const sel = li.querySelector('select')!;
+        const ok = sel.value === ronda[i].a;
+        if (ok) aciertos++;
+        sel.disabled = true;
+        li.classList.add(ok ? 'bien' : 'mal');
+        const nota = li.querySelector<HTMLElement>('.nota')!;
+        nota.replaceChildren();
+        if (!ok) nota.textContent = `${t.era.replace('{x}', ronda[i].a)} · `;
+        const a = document.createElement('a');
+        a.href = ronda[i].url;
+        a.textContent = `${t.ver} →`;
+        nota.append(a);
+      });
+      $('[data-resultado]').textContent = t.aciertos.replace('91', String(aciertos)).replace('92', String(N));
+      $<HTMLButtonElement>('[data-comprobar]').hidden = true;
+      const otra = $<HTMLButtonElement>('[data-otra-vez]');
+      otra.hidden = false;
+      otra.focus();
+    });
+    $('[data-otra-vez]').addEventListener('click', empezar);
+    empezar();
+  });
+</script>
+
+<style>
+  .juego {
+    max-width: 760px;
+  }
+  .lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .lista :global(li) {
+    display: grid;
+    grid-template-columns: minmax(8em, 1fr) minmax(10em, 1.2fr);
+    align-items: center;
+    gap: 6px 14px;
+    padding: 12px 14px;
+    border-radius: var(--radio);
+    border: 1px solid var(--borde);
+    background: var(--sup-2, var(--sup));
+  }
+  .lista :global(label) {
+    font: 700 1.05rem var(--f-titulo);
+  }
+  .lista :global(select) {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--borde);
+    background: var(--sup);
+    color: inherit;
+    font-size: 0.95rem;
+  }
+  .lista :global(.nota) {
+    grid-column: 1 / -1;
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .lista :global(.nota:empty) {
+    display: none;
+  }
+  .lista :global(li.bien) {
+    box-shadow: inset 4px 0 0 #1a7f45;
+  }
+  .lista :global(li.mal) {
+    box-shadow: inset 4px 0 0 #b3261e;
+  }
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .principal {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
+  }
+  .resultado {
+    margin: 14px 0 6px;
+    font: 800 1.2rem var(--f-titulo);
+  }
+  @media (max-width: 520px) {
+    .lista :global(li) {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

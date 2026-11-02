@@ -383,19 +383,24 @@ Página `/estadisticas/` (`/en/stats/`), enlazada en el pie. Todo se calcula al 
 
 ## Pasatiempos
 
-Página `/pasatiempos/` (`/en/games/`), enlazada en el pie y junto a la llamada al test de la portada, con tres juegos
-(demos) que funcionan en el navegador con los datos de la web:
+Página `/pasatiempos/` (`/en/games/`), siempre a la vista: botón **«Juegos»** en la cabecera (en el móvil, solo el icono) y
+bloque **«¿Jugamos?»** en la portada con los cuatro primeros. Ocho juegos que funcionan en el navegador con los datos de
+la web, sin cuentas:
 
-- **Adivina el personaje** (`JuegoAdivina.astro`): 5 rondas con personajes que salen en al menos 4 títulos. Pistas que se
-  desvelan una a una (universo y número de títulos, primera aparición, un título, intérpretes, identidad) y cuatro
-  opciones del mismo universo. Puntos: 5 menos las pistas extra usadas.
-- **¿Qué héroe eres?** (`JuegoQuienEres.astro`): 6 preguntas; cada respuesta suma puntos a varios héroes. Preguntas,
-  respuestas y resultados (ES/EN) en `src/config/quien-eres.ts`, redactados en neutro porque describen a quien juega.
-- **¿Cuál se estrenó antes?** (`JuegoCualAntes.astro`): dos títulos de años distintos; la mejor racha se guarda en el
-  navegador.
+- **Heroedle** (`JuegoHeroedle.astro`): el personaje del día, el mismo para todo el mundo (se calcula con la fecha). Seis
+  intentos que comparan universo, primera aparición, títulos e intérpretes, con flechas. La partida del día se guarda en el
+  navegador y el resultado se puede copiar con cuadraditos.
+- **Adivina el personaje** (`JuegoAdivina.astro`): 5 rondas con pistas que se desvelan y cuatro opciones del mismo universo.
+- **Cartel pixelado** (`JuegoPixelado.astro`): títulos con al menos 1000 votos en TMDB; cuanto menos se aclara, más puntos.
+- **¿Qué héroe eres?** (`JuegoQuienEres.astro`): preguntas y resultados en `src/config/quien-eres.ts`, redactados en neutro
+  porque describen a quien juega.
+- **Ordena la cronología** (`JuegoOrdena.astro`): cinco películas del UMC de años distintos, según el orden de la colección.
+  Se excluyen las que transcurren en otros universos. Botones subir/bajar, usables con teclado.
+- **¿Quién lo interpretó?** (`JuegoInterpretes.astro`): personajes con el mismo intérprete en al menos 3 títulos.
+- **¿Cuál se estrenó antes?** y **Duelo de notas** (`JuegoCualAntes.astro`, el mismo duelo con otro criterio; las notas, con
+  al menos 500 votos): la mejor racha de cada uno se guarda en el navegador.
 
-La lista de juegos está en `src/config/juegos.ts`, con las **ideas para más adelante** que se muestran en la página
-(Heroedle, cartel pixelado, ordenar la cronología, conectar actores, trivia diaria…).
+La lista de juegos, su orden y las **ideas para más adelante** que se muestran en la página están en `src/config/juegos.ts`.
 
 ## Mi progreso (vistos)
 

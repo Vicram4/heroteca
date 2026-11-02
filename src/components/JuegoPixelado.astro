@@ -1,0 +1,241 @@
+---
+/**
+ * «Cartel pixelado»: 5 rondas. El cartel se dibuja en un lienzo con bloques enormes y se va aclarando con
+ * «Más nítido»; hay que acertar el título entre cuatro opciones. Puntos: 5 en el nivel más pixelado, 1 con el
+ * cartel casi nítido. Un fallo termina la ronda y muestra el cartel.
+ */
+import { textos } from '../i18n';
+
+export interface CartelJuego {
+  n: string;
+  img: string;
+  url: string;
+}
+interface Props {
+  carteles: CartelJuego[];
+}
+const { carteles } = Astro.props;
+const tx = textos(Astro.url);
+const j = tx.juegos;
+const plantillas = { final: j.final(97, 98), correcto: j.correcto, incorrecto: j.incorrecto('{x}'), rondaTxt: j.rondaCartel(95, 96) };
+---
+
+<div class="juego panel" data-pixelado>
+  <div class="marcador">
+    <span data-ronda></span>
+    <span>{j.puntos}: <strong data-puntos>0</strong></span>
+  </div>
+  <div data-zona>
+    <div class="lienzo">
+      <canvas width="240" height="360" role="img" aria-label={j.pixeladoAria} data-lienzo></canvas>
+    </div>
+    <button type="button" class="pastilla" data-nitido>{j.masNitido}</button>
+    <div class="opciones" data-opciones role="group"></div>
+    <p class="resultado" data-resultado role="status"></p>
+    <div class="acciones">
+      <a data-enlace hidden>{j.verFichaTitulo} →</a>
+      <button type="button" class="pastilla principal" data-siguiente hidden>{j.siguiente} →</button>
+    </div>
+  </div>
+  <div data-final hidden>
+    <p class="nota-final" data-nota-final></p>
+    <button type="button" class="pastilla principal" data-otra-vez>{j.otraVez}</button>
+  </div>
+  <script type="application/json" data-datos set:html={JSON.stringify(carteles)} />
+  <script type="application/json" data-plantillas set:html={JSON.stringify(plantillas)} />
+</div>
+
+<script>
+  import type { CartelJuego } from './JuegoPixelado.astro';
+  const RONDAS = 5;
+  // Tamaño del bloque en píxeles de cada nivel (0 = nítido)
+  const NIVELES = [30, 18, 11, 6, 3, 0];
+  document.querySelectorAll<HTMLElement>('[data-pixelado]').forEach((caja) => {
+    const todos: CartelJuego[] = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '[]');
+    const t = JSON.parse(caja.querySelector('[data-plantillas]')!.textContent ?? '{}');
+    const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
+    const lienzo = $<HTMLCanvasElement>('[data-lienzo]');
+    const ctx = lienzo.getContext('2d')!;
+    const pequeno = document.createElement('canvas');
+    const mezclar = <T,>(l: T[]) => [...l].sort(() => Math.random() - 0.5);
+    let ronda = 0;
+    let puntos = 0;
+    let nivel = 0;
+    let usados = new Set<string>();
+    let actual: CartelJuego;
+    let imagen: HTMLImageElement | null = null;
+
+    function dibujar() {
+      if (!imagen) return;
+      const W = lienzo.width;
+      const H = lienzo.height;
+      const bloque = NIVELES[nivel];
+      ctx.imageSmoothingEnabled = bloque === 0;
+      if (bloque === 0) return ctx.drawImage(imagen, 0, 0, W, H);
+      // Se dibuja muy pequeño y se amplía sin suavizar: bloques de color
+      pequeno.width = Math.max(1, Math.round(W / bloque));
+      pequeno.height = Math.max(1, Math.round(H / bloque));
+      const pc = pequeno.getContext('2d')!;
+      pc.imageSmoothingEnabled = true;
+      pc.drawImage(imagen, 0, 0, pequeno.width, pequeno.height);
+      ctx.drawImage(pequeno, 0, 0, W, H);
+    }
+    function nuevaRonda() {
+      ronda++;
+      nivel = 0;
+      actual = mezclar(todos.filter((c) => !usados.has(c.n)))[0];
+      usados.add(actual.n);
+      $('[data-ronda]').textContent = t.rondaTxt.replace('95', String(ronda)).replace('96', String(RONDAS));
+      ctx.clearRect(0, 0, lienzo.width, lienzo.height);
+      imagen = new Image();
+      imagen.onload = dibujar;
+      imagen.src = actual.img;
+      const falsas = mezclar(todos.filter((c) => c.n !== actual.n)).slice(0, 3);
+      $('[data-opciones]').replaceChildren(
+        ...mezclar([actual, ...falsas]).map((c) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'opcion';
+          b.textContent = c.n;
+          b.addEventListener('click', () => responder(b, c));
+          return b;
+        }),
+      );
+      $<HTMLButtonElement>('[data-nitido]').hidden = false;
+      $('[data-resultado]').textContent = '';
+      $('[data-resultado]').className = 'resultado';
+      $<HTMLAnchorElement>('[data-enlace]').hidden = true;
+      $<HTMLButtonElement>('[data-siguiente]').hidden = true;
+    }
+    function responder(b: HTMLButtonElement, c: CartelJuego) {
+      const bien = c === actual;
+      caja.querySelectorAll<HTMLButtonElement>('.opcion').forEach((o) => {
+        o.disabled = true;
+        if (o.textContent === actual.n) o.classList.add('buena');
+        else if (o === b) o.classList.add('mala');
+      });
+      if (bien) puntos += Math.max(1, 5 - nivel);
+      $('[data-puntos]').textContent = String(puntos);
+      nivel = NIVELES.length - 1;
+      dibujar();
+      $<HTMLButtonElement>('[data-nitido]').hidden = true;
+      const r = $('[data-resultado]');
+      r.textContent = bien ? t.correcto : t.incorrecto.replace('{x}', actual.n);
+      r.className = `resultado ${bien ? 'bien' : 'mal'}`;
+      const enlace = $<HTMLAnchorElement>('[data-enlace]');
+      enlace.href = actual.url;
+      enlace.hidden = false;
+      const sig = $<HTMLButtonElement>('[data-siguiente]');
+      sig.hidden = false;
+      sig.focus();
+    }
+    function empezar() {
+      ronda = 0;
+      puntos = 0;
+      usados = new Set();
+      $('[data-puntos]').textContent = '0';
+      $('[data-final]').hidden = true;
+      $('[data-zona]').hidden = false;
+      nuevaRonda();
+    }
+    $('[data-nitido]').addEventListener('click', () => {
+      nivel = Math.min(NIVELES.length - 2, nivel + 1);
+      dibujar();
+      if (nivel >= NIVELES.length - 2) $<HTMLButtonElement>('[data-nitido]').hidden = true;
+    });
+    $('[data-siguiente]').addEventListener('click', () => {
+      if (ronda < RONDAS) return nuevaRonda();
+      $('[data-zona]').hidden = true;
+      $('[data-final]').hidden = false;
+      $('[data-nota-final]').textContent = t.final.replace('97', String(puntos)).replace('98', String(RONDAS * 5));
+      $<HTMLButtonElement>('[data-otra-vez]').focus();
+    });
+    $('[data-otra-vez]').addEventListener('click', empezar);
+    empezar();
+  });
+</script>
+
+<style>
+  .juego {
+    max-width: 760px;
+  }
+  .marcador {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--txt-2);
+  }
+  .lienzo {
+    display: flex;
+    justify-content: center;
+    margin: 16px 0 12px;
+  }
+  canvas {
+    width: min(70vw, 240px);
+    height: auto;
+    aspect-ratio: 2 / 3;
+    border-radius: 10px;
+    background: var(--borde);
+    box-shadow: var(--sombra);
+  }
+  [data-nitido] {
+    display: block;
+    margin: 0 auto;
+  }
+  .opciones {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .opciones :global(.opcion) {
+    padding: 14px 16px;
+    border-radius: var(--radio);
+    border: 1px solid var(--borde);
+    background: var(--sup-2, var(--sup));
+    color: inherit;
+    font: 700 1rem var(--f-titulo);
+    cursor: pointer;
+  }
+  .opciones :global(.opcion:hover:not(:disabled)) {
+    border-color: var(--acento);
+  }
+  .opciones :global(.opcion.buena) {
+    background: #1a7f45;
+    border-color: #1a7f45;
+    color: #fff;
+  }
+  .opciones :global(.opcion.mala) {
+    background: #b3261e;
+    border-color: #b3261e;
+    color: #fff;
+  }
+  .resultado {
+    min-height: 1.5em;
+    margin: 16px 0 8px;
+    font-weight: 700;
+  }
+  .resultado.bien {
+    color: var(--visto-txt);
+  }
+  .resultado.mal {
+    color: var(--acento-txt);
+  }
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+  }
+  .principal {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
+  }
+  .nota-final {
+    font: 800 1.6rem var(--f-titulo);
+  }
+</style>
