@@ -393,7 +393,7 @@ Página `/estadisticas/` (`/en/stats/`), enlazada en el pie. Todo se calcula al 
 ## Pasatiempos
 
 Página `/pasatiempos/` (`/en/games/`), siempre a la vista: botón **«Juegos»** en la cabecera (en el móvil, solo el icono) y
-bloque **«¿Jugamos?»** en la portada con los cuatro primeros. Ocho juegos que funcionan en el navegador con los datos de
+bloque **«¿Jugamos?»** en la portada con los cuatro primeros. Once juegos que funcionan en el navegador con los datos de
 la web, sin cuentas:
 
 - **Heroedle** (`JuegoHeroedle.astro`): el personaje del día, el mismo para todo el mundo (se calcula con la fecha). Seis
@@ -409,7 +409,16 @@ la web, sin cuentas:
 - **¿Cuál se estrenó antes?** y **Duelo de notas** (`JuegoCualAntes.astro`, el mismo duelo con otro criterio; las notas, con
   al menos 500 votos): la mejor racha de cada uno se guarda en el navegador.
 
-La lista de juegos, su orden y las **ideas para más adelante** que se muestran en la página están en `src/config/juegos.ts`.
+- **Conecta a los actores** (`JuegoConecta.astro`): de un actor a otro en 2 o 3 saltos, eligiendo título y luego compañero de
+  reparto. Solo actores con página y sus papeles principales: los cameos quedan fuera para no destripar sorpresas. Las parejas
+  salen de quienes tienen al menos 5 obras, y al acabar se muestra un camino más corto.
+- **Trivia diaria** (`JuegoTrivia.astro`): cinco preguntas al día, iguales para todos y en los dos idiomas (año, dirección,
+  duración, la más larga de cuatro y escena de créditos), con películas de al menos 300 votos y la dirección según TMDB. La pregunta de escenas solo usa
+  datos seguros: dos momentos confirmados o una escena con fuente en la ficha. Guarda la partida y la racha en el navegador.
+- **Bingo de maratón** (`JuegoBingo.astro`): cartón de 5×5 al azar con el centro libre; los momentos están en
+  `src/config/bingo.ts` (añade los nuevos al final, porque el cartón se guarda por posición). Avisa de línea y de bingo.
+
+La lista de juegos y su orden están en `src/config/juegos.ts`.
 
 ## Rankings
 

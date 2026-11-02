@@ -3,14 +3,13 @@ import { conIdiomas } from '../../../i18n';
 export function getStaticPaths() {
   return conIdiomas([{ params: { pasatiempos: 'pasatiempos' } }], () => ({ pasatiempos: 'games' }));
 }
-/** Pasatiempos: los juegos disponibles y las ideas para más adelante. */
+/** Pasatiempos: los juegos disponibles. */
 import Base from '../../../layouts/Base.astro';
-import { JUEGOS, IDEAS, textoJuego } from '../../../config/juegos';
-import { textos, idiomaDe } from '../../../i18n';
+import { JUEGOS, textoJuego } from '../../../config/juegos';
+import { textos } from '../../../i18n';
 
 const tx = textos(Astro.url);
 const j = tx.juegos;
-const idioma = idiomaDe(Astro.url);
 const fichas = JUEGOS.map((g) => ({ id: g.id, icono: g.icono, ...textoJuego(j, g.clave) }));
 ---
 
@@ -32,19 +31,6 @@ const fichas = JUEGOS.map((g) => ({ id: g.id, icono: g.icono, ...textoJuego(j, g
         ))
       }
     </ul>
-    <section class="ideas" aria-labelledby="t-ideas">
-      <h2 id="t-ideas">{j.ideas}</h2>
-      <p>{j.ideasTexto}</p>
-      <ul>
-        {
-          IDEAS.map((i) => (
-            <li>
-              <strong>{i[idioma][0]}</strong>: {i[idioma][1]}
-            </li>
-          ))
-        }
-      </ul>
-    </section>
   </div>
 </Base>
 
@@ -105,15 +91,5 @@ const fichas = JUEGOS.map((g) => ({ id: g.id, icono: g.icono, ...textoJuego(j, g
     margin-top: auto;
     font-weight: 700;
     color: var(--acento-txt);
-  }
-  .ideas {
-    margin-top: 40px;
-    max-width: 80ch;
-  }
-  .ideas p {
-    color: var(--txt-2);
-  }
-  .ideas li {
-    margin-bottom: 6px;
   }
 </style>

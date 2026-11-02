@@ -1,0 +1,315 @@
+---
+/**
+ * «Trivia diaria»: cinco preguntas al día, las mismas para todo el mundo (se eligen con la fecha, en los dos idiomas):
+ * año, dirección, duración, la más larga de cuatro y escena de créditos. Se montan en el navegador con los datos de
+ * las fichas. La partida del día y la racha de días jugados se guardan en el navegador.
+ */
+import { textos } from '../i18n';
+
+export interface PeliculaTrivia {
+  /** Identificador de la ficha: fija el orden, para que las preguntas sean iguales en los dos idiomas */
+  id: string;
+  n: string;
+  a: number;
+  url: string;
+  /** Minutos */
+  d?: number;
+  /** Dirección */
+  r?: string[];
+  /** Escenas de créditos seguras ('durante', 'despues') */
+  e?: string[];
+}
+interface Props {
+  peliculas: PeliculaTrivia[];
+}
+const { peliculas } = Astro.props;
+const tx = textos(Astro.url);
+const j = tx.juegos;
+const p = tx.poscreditos;
+const textosCliente = {
+  anio: j.triviaAnio('{x}'),
+  direccion: j.triviaDireccion('{x}'),
+  duracion: j.triviaDuracion('{x}'),
+  larga: j.triviaLarga,
+  escena: j.triviaEscena('{x}'),
+  durante: p.durante,
+  despues: p.despues,
+  ambas: j.triviaAmbas,
+  minutos: j.triviaMinutos('{n}'),
+  correcto: j.correcto,
+  incorrecto: j.incorrecto('{x}'),
+  pregunta: j.pregunta('{n}', '{t}'),
+  final: j.triviaFinal('{n}', '{t}'),
+  racha: j.triviaRacha('{n}'),
+  copiado: j.copiado,
+  siguiente: j.siguiente,
+  verFicha: j.verFichaTitulo,
+};
+---
+
+<div class="juego panel" data-trivia>
+  <p class="cabecera"><span data-fecha></span> <span data-paso></span></p>
+  <div data-zona></div>
+  <div class="final" data-final hidden>
+    <p class="nota" data-nota></p>
+    <p class="cuadros" data-cuadros aria-hidden="true"></p>
+    <p data-racha></p>
+    <p class="manana">{j.triviaManana}</p>
+    <button type="button" class="pastilla" data-compartir>{j.compartir}</button>
+    <p class="aviso" data-aviso role="status"></p>
+  </div>
+  <script type="application/json" data-datos set:html={JSON.stringify(peliculas)} />
+  <script type="application/json" data-textos set:html={JSON.stringify(textosCliente)} />
+</div>
+
+<script>
+  import type { PeliculaTrivia } from './JuegoTrivia.astro';
+  const CLAVE = 'heroteca:trivia';
+  interface Pregunta {
+    texto: string;
+    opciones: string[];
+    buena: number;
+    /** Película de la que trata la respuesta, para enlazarla */
+    p: PeliculaTrivia;
+  }
+  document.querySelectorAll<HTMLElement>('[data-trivia]').forEach((caja) => {
+    const lista: PeliculaTrivia[] = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '[]');
+    const t = JSON.parse(caja.querySelector('[data-textos]')!.textContent ?? '{}');
+    const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
+
+    const hoy = new Date();
+    const fecha = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+    const dia = Math.floor(Date.UTC(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()) / 86400000);
+    $('[data-fecha]').textContent = hoy.toLocaleDateString(document.documentElement.lang, { day: 'numeric', month: 'long' });
+
+    // Azar con semilla: el mismo día da las mismas preguntas
+    let semilla = (dia * 48271 + 20261102) % 2147483647;
+    const azar = () => ((semilla = (semilla * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < 12; i++) azar();
+    const barajar = <T,>(x: T[]) => {
+      const c = [...x];
+      for (let i = c.length - 1; i > 0; i--) {
+        const k = Math.floor(azar() * (i + 1));
+        [c[i], c[k]] = [c[k], c[i]];
+      }
+      return c;
+    };
+    const orden = barajar([...lista].sort((a, b) => (a.id < b.id ? -1 : 1)));
+    const usadas = new Set<string>();
+    /** Primera película sin usar hoy que cumpla la condición. */
+    const coger = (cond: (p: PeliculaTrivia) => unknown) => {
+      const p = orden.find((x) => !usadas.has(x.id) && cond(x))!;
+      usadas.add(p.id);
+      return p;
+    };
+    const montar = (texto: string, p: PeliculaTrivia, buena: string, otras: string[]): Pregunta => {
+      const opciones = barajar([buena, ...otras]);
+      return { texto, p, opciones, buena: opciones.indexOf(buena) };
+    };
+    const con = (s: string, x: string | number) => s.replace('{x}', String(x));
+    const min = (d: number) => t.minutos.replace('{n}', d);
+
+    const preguntaAnio = () => {
+      const p = coger((x) => x.a);
+      const otras = barajar([-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6].map((d) => p.a + d).filter((a) => a <= hoy.getFullYear())).slice(0, 3);
+      return montar(con(t.anio, p.n), p, String(p.a), otras.map(String));
+    };
+    const preguntaDireccion = () => {
+      const p = coger((x) => x.r?.length);
+      const otras = [...new Set(orden.filter((x) => x.r?.length && !x.r.some((n) => p.r!.includes(n))).map((x) => x.r!.join(', ')))].slice(0, 3);
+      return montar(con(t.direccion, p.n), p, p.r!.join(', '), otras);
+    };
+    const preguntaDuracion = () => {
+      const p = coger((x) => x.d);
+      // Opciones separadas: nadie recuerda una película al minuto
+      const otras = barajar([-45, -30, -20, 20, 30, 45].map((d) => p.d! + d).filter((d) => d >= 60)).slice(0, 3);
+      return montar(con(t.duracion, p.n), p, min(p.d!), otras.map(min));
+    };
+    const preguntaLarga = () => {
+      // Cuatro películas con al menos 5 minutos de diferencia entre ellas, para que no se decida por poco
+      const elegidas: PeliculaTrivia[] = [];
+      for (const x of orden) if (elegidas.length < 4 && x.d && !usadas.has(x.id) && elegidas.every((e) => Math.abs(e.d! - x.d!) >= 5)) elegidas.push(x);
+      elegidas.forEach((e) => usadas.add(e.id));
+      const larga = elegidas.reduce((a, b) => (b.d! > a.d! ? b : a));
+      return montar(t.larga, larga, larga.n, elegidas.filter((e) => e !== larga).map((e) => e.n));
+    };
+    const preguntaEscena = () => {
+      const p = coger((x) => x.e?.length);
+      const buena = p.e!.length === 2 ? t.ambas : p.e![0] === 'durante' ? t.durante : t.despues;
+      return montar(con(t.escena, p.n), p, buena, [t.durante, t.despues, t.ambas].filter((o) => o !== buena));
+    };
+    const preguntas: Pregunta[] = barajar([preguntaAnio, preguntaDireccion, preguntaDuracion, preguntaLarga, preguntaEscena]).map((f) => f());
+
+    // Partida guardada: respuestas de hoy y racha de días seguidos jugados
+    let estado = { fecha, respuestas: [] as number[], racha: 0, ultimo: 0 };
+    try {
+      const g = JSON.parse(localStorage.getItem(CLAVE) ?? 'null');
+      if (g) estado = { fecha, racha: g.racha ?? 0, ultimo: g.ultimo ?? 0, respuestas: g.fecha === fecha ? g.respuestas : [] };
+    } catch {}
+    const guardar = () => {
+      try {
+        localStorage.setItem(CLAVE, JSON.stringify(estado));
+      } catch {}
+    };
+    const aciertos = () => estado.respuestas.filter((r, i) => r === preguntas[i].buena).length;
+    const cuadros = () => estado.respuestas.map((r, i) => (r === preguntas[i].buena ? '🟩' : '🟥')).join('');
+
+    function terminar() {
+      if (estado.ultimo !== dia) {
+        estado.racha = estado.ultimo === dia - 1 ? estado.racha + 1 : 1;
+        estado.ultimo = dia;
+        guardar();
+      }
+      $('[data-zona]').replaceChildren();
+      $('[data-paso]').textContent = '';
+      $('[data-nota]').textContent = t.final.replace('{n}', aciertos()).replace('{t}', preguntas.length);
+      $('[data-cuadros]').textContent = cuadros();
+      $('[data-racha]').textContent = t.racha.replace('{n}', estado.racha);
+      $('[data-final]').hidden = false;
+    }
+    function mostrar() {
+      const n = estado.respuestas.length;
+      if (n >= preguntas.length) return terminar();
+      const q = preguntas[n];
+      const zona = $('[data-zona]');
+      $('[data-paso]').textContent = `· ${t.pregunta.replace('{n}', n + 1).replace('{t}', preguntas.length)}`;
+      const titulo = document.createElement('h2');
+      titulo.textContent = q.texto;
+      const opciones = document.createElement('div');
+      opciones.className = 'opciones';
+      const resultado = document.createElement('p');
+      resultado.className = 'resultado';
+      resultado.setAttribute('role', 'status');
+      const botones = q.opciones.map((o, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'opcion';
+        b.textContent = o;
+        b.addEventListener('click', () => {
+          estado.respuestas.push(i);
+          guardar();
+          botones.forEach((x, k) => {
+            x.disabled = true;
+            if (k === q.buena) x.classList.add('buena');
+            else if (k === i) x.classList.add('mala');
+          });
+          const bien = i === q.buena;
+          resultado.textContent = bien ? t.correcto : t.incorrecto.replace('{x}', q.opciones[q.buena]);
+          resultado.classList.add(bien ? 'bien' : 'mal');
+          const enlace = document.createElement('a');
+          enlace.href = q.p.url;
+          enlace.textContent = `${t.verFicha}: ${q.p.n}`;
+          const sig = document.createElement('button');
+          sig.type = 'button';
+          sig.className = 'pastilla principal';
+          sig.textContent = `${t.siguiente} →`;
+          sig.addEventListener('click', mostrar);
+          const pie = document.createElement('p');
+          pie.className = 'pie';
+          pie.append(sig, enlace);
+          zona.append(pie);
+          sig.focus();
+        });
+        return b;
+      });
+      opciones.append(...botones);
+      zona.replaceChildren(titulo, opciones, resultado);
+    }
+    $('[data-compartir]').addEventListener('click', async () => {
+      const texto = [`Heroteca Trivia ${fecha} · ${aciertos()}/${preguntas.length}`, cuadros(), location.href].join('\n');
+      try {
+        await navigator.clipboard.writeText(texto);
+        $('[data-aviso]').textContent = t.copiado;
+      } catch {}
+    });
+    mostrar();
+  });
+</script>
+
+<style>
+  .juego {
+    max-width: 760px;
+  }
+  .cabecera {
+    margin: 0 0 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--txt-2);
+  }
+  [data-zona] :global(h2) {
+    margin: 0 0 14px;
+    font-size: 1.3rem;
+  }
+  [data-zona] :global(.opciones) {
+    display: grid;
+    gap: 8px;
+  }
+  [data-zona] :global(.opcion) {
+    padding: 12px 14px;
+    text-align: left;
+    border-radius: var(--radio);
+    border: 2px solid var(--borde);
+    background: var(--sup-2, var(--sup));
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+  [data-zona] :global(.opcion:hover:not(:disabled)) {
+    border-color: var(--acento);
+  }
+  [data-zona] :global(.opcion:disabled) {
+    cursor: default;
+    color: inherit;
+  }
+  [data-zona] :global(.opcion.buena) {
+    border-color: #1a7f45;
+    box-shadow: 0 0 0 2px #1a7f45;
+    font-weight: 700;
+  }
+  [data-zona] :global(.opcion.mala) {
+    border-color: var(--acento);
+    opacity: 0.8;
+  }
+  [data-zona] :global(.resultado) {
+    min-height: 1.5em;
+    margin: 14px 0 8px;
+    font-weight: 700;
+  }
+  [data-zona] :global(.resultado.bien) {
+    color: var(--visto-txt);
+  }
+  [data-zona] :global(.resultado.mal) {
+    color: var(--acento-txt);
+  }
+  [data-zona] :global(.pie) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+  }
+  [data-zona] :global(.principal) {
+    background: var(--txt);
+    color: var(--fondo);
+    border-color: var(--txt);
+  }
+  .nota {
+    margin: 0;
+    font: 800 1.6rem var(--f-titulo);
+  }
+  .cuadros {
+    margin: 8px 0;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+  }
+  .manana {
+    color: var(--txt-2);
+  }
+  .aviso {
+    min-height: 1.3em;
+    margin: 8px 0 0;
+    font-weight: 700;
+  }
+</style>

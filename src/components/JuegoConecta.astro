@@ -1,0 +1,282 @@
+---
+/**
+ * «Conecta a los actores»: llegar de un actor a otro saltando por títulos que comparten. Solo entran quienes tienen
+ * página de actor y sus papeles principales (los cameos podrían destripar sorpresas). Una serie cuenta como una obra.
+ * Las parejas salen al azar, a 2 o 3 saltos, y el navegador calcula el camino más corto para compararlo al acabar.
+ */
+import { textos } from '../i18n';
+
+export interface DatosConecta {
+  /** Actores: nombre y página */
+  a: { n: string; u: string }[];
+  /** Obras: nombre y posiciones de sus actores en `a` */
+  o: { n: string; r: number[] }[];
+  /** Posiciones de los actores más conocidos, de los que salen las parejas */
+  c: number[];
+}
+interface Props {
+  datos: DatosConecta;
+}
+const { datos } = Astro.props;
+const tx = textos(Astro.url);
+const j = tx.juegos;
+const textosCliente = {
+  reto: j.conectaReto('{a}', '{b}'),
+  saltos: j.conectaSaltos('{n}'),
+  eligeObra: j.conectaObra('{x}'),
+  eligeActor: j.conectaActor('{x}'),
+  ganado: j.conectaGanado('{n}', '{m}'),
+  perfecto: j.conectaPerfecto('{n}'),
+  volver: j.conectaVolver,
+};
+---
+
+<div class="juego panel" data-conecta>
+  <p class="reto" data-reto></p>
+  <p class="saltos" data-saltos role="status"></p>
+  <ol class="cadena" data-cadena></ol>
+  <div data-zona></div>
+  <div data-final hidden>
+    <p class="resultado" data-resultado></p>
+    <p class="camino-titulo">{j.conectaCamino}</p>
+    <ol class="cadena" data-camino></ol>
+  </div>
+  <div class="botones">
+    <button type="button" class="pastilla" data-deshacer>{j.conectaDeshacer}</button>
+    <button type="button" class="pastilla" data-rendirse>{j.conectaRendirse}</button>
+    <button type="button" class="pastilla" data-otra>{j.conectaOtra}</button>
+  </div>
+  <script type="application/json" data-datos set:html={JSON.stringify(datos)} />
+  <script type="application/json" data-textos set:html={JSON.stringify(textosCliente)} />
+</div>
+
+<script>
+  import type { DatosConecta } from './JuegoConecta.astro';
+  type Paso = { o: number; a: number };
+  document.querySelectorAll<HTMLElement>('[data-conecta]').forEach((caja) => {
+    const { a: actores, o: obras, c: conocidos }: DatosConecta = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '{}');
+    const t = JSON.parse(caja.querySelector('[data-textos]')!.textContent ?? '{}');
+    const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
+
+    const obrasDe: number[][] = actores.map(() => []);
+    obras.forEach((o, i) => o.r.forEach((a) => obrasDe[a].push(i)));
+
+    /** Búsqueda en anchura desde un actor: a cuántos saltos está cada uno y por dónde se llega. */
+    function explorar(desde: number) {
+      const previo = new Map<number, { a: number; o: number }>();
+      const distancia = new Map([[desde, 0]]);
+      const cola = [desde];
+      for (const x of cola)
+        for (const o of obrasDe[x])
+          for (const y of obras[o].r)
+            if (!distancia.has(y)) {
+              distancia.set(y, distancia.get(x)! + 1);
+              previo.set(y, { a: x, o });
+              cola.push(y);
+            }
+      return { previo, distancia };
+    }
+
+    let inicio = 0;
+    let meta = 0;
+    let optimo = 0;
+    let previoMeta = new Map<number, { a: number; o: number }>();
+    let ruta: Paso[] = [];
+    let terminado = false;
+
+    function nuevaPartida() {
+      // Pareja a 2 o 3 saltos: a 1 sería trivial y a más se hace largo
+      for (let intento = 0; intento < 200; intento++) {
+        inicio = conocidos[Math.floor(Math.random() * conocidos.length)];
+        const { previo, distancia } = explorar(inicio);
+        const candidatos = conocidos.filter((c) => [2, 3].includes(distancia.get(c) ?? 0));
+        if (!candidatos.length) continue;
+        meta = candidatos[Math.floor(Math.random() * candidatos.length)];
+        optimo = distancia.get(meta)!;
+        previoMeta = previo;
+        break;
+      }
+      ruta = [];
+      terminado = false;
+      $('[data-final]').hidden = true;
+      pintar();
+    }
+    const actual = () => (ruta.length ? ruta[ruta.length - 1].a : inicio);
+
+    function nombreActor(a: number) {
+      if (!terminado) return actores[a].n;
+      const l = document.createElement('a');
+      l.href = actores[a].u;
+      l.textContent = actores[a].n;
+      return l;
+    }
+    function pintarCadena(lista: HTMLElement, pasos: Paso[]) {
+      const primero = document.createElement('li');
+      primero.append(nombreActor(inicio));
+      lista.replaceChildren(
+        primero,
+        ...pasos.map((p) => {
+          const li = document.createElement('li');
+          const obra = document.createElement('span');
+          obra.className = 'obra';
+          obra.textContent = `«${obras[p.o].n}»`;
+          li.append(obra, nombreActor(p.a));
+          return li;
+        }),
+      );
+    }
+    function opcion(texto: string, alPulsar: () => void, clase = '') {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = `opcion ${clase}`;
+      b.textContent = texto;
+      b.addEventListener('click', alPulsar);
+      return b;
+    }
+    function pintarOpciones(titulo: string, botones: HTMLElement[]) {
+      const h = document.createElement('h2');
+      h.textContent = titulo;
+      const lista = document.createElement('div');
+      lista.className = 'opciones';
+      lista.append(...botones);
+      $('[data-zona]').replaceChildren(h, lista);
+      botones[0]?.focus({ preventScroll: true });
+    }
+    /** Primer paso de cada turno: por qué obra de este actor seguir. */
+    function pintarObras() {
+      const yo = actual();
+      pintarOpciones(
+        t.eligeObra.replace('{x}', actores[yo].n),
+        obrasDe[yo].map((o) => opcion(obras[o].n, () => pintarReparto(o))),
+      );
+    }
+    /** Segundo paso: a quién saltar dentro de esa obra. */
+    function pintarReparto(o: number) {
+      const yo = actual();
+      pintarOpciones(t.eligeActor.replace('{x}', obras[o].n), [
+        ...obras[o].r
+          .filter((a) => a !== yo)
+          .map((a) =>
+            opcion(
+              actores[a].n,
+              () => {
+                ruta.push({ o, a });
+                if (a === meta) acabar(true);
+                else pintar();
+              },
+              a === meta ? 'meta' : '',
+            ),
+          ),
+        opcion(`← ${t.volver}`, pintarObras, 'volver'),
+      ]);
+    }
+    function caminoMasCorto() {
+      const pasos: Paso[] = [];
+      for (let x = meta; x !== inicio; x = previoMeta.get(x)!.a) pasos.unshift({ o: previoMeta.get(x)!.o, a: x });
+      return pasos;
+    }
+    function acabar(ganado: boolean) {
+      terminado = true;
+      $('[data-resultado]').textContent = !ganado ? '' : ruta.length === optimo ? t.perfecto.replace('{n}', ruta.length) : t.ganado.replace('{n}', ruta.length).replace('{m}', optimo);
+      pintarCadena($('[data-camino]'), caminoMasCorto());
+      $('[data-final]').hidden = false;
+      pintar();
+    }
+    function pintar() {
+      $('[data-reto]').textContent = t.reto.replace('{a}', actores[inicio].n).replace('{b}', actores[meta].n);
+      $('[data-saltos]').textContent = t.saltos.replace('{n}', ruta.length);
+      pintarCadena($('[data-cadena]'), ruta);
+      $<HTMLButtonElement>('[data-deshacer]').disabled = terminado || !ruta.length;
+      $<HTMLButtonElement>('[data-rendirse]').disabled = terminado;
+      if (terminado) $('[data-zona]').replaceChildren();
+      else pintarObras();
+    }
+    $('[data-deshacer]').addEventListener('click', () => {
+      ruta.pop();
+      pintar();
+    });
+    $('[data-rendirse]').addEventListener('click', () => acabar(false));
+    $('[data-otra]').addEventListener('click', nuevaPartida);
+    nuevaPartida();
+  });
+</script>
+
+<style>
+  .juego {
+    max-width: 760px;
+  }
+  .reto {
+    margin: 0;
+    font: 800 1.4rem / 1.2 var(--f-titulo);
+  }
+  .saltos {
+    margin: 4px 0 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--txt-2);
+  }
+  .cadena {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-weight: 700;
+  }
+  .cadena :global(.obra) {
+    display: block;
+    margin-left: 12px;
+    padding-left: 10px;
+    border-left: 2px solid var(--acento);
+    font-weight: 400;
+    font-size: 0.88rem;
+    color: var(--txt-2);
+  }
+  [data-zona] :global(h2) {
+    margin: 0 0 12px;
+    font-size: 1.1rem;
+  }
+  [data-zona] :global(.opciones) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  [data-zona] :global(.opcion) {
+    padding: 8px 12px;
+    border-radius: var(--radio);
+    border: 2px solid var(--borde);
+    background: var(--sup-2, var(--sup));
+    color: inherit;
+    font: inherit;
+    font-size: 0.92rem;
+    cursor: pointer;
+  }
+  [data-zona] :global(.opcion:hover) {
+    border-color: var(--acento);
+  }
+  [data-zona] :global(.opcion.meta) {
+    border-color: var(--acento);
+    font-weight: 700;
+  }
+  [data-zona] :global(.opcion.volver) {
+    border-style: dashed;
+  }
+  .resultado {
+    margin: 0 0 8px;
+    font: 800 1.3rem var(--f-titulo);
+    color: var(--visto-txt);
+  }
+  .camino-titulo {
+    margin: 0 0 4px;
+    color: var(--txt-2);
+  }
+  .botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+</style>

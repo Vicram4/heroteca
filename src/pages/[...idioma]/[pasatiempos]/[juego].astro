@@ -18,6 +18,10 @@ import JuegoHeroedle, { type PersonajeHeroedle } from '../../../components/Juego
 import JuegoPixelado, { type CartelJuego } from '../../../components/JuegoPixelado.astro';
 import JuegoOrdena, { type TituloOrden } from '../../../components/JuegoOrdena.astro';
 import JuegoInterpretes, { type ParejaInterprete } from '../../../components/JuegoInterpretes.astro';
+import JuegoConecta, { type DatosConecta } from '../../../components/JuegoConecta.astro';
+import JuegoTrivia, { type PeliculaTrivia } from '../../../components/JuegoTrivia.astro';
+import JuegoBingo from '../../../components/JuegoBingo.astro';
+import { actores, obraDe } from '../../../lib/actores';
 import { LINEA_TEMPORAL, leerEpoca } from '../../../lib/lineaTemporal';
 import { universosActivos, todosLosTitulos, huecosDeSeccion, localizar, type Titulo } from '../../../lib/datos';
 import { apariciones } from '../../../lib/personajes';
@@ -160,6 +164,52 @@ if (juego.clave === 'ordena') {
     );
   }
 }
+
+// Conecta a los actores: quienes tienen página y las obras que comparten al menos dos (sin cameos)
+let conecta: DatosConecta = { a: [], o: [], c: [] };
+if (juego.clave === 'conecta') {
+  const lista = await actores();
+  const obras = new Map<string, { n: string; r: Set<number> }>();
+  lista.forEach((a, i) => {
+    for (const { t } of a.papeles) {
+      const l = localizar(t, idioma);
+      const obra = obras.get(obraDe(t)) ?? { n: l.d.serie ? l.corto.split(' · ')[0] : l.corto, r: new Set<number>() };
+      obra.r.add(i);
+      obras.set(obraDe(t), obra);
+    }
+  });
+  conecta = {
+    a: await Promise.all(lista.map(async (a) => ({ n: a.nombre, u: await rutaEnIdioma(`/actores/${a.id}/`, idioma) }))),
+    o: [...obras.values()].filter((o) => o.r.size >= 2).map((o) => ({ n: o.n, r: [...o.r] })),
+    // Las parejas salen de quienes tienen al menos 5 obras: dos desconocidos no son divertidos
+    c: lista.flatMap((a, i) => (a.obras >= 5 ? [i] : [])),
+  };
+}
+
+// Trivia diaria: películas con al menos 300 votos, de 60 minutos o más para preguntar la duración, y con la dirección
+// de TMDB (nombres completos e iguales en toda la lista), solo si son una o dos personas. De las escenas, solo lo seguro: dos momentos confirmados, o una
+// escena con fuente en la ficha (las palabras clave de TMDB a veces omiten una: «solo durante» no sería fiable)
+let trivia: PeliculaTrivia[] = [];
+if (juego.clave === 'trivia') {
+  trivia = await Promise.all(
+    (await todosLosTitulos(idioma))
+      .filter((t) => activos.has(t.universo) && t.tipo === 'pelicula' && votosDe(t) >= 300)
+      .map(async (t) => {
+        const momentos = (['durante', 'despues'] as const).filter((m) => t.m.escenasCreditos.includes(m) || t.d.conexiones.postCreditos.some((e) => e.momento === m));
+        const segura = momentos.length === 2 || (momentos.length === 1 && t.d.conexiones.postCreditos.length > 0);
+        const direccion = datosTmdb(t.universo, t.id, 'es')?.direccion ?? t.m.direccion;
+        return {
+          id: t.id,
+          n: t.corto,
+          a: t.d.anio,
+          url: await rutaEnIdioma(t.url, idioma),
+          d: (t.m.duracion ?? 0) >= 60 ? t.m.duracion : undefined,
+          r: direccion.length >= 1 && direccion.length <= 2 ? direccion : undefined,
+          e: segura ? momentos : undefined,
+        };
+      }),
+  );
+}
 ---
 
 <Base
@@ -185,6 +235,9 @@ if (juego.clave === 'ordena') {
     {juego.clave === 'pixelado' && <JuegoPixelado carteles={carteles} />}
     {juego.clave === 'ordena' && <JuegoOrdena titulos={paraOrdenar} />}
     {juego.clave === 'interpretes' && <JuegoInterpretes parejas={parejas} />}
+    {juego.clave === 'conecta' && <JuegoConecta datos={conecta} />}
+    {juego.clave === 'trivia' && <JuegoTrivia peliculas={trivia} />}
+    {juego.clave === 'bingo' && <JuegoBingo />}
   </div>
 </Base>
 

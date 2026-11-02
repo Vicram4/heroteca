@@ -14,6 +14,9 @@ export const JUEGOS = [
   { id: 'quien-lo-interpreto', idEn: 'who-played-them', clave: 'interpretes', icono: '◐' },
   { id: 'cual-fue-antes', idEn: 'which-came-first', clave: 'antes', icono: '⇄' },
   { id: 'duelo-de-notas', idEn: 'rating-duel', clave: 'duelo', icono: '≥' },
+  { id: 'conecta-a-los-actores', idEn: 'connect-the-actors', clave: 'conecta', icono: '⇝' },
+  { id: 'trivia-diaria', idEn: 'daily-trivia', clave: 'trivia', icono: '5' },
+  { id: 'bingo-de-maraton', idEn: 'marathon-bingo', clave: 'bingo', icono: '▣' },
 ] as const;
 export type Juego = (typeof JUEGOS)[number];
 
@@ -28,13 +31,9 @@ export function textoJuego(j: Textos['juegos'], clave: Juego['clave']) {
     interpretes: [j.interpretes, j.interpretesTexto],
     antes: [j.antes, j.antesTexto],
     duelo: [j.duelo, j.dueloTexto],
+    conecta: [j.conecta, j.conectaTexto],
+    trivia: [j.trivia, j.triviaTexto],
+    bingo: [j.bingo, j.bingoTexto],
   } as const;
   return { nombre: textos[clave][0], texto: textos[clave][1] };
 }
-
-/** Ideas de pasatiempos para más adelante (se listan en /pasatiempos/). */
-export const IDEAS = [
-  { es: ['Conecta a los actores', 'Llega de un actor a otro en el menor número de saltos, a través de los títulos que comparten.'], en: ['Connect the actors', 'Get from one actor to another in as few steps as possible, through the titles they share.'] },
-  { es: ['Trivia diaria', 'Cinco preguntas al día sobre duraciones, directores, años y escenas poscréditos.'], en: ['Daily trivia', 'Five questions a day about runtimes, directors, years and post-credits scenes.'] },
-  { es: ['Bingo de maratón', 'Un cartón con momentos típicos (escena poscréditos, cameo, chiste en plena batalla) para ver una peli con amigos.'], en: ['Marathon bingo', 'A card with classic moments (post-credits scene, cameo, a joke mid-battle) to play while watching with friends.'] },
-] as const;
