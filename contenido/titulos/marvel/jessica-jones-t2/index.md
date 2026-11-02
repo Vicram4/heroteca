@@ -33,7 +33,7 @@ reparto:
 capitulos:
 - codigo: 2x01
   titulo: Empezar por el principio
-  argumento: Trish quiere convencer a Jessica que investigue a la compañía que le dió sus poderes pero Jessica está muy ocupada. Por su parte Trish obtiene un archivo médico que puede ser la respuesta al misterio de los poderes de Jessica.
+  argumento: Trish quiere convencer a Jessica que investigue a la compañía que le dio sus poderes pero Jessica está muy ocupada. Por su parte Trish obtiene un archivo médico que puede ser la respuesta al misterio de los poderes de Jessica.
   direccion: Anna Foerster
   guion: Melissa Rosenberg
   duracion: 50

@@ -517,7 +517,6 @@ def escribir_visionados(cat, entradas, contenido):
     for b in cat['series_paginas']:
         if b['tipo'] != 'crossover':
             continue
-        borrador = 'haciendo' in b['pagina']
         # La carpeta: la de la primera temporada con código de capítulo
         carpeta, codigo = None, None
         for o in b['orden']:
@@ -532,7 +531,7 @@ def escribir_visionados(cat, entradas, contenido):
             continue
         temporadas_carpeta = {e.get('serie'): e for e in entradas if e.get('visionado', {}).get('carpeta') == carpeta}
         orden = []
-        for o in b['orden']:
+        for i, o in enumerate(b['orden'], start=1):
             sid = clave_serie(o['serie'])[1]
             c = codigo_cap(o.get('codigo'))
             e = por_serie.get((sid, int(c.split('x')[0]))) if c else temporadas_carpeta.get(sid)
@@ -540,8 +539,7 @@ def escribir_visionados(cat, entradas, contenido):
                 revisar.append(f"Crossover carpeta {carpeta}: «{o['serie']} {o.get('codigo') or ''}» sin ficha")
                 continue
             x = {}
-            if o.get('n') is not None:
-                x['n'] = o['n']
+            x['n'] = o['n'] if o.get('n') is not None else i  # la página 009 viene sin numerar
             x['titulo'] = e['id']
             if c:
                 x['codigo'] = c
@@ -553,10 +551,6 @@ def escribir_visionados(cat, entradas, contenido):
             orden.append(x)
         nombre = f'Carpeta {carpeta}: orden capítulo a capítulo'
         v = {'nombre': nombre, 'universo': UNIVERSO, 'seccion': 'series', 'carpeta': carpeta, 'codigo': codigo}
-        if borrador:
-            v['borrador'] = True
-            v['notas'] = ('Página «series pagina 009 haciendo»: a medio hacer, con los títulos en inglés y sin numerar. '
-                          'Su cabecera es una copia de la plantilla.')
         v['orden'] = orden
         v['fuente'] = f"Archivador AZUL/{Path(b['pagina']).stem}"
         (destino / f'carpeta-{carpeta:02d}.yaml').write_text(volcar(v), encoding='utf-8', newline='\n')

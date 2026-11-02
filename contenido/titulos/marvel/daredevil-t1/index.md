@@ -61,7 +61,7 @@ capitulos:
   duracion: 50
 - codigo: 1x06
   titulo: Condenado
-  argumento: Murdock está rodeado de policías junto a un Vladimir moribundo, pero consigue esconderse en un edificio abandonado esperando respuestas sobre Fisk con Vladimir. Mientras tanto, Nelson y Cardenas son heridos en las bombas. En el intento de Murdock de hacer hablar a Vladimir, cauteriza sus heridas con la ayuda de Temple, pero son descubiertos por los policías y pronto, los oficiales corruptos se hacen con el mando de la situación esperando órdenes de Fisk.En ese momento, Fisk se pone en contacto con Murdock a través de la radio de uno de los policías. Finalmente Vladimir decide hablar a cambio de que Murdock se vengue de la muerte de su hermano y le revela información sobre distintas operaciones de Fisk y un hombre relacionado llamado Leland Owlsley.
+  argumento: Murdock está rodeado de policías junto a un Vladimir moribundo, pero consigue esconderse en un edificio abandonado esperando respuestas sobre Fisk con Vladimir. Mientras tanto, Nelson y Cardenas son heridos en las bombas. En el intento de Murdock de hacer hablar a Vladimir, cauteriza sus heridas con la ayuda de Temple, pero son descubiertos por los policías y pronto, los oficiales corruptos se hacen con el mando de la situación esperando órdenes de Fisk. En ese momento, Fisk se pone en contacto con Murdock a través de la radio de uno de los policías. Finalmente Vladimir decide hablar a cambio de que Murdock se vengue de la muerte de su hermano y le revela información sobre distintas operaciones de Fisk y un hombre relacionado llamado Leland Owlsley.
   direccion: Guy Ferland
   guion:
   - Joe Pokaski
@@ -98,7 +98,7 @@ capitulos:
   duracion: 50
 - codigo: 1x11
   titulo: La senda de los justos
-  argumento: Murdock se sigue recuperando de sus heridas y se despide de Temple que abandona Hell´s Kitchen por un tiempo. Además, el vigilante consigue ponerse en contacto con un ingeniero que es amenazado por Fisk y le prepara ropa blindada, daredevil consigue que éste le prepare una mejor vestimenta con la promesa de que parará a Fisk e impedirá que dañe a alguien más.Page insiste en revelar la historia de la mandre de Fisk pero Urich le explica que no pueden hacer eso, ya que la historia se sustenta en una mujer con problemas mentales. Mientras tanto, Fisk permanece en el hospital cuidando de Vanessa. Cuando Wesley (que trabaja para Fisk) se entera de la visita de Page a la madre de Fisk, consigue llegar hasta Page, amenazándola de herir a sus seres queridos si dice algo. Dada la tensa situación, Kare Page reacciona.
+  argumento: Murdock se sigue recuperando de sus heridas y se despide de Temple que abandona Hell´s Kitchen por un tiempo. Además, el vigilante consigue ponerse en contacto con un ingeniero que es amenazado por Fisk y le prepara ropa blindada, daredevil consigue que éste le prepare una mejor vestimenta con la promesa de que parará a Fisk e impedirá que dañe a alguien más. Page insiste en revelar la historia de la madre de Fisk pero Urich le explica que no pueden hacer eso, ya que la historia se sustenta en una mujer con problemas mentales. Mientras tanto, Fisk permanece en el hospital cuidando de Vanessa. Cuando Wesley (que trabaja para Fisk) se entera de la visita de Page a la madre de Fisk, consigue llegar hasta Page, amenazándola de herir a sus seres queridos si dice algo. Dada la tensa situación, Kare Page reacciona.
   direccion: Nick Gómez
   guion:
   - Steven S. DeKnight

@@ -178,7 +178,7 @@ Necesitan Python con `python-docx`, `python-pptx` y `pyyaml` (en `.venv`) y la c
 ### DC
 
 DC sigue la organización de tu disco duro: «001 UDC», «002 DCDU», «UDC Series por orden» (con las 13 carpetas
-del RESUMEN de carpetas UDC) y «animacion/Animación».
+del RESUMEN de carpetas UDC y las 14-19 añadidas después) y «animacion/Animación».
 
 ```bash
 # 1. Catálogo de DC (Word del Archivador AZUL + árbol del disco) → catalogo.json y carátulas
@@ -192,9 +192,23 @@ del RESUMEN de carpetas UDC) y «animacion/Animación».
 ```
 
 - `datos/tmdb-manual-dc.yaml`: correcciones a mano del emparejamiento con TMDB y títulos en España.
+- `datos/correcciones-tmdb.json`: faltas de ortografía de los textos de TMDB (títulos y sinopsis), separadas por idioma.
+  Se aplican al compilar, no en `datos/tmdb/`, y por eso sobreviven a cada sincronización. Para corregir otra falta,
+  añade `"error": "correcto"`; distingue mayúsculas y admite frases, y es lo que hay que usar con palabras que solo
+  están mal en contexto («el no podrá»). Las tildes partidas y los puntos sin espacio se arreglan solos.
 - `contenido/visionados/dc/carpeta-NN.yaml`: tu orden capítulo a capítulo de cada bloque Crossover.
+  La carpeta 11 no sale de los documentos (la página 010 era la carpeta 10 a medio empezar): se hizo a mano con las
+  fechas de emisión de TMDB, contrastadas con arrowverse.info. La 9 se numeró y se pasó al español a mano, así que
+  volver a ejecutar `dc_generar.py` le devolvería los títulos en inglés. Batwoman 1ª se reparte entre las dos,
+  como indica el RESUMEN de carpetas: hasta 1x06 en la 9 y desde 1x07 en la 11.
 - En la sección Series, cada ficha lleva `visionado: { carpeta, codigo, orden }` (tu código 2.3, 5.1…)
   y `numero` es el de la carpeta del disco (011 Smallville). `enEspera: true` la pone al final, en «En espera».
+- Carpetas 20-21 y 22-23 («Clásicas»), y 28 series en Animación (noviembre de 2026): series de DC que no estaban en la
+  colección, por fecha de estreno y con TMDB como fuente. Las recientes llevan una ficha por temporada; las clásicas y
+  las animadas, una por serie. No están los cortos web, los pódcasts ni las series que aún no se han estrenado.
+- Carpetas 14-19 (noviembre de 2026): no salen de los documentos. Colocan por fecha de estreno las 13 fichas que
+  estaban «En espera» y 18 temporadas que faltaban (su campo `fuente` lo indica). Ya no queda nada en «En espera»;
+  `dc_generar.py --forzar` lo volvería a poner, porque el RESUMEN sigue teniendo esa lista.
 
 ## Imagen principal de cada título
 

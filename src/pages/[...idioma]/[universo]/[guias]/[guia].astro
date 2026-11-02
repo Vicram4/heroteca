@@ -76,7 +76,6 @@ type BloqueCarpeta = {
   etapa: string;
   filas: Fila[];
   orden?: { n?: number; t?: Titulo; codigo?: string; capitulo?: string; mega: boolean; nota?: string }[];
-  borrador: boolean;
 };
 const carpetas: BloqueCarpeta[] = [];
 
@@ -108,7 +107,6 @@ for (const id of guia.secciones) {
           mega: o.megacrossover,
           nota: o.nota,
         })),
-        borrador: v?.data.borrador ?? false,
       });
     }
     continue;
@@ -432,9 +430,8 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
           {c.orden && (
             <details class="capitulos" open>
               <summary>
-                {tx.guias.pasos(c.orden.length)}{c.borrador && tx.guias.borrador}
+                {tx.guias.pasos(c.orden.length)}
               </summary>
-              {c.borrador && <p class="texto">{tx.guias.borradorTexto}</p>}
               <ol class="pasos">
                 {c.orden.map((o) => (
                   <li class:list={{ mega: o.mega }} style={`--c-serie: var(--serie-${colores(c).indexOf(o.t?.id) % 6})`}>

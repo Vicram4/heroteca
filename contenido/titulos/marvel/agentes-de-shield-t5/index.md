@@ -177,7 +177,7 @@ capitulos:
   duracion: 40
 - codigo: 5x20
   titulo: El que nos salvará a todos
-  argumento: Talbot y Coulson van a negociar con la Confederación, mientras que Daisy insta a Jemma a encuentrar la manera de hacer que la tecnología Centipede funcione.
+  argumento: Talbot y Coulson van a negociar con la Confederación, mientras que Daisy insta a Jemma a encontrar la manera de hacer que la tecnología Centipede funcione.
   direccion: Cherie Gierhart
   guion: Brent Fletcher
   duracion: 40

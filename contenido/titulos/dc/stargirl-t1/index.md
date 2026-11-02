@@ -4,8 +4,11 @@ tituloOriginal: DC's Stargirl
 tipo: serie
 universo: dc
 seccion: series
+visionado:
+  carpeta: 14
+  codigo: "14.5"
+  orden: 76
 numero: 30
-enEspera: true
 serie: stargirl
 temporada: 1
 fichaPropia: false
@@ -13,7 +16,5 @@ anio: 2020
 tmdb:
   id: 80986
   tipo: tv
-notas: En la lista «EN ESPERA» del RESUMEN de carpetas.
-notasEn: On the “ON HOLD” list in the collection’s folder summary.
 fuente: Archivador AZUL/RESUMEN de carpetas UDC (EN ESPERA)
 ---

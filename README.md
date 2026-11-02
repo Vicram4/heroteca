@@ -24,7 +24,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 
 ## Características
 
-- **426 fichas** (247 de Marvel, 179 de DC), **180 personajes**, **42 sagas y agrupaciones**.
+- **494 fichas** (247 de Marvel, 247 de DC), **180 personajes**, **42 sagas y agrupaciones**.
 - **Estanterías** con la numeración original y orden alternable (historia o estreno), leyenda de colores y **vista de lista** compacta; en móvil, los filtros se agrupan en un botón.
 - **Orden por carpetas** para las series de DC (Pre-Crossover, Crossover…), con páginas que muestran el orden de visionado capítulo a capítulo entre varias series.
 - **Cuatro órdenes** en cada estantería: el de la colección (historia o carpetas), estreno, más recientes y mejor valoradas.
@@ -93,7 +93,7 @@ Word / PowerPoint ──► scripts de Python ──► Markdown + YAML ──�
 1. **Extracción.** Los scripts leen las copias de los documentos con `python-docx` y `python-pptx`. Recogen tablas, cuadros de texto, carátulas e incluso la **calidad de cada copia**, que en los originales es una imagen (insignias 720p, 1080p, 4K, AVI) y se identifica por su huella SHA-1.
 2. **Emparejado con TMDB.** Cada título se busca en TMDB y se acepta con un umbral de confianza. Los casos dudosos van a una lista de revisión y a un archivo de correcciones manuales.
 3. **Contenido.** Cada ficha es un archivo Markdown con cabecera YAML, legible y editable a mano. Astro valida todo con esquemas Zod y comprobaciones de integridad: referencias rotas, números duplicados, secciones inexistentes. Si un dato está mal, la compilación falla e indica el archivo y el campo.
-4. **Compilación.** TMDB solo se consulta al sincronizar, nunca desde el navegador. Los datos se guardan en un JSON compacto dentro del repositorio, así que la web publicada no necesita claves ni hace llamadas externas.
+4. **Compilación.** TMDB solo se consulta al sincronizar, nunca desde el navegador. Los datos se guardan en un JSON compacto dentro del repositorio, así que la web publicada no necesita claves ni hace llamadas externas. Las faltas de los textos de TMDB se corrigen al compilar con `datos/correcciones-tmdb.json`, de modo que no se pierden al sincronizar.
 5. **Actualización semanal.** Una tarea de GitHub Actions pide cada lunes los datos de «dónde ver» y los sube al repositorio; Vercel vuelve a publicar la web sola. La clave de TMDB está guardada como secreto de GitHub, nunca en el código.
 
 ### Dos idiomas sin duplicar páginas

@@ -92,7 +92,7 @@ capitulos:
   duracion: 40
 - codigo: 4x06
   titulo: El buen samaritano
-  argumento: Mientras las vidas de Coulson y de los miembros del equipo penden de un hilo, se desvela cómo fue la tranformación de Robbie en Ghost Rider.
+  argumento: Mientras las vidas de Coulson y de los miembros del equipo penden de un hilo, se desvela cómo fue la transformación de Robbie en Ghost Rider.
   direccion: Billy Gierhart
   guion: Jeffrey Bell
   duracion: 40

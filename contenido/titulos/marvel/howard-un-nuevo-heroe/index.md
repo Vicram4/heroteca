@@ -21,7 +21,7 @@ argumento: |-
 
   Es acogido en casa de Beberly, una joven que es vocal de un grupo de rock.
 
-  Cuando el doctor Jenin intenta devolverle a su planeta, la energia diabólica del experimento le atrapa, transformandole en el terrible Señor de las Tinieblas y Howard tendrá que enfrentarse a él.
+  Cuando el doctor Jenin intenta devolverle a su planeta, la energía diabólica del experimento le atrapa, transformándole en el terrible Señor de las Tinieblas y Howard tendrá que enfrentarse a él.
 reparto:
 - actor: Chip Zien
   personaje: Howard, el pato

@@ -32,7 +32,7 @@ capitulos:
 - codigo: 3x07
   titulo: Bienvenidos a la jungla
 - codigo: 3x08
-  titulo: Crisis en Tierra X - 4ªparte
+  titulo: Crisis en Tierra X - 4.ª parte
 - codigo: 3x09
   titulo: Beebo, el Dios de la Guerra
 - codigo: 3x10

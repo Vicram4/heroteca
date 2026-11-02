@@ -49,6 +49,16 @@ secciones:
       - { numero: 11, etapa: Crossover, etapaEn: Crossover }
       - { numero: 12, etapa: Pos-Crossover, etapaEn: Post-crossover }
       - { numero: 13, etapa: Pos-Crossover, etapaEn: Post-crossover }
+      - { numero: 14, etapa: Pos-Crossover, etapaEn: Post-crossover }
+      - { numero: 15, etapa: Pos-Crossover, etapaEn: Post-crossover }
+      - { numero: 16, etapa: Pos-Crossover, etapaEn: Post-crossover }
+      - { numero: 17, etapa: Pos-Crossover, etapaEn: Post-crossover }
+      - { numero: 18, etapa: Pos-Crossover, etapaEn: Post-crossover }
+      - { numero: 19, etapa: Pos-Crossover, etapaEn: Post-crossover }
+      - { numero: 20, etapa: Pos-Crossover, etapaEn: Post-crossover }
+      - { numero: 21, etapa: Pos-Crossover, etapaEn: Post-crossover }
+      - { numero: 22, etapa: Clásicas, etapaEn: Classics }
+      - { numero: 23, etapa: Clásicas, etapaEn: Classics }
   - id: animacion
     nombre: Animación
     orden: estreno

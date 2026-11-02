@@ -1,0 +1,385 @@
+nombre: 'Carpeta 11: orden capítulo a capítulo'
+universo: dc
+seccion: series
+carpeta: 11
+codigo: "11.1"
+notas: 'La primera temporada de Batwoman se reparte entre las carpetas 9 y 11: aquí sigue desde el capítulo 1x07.'
+orden:
+- n: 1
+  titulo: supergirl-t5
+  codigo: 5x01
+  capitulo: 'Agujero negro'
+- n: 2
+  titulo: black-lightning-t3
+  codigo: 3x01
+  capitulo: 'El libro de la ocupación: Capítulo uno: Nacimiento de un mirlo'
+- n: 3
+  titulo: the-flash-t6
+  codigo: 6x01
+  capitulo: 'Entrando en el vacío'
+- n: 4
+  titulo: supergirl-t5
+  codigo: 5x02
+  capitulo: 'Una extraña a mi lado'
+- n: 5
+  titulo: black-lightning-t3
+  codigo: 3x02
+  capitulo: 'El libro de la ocupación: Capítulo dos: Tasbih de Maryam'
+- n: 6
+  titulo: the-flash-t6
+  codigo: 6x02
+  capitulo: 'La luz del relámpago'
+- n: 7
+  titulo: arrow-t8
+  codigo: 8x01
+  capitulo: 'Starling City'
+- n: 8
+  titulo: supergirl-t5
+  codigo: 5x03
+  capitulo: 'Líneas borrosas'
+- n: 9
+  titulo: black-lightning-t3
+  codigo: 3x03
+  capitulo: 'El libro de la ocupación: Capítulo tres: El sueño de la pipa del agente Odell'
+- n: 10
+  titulo: the-flash-t6
+  codigo: 6x03
+  capitulo: 'Hombre muerto'
+- n: 11
+  titulo: arrow-t8
+  codigo: 8x02
+  capitulo: 'Bienvenido a Hong Kong'
+- n: 12
+  titulo: supergirl-t5
+  codigo: 5x04
+  capitulo: 'A plena vista'
+- n: 13
+  titulo: black-lightning-t3
+  codigo: 3x04
+  capitulo: 'El libro de la ocupación: Capítulo cuatro: El Uróboros de Lynn'
+- n: 14
+  titulo: the-flash-t6
+  codigo: 6x04
+  capitulo: 'Correrá la sangre'
+- n: 15
+  titulo: arrow-t8
+  codigo: 8x03
+  capitulo: 'Salto de fe'
+- n: 16
+  titulo: supergirl-t5
+  codigo: 5x05
+  capitulo: 'Amistades peligrosas'
+- n: 17
+  titulo: the-flash-t6
+  codigo: 6x05
+  capitulo: 'La brecha mortal'
+- n: 18
+  titulo: arrow-t8
+  codigo: 8x04
+  capitulo: 'Tiempo presente'
+- n: 19
+  titulo: supergirl-t5
+  codigo: 5x06
+  capitulo: 'Mujeres seguras de sí mismas'
+- n: 20
+  titulo: black-lightning-t3
+  codigo: 3x05
+  capitulo: 'El libro de la ocupación: Capítulo cinco: Requiem for Tavon'
+- n: 21
+  titulo: batwoman-t1
+  codigo: 1x07
+  capitulo: 'Dime la verdad'
+- n: 22
+  titulo: supergirl-t5
+  codigo: 5x07
+  capitulo: 'Temblores'
+- n: 23
+  titulo: black-lightning-t3
+  codigo: 3x06
+  capitulo: 'El libro de la resistencia: Capítulo uno: Golpeando las puertas del cielo'
+- n: 24
+  titulo: the-flash-t6
+  codigo: 6x06
+  capitulo: 'Licencia para alargarse'
+- n: 25
+  titulo: arrow-t8
+  codigo: 8x05
+  capitulo: 'Prochnost'
+- n: 26
+  titulo: black-lightning-t3
+  codigo: 3x07
+  capitulo: 'El libro de la resistencia: Capítulo dos: El Opus de Henderson'
+- n: 27
+  titulo: the-flash-t6
+  codigo: 6x07
+  capitulo: 'La última tentación de Barry Allen - Primera Parte'
+- n: 28
+  titulo: arrow-t8
+  codigo: 8x06
+  capitulo: 'Reinicio'
+- n: 29
+  titulo: batwoman-t1
+  codigo: 1x08
+  capitulo: 'La merienda de los locos'
+- n: 30
+  titulo: supergirl-t5
+  codigo: 5x08
+  capitulo: 'La ira de Rama Khan'
+- n: 31
+  titulo: black-lightning-t3
+  codigo: 3x08
+  capitulo: 'El libro de la resistencia: Capítulo tres: La batalla de Franklin Terrace'
+- n: 32
+  titulo: the-flash-t6
+  codigo: 6x08
+  capitulo: 'La última tentación de Barry Allen - Segunda Parte'
+- n: 33
+  titulo: arrow-t8
+  codigo: 8x07
+  capitulo: 'Purgatorio'
+- n: 34
+  titulo: supergirl-t5
+  codigo: 5x09
+  capitulo: 'Crisis en Tierras Infinitas: Hora uno (I)'
+  megacrossover: true
+- n: 35
+  titulo: batwoman-t1
+  codigo: 1x09
+  capitulo: 'Crisis en Tierras Infinitas: Hora dos (II)'
+  megacrossover: true
+- n: 36
+  titulo: black-lightning-t3
+  codigo: 3x09
+  capitulo: 'El libro de la resistencia: Capítulo cuatro: Crisis de la Tierra'
+- n: 37
+  titulo: the-flash-t6
+  codigo: 6x09
+  capitulo: 'Crisis en Tierras Infinitas: Hora tres (III)'
+  megacrossover: true
+- n: 38
+  titulo: arrow-t8
+  codigo: 8x08
+  capitulo: 'Crisis en Tierras Infinitas: Hora cuatro (IV)'
+  megacrossover: true
+- n: 39
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x01
+  capitulo: 'Crisis en Tierras Infinitas: Hora cinco (V)'
+  megacrossover: true
+- n: 40
+  titulo: batwoman-t1
+  codigo: 1x10
+  capitulo: '¡Hoy es todo mazo gay!'
+- n: 41
+  titulo: supergirl-t5
+  codigo: 5x10
+  capitulo: 'El episodio de la botella'
+- n: 42
+  titulo: black-lightning-t3
+  codigo: 3x10
+  capitulo: 'El libro de Markovia: Capítulo uno: Bendiciones y maldiciones renacen'
+- n: 43
+  titulo: arrow-t8
+  codigo: 8x09
+  capitulo: 'Flecha verde y las Canarios'
+- n: 44
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x02
+  capitulo: 'Conoce a las leyendas'
+- n: 45
+  titulo: batwoman-t1
+  codigo: 1x11
+  capitulo: 'Regalo de No-Cumpleaños'
+- n: 46
+  titulo: supergirl-t5
+  codigo: 5x11
+  capitulo: 'Regreso del futuro - Parte uno'
+- n: 47
+  titulo: black-lightning-t3
+  codigo: 3x11
+  capitulo: 'El libro de Markovia: Capítulo dos: La adicción de Lynn'
+- n: 48
+  titulo: arrow-t8
+  codigo: 8x10
+  capitulo: 'Desaparición'
+- n: 49
+  titulo: black-lightning-t3
+  codigo: 3x12
+  capitulo: 'El libro de Markovia: Capítulo tres: Identidad: huérfano de madre'
+- n: 50
+  titulo: the-flash-t6
+  codigo: 6x10
+  capitulo: 'Maratón'
+- n: 51
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x03
+  capitulo: 'Extráñame, bésame, ámame'
+- n: 52
+  titulo: black-lightning-t3
+  codigo: 3x13
+  capitulo: 'El libro de Markovia: Capítulo cuatro: Agarra la correa'
+- n: 53
+  titulo: the-flash-t6
+  codigo: 6x11
+  capitulo: 'El amor es una guerra'
+- n: 54
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x04
+  capitulo: 'Matar cualquier cosa'
+- n: 55
+  titulo: batwoman-t1
+  codigo: 1x12
+  capitulo: 'Tú eliges'
+- n: 56
+  titulo: supergirl-t5
+  codigo: 5x12
+  capitulo: 'Regreso del futuro - Parte dos'
+- n: 57
+  titulo: the-flash-t6
+  codigo: 6x12
+  capitulo: 'Una chica llamada Sue'
+- n: 58
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x05
+  capitulo: 'Una cabeza de su tiempo'
+- n: 59
+  titulo: batwoman-t1
+  codigo: 1x13
+  capitulo: 'Bébeme'
+- n: 60
+  titulo: supergirl-t5
+  codigo: 5x13
+  capitulo: 'Es una super vida'
+- n: 61
+  titulo: black-lightning-t3
+  codigo: 3x14
+  capitulo: 'El libro de la guerra: Capítulo uno: Regreso a casa'
+- n: 62
+  titulo: the-flash-t6
+  codigo: 6x13
+  capitulo: 'Grodd quiere ser mi amigo'
+- n: 63
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x06
+  capitulo: 'Mortal Khanbat'
+- n: 64
+  titulo: black-lightning-t3
+  codigo: 3x15
+  capitulo: 'El libro de la guerra: Capítulo dos: La libertad no es libre'
+- n: 65
+  titulo: batwoman-t1
+  codigo: 1x14
+  capitulo: 'Sonriendo de oreja a oreja'
+- n: 66
+  titulo: supergirl-t5
+  codigo: 5x14
+  capitulo: 'La guardaespaldas'
+- n: 67
+  titulo: black-lightning-t3
+  codigo: 3x16
+  capitulo: 'El libro de la guerra: Capítulo tres: Liberación'
+- n: 68
+  titulo: the-flash-t6
+  codigo: 6x14
+  capitulo: 'La muerte de la Fuerza  Veloz'
+- n: 69
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x07
+  capitulo: 'Mr. Parker''s Cul-De-Sac'
+- n: 70
+  titulo: batwoman-t1
+  codigo: 1x15
+  capitulo: 'Que le corten la cabeza'
+- n: 71
+  titulo: supergirl-t5
+  codigo: 5x15
+  capitulo: 'Bocados de realidad'
+- n: 72
+  titulo: the-flash-t6
+  codigo: 6x15
+  capitulo: 'El exorcismo de Nash Wells'
+- n: 73
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x08
+  capitulo: 'Romeo V. Julieta: El amanecer de la justicia'
+- n: 74
+  titulo: batwoman-t1
+  codigo: 1x16
+  capitulo: 'A través del espejo'
+- n: 75
+  titulo: supergirl-t5
+  codigo: 5x16
+  capitulo: 'Alex en el país de las maravillas'
+- n: 76
+  titulo: the-flash-t6
+  codigo: 6x16
+  capitulo: 'Adiós y buenas noches'
+- n: 77
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x09
+  capitulo: 'Zari, no Zari'
+- n: 78
+  titulo: batwoman-t1
+  codigo: 1x17
+  capitulo: 'Escape por los pelos'
+- n: 79
+  titulo: the-flash-t6
+  codigo: 6x17
+  capitulo: 'Liberación'
+- n: 80
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x10
+  capitulo: 'La gran falsificación británica'
+- n: 81
+  titulo: batwoman-t1
+  codigo: 1x18
+  capitulo: 'Si tú crees en mí, yo creeré en ti'
+- n: 82
+  titulo: supergirl-t5
+  codigo: 5x17
+  capitulo: 'Deus Lex Machina'
+- n: 83
+  titulo: the-flash-t6
+  codigo: 6x18
+  capitulo: 'Paga al flautista'
+- n: 84
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x11
+  capitulo: 'Barco roto'
+- n: 85
+  titulo: batwoman-t1
+  codigo: 1x19
+  capitulo: 'Un secreto oculto a todo el mundo'
+- n: 86
+  titulo: supergirl-t5
+  codigo: 5x18
+  capitulo: 'El vínculo perdido'
+- n: 87
+  titulo: the-flash-t6
+  codigo: 6x19
+  capitulo: 'El éxito está asegurado'
+- n: 88
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x12
+  capitulo: 'Frikis y nerds'
+- n: 89
+  titulo: batwoman-t1
+  codigo: 1x20
+  capitulo: 'Oh, Ratón'
+- n: 90
+  titulo: supergirl-t5
+  codigo: 5x19
+  capitulo: 'Immortal Kombat'
+- n: 91
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x13
+  capitulo: 'Soy leyendas'
+- n: 92
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x14
+  capitulo: 'En el que estamos atrapados en la televisión'
+- n: 93
+  titulo: dc-s-legends-of-tomorrow-t5
+  codigo: 5x15
+  capitulo: 'El canto del tanga'
+fuente: Fechas de emisión de TMDB, contrastadas con arrowverse.info

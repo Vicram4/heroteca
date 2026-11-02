@@ -3,7 +3,10 @@ titulo: The Boys
 tipo: serie
 universo: dc
 seccion: series
-enEspera: true
+visionado:
+  carpeta: 15
+  codigo: "15.2"
+  orden: 78
 serie: the-boys
 temporada: 2
 fichaPropia: false
@@ -13,7 +16,5 @@ anio: 2020
 tmdb:
   id: 76479
   tipo: tv
-notas: En la lista «EN ESPERA» del RESUMEN de carpetas.
-notasEn: On the “ON HOLD” list in the collection’s folder summary.
 fuente: Archivador AZUL/RESUMEN de carpetas UDC (EN ESPERA)
 ---

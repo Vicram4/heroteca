@@ -44,7 +44,7 @@ reparto:
 capitulos:
 - codigo: 2x01
   titulo: Sombras
-  argumento: La agencia SHIELD deberá operar en la clandestinidad después de descubrir que HYDRA se ha infiltrado en la organización.Carl Creel es enviado a buscar un artículo que fue robado por esta organización durante la II Guerra Mundial.
+  argumento: La agencia SHIELD deberá operar en la clandestinidad después de descubrir que HYDRA se ha infiltrado en la organización. Carl Creel es enviado a buscar un artículo que fue robado por esta organización durante la II Guerra Mundial.
   direccion: Vincent Misiano
   guion:
   - Jed Whedon

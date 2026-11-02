@@ -74,7 +74,7 @@ capitulos:
   duracion: 45
 - codigo: 1x06
   titulo: Nada normal
-  argumento: Kamala protege a Kamran de Control de Daños, que no se dentendrá ante Nada para atraparlo.
+  argumento: Kamala protege a Kamran de Control de Daños, que no se detendrá ante nada para atraparlo.
   direccion:
   - Adil El Arbi
   - Bilall Fallah

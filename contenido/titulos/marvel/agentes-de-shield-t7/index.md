@@ -95,7 +95,7 @@ capitulos:
   duracion: 50
 - codigo: 7x10
   titulo: Robado
-  argumento: Después de Enoch Coltrane se sacrificara para salvarlos de la tormenta temporal, el equipo llega a 1983, donde Nathaniel Malick y Kora están reuniendo a un ejército de Inhumanos anarquistas. Cuando a Daisy Johnson se le encomienda la misión de proteger a Jiaying se verá obligada a interactuar con su madre nuevamente desde su muerte; al mismo tiempo, los demás descubren que otro antiguo adversario se nterpondrá en su camino para detener a Malick.
+  argumento: Después de Enoch Coltrane se sacrificara para salvarlos de la tormenta temporal, el equipo llega a 1983, donde Nathaniel Malick y Kora están reuniendo a un ejército de Inhumanos anarquistas. Cuando a Daisy Johnson se le encomienda la misión de proteger a Jiaying se verá obligada a interactuar con su madre nuevamente desde su muerte; al mismo tiempo, los demás descubren que otro antiguo adversario se interpondrá en su camino para detener a Malick.
   direccion: Garry A. Brown
   guion:
   - Mark Bruner

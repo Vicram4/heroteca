@@ -2,6 +2,8 @@
  * Datos complementarios de TMDB, leídos del archivo compacto datos/tmdb/<universo>.json
  * (lo genera scripts/sincronizar_tmdb.py). Al compilar no se contacta con TMDB.
  */
+import correcciones from '../../datos/correcciones-tmdb.json';
+
 export interface CapituloTmdb {
   codigo: string;
   titulo?: string;
@@ -42,9 +44,44 @@ export interface DatosTmdb {
   escenasCreditos?: ('durante' | 'despues')[];
 }
 
+/**
+ * Los textos de TMDB los escribe su comunidad y traen faltas. Se corrigen al leerlos, no en los JSON, porque
+ * cada sincronización los sobrescribe. Las correcciones (datos/correcciones-tmdb.json) distinguen mayúsculas.
+ */
+const correctorDe = (idioma: 'es' | 'en') => {
+  const tabla: Record<string, string> = correcciones[idioma];
+  const claves = Object.keys(tabla).sort((a, b) => b.length - a.length);
+  const errores = new RegExp(`(?<!\\p{L})(?:${claves.map((c) => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?!\\p{L})`, 'gu');
+  return <T extends string | undefined>(texto: T): T =>
+    texto
+      ?.normalize('NFC') // algunos traen las tildes como caracteres sueltos («diseñadora» partida en dos)
+      .replace(/ /g, ' ') // y espacios duros pegados desde otras webs
+      .replace(errores, (error) => tabla[error])
+      .replace(/(\p{Ll}{2})\.(\p{Lu}\p{Ll})/gu, '$1. $2') // punto sin espacio: «temporada.Trata»
+      .trim() as T;
+};
+
+const corregirDatos = (datos: Record<string, DatosTmdb>, idioma: 'es' | 'en') => {
+  const corregir = correctorDe(idioma);
+  return Object.fromEntries(
+    Object.entries(datos).map(([id, d]) => [
+      id,
+      {
+        ...d,
+        titulo: corregir(d.titulo),
+        sinopsis: corregir(d.sinopsis),
+        capitulos: d.capitulos?.map((c) => ({ ...c, titulo: corregir(c.titulo), sinopsis: corregir(c.sinopsis) })),
+      },
+    ]),
+  );
+};
+
 const archivos = import.meta.glob<Record<string, DatosTmdb>>('../../datos/tmdb/*.json', { eager: true, import: 'default' });
 const porUniverso = new Map(
-  Object.entries(archivos).map(([ruta, datos]) => [ruta.split('/').pop()!.replace('.json', ''), datos]),
+  Object.entries(archivos).map(([ruta, datos]) => {
+    const nombre = ruta.split('/').pop()!.replace('.json', '');
+    return [nombre, corregirDatos(datos, nombre.endsWith('.en') ? 'en' : 'es')];
+  }),
 );
 
 /** Datos de TMDB de una ficha; con idioma 'en', los de la versión inglesa (datos/tmdb/<universo>.en.json). */

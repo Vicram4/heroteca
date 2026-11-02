@@ -99,7 +99,7 @@ capitulos:
   duracion: 50
 - codigo: 3x12
   titulo: Última oportunidad
-  argumento: Vanessa logra convencer a Fisk de incluírla en el lado criminal de su vida. Por su parte, Nelson & Murdock consiguen un cliente que tiene información importante sobre el Kingpin. Por su parte Matt se convence de trabajar nuevamente con Foggy.
+  argumento: Vanessa logra convencer a Fisk de incluirla en el lado criminal de su vida. Por su parte, Nelson & Murdock consiguen un cliente que tiene información importante sobre el Kingpin. Por su parte Matt se convence de trabajar nuevamente con Foggy.
   direccion: Phil Abraham
   guion: Sam Ernst
   duracion: 50

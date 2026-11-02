@@ -363,8 +363,6 @@ const visionados = defineCollection({
     carpeta: z.number().int(),
     /** Código del bloque en tus documentos ("5.1", "7.2"). */
     codigo: z.string().optional(),
-    /** Página de tus documentos todavía a medio hacer. */
-    borrador: z.boolean().default(false),
     orden: z.array(
       z.object({
         /** Tu número de orden (01, 02…). */

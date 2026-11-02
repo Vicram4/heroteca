@@ -121,7 +121,6 @@ const color = (id: string) => `var(--serie-${series.indexOf(id) % 6})`;
           <h2 id="titulo-orden">{tx.carpetas.orden}</h2>
           <p class="explica">
             {tx.carpetas.explica}{visionado.data.codigo && tx.carpetas.bloque(visionado.data.codigo)}.
-            {visionado.data.borrador && <strong>{tx.carpetas.borrador}</strong>}
           </p>
           <ol class="lista">
             {visionado.data.orden.map((o) => {
