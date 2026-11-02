@@ -221,6 +221,10 @@ JustWatch que da TMDB. Se guardan en `datos/donde-ver.json`.
   nuevo y hace que Vercel vuelva a publicar la web. Necesita el secreto `TMDB_API_TOKEN` en GitHub
   (Settings → Secrets and variables → Actions).
 - Para lanzarlo a mano: pestaña **Actions** del repositorio → «Actualizar «Dónde ver» y «Próximamente»» → **Run workflow**.
+  También se lanza solo si se sube un cambio en el propio `donde-ver.yml`.
+- **Horarios de las tareas:** GitHub no garantiza la hora de las tareas programadas y puede saltarse alguna, sobre todo
+  las puestas en punto. Por eso van en minutos poco habituales (lunes a las 05:17 UTC; noticias, a diario a las 06:43).
+  Para comprobar si se han ejecutado: pestaña **Actions**, o `https://api.github.com/repos/Vicram4/heroteca/actions/runs`.
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_donde_ver.py`
 - **Historial de llegadas y salidas** (para la futura sección «Novedades»): cada semana se compara con la anterior y
   se apunta en `datos/novedades-plataformas.json` qué títulos llegan o se van de cada plataforma, por país y en dos
@@ -238,7 +242,7 @@ Página `/noticias/` (`/en/news/`), con filtro por universo, y una por universo 
   noticia original, que se abre en una pestaña nueva. No se copian textos completos ni imágenes.
 - **Clasificación:** por palabras clave de cada universo (`CLAVES`): si el titular las menciona, o el resumen al menos
   dos veces. Una noticia puede ser de los dos universos; las que no hablan de ninguno se descartan.
-- **Actualización:** cada día a las 06:30 UTC con GitHub Actions (`.github/workflows/noticias.yml`), que sube
+- **Actualización:** cada día a las 06:43 UTC con GitHub Actions (`.github/workflows/noticias.yml`), que sube
   `datos/noticias.json` y hace que Vercel vuelva a publicar la web. Se guardan los últimos 30 días (máximo 200 por
   idioma). Si una fuente falla, las demás siguen. Para lanzarlo a mano: Actions → «Actualizar «Noticias»» → Run workflow.
 

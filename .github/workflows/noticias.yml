@@ -4,7 +4,10 @@ name: Actualizar «Noticias»
 
 on:
   schedule:
-    - cron: '30 6 * * *' # cada día a las 06:30 UTC
+    - cron: '43 6 * * *' # cada día a las 06:43 UTC (GitHub puede saltarse las tareas puestas en punto: evitar minutos :00 y :30)
+  push: # al cambiar esta tarea se ejecuta una vez, para comprobar que funciona
+    branches: [main]
+    paths: ['.github/workflows/noticias.yml']
   workflow_dispatch: # también se puede lanzar a mano desde la pestaña Actions
 
 permissions:
