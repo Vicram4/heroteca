@@ -20,4 +20,10 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+conexiones:
+  # Fuente: https://www.slashfilm.com/545762/suicide-squad-after-credits-scene
+  postCreditos:
+  - momento: durante
+    texto: "Amanda Waller se reúne con Bruce Wayne."
+    textoEn: "Amanda Waller meets Bruce Wayne."
 ---

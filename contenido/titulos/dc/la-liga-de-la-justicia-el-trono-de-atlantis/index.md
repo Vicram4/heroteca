@@ -16,4 +16,10 @@ tmdb:
   id: 297556
   tipo: movie
 fuente: animacion/Animación/021/Liga de la Justicia.docx
+conexiones:
+  # Fuente: https://en.wikipedia.org/wiki/Justice_League:_Throne_of_Atlantis
+  postCreditos:
+  - momento: despues
+    texto: "Lex Luthor visita a Orm en la prisión de Belle Reve con una propuesta."
+    textoEn: "Lex Luthor visits Orm in Belle Reve prison with a proposition."
 ---

@@ -22,4 +22,10 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+conexiones:
+  # Fuente: https://www.thewrap.com/does-wonder-woman-1984-have-a-post-credits-scene-dceu/
+  postCreditos:
+  - momento: durante
+    texto: "Aparece Asteria, la amazona de la leyenda, interpretada por Lynda Carter."
+    textoEn: "Asteria, the Amazon from the legend, appears, played by Lynda Carter."
 ---

@@ -20,4 +20,10 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+conexiones:
+  # Fuente: https://www.thewrap.com/aquaman-and-the-lost-kingdom-post-credits-explained/
+  postCreditos:
+  - momento: durante
+    texto: "Una broma sin más: Orm en una hamburguesería y una cucaracha."
+    textoEn: "Just a joke: Orm at a burger restaurant, and a cockroach."
 ---

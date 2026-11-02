@@ -52,7 +52,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
   daltonismo en modo claro y oscuro).
 - **Rankings**: títulos por nota de TMDB con filtros de universo, tipo y década (cada serie cuenta una vez, con la
   media de sus temporadas) y los actores y villanos con más apariciones.
-- **Escenas poscréditos**: qué películas tienen escena durante o después de los créditos, sin spoilers, con filtros por
+- **Escenas poscréditos**: qué títulos tienen escena durante o después de los créditos, sin spoilers, con filtros por
   universo y momento.
 - **Planificador de maratones**: calcula las horas de una sección, saga o lista propia y las reparte en sesiones con
   descansos, partiendo las temporadas entre capítulos. El plan viaja en el enlace, sin servidor.

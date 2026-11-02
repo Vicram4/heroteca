@@ -38,8 +38,15 @@ const unoOVarios = z
 
 /** Texto que puede ocultarse como spoiler. Admite texto simple o { texto, spoiler }. */
 const textoConSpoiler = z.union([
-  z.string().transform((texto) => ({ texto, spoiler: true })),
-  z.object({ texto: z.string(), spoiler: z.boolean().default(true) }),
+  z.string().transform((texto) => ({ texto, spoiler: true, textoEn: undefined, momento: undefined })),
+  z.object({
+    texto: z.string(),
+    spoiler: z.boolean().default(true),
+    /** El mismo texto en inglés. */
+    textoEn: z.string().optional(),
+    /** Solo en escenas de créditos: si va durante o después de los créditos. */
+    momento: z.enum(['durante', 'despues']).optional(),
+  }),
 ]);
 
 /* ------------------------------------------------------------------ */

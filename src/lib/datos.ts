@@ -220,6 +220,7 @@ function prepararEn(t: Titulo): Titulo {
     tituloOriginal: original,
     otrosTitulos: [d.titulo, ...d.otrosTitulos].filter((o, i, l) => o !== titulo && l.indexOf(o) === i),
     notas: d.notasEn ?? d.notas,
+    conexiones: { ...d.conexiones, postCreditos: d.conexiones.postCreditos.map((p) => ({ ...p, texto: p.textoEn ?? p.texto })) },
   };
   const deTmdb = new Set<string>();
   const de = <T,>(campo: string, valor: T | undefined, si: boolean) => {

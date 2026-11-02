@@ -15,4 +15,10 @@ tmdb:
   id: 102382
   tipo: movie
 fuente: 001 Índices.pptx · diapositiva 19
+conexiones:
+  # Fuente: https://www.empireonline.com/movies/news/see-x-men-days-future-past-sting-amazing-spider-man-2
+  postCreditos:
+  - momento: durante
+    texto: "No continúa la historia: es un avance de X-Men: Días del futuro pasado, con Mística liberando a unos mutantes presos."
+    textoEn: "It does not continue the story: it is a preview of X-Men: Days of Future Past, with Mystique freeing imprisoned mutants."
 ---

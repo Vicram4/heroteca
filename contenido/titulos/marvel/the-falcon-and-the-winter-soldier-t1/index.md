@@ -80,4 +80,10 @@ fuente: 003 Fichas SERIES UMC.pptx · diapositiva 213; 001 Índices.pptx · diap
 imagenes:
 - src: ./portada.png
   rol: portada
+conexiones:
+  # Fuente: https://bgr.com/entertainment/falcon-winter-soldier-post-credits-sharon-carter-explained/
+  postCreditos:
+  - momento: durante
+    texto: "Episodio 6. Sharon Carter recupera su puesto en el Gobierno y ofrece vender los secretos a los que ahora tiene acceso."
+    textoEn: "Episode 6. Sharon Carter gets her government job back and offers to sell the secrets she can now access."
 ---

@@ -421,14 +421,23 @@ Todo se calcula al compilar. Textos: apartado `rankings` de `src/i18n/textos.ts`
 ## Escenas poscréditos
 
 Página `/poscreditos/` (`/en/post-credits/`, enlazada en el pie y desde la etiqueta «Post-créditos» de cada ficha). Dice qué
-películas tienen escena durante o después de los créditos, sin contar qué pasa. Se filtra por universo y momento, y se ordena
+títulos tienen escena durante o después de los créditos, sin contar qué pasa. Se filtra por universo y momento, y se ordena
 por año.
 
 - **De dónde salen los datos:** de las palabras clave de TMDB (`escenasCreditos`, de `scripts/sincronizar_tmdb.py`). Las
   ponen sus usuarios y a veces faltan, por eso la página avisa de que no estar en la lista no significa no tener escena. TMDB
   solo las da para películas, así que las series no aparecen salvo que tengan la escena escrita a mano.
 - **Escenas escritas a mano:** si una ficha tiene `conexiones.postCreditos`, aparece aunque TMDB no la marque, y el texto se
-  muestra oculto como spoiler. Es la forma de añadir una película que falta.
+  muestra oculto como spoiler. Es la forma de añadir un título que falta. Hay 16 añadidos así (11 películas o cortos y 5
+  series), cada uno con su fuente en un comentario de la ficha. Solo se añade lo confirmado en una fuente fiable.
+  ```yaml
+  conexiones:
+    # Fuente: https://…
+    postCreditos:
+    - momento: durante        # durante o despues; con él funciona el filtro de la página
+      texto: "Texto en español"
+      textoEn: "Text in English"
+  ```
 
 Textos: apartado `poscreditos` de `src/i18n/textos.ts`.
 

@@ -21,4 +21,10 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+conexiones:
+  # Fuente: https://www.thewrap.com/does-birds-of-prey-harley-quinn-have-post-credits-scene-batman-suicide-squad-huntress-black-canary-dceu/
+  postCreditos:
+  - momento: despues
+    texto: "Solo audio, con la pantalla en negro: Harley promete un secreto sobre Batman y se corta antes de contarlo."
+    textoEn: "Audio only, over a black screen: Harley promises a secret about Batman and is cut off before telling it."
 ---

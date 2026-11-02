@@ -92,4 +92,10 @@ imagenes:
   rol: portada
 notas: 'En los documentos de la colección ponía «Katie Mathewson» (errata corregida: Katrina Mathewson)'
 notasEn: 'The collection documents said “Katie Mathewson” (typo corrected: Katrina Mathewson).'
+conexiones:
+  # Fuente: https://www.thewrap.com/hawkeye-episode-6-credits-scene
+  postCreditos:
+  - momento: durante
+    texto: "Episodio 6. No adelanta nada: es el número musical «Save the City» de Rogers: The Musical, completo."
+    textoEn: "Episode 6. It teases nothing: it is the full «Save the City» number from Rogers: The Musical."
 ---

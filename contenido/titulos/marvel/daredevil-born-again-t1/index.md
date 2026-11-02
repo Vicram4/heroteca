@@ -17,4 +17,10 @@ tmdb:
 notas: 'En los documentos de la colección: temporada 4 · En los documentos de la colección es la temporada 4 de Daredevil (Born Again es su continuación)'
 notasEn: 'In the collection documents: season 4 · The collection documents list it as season 4 of Daredevil (Born Again is its continuation).'
 fuente: 001 Índices.pptx · diapositiva 12
+conexiones:
+  # Fuente: https://inverse.com/entertainment/daredevil-born-again-post-credits-scene-explained-the-punisher-special
+  postCreditos:
+  - momento: despues
+    texto: "Último episodio. Una escena sobre Frank Castle, el Castigador."
+    textoEn: "Final episode. A scene about Frank Castle, the Punisher."
 ---

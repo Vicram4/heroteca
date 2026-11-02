@@ -5,8 +5,8 @@ export function getStaticPaths() {
 }
 /**
  * Escenas poscréditos: qué películas tienen escena durante o después de los créditos, sin contar qué pasa en ellas.
- * Los momentos salen de las palabras clave de TMDB (escenasCreditos). Si la ficha tiene la escena escrita a mano
- * (conexiones.postCreditos), se añade oculta como spoiler. La lista va en el HTML y se filtra en el navegador.
+ * Los momentos salen de las palabras clave de TMDB (escenasCreditos) y de las escenas escritas a mano en la ficha
+ * (conexiones.postCreditos), que se añaden ocultas como spoiler. La lista va en el HTML y se filtra en el navegador.
  *
  * Las palabras clave las ponen los usuarios de TMDB y a veces faltan: no estar en la lista no significa no tener escena.
  */
@@ -30,8 +30,8 @@ const filas = titulos
       t: l,
       nombre: l.d.serie ? l.d.titulo : l.corto,
       poster: (datosTmdb(t.universo, t.id, idioma) ?? datosTmdb(t.universo, t.id, 'es'))?.poster,
-      momentos: t.m.escenasCreditos,
-      escritas: t.d.conexiones.postCreditos,
+      momentos: (['durante', 'despues'] as const).filter((m) => t.m.escenasCreditos.includes(m) || t.d.conexiones.postCreditos.some((e) => e.momento === m)),
+      escritas: l.d.conexiones.postCreditos,
     };
   })
   // De la más reciente a la más antigua

@@ -100,4 +100,13 @@ fuente: 003 Fichas SERIES UMC.pptx · diapositiva 208; 001 Índices.pptx · diap
 imagenes:
 - src: ./portada.jpg
   rol: portada
+conexiones:
+  # Fuente: https://www.fatherly.com/play/wandavision-post-credits-scenes-nick-fury-doctor-strange-captain-marvel
+  postCreditos:
+  - momento: durante
+    texto: "Episodio 9. Monica Rambeau recibe un encargo de alguien inesperado."
+    textoEn: "Episode 9. Monica Rambeau gets an assignment from an unexpected contact."
+  - momento: despues
+    texto: "Episodio 9. Wanda, aislada, estudia el Darkhold mientras oye a sus hijos pedir ayuda."
+    textoEn: "Episode 9. Wanda, in isolation, studies the Darkhold while hearing her sons call for help."
 ---

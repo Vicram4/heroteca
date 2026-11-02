@@ -90,4 +90,10 @@ fuente: 003 Fichas SERIES UMC.pptx · diapositiva 229; 001 Índices.pptx · diap
 imagenes:
 - src: ./portada.jpg
   rol: portada
+conexiones:
+  # Fuente: https://slashfilm.com/926158/how-the-ms-marvel-finale-sets-up-the-marvels
+  postCreditos:
+  - momento: durante
+    texto: "Episodio 6. El brazalete de Kamala brilla, un portal se la lleva y Carol Danvers aparece en su habitación."
+    textoEn: "Episode 6. Kamala’s bangle glows, a portal takes her away and Carol Danvers appears in her room."
 ---
