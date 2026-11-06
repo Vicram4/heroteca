@@ -20,4 +20,9 @@ fuente: 'Archivador AZUL/PRE-DCUE Página 002 impresa orden de estreno · Disco:
 imagenes:
 - src: ./portada.jpg
   rol: portada
+canciones:
+- titulo: "Kiss from a Rose"
+  artista: "Seal"
+- titulo: "Hold Me, Thrill Me, Kiss Me, Kill Me"
+  artista: "U2"
 ---

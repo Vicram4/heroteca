@@ -15,4 +15,6 @@ tmdb:
   id: 4515
   tipo: tv
 fuente: Añadida en la revisión de noviembre de 2026 (TMDB); no está en los documentos de la colección
+musica:
+- Jay Gruska
 ---

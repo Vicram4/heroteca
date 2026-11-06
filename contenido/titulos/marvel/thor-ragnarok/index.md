@@ -46,4 +46,9 @@ imagenes:
   rol: portada
 - src: ./contraportada.png
   rol: contraportada
+canciones:
+- titulo: "Immigrant Song"
+  artista: "Led Zeppelin"
+- titulo: "Pure Imagination"
+  artista: "Gene Wilder"
 ---

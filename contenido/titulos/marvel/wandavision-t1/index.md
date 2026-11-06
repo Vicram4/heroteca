@@ -109,4 +109,7 @@ conexiones:
   - momento: despues
     texto: "Episodio 9. Wanda, aislada, estudia el Darkhold mientras oye a sus hijos pedir ayuda."
     textoEn: "Episode 9. Wanda, in isolation, studies the Darkhold while hearing her sons call for help."
+canciones:
+- titulo: "Agatha All Along"
+  artista: "Kathryn Hahn"
 ---

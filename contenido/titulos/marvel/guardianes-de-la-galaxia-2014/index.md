@@ -49,4 +49,27 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Come and Get Your Love"
+  artista: "Redbone"
+  momento: "Créditos iniciales"
+  momentoEn: "Opening credits"
+- titulo: "Hooked on a Feeling"
+  artista: "Blue Swede"
+- titulo: "Escape (The Piña Colada Song)"
+  artista: "Rupert Holmes"
+- titulo: "Cherry Bomb"
+  artista: "The Runaways"
+- titulo: "Moonage Daydream"
+  artista: "David Bowie"
+  momento: "Llegada a Knowhere"
+  momentoEn: "Arrival at Knowhere"
+- titulo: "O-o-h Child"
+  artista: "The Five Stairsteps"
+- titulo: "Ain't No Mountain High Enough"
+  artista: "Marvin Gaye & Tammi Terrell"
+- titulo: "I Want You Back"
+  artista: "The Jackson 5"
+  momento: "Créditos finales"
+  momentoEn: "End credits"
 ---

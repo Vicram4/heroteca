@@ -45,4 +45,11 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Just a Girl"
+  artista: "No Doubt"
+- titulo: "Come As You Are"
+  artista: "Nirvana"
+- titulo: "Waterfalls"
+  artista: "TLC"
 ---

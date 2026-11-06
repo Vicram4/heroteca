@@ -45,4 +45,11 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Shoot to Thrill"
+  artista: "AC/DC"
+  momento: "Llegada a la Stark Expo"
+  momentoEn: "Arrival at the Stark Expo"
+- titulo: "Highway to Hell"
+  artista: "AC/DC"
 ---

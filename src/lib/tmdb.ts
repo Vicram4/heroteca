@@ -27,6 +27,8 @@ export interface DatosTmdb {
   direccion?: string[];
   guion?: string[];
   creadores?: string[];
+  /** Compositor de la banda sonora */
+  musica?: string[];
   /** Reparto; idTmdb y foto, para las páginas de actores */
   reparto?: { actor: string; personaje?: string; idTmdb?: number; foto?: string }[];
   /** Personas fuera del reparto principal que importan: personajes de la colección y gente conocida por otras obras */

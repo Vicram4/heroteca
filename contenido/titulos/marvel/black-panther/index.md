@@ -48,4 +48,11 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "All the Stars"
+  artista: "Kendrick Lamar & SZA"
+  momento: "Créditos finales"
+  momentoEn: "End credits"
+- titulo: "Pray for Me"
+  artista: "The Weeknd & Kendrick Lamar"
 ---

@@ -17,4 +17,9 @@ tmdb:
   id: 110492
   tipo: tv
 fuente: 'Disco: UDC Series por orden'
+canciones:
+- titulo: "Do Ya Wanna Taste It"
+  artista: "Wig Wam"
+  momento: "Créditos iniciales"
+  momentoEn: "Opening credits"
 ---

@@ -70,6 +70,7 @@ nacionalidad: E.E.U.U.
 duracion: 125                  # minutos
 direccion: Joe Johnston        # uno o varios: [Nombre 1, Nombre 2]
 guion: Christopher Markus
+musica: Alan Silvestri          # compositor; si falta, el de TMDB
 productora: MARVEL Studios
 distribuidora: Paramount Pictures
 argumento: |
@@ -82,6 +83,8 @@ imagenes:
   - { src: ./portada.jpg, rol: portada }
   - { src: ./contraportada.jpg, rol: contraportada }
 trailer: JerVrbLldXw           # id de YouTube
+canciones:                     # canciones conocidas que suenan (no la partitura); momento y momentoEn son opcionales
+  - { titulo: "Back in Black", artista: "AC/DC", momento: "Escena inicial", momentoEn: "Opening scene" }
 conexiones:
   verAntes: []
   verDespues: []
@@ -151,6 +154,52 @@ La clave de TMDB va en el archivo `.env` (no se sube a GitHub): `TMDB_API_TOKEN=
   (sobre todo animación antigua y cortos) no tienen ninguno en TMDB.
 - **Duración de series completas** (sin temporadas detalladas): la media de los capítulos de su primera temporada. Se
   muestra como «capítulos de unos 22 min» y no cuenta en las horas totales de las estadísticas.
+
+## Banda sonora
+
+Cada ficha tiene, si se encuentra, un apartado **Banda sonora** debajo del tráiler, con tres partes:
+
+- **Compositor:** la línea «Música» de la ficha técnica. Sale de TMDB («Original Music Composer»; en las series, los que
+  compusieron más capítulos) al ejecutar `scripts/sincronizar_tmdb.py`. Para ponerlo a mano: campo `musica` de la ficha.
+  Así está en las series antiguas o de animación que TMDB no tiene (Gotham, Luke Cage, Batman del futuro…).
+- **Álbumes:** hasta dos por ficha, la banda sonora y, si sale aparte, la partitura («Partitura»). Cada uno con
+  «Escuchar aquí» (el reproductor de Spotify o, si no está allí, el de Apple Music; solo se carga al pulsar) y enlaces a Apple Music, Spotify y
+  YouTube Music. Los busca `scripts/sincronizar_bandas_sonoras.py` en la tienda española de Apple (búsqueda pública de
+  iTunes, sin clave) y los guarda en `datos/bandas-sonoras.json`:
+
+  ```bash
+  .venv/Scripts/python.exe scripts/sincronizar_bandas_sonoras.py              # Marvel y DC; usa lo ya descargado
+  .venv/Scripts/python.exe scripts/sincronizar_bandas_sonoras.py dc --solo the-batman,joker   # solo esas fichas
+  .venv/Scripts/python.exe scripts/sincronizar_bandas_sonoras.py --refrescar  # vuelve a preguntarlo todo
+  ```
+
+  Un álbum se acepta solo si su nombre (sin lo que va entre paréntesis) es el título original de la ficha, dice que es
+  banda sonora o partitura y salió cerca del estreno (o más tarde, si el artista es el compositor o el álbum es de esa
+  misma temporada). Tarda más de una hora con todas las fichas, porque iTunes admite unas 20 peticiones por minuto; las
+  respuestas se guardan en `cache/musica/`. Al terminar deja en `documentos/extraido/bandas-sonoras-revisar.txt` lo
+  encontrado y lo que no. Otras reglas: una serie no acepta álbumes de película ni al revés, se descartan videojuegos,
+  versiones para piano y homenajes, y si el álbum no es del año del estreno tiene que ser del compositor (salvo los
+  recopilatorios de canciones).
+- **Resultado (noviembre de 2026):** 212 de 494 fichas tienen álbum. Casi todas las que faltan son animación antigua,
+  cortos y series sin álbum publicado, o álbumes que no están en la tienda española (Iron Man, Deadpool, X2, Superman
+  de 1978…: el reproductor no funcionaría en España). En las fichas sin álbum pero con compositor, el apartado ofrece
+  buscar «<título original> soundtrack» en Apple Music, Spotify y YouTube Music.
+- **Correcciones:** `datos/bandas-sonoras-manual.yaml`, con el id de la ficha y el enlace (o una lista de enlaces) de
+  Apple Music; `null` quita los álbumes de esa ficha. Sirve para álbumes con otro nombre («Black Panther: The Album»)
+  o para quitar uno equivocado. Después hay que volver a ejecutar el script.
+- **Spotify y YouTube Music:** sus enlaces abren la búsqueda del álbum por nombre y artista. Con una clave gratuita de
+  Spotify (developer.spotify.com → crear app) en `.env` (`SPOTIFY_CLIENT_ID=…` y `SPOTIFY_CLIENT_SECRET=…`), el script
+  busca también el álbum exacto en Spotify: el enlace va directo y «Escuchar aquí» usa el reproductor de Spotify.
+  Las claves están puestas desde el 6 de noviembre de 2026 (app «Heroteca» en modo desarrollo): 204 de los 219 álbumes
+  tienen su id de Spotify. Solo se acepta un álbum con el mismo nombre y el mismo artista (en los recopilatorios,
+  «Various Artists»); las Awesome Mix de Guardianes, por ejemplo, no salen en la búsqueda de Spotify y se quedan con el
+  enlace de búsqueda y el reproductor de Apple Music. Las respuestas se guardan en `cache/musica/spotify/`.
+  (song.link, que traducía el enlace de Apple Music a los demás servicios, cerró su API pública en 2026.)
+- **Canciones que suenan:** campo `canciones` de la ficha, escrito a mano solo en las películas y series donde las
+  canciones son parte importante (Guardianes de la Galaxia, Deadpool, Thor: Ragnarok, Joker…). Cada canción enlaza a su
+  búsqueda en los tres servicios. `momento` dice dónde suena sin destripar nada («Créditos iniciales»).
+- Ningún dato de música se sube a la web: solo enlaces y el reproductor oficial de cada servicio. La página de
+  privacidad lo explica.
 
 ## Regenerar las fichas desde los documentos
 

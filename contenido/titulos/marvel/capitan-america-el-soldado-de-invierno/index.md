@@ -45,4 +45,7 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Trouble Man"
+  artista: "Marvin Gaye"
 ---

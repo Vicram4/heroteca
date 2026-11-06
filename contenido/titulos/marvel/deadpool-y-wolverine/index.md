@@ -14,4 +14,13 @@ tmdb:
   id: 533535
   tipo: movie
 fuente: 001 Índices.pptx · diapositiva 12
+canciones:
+- titulo: "Bye Bye Bye"
+  artista: "*NSYNC"
+  momento: "Créditos iniciales"
+  momentoEn: "Opening credits"
+- titulo: "Like a Prayer"
+  artista: "Madonna"
+- titulo: "Good Riddance (Time of Your Life)"
+  artista: "Green Day"
 ---

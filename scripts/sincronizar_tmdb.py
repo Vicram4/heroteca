@@ -47,6 +47,22 @@ def nombres(crew, *trabajos):
     return list(dict.fromkeys(c['name'] for c in crew or [] if c.get('job') in trabajos))
 
 
+def musica(crew):
+    """Compositor de la banda sonora original (si no hay, quien figure como «Music»)."""
+    return nombres(crew, 'Original Music Composer') or nombres(crew, 'Music')
+
+
+def musica_serie(agg):
+    """En aggregate_credits cada persona trae sus trabajos con el número de capítulos: los que más compusieron, primero."""
+    for trabajo in ('Original Music Composer', 'Music'):
+        gente = [(sum(j.get('episode_count', 0) for j in c.get('jobs', []) if j.get('job') == trabajo), c['name'])
+                 for c in (agg or {}).get('crew') or []]
+        gente = sorted((g for g in gente if g[0]), key=lambda g: -g[0])
+        if gente:
+            return list(dict.fromkeys(n for _, n in gente))[:3]
+    return []
+
+
 def trailer(videos):
     """El mejor tráiler de YouTube: en el idioma de la web primero, oficial antes que no oficial."""
     lista = [v for v in (videos or {}).get('results', []) if v.get('site') == 'YouTube' and v.get('type') in ('Trailer', 'Teaser')]
@@ -133,6 +149,7 @@ def datos_pelicula(d, refrescar):
         'sinopsis': (d.get('overview') or '').strip() or None,
         'direccion': nombres(cred.get('crew'), 'Director'),
         'guion': nombres(cred.get('crew'), 'Screenplay', 'Writer', 'Story'),
+        'musica': musica(cred.get('crew')),
         'reparto': [actor(c, c.get('character')) for c in (cred.get('cast') or [])[:MAX_REPARTO]],
         'cameos': [actor(c, c.get('character')) for c in (cred.get('cast') or [])[MAX_REPARTO:]],
         'trailer': trailer(d.get('videos')),
@@ -160,6 +177,7 @@ def datos_serie(d, temporada, refrescar):
     reparto = [actor(c, ' / '.join(r.get('character', '') for r in c.get('roles', [])[:1]))
                for c in (agg.get('cast') or (d.get('credits') or {}).get('cast') or [])[:MAX_REPARTO]]
     base['reparto'] = reparto
+    base['musica'] = musica_serie(agg) or musica((d.get('credits') or {}).get('crew'))
     if not temporada:
         base['cameos'] = [actor(c, ' / '.join(r.get('character', '') for r in c.get('roles', [])))
                           for c in (agg.get('cast') or [])[MAX_REPARTO:]]
@@ -187,6 +205,7 @@ def datos_serie(d, temporada, refrescar):
     reparto_t = [actor(c, c.get('character')) for c in ((s.get('credits') or {}).get('cast') or [])[:MAX_REPARTO]]
     if reparto_t:
         base['reparto'] = reparto_t
+    base['musica'] = musica((s.get('credits') or {}).get('crew')) or base['musica']
     # Los cameos de una serie suelen ser invitados de un capítulo, que TMDB no incluye en el reparto de la temporada
     base['cameos'] = [actor(c, c.get('character')) for c in ((s.get('credits') or {}).get('cast') or [])[MAX_REPARTO:]]
     base['cameos'] += [actor(c, c.get('character')) for ep in s.get('episodes', []) for c in ep.get('guest_stars') or []]
@@ -305,7 +324,7 @@ def main(argv):
     destino.write_text(json.dumps(salida, ensure_ascii=False, separators=(',', ':'), sort_keys=True), encoding='utf-8', newline='\n')
     con = lambda k: sum(1 for v in salida.values() if v.get(k))  # noqa: E731
     print(f'{len(salida)} fichas con datos de TMDB → {destino.relative_to(RAIZ)} ({destino.stat().st_size // 1024} KB)')
-    print(f"  carátula: {con('poster')} · sinopsis: {con('sinopsis')} · reparto: {con('reparto')} · tráiler: {con('trailer')} · capítulos: {con('capitulos')} · con cameos: {con('cameos')}")
+    print(f"  carátula: {con('poster')} · sinopsis: {con('sinopsis')} · reparto: {con('reparto')} · tráiler: {con('trailer')} · música: {con('musica')} · capítulos: {con('capitulos')} · con cameos: {con('cameos')}")
     if sin_tmdb:
         print(f'  Sin TMDB ({len(sin_tmdb)}): {", ".join(sin_tmdb)}')
 

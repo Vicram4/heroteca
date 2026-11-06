@@ -45,4 +45,9 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "The Rubberband Man"
+  artista: "The Spinners"
+  momento: "Presentación de los Guardianes"
+  momentoEn: "Introducing the Guardians"
 ---

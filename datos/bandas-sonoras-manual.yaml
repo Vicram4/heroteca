@@ -1,0 +1,12 @@
+# Correcciones a mano de las bandas sonoras (las lee scripts/sincronizar_bandas_sonoras.py).
+# Clave: id de la ficha. Valor: enlace de Apple Music (tienda española), una lista de enlaces, o null para no poner ninguno.
+# Después hay que volver a ejecutar el script.
+
+# Álbumes oficiales «Music From and Inspired By», que la búsqueda descarta por «inspired by»
+black-panther:
+- https://music.apple.com/es/album/black-panther-the-album/1440903005
+- https://music.apple.com/es/album/black-panther-original-score/1440628690
+black-panther-wakanda-forever:
+- https://music.apple.com/es/album/black-panther-wakanda-forever-music-from-and-inspired-by/1653546033
+- https://music.apple.com/es/album/black-panther-wakanda-forever-original-score/1653660187
+spider-man-3: https://music.apple.com/es/album/spider-man-3-music-from-and-inspired-by-the-motion-picture/252118252

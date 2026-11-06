@@ -26,4 +26,11 @@ conexiones:
   - momento: durante
     texto: "Amanda Waller se reúne con Bruce Wayne."
     textoEn: "Amanda Waller meets Bruce Wayne."
+canciones:
+- titulo: "Heathens"
+  artista: "twenty one pilots"
+- titulo: "Sucker for Pain"
+  artista: "Lil Wayne, Wiz Khalifa & Imagine Dragons"
+- titulo: "Bohemian Rhapsody"
+  artista: "Queen"
 ---

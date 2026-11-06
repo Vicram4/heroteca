@@ -47,4 +47,13 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Back in Black"
+  artista: "AC/DC"
+  momento: "Escena inicial"
+  momentoEn: "Opening scene"
+- titulo: "Iron Man"
+  artista: "Black Sabbath"
+  momento: "Créditos finales"
+  momentoEn: "End credits"
 ---

@@ -47,4 +47,11 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "I Will Always Love You"
+  artista: "Whitney Houston"
+  momento: "Escena inicial"
+  momentoEn: "Opening scene"
+- titulo: "Back in Black"
+  artista: "AC/DC"
 ---

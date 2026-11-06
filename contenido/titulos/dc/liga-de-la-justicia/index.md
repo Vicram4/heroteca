@@ -21,4 +21,9 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Come Together"
+  artista: "Gary Clark Jr. & Junkie XL"
+- titulo: "Everybody Knows"
+  artista: "Sigrid"
 ---

@@ -49,4 +49,15 @@ imagenes:
   rol: portada
 - src: ./contraportada.png
   rol: contraportada
+canciones:
+- titulo: "Creep (Acoustic Version)"
+  artista: "Radiohead"
+  momento: "Escena inicial"
+  momentoEn: "Opening scene"
+- titulo: "In the Meantime"
+  artista: "Spacehog"
+- titulo: "No Sleep till Brooklyn"
+  artista: "Beastie Boys"
+- titulo: "Dog Days Are Over"
+  artista: "Florence + the Machine"
 ---

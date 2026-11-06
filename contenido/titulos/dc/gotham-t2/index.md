@@ -64,4 +64,7 @@ fuente: Archivador AZUL/RESUMEN de carpetas UDC · series pagina 002
 imagenes:
 - src: ./portada.jpg
   rol: portada
+musica:
+- Graeme Revell
+- David E. Russo
 ---

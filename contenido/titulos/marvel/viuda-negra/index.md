@@ -43,4 +43,11 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Smells Like Teen Spirit"
+  artista: "Malia J"
+  momento: "Créditos iniciales"
+  momentoEn: "Opening credits"
+- titulo: "American Pie"
+  artista: "Don McLean"
 ---

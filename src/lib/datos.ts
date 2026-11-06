@@ -38,6 +38,7 @@ export interface Mezcla {
   duracion?: number;
   direccion: string[];
   guion: string[];
+  musica: string[];
   creadores: string[];
   fecha?: Date;
   fechaEspana?: Date;
@@ -159,6 +160,7 @@ function mezclar(d: TituloEntrada['data'], x?: DatosTmdb, id?: string): Mezcla {
     duracion: elegir('duracion', d.duracion, x?.duracion),
     direccion: elegir('direccion', d.direccion, x?.direccion) ?? [],
     guion: elegir('guion', d.guion, x?.guion) ?? [],
+    musica: elegir('musica', d.musica, x?.musica) ?? [],
     creadores: x?.creadores ?? [],
     fecha: d.fechaEstreno ?? fecha(x?.fecha),
     fechaEspana: d.fechaEstrenoEspana ?? fecha(x?.fechaES),

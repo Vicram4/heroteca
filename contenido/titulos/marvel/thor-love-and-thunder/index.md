@@ -48,4 +48,15 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Welcome to the Jungle"
+  artista: "Guns N' Roses"
+- titulo: "Sweet Child O' Mine"
+  artista: "Guns N' Roses"
+- titulo: "Paradise City"
+  artista: "Guns N' Roses"
+- titulo: "November Rain"
+  artista: "Guns N' Roses"
+- titulo: "Our Last Summer"
+  artista: "ABBA"
 ---

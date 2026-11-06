@@ -13,4 +13,9 @@ tmdb:
   id: 246655
   tipo: movie
 fuente: 001 Índices.pptx · diapositiva 20
+canciones:
+- titulo: "Sweet Dreams (Are Made of This)"
+  artista: "Eurythmics"
+  momento: "Escena de Mercurio"
+  momentoEn: "Quicksilver’s scene"
 ---

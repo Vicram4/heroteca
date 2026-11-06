@@ -30,6 +30,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Cuatro órdenes** en cada estantería: el de la colección (historia o carpetas), estreno, más recientes y mejor valoradas.
 - **Filtros** por tipo, década, personaje y saga; **búsqueda instantánea** (atajo `/`) que también encuentra títulos originales y alternativos.
 - **Fichas completas**: datos del archivo original, completados con sinopsis, reparto, carteles y tráileres de TMDB. Cada dato de TMDB queda marcado. La imagen principal es el cartel oficial y cada ficha muestra también la carátula de la edición de la colección.
+- **Banda sonora**: compositor en la ficha técnica, álbum de la banda sonora (y de la partitura) para escuchar en la propia ficha con Apple Music o abrir en Spotify y YouTube Music, y las canciones conocidas que suenan en títulos como Guardianes de la Galaxia o Deadpool.
 - **Dónde ver**: plataformas de suscripción, alquiler y compra de cada título (España en la versión española,
   EE. UU. en la inglesa), con datos de JustWatch que se **actualizan solos cada semana**.
 - **Pasatiempos**: once juegos hechos con los datos de la colección, entre ellos Heroedle (un personaje al día), trivia
@@ -107,7 +108,7 @@ en español y una integración de Astro los traduce al compilar las páginas ing
 ### Decisiones
 
 - **Los documentos mandan.** TMDB solo rellena lo que falta y nunca sobrescribe. Las erratas evidentes se corrigen dejando una nota con el texto original.
-- **Web 100 % estática** (Astro, sin framework de cliente). Unas pocas islas de JavaScript sin dependencias: buscador, filtros, tema, spoilers y la fachada del tráiler. El tráiler usa `youtube-nocookie` y solo se carga al pulsar.
+- **Web 100 % estática** (Astro, sin framework de cliente). Unas pocas islas de JavaScript sin dependencias: buscador, filtros, tema, spoilers y las fachadas del tráiler y del reproductor de la banda sonora. El tráiler usa `youtube-nocookie` y, como el reproductor de Apple Music, solo se carga al pulsar.
 - **Preparada para crecer.** Añadir un universo nuevo es crear un archivo YAML; las rutas, la navegación y la portada se generan solas.
 - **Coste cero.** Vercel (plan gratuito), TMDB (API gratuita), GitHub Actions, Cloudflare Web Analytics (estadísticas sin cookies), tipografías autoalojadas con Fontsource.
 

@@ -50,4 +50,9 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Lift Me Up"
+  artista: "Rihanna"
+  momento: "Créditos finales"
+  momentoEn: "End credits"
 ---

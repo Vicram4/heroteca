@@ -288,6 +288,8 @@ const titulos = defineCollection({
       duracion: z.number().int().positive().optional(),
       direccion: unoOVarios,
       guion: unoOVarios,
+      /** Compositor de la banda sonora (si falta, el de TMDB). */
+      musica: unoOVarios,
       productora: unoOVarios,
       distribuidora: unoOVarios,
 
@@ -321,6 +323,14 @@ const titulos = defineCollection({
       /** Id del vídeo de YouTube (lo que va tras `v=`). */
       trailer: z.string().regex(/^[\w-]{11}$/, 'Debe ser el id de 11 caracteres de YouTube').optional(),
       tmdb: z.object({ id: z.number().int(), tipo: z.enum(['movie', 'tv']) }).optional(),
+      /**
+       * Canciones conocidas que suenan en el título (no la partitura). `momento` dice dónde, sin destripar nada
+       * importante («Créditos iniciales»); `momentoEn`, lo mismo en inglés. El álbum de la banda sonora no va aquí:
+       * lo busca scripts/sincronizar_bandas_sonoras.py.
+       */
+      canciones: z
+        .array(z.object({ titulo: z.string(), artista: z.string(), momento: z.string().optional(), momentoEn: z.string().optional() }))
+        .default([]),
 
       conexiones: z
         .object({

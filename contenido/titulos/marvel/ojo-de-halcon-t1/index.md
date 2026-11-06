@@ -98,4 +98,7 @@ conexiones:
   - momento: durante
     texto: "Episodio 6. No adelanta nada: es el número musical «Save the City» de Rogers: The Musical, completo."
     textoEn: "Episode 6. It teases nothing: it is the full «Save the City» number from Rogers: The Musical."
+canciones:
+- titulo: "I Can Do This All Day (Rogers: The Musical)"
+  artista: "Broadway Cast"
 ---

@@ -50,4 +50,7 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Time"
+  artista: "Pink Floyd"
 ---

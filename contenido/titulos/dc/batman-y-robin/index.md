@@ -23,4 +23,7 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "The End Is the Beginning Is the End"
+  artista: "The Smashing Pumpkins"
 ---

@@ -46,4 +46,9 @@ imagenes:
   rol: portada
 - src: ./contraportada.png
   rol: contraportada
+canciones:
+- titulo: "Interstellar Overdrive"
+  artista: "Pink Floyd"
+- titulo: "Shining Star"
+  artista: "Earth, Wind & Fire"
 ---

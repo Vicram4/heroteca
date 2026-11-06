@@ -12,4 +12,9 @@ tmdb:
   id: 557
   tipo: movie
 fuente: 001 Índices.pptx · diapositiva 17
+canciones:
+- titulo: "Hero"
+  artista: "Chad Kroeger & Josey Scott"
+  momento: "Créditos finales"
+  momentoEn: "End credits"
 ---

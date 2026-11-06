@@ -19,4 +19,11 @@ fuente: 'Archivador AZUL/PRE-DCUE Página 002 impresa orden de estreno · Disco:
 imagenes:
 - src: ./portada.jpg
   rol: portada
+canciones:
+- titulo: "Partyman"
+  artista: "Prince"
+  momento: "El Joker en el museo"
+  momentoEn: "The Joker at the museum"
+- titulo: "Batdance"
+  artista: "Prince"
 ---

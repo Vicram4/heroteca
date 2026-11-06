@@ -27,4 +27,7 @@ conexiones:
   - momento: despues
     texto: "Solo audio, con la pantalla en negro: Harley promete un secreto sobre Batman y se corta antes de contarlo."
     textoEn: "Audio only, over a black screen: Harley promises a secret about Batman and is cut off before telling it."
+canciones:
+- titulo: "Diamonds"
+  artista: "Megan Thee Stallion & Normani"
 ---

@@ -11,4 +11,9 @@ tmdb:
   id: 324857
   tipo: movie
 fuente: EL INDICE.docx · películas de animación
+canciones:
+- titulo: "Sunflower"
+  artista: "Post Malone & Swae Lee"
+- titulo: "What's Up Danger"
+  artista: "Blackway & Black Caviar"
 ---

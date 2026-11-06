@@ -48,4 +48,19 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Mr. Blue Sky"
+  artista: "Electric Light Orchestra"
+  momento: "Créditos iniciales"
+  momentoEn: "Opening credits"
+- titulo: "Brandy (You're a Fine Girl)"
+  artista: "Looking Glass"
+- titulo: "The Chain"
+  artista: "Fleetwood Mac"
+- titulo: "My Sweet Lord"
+  artista: "George Harrison"
+- titulo: "Come a Little Bit Closer"
+  artista: "Jay and the Americans"
+- titulo: "Father and Son"
+  artista: "Cat Stevens"
 ---

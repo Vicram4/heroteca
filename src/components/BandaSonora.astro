@@ -1,0 +1,198 @@
+---
+/**
+ * «Banda sonora»: los álbumes de la ficha (banda sonora y partitura) con enlaces a Apple Music, Spotify y YouTube Music,
+ * y las canciones conocidas que suenan en ella. El reproductor solo se carga al pulsar (antes no se contacta con nadie).
+ */
+import { bandaSonora, enlacesAlbum } from '../lib/bandasSonoras';
+import { textos, idiomaDe } from '../i18n';
+
+interface Props {
+  universo: string;
+  id: string;
+  titulo: string;
+  canciones: { titulo: string; artista: string; momento?: string; momentoEn?: string }[];
+  /** Sin álbum encontrado: si se da, se ofrece buscar «<busqueda> soundtrack» en los tres servicios */
+  busqueda?: string;
+}
+const { universo, id, titulo, canciones, busqueda } = Astro.props;
+const tx = textos(Astro.url).bandaSonora;
+const idioma = idiomaDe(Astro.url);
+const albumes = bandaSonora(universo, id).map((a) => ({ ...a, e: enlacesAlbum(a, idioma) }));
+const buscar = albumes.length === 0 && busqueda ? encodeURIComponent(`${busqueda} soundtrack`) : undefined;
+---
+
+{
+  (albumes.length > 0 || canciones.length > 0 || buscar) && (
+    <section class="panel banda-sonora" aria-labelledby="titulo-banda-sonora">
+      <h2 class="h-panel" id="titulo-banda-sonora">
+        {tx.titulo}
+      </h2>
+      {albumes.length > 0 && (
+        <ul class="albumes">
+          {albumes.map((a) => (
+            <li class="album">
+              <p class="nombre">
+                <strong>{a.album}</strong>
+                {a.partitura && <span class="insignia">{tx.partitura}</span>}
+              </p>
+              <p class="artista">{[a.artista, a.anio].filter(Boolean).join(' · ')}</p>
+              <div class="reproductor" data-reproductor={a.e.embedSpotify ?? a.e.embedApple} data-servicio={a.e.embedSpotify ? 'spotify' : 'apple'} data-titulo-iframe={tx.iframe(a.album)}>
+                <button type="button" class="escuchar" aria-label={tx.aria(a.album, a.e.embedSpotify ? 'Spotify' : 'Apple Music')}>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5Z"></path></svg>
+                  {tx.escuchar}
+                </button>
+              </div>
+              <p class="servicios">
+                <a href={a.e.apple} target="_blank" rel="noopener">Apple Music</a>
+                <a href={a.e.spotify} target="_blank" rel="noopener" title={a.spotify ? undefined : tx.busqueda}>Spotify</a>
+                <a href={a.e.youtube} target="_blank" rel="noopener" title={tx.busqueda}>YouTube Music</a>
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+      {buscar && (
+        <p class="servicios buscar">
+          <span>{tx.sinAlbum}</span>
+          <a href={`https://music.apple.com/es/search?term=${buscar}`} target="_blank" rel="noopener">Apple Music</a>
+          <a href={`https://open.spotify.com/search/${buscar}`} target="_blank" rel="noopener">Spotify</a>
+          <a href={`https://music.youtube.com/search?q=${buscar}`} target="_blank" rel="noopener">YouTube Music</a>
+        </p>
+      )}
+      {canciones.length > 0 && (
+        <>
+          <h3 class="h-canciones">{tx.canciones}</h3>
+          <ol class="canciones">
+            {canciones.map((c) => {
+              const momento = idioma === 'en' ? (c.momentoEn ?? c.momento) : c.momento;
+              const q = encodeURIComponent(`${c.titulo} ${c.artista}`);
+              return (
+                <li>
+                  <span class="cancion">
+                    <strong>«{c.titulo}»</strong> · {c.artista}
+                    {momento && <span class="momento"> — {momento}</span>}
+                  </span>
+                  <span class="servicios">
+                    <a href={`https://music.apple.com/es/search?term=${q}`} target="_blank" rel="noopener" aria-label={tx.buscarEn(c.titulo, 'Apple Music')}>Apple Music</a>
+                    <a href={`https://open.spotify.com/search/${q}`} target="_blank" rel="noopener" aria-label={tx.buscarEn(c.titulo, 'Spotify')}>Spotify</a>
+                    <a href={`https://music.youtube.com/search?q=${q}`} target="_blank" rel="noopener" aria-label={tx.buscarEn(c.titulo, 'YouTube Music')}>YouTube Music</a>
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+        </>
+      )}
+      {albumes.length > 0 && <p class="fuente">{tx.aviso}</p>}
+      {albumes.length === 0 && canciones.length > 0 && <p class="fuente">{tx.avisoCanciones(titulo)}</p>}
+    </section>
+  )
+}
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-reproductor]').forEach((caja) => {
+    caja.querySelector('button')!.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = caja.dataset.reproductor!;
+      iframe.title = caja.dataset.tituloIframe ?? '';
+      iframe.allow = 'autoplay *; encrypted-media *; fullscreen *; clipboard-write';
+      iframe.loading = 'lazy';
+      iframe.height = caja.dataset.servicio === 'spotify' ? '352' : '450';
+      iframe.setAttribute('sandbox', 'allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation');
+      caja.replaceChildren(iframe);
+      iframe.focus();
+    });
+  });
+</script>
+
+<style>
+  .albumes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.1rem;
+  }
+  .album p {
+    margin: 0;
+  }
+  .nombre {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+    overflow-wrap: anywhere;
+  }
+  .insignia {
+    font-size: 0.75rem;
+    padding: 0.05rem 0.45rem;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    opacity: 0.8;
+  }
+  .artista {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+  .reproductor {
+    margin: 0.5rem 0 0.35rem;
+    max-width: 660px;
+  }
+  .reproductor :global(iframe) {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: var(--radio);
+    overflow: hidden;
+    background: transparent;
+  }
+  .escuchar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid var(--acento, currentColor);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+  .escuchar:hover,
+  .escuchar:focus-visible {
+    background: color-mix(in srgb, var(--acento, currentColor) 15%, transparent);
+  }
+  .servicios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+    font-size: 0.9rem;
+  }
+  .h-canciones {
+    font-size: 1rem;
+    margin: 1.3rem 0 0.5rem;
+  }
+  .canciones {
+    margin: 0;
+    padding-left: 1.4rem;
+    display: grid;
+    gap: 0.55rem;
+  }
+  .canciones li {
+    overflow-wrap: anywhere;
+  }
+  .cancion {
+    display: block;
+  }
+  .momento {
+    opacity: 0.8;
+  }
+  .canciones .servicios {
+    font-size: 0.82rem;
+  }
+  .fuente {
+    margin: 1rem 0 0;
+    font-size: 0.82rem;
+    opacity: 0.75;
+  }
+</style>

@@ -12,4 +12,9 @@ tmdb:
   id: 263115
   tipo: movie
 fuente: 001 Índices.pptx · diapositiva 20
+canciones:
+- titulo: "The Man Comes Around"
+  artista: "Johnny Cash"
+  momento: "Créditos finales"
+  momentoEn: "End credits"
 ---

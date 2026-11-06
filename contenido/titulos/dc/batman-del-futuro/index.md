@@ -11,4 +11,8 @@ tmdb:
   id: 513
   tipo: tv
 fuente: Añadida en la revisión de noviembre de 2026 (TMDB); no está en los documentos de la colección
+musica:
+- Kristopher Carter
+- Michael McCuistion
+- Lolita Ritmanis
 ---

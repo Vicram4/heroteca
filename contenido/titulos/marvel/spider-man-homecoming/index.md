@@ -42,4 +42,9 @@ imagenes:
   rol: portada
 - src: ./contraportada.jpg
   rol: contraportada
+canciones:
+- titulo: "Blitzkrieg Bop"
+  artista: "Ramones"
+- titulo: "The Underdog"
+  artista: "Spoon"
 ---

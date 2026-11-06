@@ -23,4 +23,15 @@ imagenes:
   rol: portada
 - src: ./contraportada.png
   rol: contraportada
+canciones:
+- titulo: "That's Life"
+  artista: "Frank Sinatra"
+- titulo: "Rock and Roll Part 2"
+  artista: "Gary Glitter"
+  momento: "La escena de las escaleras"
+  momentoEn: "The stairs scene"
+- titulo: "Smile"
+  artista: "Jimmy Durante"
+  momento: "Créditos finales"
+  momentoEn: "End credits"
 ---

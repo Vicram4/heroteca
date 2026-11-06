@@ -2,6 +2,7 @@
 /** Ficha de un título: tu «Ficha Técnica» modernizada. */
 import Caratula from './Caratula.astro';
 import Trailer from './Trailer.astro';
+import BandaSonora from './BandaSonora.astro';
 import { render } from 'astro:content';
 import Spoiler from './Spoiler.astro';
 import DondeVer from './DondeVer.astro';
@@ -55,6 +56,7 @@ const tecnica = [
   [f.creadaPor, d.tipo === 'serie' && m.creadores.length ? lista(m.creadores) : undefined],
   [f.direccion, m.direccion.length ? lista(m.direccion) + marca('direccion') : undefined],
   [f.guion, m.guion.length ? lista(m.guion) + marca('guion') : undefined],
+  [f.musica, m.musica.length ? lista(m.musica) + marca('musica') : undefined],
   [f.productora, lista(d.productora)],
   [f.distribuidora, lista(d.distribuidora)],
   [f.temporadas, m.temporadas ? String(m.temporadas) : undefined],
@@ -256,6 +258,8 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       <DondeVer id={t.id} titulo={t.corto} busqueda={d.titulo} />
 
       {t.m.trailer && <Trailer id={t.m.trailer} titulo={d.titulo} fondo={t.m.fondoTmdb} />}
+
+      <BandaSonora universo={t.universo} id={t.id} titulo={d.titulo} canciones={d.canciones} busqueda={t.m.musica.length ? (Astro.props.t.d.tituloOriginal ?? Astro.props.t.d.titulo) : undefined} />
 
       {
         tieneCuerpo && (
