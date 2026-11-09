@@ -8,14 +8,14 @@
    },
    "clave": "movie-1400940",
    "en": {
-    "fondo": "/xSDoxv4pHvs4xZjvTb0Iqg1A6ro.jpg",
+    "fondo": "/uL4cIrNi2uaUnWIOQQ28EVnkETG.jpg",
     "poster": "/9l1NuFjel2j89hiuiJbsxfblqjy.jpg",
     "sinopsis": "Matt Hagen's meteoric rise from Gotham street kid to Hollywood leading man is tragically cut short when a local crime boss's actions leave him horribly disfigured. Abandoned by his team and with nothing left, Matt seeks out a cutting edge treatment that miraculously returns him to his former self… but also unexpectedly affects his grip on reality, spiraling him down a destructive path of all-consuming revenge.",
     "titulo": "Clayface",
     "trailer": "OGO4Mqvo3jI"
    },
    "es": {
-    "fondo": "/xSDoxv4pHvs4xZjvTb0Iqg1A6ro.jpg",
+    "fondo": "/uL4cIrNi2uaUnWIOQQ28EVnkETG.jpg",
     "poster": "/6ihSDJlBNcvoTWzSA0jonZyOXTs.jpg",
     "sinopsis": "Una criatura cambiante hecha de arcilla mágica acecha Ciudad Gótica, alternando entre villano y aliado de Batman. Varias figuras trágicas han asumido el manto de Cara de Barro a lo largo de los años.",
     "titulo": "Clayface",
@@ -37,21 +37,21 @@
   {
    "clave": "tv-213375-t1",
    "en": {
-    "fondo": "/58v1KFe3rxvHrYM1hLH5ScpwqNR.jpg",
-    "poster": "/xK27l5uwaVyZSlENWnmLlWwDQNS.jpg",
+    "fondo": "/31o1Ufd7bStD5dGEcpzapOjwaqx.jpg",
+    "poster": "/mKOj29RCB0pNqnXL3CTlMLPUWNg.jpg",
     "sinopsis": "The Vision, rebooted and having escaped from those who sought to weaponize him, has been in hiding. Searching for new meaning, he consults the AI personas embedded in his programming, including Friday, Edith, Jarvis, and the infamous Ultron. His discreet existence ends when a bounty placed on his head thrusts him on the run with Thomas Shepherd, a mysterious boy who may be Vision's son reincarnate. As Vision evades capture, he must confront his nature, resist Ultron's influence, and unravel the enigma that is his young companion if he's to survive.",
     "titulo": "VisionQuest",
     "trailer": "u76kq1gjHzw"
    },
-   "episodio": 7,
+   "episodio": 8,
    "es": {
-    "fondo": "/58v1KFe3rxvHrYM1hLH5ScpwqNR.jpg",
+    "fondo": "/31o1Ufd7bStD5dGEcpzapOjwaqx.jpg",
     "poster": "/nNm8aY8OjAm0Lyn1khmoPNPNvmh.jpg",
     "sinopsis": "Con una recompensa por su cabeza, Visión debe enfrentarse a su propia naturaleza y resistir la influencia de Ultrón para sobrevivir.",
     "titulo": "VisionQuest",
     "trailer": "u76kq1gjHzw"
    },
-   "fecha": "2026-11-03",
+   "fecha": "2026-11-10",
    "ficha": null,
    "ruta": {
     "en": "visionquest",
@@ -66,35 +66,35 @@
    "universo": "marvel"
   },
   {
-   "clave": "tv-231801-t1",
+   "clave": "tv-332379-t1",
    "en": {
-    "fondo": "/xe6wbOPKuSMOze4rl48NFWy8PNe.jpg",
-    "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
-    "sinopsis": "In a post-apocalyptic, near-future Los Angeles where culinary culture reigns supreme, the world's most powerful figures are chefs, and food is both currency and a demarcation of class, the mysterious sushi chef Jiro sets out on a quest for vengeance.",
-    "titulo": "GET JIRO",
+    "fondo": "/kuS2wdKyXBc5kdgDdHx02Yi3zDF.jpg",
+    "poster": "/jQKt9R0LRWGXYF4TfhyrIrqqvv3.jpg",
+    "sinopsis": "Iman Vellani and Frank Alvarez host a rewatch of films from Marvel Studios' The Infinity Saga, working their way to \"Avengers: Doomsday.\" Together, they revisit each film with a recap and a conversation about which themes and characters may continue to have future implications. Whether a longtime fan or new to the MCU, the show is the perfect opportunity to reminisce about the most iconic moments and characters from Marvel Studios' The Infinity Saga.",
+    "titulo": "Countdown to Avengers: Doomsday Official Podcast",
     "trailer": null
    },
    "episodio": 7,
    "es": {
-    "fondo": "/xe6wbOPKuSMOze4rl48NFWy8PNe.jpg",
-    "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
-    "sinopsis": "En una futurista Los Ángeles, el misterioso chef de sushi JIRO busca venganza. Basada en la exitosa novela gráfica de Anthony Bourdain y Joel Rose.",
-    "titulo": "¡A por Jiro!",
+    "fondo": "/kuS2wdKyXBc5kdgDdHx02Yi3zDF.jpg",
+    "poster": "/jQKt9R0LRWGXYF4TfhyrIrqqvv3.jpg",
+    "sinopsis": "",
+    "titulo": "Countdown to Avengers: Doomsday Official Podcast",
     "trailer": null
    },
-   "fecha": "2026-11-08",
+   "fecha": "2026-11-12",
    "ficha": null,
    "ruta": {
-    "en": "get-jiro",
-    "es": "a-por-jiro"
+    "en": "countdown-to-avengers-doomsday-official-podcast",
+    "es": "countdown-to-avengers-doomsday-official-podcast"
    },
    "temporada": 1,
    "tipo": "serie",
    "tmdb": {
-    "id": 231801,
+    "id": 332379,
     "tipo": "tv"
    },
-   "universo": "dc"
+   "universo": "marvel"
   },
   {
    "clave": "tv-274388-t1",
@@ -128,22 +128,53 @@
    "universo": "marvel"
   },
   {
+   "clave": "tv-231801-t1",
+   "en": {
+    "fondo": "/xe6wbOPKuSMOze4rl48NFWy8PNe.jpg",
+    "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
+    "sinopsis": "In a post-apocalyptic, near-future Los Angeles where culinary culture reigns supreme, the world's most powerful figures are chefs, and food is both currency and a demarcation of class, the mysterious sushi chef Jiro sets out on a quest for vengeance.",
+    "titulo": "GET JIRO",
+    "trailer": null
+   },
+   "episodio": 8,
+   "es": {
+    "fondo": "/xe6wbOPKuSMOze4rl48NFWy8PNe.jpg",
+    "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
+    "sinopsis": "En una futurista Los Ángeles, el misterioso chef de sushi JIRO busca venganza. Basada en la exitosa novela gráfica de Anthony Bourdain y Joel Rose.",
+    "titulo": "¡A por Jiro!",
+    "trailer": null
+   },
+   "fecha": "2026-11-15",
+   "ficha": "dc/a-por-jiro",
+   "ruta": {
+    "en": "get-jiro",
+    "es": "a-por-jiro"
+   },
+   "temporada": 1,
+   "tipo": "serie",
+   "tmdb": {
+    "id": 231801,
+    "tipo": "tv"
+   },
+   "universo": "dc"
+  },
+  {
    "clave": "movie-1389765",
    "en": {
     "fondo": "/jOvZD4VpU4Wx4XmNG2uTDNjUdDT.jpg",
-    "poster": "/4zWHei7BJ4dP0DDK4FJ7em9ET7e.jpg",
+    "poster": "/9jGwTCEYaOg3xxnKFaL5ukVexLp.jpg",
     "sinopsis": "Batman lies broken at the hands of the villainous mastermind Bane. With Bruce Wayne paralyzed from the waist down and unable to continue as Batman, a new successor must be chosen to defend Gotham City. Jean-Paul Valley, the man also known as Azrael, must take up the mantle of the Batman. But will his more violent methods be enough to stop Bane?",
     "titulo": "Batman: Knightfall Part 2: Knightquest",
     "trailer": "9NApbwwm4aU"
    },
    "es": {
     "fondo": "/jOvZD4VpU4Wx4XmNG2uTDNjUdDT.jpg",
-    "poster": "/4zWHei7BJ4dP0DDK4FJ7em9ET7e.jpg",
+    "poster": "/9jGwTCEYaOg3xxnKFaL5ukVexLp.jpg",
     "sinopsis": "",
     "titulo": "Batman: Knightfall Part 2: Knightquest",
     "trailer": "9NApbwwm4aU"
    },
-   "fecha": "2026-12-08",
+   "fecha": "2026-12-15",
    "ficha": null,
    "ruta": {
     "en": "batman-knightfall-part-2-knightquest",
@@ -164,7 +195,7 @@
    "clave": "movie-1003596",
    "en": {
     "fondo": "/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
-    "poster": "/jzPwsojjFStf5lR5Nm07w2hH56G.jpg",
+    "poster": "/9jlZ59UALLLOE279HMT19rP9XQs.jpg",
     "sinopsis": "Beloved heroes from three distinct universes are set on a deadly collision course and face an existential threat unlike anything they've ever encountered.",
     "titulo": "Avengers: Doomsday",
     "trailer": "irVNGjRFZGk"
@@ -260,14 +291,14 @@
    "clave": "movie-1523140",
    "en": {
     "fondo": "/lX2TpAZxdIus6cnMCDBOrs96NBY.jpg",
-    "poster": "/ms7BhVucvjxV74HkX8JLmFlQ6p2.jpg",
+    "poster": "/tYLgfKk3cEk7LskgxWyW37Nty01.jpg",
     "sinopsis": "Superman and Lex Luthor find themselves forced to work together—to a certain degree—against a much, much bigger threat when Brainiac sets his sights on Earth.",
     "titulo": "Man of Tomorrow",
     "trailer": null
    },
    "es": {
     "fondo": "/lX2TpAZxdIus6cnMCDBOrs96NBY.jpg",
-    "poster": "/ms7BhVucvjxV74HkX8JLmFlQ6p2.jpg",
+    "poster": "/tYLgfKk3cEk7LskgxWyW37Nty01.jpg",
     "sinopsis": "Superman y Lex Luthor se ven obligados a trabajar juntos, hasta cierto punto, contra una amenaza mucho, mucho mayor cuando Brainiac pone sus ojos en la Tierra.",
     "titulo": "El Hombre del Mañana",
     "trailer": null
@@ -480,6 +511,6 @@
    "universo": "marvel"
   }
  ],
- "fecha": "2026-11-02",
+ "fecha": "2026-11-09",
  "fuente": "TMDB"
 }

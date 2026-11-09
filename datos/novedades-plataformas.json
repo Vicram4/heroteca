@@ -30,6 +30,120 @@
     "id": "venom",
     "modo": "plataforma",
     "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "batman-1989",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "batman-begins",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-ii",
+    "modo": "plataforma",
+    "plataforma": "Atres Player"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-trinity",
+    "modo": "plataforma",
+    "plataforma": "Atres Player"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "capitan-america-1979",
+    "modo": "plataforma",
+    "plataforma": "Sky Showtime"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "constantine",
+    "modo": "plataforma",
+    "plataforma": "HBO Max"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "constantine",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "daredevil",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "el-increible-hulk-2008",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "elektra",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "iron-man-2008",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "liga-de-la-justicia",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "men-in-black-3",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "men-in-black-ii",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "shazam",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "superman",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "superman-ii-la-aventura-continua",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "superman-iv-en-busca-de-la-paz",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "superman-returns",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
    }
   ],
   "salidas": [
@@ -56,6 +170,90 @@
     "id": "the-amazing-spider-man",
     "modo": "plataforma",
     "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "batman-begins",
+    "modo": "plataforma",
+    "plataforma": "Netflix"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-1998",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-1998",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-ii",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-trinity",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "catwoman",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "el-caballero-oscuro",
+    "modo": "plataforma",
+    "plataforma": "Netflix"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "el-caballero-oscuro-la-leyenda-renace",
+    "modo": "plataforma",
+    "plataforma": "Netflix"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "el-profesor-marston-y-wonder-women",
+    "modo": "plataforma",
+    "plataforma": "Netflix"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "elektra",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "ghost-rider-el-motorista-fantasma",
+    "modo": "plataforma",
+    "plataforma": "Movistar Plus+"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "ghost-rider-el-motorista-fantasma",
+    "modo": "plataforma",
+    "plataforma": "Movistar Plus+ Ficción Total"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "ghost-rider-espiritu-de-venganza",
+    "modo": "plataforma",
+    "plataforma": "Movistar Plus+"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "ghost-rider-espiritu-de-venganza",
+    "modo": "plataforma",
+    "plataforma": "Movistar Plus+ Ficción Total"
    }
   ]
  },
@@ -132,6 +330,240 @@
     "id": "venom-habra-matanza",
     "modo": "plataforma",
     "plataforma": "FXNow"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "aquaman-y-el-reino-perdido",
+    "modo": "plataforma",
+    "plataforma": "TBS"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "aquaman-y-el-reino-perdido",
+    "modo": "plataforma",
+    "plataforma": "TNT"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "aquaman-y-el-reino-perdido",
+    "modo": "plataforma",
+    "plataforma": "tru TV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "batman",
+    "modo": "plataforma",
+    "plataforma": "Philo"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-1998",
+    "modo": "plataforma",
+    "plataforma": "Plex"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-ii",
+    "modo": "plataforma",
+    "plataforma": "Plex"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-trinity",
+    "modo": "plataforma",
+    "plataforma": "Plex"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "el-regreso-del-increible-hulk",
+    "modo": "plataforma",
+    "plataforma": "Xumo Play"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "izombie-t1",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "izombie-t2",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "izombie-t3",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "izombie-t4",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "izombie-t5",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "joker",
+    "modo": "plataforma",
+    "plataforma": "Cinemax"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "joker",
+    "modo": "plataforma",
+    "plataforma": "Cinemax Apple TV channel"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "joker-folie-a-deux",
+    "modo": "plataforma",
+    "plataforma": "Cinemax"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "joker-folie-a-deux",
+    "modo": "plataforma",
+    "plataforma": "Cinemax Apple TV channel"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "kick-ass",
+    "modo": "digital",
+    "plataforma": "FlixFling"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "legion",
+    "modo": "plataforma",
+    "plataforma": "Tubi TV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "linternas-t1",
+    "modo": "digital",
+    "plataforma": "Amazon Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "linternas-t1",
+    "modo": "digital",
+    "plataforma": "Apple TV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "linternas-t1",
+    "modo": "digital",
+    "plataforma": "Fandango At Home"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "lobezno-inmortal",
+    "modo": "plataforma",
+    "plataforma": "HBO Max"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "los-nuevos-mutantes",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "men-in-black",
+    "modo": "plataforma",
+    "plataforma": "AMC"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "men-in-black",
+    "modo": "plataforma",
+    "plataforma": "Philo"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "morbius",
+    "modo": "digital",
+    "plataforma": "FlixFling"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "punisher-war-zone",
+    "modo": "plataforma",
+    "plataforma": "Howdy"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "punisher-war-zone",
+    "modo": "plataforma",
+    "plataforma": "Plex"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "shazam-la-furia-de-los-dioses",
+    "modo": "plataforma",
+    "plataforma": "TBS"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "shazam-la-furia-de-los-dioses",
+    "modo": "plataforma",
+    "plataforma": "TNT"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "shazam-la-furia-de-los-dioses",
+    "modo": "plataforma",
+    "plataforma": "tru TV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "spider-man-homecoming",
+    "modo": "digital",
+    "plataforma": "FlixFling"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "spider-man-lejos-de-casa",
+    "modo": "digital",
+    "plataforma": "FlixFling"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "venom",
+    "modo": "digital",
+    "plataforma": "FlixFling"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "venom-el-ultimo-baile",
+    "modo": "digital",
+    "plataforma": "FlixFling"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "venom-habra-matanza",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "venom-habra-matanza",
+    "modo": "digital",
+    "plataforma": "FlixFling"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "x-men-fenix-oscura",
+    "modo": "plataforma",
+    "plataforma": "FXNow"
    }
   ],
   "salidas": [
@@ -176,6 +608,204 @@
     "id": "venom-habra-matanza",
     "modo": "plataforma",
     "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-1998",
+    "modo": "plataforma",
+    "plataforma": "Peacock Premium"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-1998",
+    "modo": "plataforma",
+    "plataforma": "Peacock Premium Plus"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-ii",
+    "modo": "plataforma",
+    "plataforma": "Peacock Premium"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-ii",
+    "modo": "plataforma",
+    "plataforma": "Peacock Premium Plus"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-trinity",
+    "modo": "plataforma",
+    "plataforma": "Peacock Premium"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "blade-trinity",
+    "modo": "plataforma",
+    "plataforma": "Peacock Premium Plus"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "el-juicio-del-increible-hulk",
+    "modo": "plataforma",
+    "plataforma": "Plex Channel"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "el-juicio-del-increible-hulk",
+    "modo": "plataforma",
+    "plataforma": "Xumo Play"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "el-regreso-de-la-cosa-del-pantano",
+    "modo": "plataforma",
+    "plataforma": "Plex Channel"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "el-regreso-del-increible-hulk",
+    "modo": "plataforma",
+    "plataforma": "Plex Channel"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "escudo-humano",
+    "modo": "plataforma",
+    "plataforma": "Plex Channel"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "ghost-rider-espiritu-de-venganza",
+    "modo": "plataforma",
+    "plataforma": "BBC America"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "howard-un-nuevo-heroe",
+    "modo": "plataforma",
+    "plataforma": "Tubi TV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "kingsman-el-circulo-de-oro",
+    "modo": "plataforma",
+    "plataforma": "HBO Max"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "la-cosa-del-pantano",
+    "modo": "plataforma",
+    "plataforma": "Philo"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "la-cosa-del-pantano",
+    "modo": "plataforma",
+    "plataforma": "Plex Channel"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "los-vengadores",
+    "modo": "plataforma",
+    "plataforma": "Hulu"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "men-in-black",
+    "modo": "plataforma",
+    "plataforma": "Paramount+"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "mutante-x",
+    "modo": "plataforma",
+    "plataforma": "Plex Channel"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "night-man",
+    "modo": "plataforma",
+    "plataforma": "Plex Channel"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "preacher-t1",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "preacher-t2",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "preacher-t3",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "preacher-t4",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "punisher-war-zone",
+    "modo": "plataforma",
+    "plataforma": "AMC Plus Apple TV channel"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "punisher-war-zone",
+    "modo": "plataforma",
+    "plataforma": "AMC+"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "punisher-war-zone",
+    "modo": "plataforma",
+    "plataforma": "BBC America"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "punisher-war-zone",
+    "modo": "plataforma",
+    "plataforma": "Philo"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "punisher-war-zone",
+    "modo": "plataforma",
+    "plataforma": "Plex Channel"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "spider-man-homecoming",
+    "modo": "plataforma",
+    "plataforma": "Tubi TV"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "superman-batman-apocalipsis",
+    "modo": "plataforma",
+    "plataforma": "HBO Max"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "the-king-s-man-la-primera-mision",
+    "modo": "plataforma",
+    "plataforma": "Hulu"
+   },
+   {
+    "fecha": "2026-11-09",
+    "id": "wonder-woman-2017",
+    "modo": "plataforma",
+    "plataforma": "TNT"
    }
   ]
  }
