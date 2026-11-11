@@ -1,0 +1,52 @@
+---
+/**
+ * «Avisos de estrenos en tu calendario»: suscripción al calendario .ics de Próximamente (src/lib/calendario.ts).
+ * Con `e`, además, el botón para añadir solo ese estreno a Google Calendar.
+ */
+import { textos, idiomaDe } from '../i18n';
+import { enlaceGoogle, googleSuscripcion, suscripcionCalendario } from '../lib/calendario';
+import type { Estreno } from '../lib/proximamente';
+
+interface Props {
+  e?: Estreno;
+}
+const { e } = Astro.props;
+const idioma = idiomaDe(Astro.url);
+const p = textos(Astro.url).proximos;
+const uno = e ? await enlaceGoogle(e, idioma) : undefined;
+---
+
+<section class="panel avisos" aria-labelledby="t-avisos">
+  <h2 class="h-panel" id="t-avisos"><span aria-hidden="true">🔔</span> {p.calendarioTitulo}</h2>
+  <p class="nota">{p.calendarioAyuda}</p>
+  {uno && <p class="botones"><a class="pastilla destacada" href={uno} target="_blank" rel="noopener">{p.calendarioAnadir}</a></p>}
+  {uno && <p class="nota">{p.calendarioTodos}:</p>}
+  <p class="botones">
+    <a class="pastilla" href={googleSuscripcion(idioma)} target="_blank" rel="noopener">{p.calendarioGoogle}</a>
+    <a class="pastilla" href={suscripcionCalendario(idioma)}>{p.calendarioOtros}</a>
+  </p>
+</section>
+
+<style>
+  .avisos {
+    margin-block: 20px;
+  }
+  .botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+  }
+  .botones a {
+    text-decoration: none;
+  }
+  .destacada {
+    background: var(--acento);
+    color: #fff;
+    border-color: transparent;
+  }
+  .nota {
+    color: var(--txt-2);
+    margin: 6px 0;
+  }
+</style>

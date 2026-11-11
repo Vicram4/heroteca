@@ -381,6 +381,12 @@ lo que ya se haya estrenado desde la última actualización.
     enlaces absolutos que se abren en otra pestaña (guía «Qué ver antes» si la hay y página del estreno). No se indexa ni
     sale en el mapa del sitio. Su dirección no cambia al estrenarse: entonces dice «Ya en cines». Sirve para conseguir
     enlaces desde otras webs; las visitas desde los recuadros cuentan en Cloudflare Web Analytics.
+- **Avisos de estrenos en el calendario:** `/calendario.ics` (inglés: `/en/calendar.ics`) es un calendario iCalendar con
+  los próximos estrenos (fecha de España o de EE. UU. según el idioma) y los de los últimos 90 días, con aviso la víspera.
+  En Próximamente y en cada estreno hay botones para suscribirse (Google Calendar o `webcal://` para Apple, Outlook y
+  otros) y, en cada estreno, «Añadir a Google Calendar» solo para ese. Las apps de calendario lo recargan solas. Es la
+  alternativa gratuita a las notificaciones: avisar desde la web necesitaría un servidor. Código en `src/lib/calendario.ts`
+  y `src/components/AvisosCalendario.astro`.
 - **Se actualiza sola cada lunes** con la misma tarea de GitHub Actions que «Dónde ver».
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_proximamente.py`
 - Textos de la página: apartado `proximos` de `src/i18n/textos.ts`.

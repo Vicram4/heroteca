@@ -11,6 +11,7 @@ import Base from '../../layouts/Base.astro';
 import TarjetaEstreno from '../../components/TarjetaEstreno.astro';
 import ListaEstrenos from '../../components/ListaEstrenos.astro';
 import CuentaAtras from '../../components/CuentaAtras.astro';
+import AvisosCalendario from '../../components/AvisosCalendario.astro';
 import { universosActivos } from '../../lib/datos';
 import { proximosEstrenos, enEmision, fechaProximamente, textosEstreno, fechaDe } from '../../lib/proximamente';
 import { paisDe } from '../../lib/dondever';
@@ -95,6 +96,8 @@ const actualizado = fechaProximamente().toLocaleDateString(LOCALE[idioma], { day
       }
       <p class="nada" data-nada hidden={estrenos.length > 0}>{tx.proximos.nada}</p>
     </section>
+
+    <AvisosCalendario />
 
     {
       meses.length > 0 && (

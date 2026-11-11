@@ -27,6 +27,7 @@ import { GUIAS, guiaLoc } from '../../../config/guias';
 import { EXTRAS_ESTRENOS } from '../../../config/estrenos';
 import Spoiler from '../../../components/Spoiler.astro';
 import { SITE } from '../../../config/site';
+import AvisosCalendario from '../../../components/AvisosCalendario.astro';
 
 const { e } = Astro.props as { e: Estreno };
 const idioma = idiomaDe(Astro.url);
@@ -169,6 +170,8 @@ const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
         </section>
       )
     }
+
+    {estado === 'proximo' && <AvisosCalendario e={e} />}
 
     {
       estado === 'proximo' && (
