@@ -77,7 +77,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Guías de visionado**: «Por dónde empezar» (rutas para quien no ha visto nada, en Marvel y en DC), «Qué ver antes de Vengadores: Doomsday» (enlazada desde su página de Próximamente), orden del UMC (cronológico y de estreno, con un gráfico que compara cuánto cambia cada
   título entre los dos órdenes), películas de DC y Arrowverso capítulo a capítulo. Además, **«Todas las películas de X en orden»**
   para Spider-Man, X-Men, Hulk, Venom (universo Spider-Man de Sony), Batman, Superman, Wonder Woman y el Joker: orden de
-  estreno, orden cronológico versión a versión, la animación aparte, dónde ver cada película y preguntas rápidas.
+  estreno, orden cronológico versión a versión, la animación aparte, dónde ver cada película y preguntas rápidas. Cada
+  ficha de esas películas y cada página de personaje enlaza a su guía.
 - **Bilingüe (español e inglés)**: interfaz, datos (títulos, sinopsis, capítulos y carteles en inglés) y direcciones
   traducidas (`/en/marvel/captain-america-the-first-avenger/`), con `hreflang` para los buscadores.
 - **Spoilers ocultos** hasta pulsarlos, aviso de escenas post-créditos y "ver antes / ver después".

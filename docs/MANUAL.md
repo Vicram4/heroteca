@@ -498,6 +498,9 @@ del orden del UMC.
 - **`peliculasDe`** («de Spider-Man», «del Joker»; en inglés «Spider-Man») para las preguntas, y **`consejo`** para
   «¿Hace falta verlas todas?».
 - `personajes`: páginas de personaje que se enlazan desde la guía y que, a su vez, muestran un botón hacia ella.
+- **Enlace desde las fichas:** cada ficha que sale en alguna `versiones` (también las animadas) muestra, bajo «Marcar
+  como visto», un botón «Todas las películas de X en orden →» (`guiasDeTitulo` en `src/config/guias.ts`). Sale solo,
+  sin configurar nada: 92 fichas por idioma en noviembre de 2026. Sirve para que los buscadores encuentren las guías.
 
 Lo que se calcula solo: el **orden de estreno** (por fecha de estreno de cada ficha, sin repetir), la duración total,
 **dónde ver** cada película (plataformas de suscripción de España o, en inglés, de Estados Unidos; si no hay ninguna,

@@ -13,7 +13,7 @@ import { leerEpoca } from '../lib/lineaTemporal';
 import BotonVolver from './BotonVolver.astro';
 import { plataformasIncluidas, paisDe } from '../lib/dondever';
 import { datosTmdb } from '../lib/tmdb';
-import { GUIAS } from '../config/guias';
+import { GUIAS, guiasDeTitulo, guiaLoc } from '../config/guias';
 import { universoLoc, sagaLoc, entradaWikiLoc } from '../i18n/datos';
 import { entradasDeTitulo } from '../lib/wiki';
 import { parecidosDe } from '../lib/parecidos';
@@ -72,6 +72,8 @@ const enlaceReparto = idioma === 'en' ? await enlacesRepartoEn() : (await aparic
 // Cuándo transcurre (línea temporal del UMC) y la guía que la muestra
 const epoca = leerEpoca(t.d.epoca);
 const guiaLinea = GUIAS.find((g) => g.tipo === 'linea' && g.universo === universo.id && g.secciones.includes(t.d.seccion));
+// Guías «Todas las películas de X en orden» en las que sale este título
+const guiasOrden = guiasDeTitulo(universo.id, t.id).map((g) => guiaLoc(g, idioma));
 // Actores con página propia (/actores/<id>/)
 const actorConPagina = await paginaDeActor();
 const todos = await todosLosTitulos(idioma);
@@ -244,6 +246,11 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           <span class="no-visto">{tx.progreso.marcar}</span>
           <span class="si-visto">{tx.progreso.visto}</span>
         </button>
+        {guiasOrden.length > 0 && (
+          <p class="guia-orden">
+            {guiasOrden.map((g) => <a class="pastilla" href={`/${universo.id}/guias/${g.id}/`}>{g.titulo} →</a>)}
+          </p>
+        )}
         {!d.fichaPropia && <p class="aviso-ficha">{f.sinFicha}</p>}
         {
           temporadas.length > 1 && (
@@ -631,6 +638,12 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
     margin: 8px 0 0;
   }
   /* Botón «Marcar como visto» (Mi progreso): el texto cambia con aria-pressed */
+  .guia-orden {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 0;
+  }
   .boton-visto {
     margin-top: 14px;
   }

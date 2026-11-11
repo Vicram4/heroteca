@@ -361,6 +361,10 @@ export const guiaLoc = (g: Guia, idioma: 'es' | 'en'): Guia =>
     ? { ...g, ...g.en, rutas: g.rutas?.map((r) => ({ ...r, ...r.en })), versiones: g.versiones?.map((v) => ({ ...v, ...v.en })) }
     : g;
 
+/** Guías por personaje en las que sale un título (ficha), para enlazarlas desde su ficha. */
+export const guiasDeTitulo = (universo: string, id: string) =>
+  GUIAS.filter((g) => g.universo === universo && g.tipo === 'personaje' && g.versiones?.some((v) => v.ids.includes(id)));
+
 /** Guías por personaje que enlazan a la página de un personaje. */
 export const guiasDePersonaje = (universo: string, personaje: string) =>
   GUIAS.filter((g) => g.universo === universo && g.tipo === 'personaje' && g.personajes?.includes(personaje));
