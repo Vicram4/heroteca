@@ -391,6 +391,14 @@ lo que ya se haya estrenado desde la última actualización.
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_proximamente.py`
 - Textos de la página: apartado `proximos` de `src/i18n/textos.ts`.
 
+## Instalar como aplicación
+
+Heroteca se puede instalar en el móvil o el ordenador («Añadir a pantalla de inicio» o el icono de instalar del
+navegador): `public/manifest.webmanifest` con los iconos `public/icono-192.png`, `icono-512.png` e
+`icono-maskable-512.png` (generados desde `favicon.svg`; si cambia el logotipo, hay que volver a generarlos). No hay
+_service worker_: la app abre la web normal, sin modo sin conexión ni notificaciones. Los avisos de estrenos se dan con el
+calendario (ver «Próximamente»).
+
 ## Botón «Volver»
 
 Fichas, personajes, sagas, actores, carpetas y guías tienen el botón **«← Volver»** junto a la miga de pan (componente

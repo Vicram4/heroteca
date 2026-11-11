@@ -64,6 +64,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
   universo y momento.
 - **Planificador de maratones**: calcula las horas de una sección, saga o lista propia y las reparte en sesiones con
   descansos, partiendo las temporadas entre capítulos. El plan viaja en el enlace, sin servidor.
+- **Instalable** como aplicación en el móvil o el ordenador (manifiesto web con iconos propios).
 - **Mi progreso**: marca lo que has visto desde cada ficha; las estanterías y guías lo señalan, se puede filtrar
   por «sin ver» y la página `/mi-progreso/` muestra el avance por sección y el siguiente título. Se guarda solo en el
   navegador (sin cuentas), con el día en que marcaste cada título y copia de seguridad descargable.
