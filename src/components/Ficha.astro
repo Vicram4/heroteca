@@ -72,37 +72,6 @@ const enlaceReparto = idioma === 'en' ? await enlacesRepartoEn() : (await aparic
 // Cuándo transcurre (línea temporal del UMC) y la guía que la muestra
 const epoca = leerEpoca(t.d.epoca);
 const guiaLinea = GUIAS.find((g) => g.tipo === 'linea' && g.universo === universo.id && g.secciones.includes(t.d.seccion));
-// «En resumen»: un párrafo propio con los datos de la colección (distinto en cada ficha; útil para buscadores).
-// Partes de texto y enlaces (los títulos de al lado en la colección).
-const r = f.resumen;
-const resumen: (string | { texto: string; url: string })[][] = [];
-{
-  const frase1 = seccion?.orden === 'carpetas' && d.visionado?.codigo
-    ? r.carpeta(d.visionado.codigo, seccion.nombre, universo.data.nombre)
-    : seccion && d.numero !== undefined && r.ordenes[seccion.orden]
-      ? r.puesto(d.numero, r.ordenes[seccion.orden], seccion.nombre, universo.data.nombre)
-      : '';
-  const epocaTexto = leerEpoca(d.epoca)?.texto;
-  if (frase1) resumen.push([`${frase1}${epocaTexto ? r.transcurre(epocaTexto) : ''}.`]);
-  if (anterior && siguiente) resumen.push([r.vaDespues, { texto: anterior.corto, url: anterior.url }, r.yAntes, { texto: siguiente.corto, url: siguiente.url }, '.']);
-  else if (anterior) resumen.push([r.vaDespues, { texto: anterior.corto, url: anterior.url }, '.']);
-  else if (siguiente) resumen.push([r.vaAntes, { texto: siguiente.corto, url: siguiente.url }, '.']);
-  const minutos = m.duracion;
-  const largo = d.tipo === 'serie' && m.capitulos.length
-    ? r.capitulos(m.capitulos.length)
-    : d.tipo === 'serie' && minutos
-      ? r.duraCapitulo(minutos)
-      : minutos
-        ? r.dura(tx.recomendar.horas(Math.floor(minutos / 60), minutos % 60))
-        : '';
-  const poscreditos = d.conexiones.postCreditos.length > 0 || m.escenasCreditos.length > 0;
-  if (largo) resumen.push([`${largo}${poscreditos ? r.poscreditos : ''}.`]);
-  else if (poscreditos) resumen.push([`${r.soloPoscreditos}.`]);
-  const plataformas = plataformasIncluidas(t.id, paisDe(idioma));
-  if (plataformas.length) resumen.push([r.plataformas(new Intl.ListFormat(LOCALE[idioma], { type: 'conjunction' }).format(plataformas.slice(0, 3)))]);
-  const tmdbEs = datosTmdb(t.universo, t.id, 'es');
-  if (tmdbEs?.nota && (tmdbEs.votos ?? 0) >= 50) resumen.push([r.nota(tmdbEs.nota.toLocaleString(LOCALE[idioma], { minimumFractionDigits: 1 }))]);
-}
 // Actores con página propia (/actores/<id>/)
 const actorConPagina = await paginaDeActor();
 const todos = await todosLosTitulos(idioma);
@@ -152,6 +121,57 @@ const avisoCreditos =
         : f.creditosFinal
     : undefined;
 const tienePostCreditos = d.conexiones.postCreditos.length > 0 || m.escenasCreditos.length > 0;
+// «Preguntas rápidas»: las dudas que la gente escribe en los buscadores, respondidas con los datos de la ficha
+// (distintas en cada ficha). Solo se pregunta lo que se sabe: sin datos de poscréditos o de plataformas, no hay pregunta.
+// Cada respuesta son partes de texto y enlaces.
+const r = f.resumen;
+type Parte = string | { texto: string; url: string };
+const preguntas: { p: string; r: Parte[] }[] = [];
+{
+  const q = d.temporada ? `${d.titulo} (${tx.general.temporadaMinus(d.temporada)})` : d.titulo;
+  const conY = (titulos: Titulo[]): Parte[] =>
+    titulos.flatMap((o, i) => [{ texto: o.corto, url: o.url }, i < titulos.length - 2 ? ', ' : i === titulos.length - 2 ? r.y : '']);
+  // Dónde ver
+  const plataformas = plataformasIncluidas(t.id, paisDe(idioma));
+  if (plataformas.length) preguntas.push({ p: r.qDonde(q), r: [r.plataformas(new Intl.ListFormat(LOCALE[idioma], { type: 'conjunction' }).format(plataformas.slice(0, 3)))] });
+  // Duración o capítulos
+  const minutos = m.duracion;
+  if (d.tipo === 'serie' && m.capitulos.length) preguntas.push({ p: r.qCapitulos(q), r: [r.capitulosR(m.capitulos.length, minutos)] });
+  else if (d.tipo === 'serie' && minutos) preguntas.push({ p: r.qDura(q), r: [`${r.duraCapitulo(minutos)}.`] });
+  else if (minutos) preguntas.push({ p: r.qDura(q), r: [r.duraR(tx.recomendar.horas(Math.floor(minutos / 60), minutos % 60), minutos)] });
+  // Escenas poscréditos (las escritas a mano se cuentan más abajo; si no, el aviso de TMDB)
+  if (tienePostCreditos)
+    preguntas.push({ p: r.qPos(q), r: [d.conexiones.postCreditos.length ? r.posSi(d.conexiones.postCreditos.length, f.escenas) : `${r.si} ${avisoCreditos ?? ''} ${f.quedate}`] });
+  // Orden en la colección
+  const frase1 = seccion?.orden === 'carpetas' && d.visionado?.codigo
+    ? r.carpeta(d.visionado.codigo, seccion.nombre, universo.data.nombre)
+    : seccion && d.numero !== undefined && r.ordenes[seccion.orden]
+      ? r.puesto(d.numero, r.ordenes[seccion.orden], seccion.nombre, universo.data.nombre)
+      : '';
+  const orden: Parte[] = frase1 ? [`${frase1}. `] : [];
+  if (anterior && siguiente) orden.push(r.vaDespues, { texto: anterior.corto, url: anterior.url }, r.yAntes, { texto: siguiente.corto, url: siguiente.url }, '.');
+  else if (anterior) orden.push(r.vaDespues, { texto: anterior.corto, url: anterior.url }, '.');
+  else if (siguiente) orden.push(r.vaAntes, { texto: siguiente.corto, url: siguiente.url }, '.');
+  if (orden.length) preguntas.push({ p: r.qOrden(q), r: orden });
+  // Qué ver antes (conexiones propias o, si no hay, la entrega anterior de su trilogía)
+  const antes = automaticas ? vecinos.antes : verAntes;
+  if (antes.length) preguntas.push({ p: r.qAntes(q), r: [r.antesR, ...conY(antes.slice(0, 4)), '.'] });
+  // Cuándo transcurre (línea temporal)
+  if (epoca)
+    preguntas.push({
+      p: r.qEpoca(q),
+      r: guiaLinea ? [r.epocaR(epoca.texto), ' ', { texto: r.verLinea, url: `/${universo.id}/guias/${guiaLinea.id}/#a-${epoca.desde}` }, '.'] : [r.epocaR(epoca.texto)],
+    });
+  // Fecha de estreno (y la de España si es distinta)
+  if (m.fecha) {
+    const futuro = m.fecha.getTime() > Date.now();
+    const espana = m.fechaEspana && m.fechaEspana.getTime() !== m.fecha.getTime() ? fechaLarga(m.fechaEspana) : '';
+    preguntas.push({ p: r.qEstreno(q, futuro), r: [r.estrenoR(fechaLarga(m.fecha)!, espana ?? '', futuro)] });
+  }
+  // Nota de TMDB (con votos suficientes)
+  const tmdbEs = datosTmdb(t.universo, t.id, 'es');
+  if (tmdbEs?.nota && (tmdbEs.votos ?? 0) >= 50) preguntas.push({ p: r.qNota(q), r: [r.nota(tmdbEs.nota.toLocaleString(LOCALE[idioma], { minimumFractionDigits: 1 }))] });
+}
 const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' : 'ninguno';
 ---
 
@@ -244,26 +264,25 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       </header>
 
       {
-        resumen.length > 0 && (
-          <section class="panel resumen" aria-labelledby="titulo-resumen">
-            <h2 class="h-panel" id="titulo-resumen">{r.titulo}</h2>
-            <p>
-              {resumen.map((frase) => (
-                <>
-                  {frase.map((parte) => (typeof parte === 'string' ? parte : <a href={parte.url}>{parte.texto}</a>))}{' '}
-                </>
-              ))}
-            </p>
-          </section>
-        )
-      }
-
-      {
         t.m.argumento && (
           <section class="panel">
             <h2 class="h-panel">{t.m.deTmdb.has('argumento') ? f.sinopsis : f.argumento}</h2>
             {t.m.argumento.split(/\n\n+/).map((p) => <p>{p}</p>)}
             {t.m.deTmdb.has('argumento') && <p class="fuente-tmdb">{t.m.deTmdb.has('argumento-traducido') ? f.sinopsisTraducida : f.sinopsisTmdb}</p>}
+          </section>
+        )
+      }
+
+      {
+        preguntas.length > 0 && (
+          <section class="panel faq" aria-labelledby="titulo-faq">
+            <h2 class="h-panel" id="titulo-faq">{r.titulo}</h2>
+            {preguntas.map((x) => (
+              <>
+                <h3>{x.p}</h3>
+                <p>{x.r.map((parte) => (typeof parte === 'string' ? parte : <a href={parte.url}>{parte.texto}</a>))}</p>
+              </>
+            ))}
           </section>
         )
       }
@@ -645,6 +664,17 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
   }
   .panel p:last-child {
     margin-bottom: 0;
+  }
+  .faq h3 {
+    margin: 16px 0 3px;
+    font: 700 1rem var(--f-titulo);
+  }
+  .faq h3:first-of-type {
+    margin-top: 4px;
+  }
+  .faq p {
+    margin: 0;
+    max-width: 70ch;
   }
   .parecidas {
     list-style: none;

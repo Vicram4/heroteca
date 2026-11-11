@@ -732,9 +732,14 @@ elemento a esa lista.
 
 - **Título de las fichas:** «Capitana Marvel (2019): dónde ver, reparto y orden» (temporadas: «…: dónde ver, capítulos y
   reparto»), para encajar con lo que la gente busca. Textos `tituloSeo` en el apartado `ficha` de `src/i18n/textos.ts`.
-- **«En resumen»** en cada ficha: un párrafo propio con el puesto en el orden, el año en que transcurre, los títulos de
-  antes y después (enlazados), la duración o los capítulos, si tiene poscréditos, dónde verla y la nota de TMDB. Así cada
-  ficha tiene texto único además de la sinopsis de TMDB (que comparten muchas webs). Se genera en `Ficha.astro`.
+- **«Preguntas rápidas»** en cada ficha (sustituye al antiguo «En resumen», con los mismos datos): las dudas que la gente
+  escribe en los buscadores, como subtítulos con su respuesta. Por ejemplo: «¿Dónde ver X en España?», «¿Cuánto dura X?» (o
+  «¿Cuántos capítulos tiene…?» en series), «¿Tiene X escena poscréditos?», «¿En qué orden se ve X?», «¿Qué ver antes de
+  X?», «¿En qué año transcurre X?», «¿Cuándo se estrenó X?» y «¿Qué nota tiene X?». Solo sale la pregunta cuyo dato se
+  conoce: sin plataformas, poscréditos (escritos a mano o de TMDB), «ver antes» o época, esa pregunta no aparece (nunca se
+  responde «no tiene poscréditos», porque los datos de TMDB son incompletos). Así cada ficha tiene texto único además de la
+  sinopsis de TMDB. Se genera en `Ficha.astro`, textos en `ficha.resumen` de `src/i18n/textos.ts`. No lleva datos
+  estructurados `FAQPage`: Google solo los muestra para webs oficiales y de salud.
 - **«Si te gustó, también te puede gustar»** en cada ficha: hasta 6 títulos del mismo universo con cartel y el motivo
   (personajes, saga o dirección en común). Enlaza fichas cercanas entre sí para el visitante y para los buscadores. No
   repite lo que ya sale en «Conexiones» ni otras temporadas de la misma serie. La puntuación (personajes pesados por
