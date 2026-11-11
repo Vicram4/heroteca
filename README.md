@@ -79,6 +79,9 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
   para Spider-Man, X-Men, Hulk, Venom (universo Spider-Man de Sony), Batman, Superman, Wonder Woman y el Joker: orden de
   estreno, orden cronológico versión a versión, la animación aparte, dónde ver cada película y preguntas rápidas. Cada
   ficha de esas películas y cada página de personaje enlaza a su guía.
+- **Series completas** (`/dc/series/lucifer/`, en inglés `/en/dc/series/lucifer/`): una página por cada serie con más
+  de una temporada (32), con una tabla de temporadas (año, capítulos, duración y dónde ver), los totales y preguntas
+  rápidas. Cada ficha de temporada enlaza a ella con «Toda la serie →».
 - **Bilingüe (español e inglés)**: interfaz, datos (títulos, sinopsis, capítulos y carteles en inglés) y direcciones
   traducidas (`/en/marvel/captain-america-the-first-avenger/`), con `hreflang` para los buscadores.
 - **Spoilers ocultos** hasta pulsarlos, aviso de escenas post-créditos y "ver antes / ver después".

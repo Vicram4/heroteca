@@ -1,0 +1,301 @@
+---
+/**
+ * Página de una serie completa (/<universo>/series/<serie>/): todas sus temporadas en una tabla
+ * (año, capítulos, duración y dónde ver) y «Preguntas rápidas» con los totales.
+ * Solo existe para las series con más de una temporada en la colección; cada ficha de temporada enlaza aquí.
+ */
+import { tablasEn } from '../../../../i18n/rutas';
+import { conIdiomas, textos, idiomaDe, LOCALE } from '../../../../i18n';
+import Base from '../../../../layouts/Base.astro';
+import SubNav from '../../../../components/SubNav.astro';
+import Caratula from '../../../../components/Caratula.astro';
+import { universosActivos, titulosDe, type Titulo, type Universo } from '../../../../lib/datos';
+import { universoLoc } from '../../../../i18n/datos';
+import { rutaEnIdioma } from '../../../../i18n/rutas';
+import { plataformasIncluidas, paisDe } from '../../../../lib/dondever';
+import { datosTmdb, imagenTmdb } from '../../../../lib/tmdb';
+import { getImage } from 'astro:assets';
+import { SITE } from '../../../../config/site';
+
+export async function getStaticPaths() {
+  const en = await tablasEn();
+  const rutas: { params: { universo: string; series: string; serie: string }; props: { universo: Universo; serie: string } }[] = [];
+  for (const universo of await universosActivos()) {
+    const ids = [...new Set((await titulosDe(universo.id)).map((t) => t.d.serie).filter((s): s is string => Boolean(s)))];
+    for (const serie of ids) {
+      if (!en.series.has(`${universo.id}/${serie}`)) continue; // una sola temporada: su ficha ya hace de página
+      rutas.push({ params: { universo: universo.id, series: 'series', serie }, props: { universo, serie } });
+    }
+  }
+  return conIdiomas(rutas, (r) => ({ serie: en.series.get(`${r.params.universo}/${r.params.serie}`) }));
+}
+
+const idioma = idiomaDe(Astro.url);
+const tx = textos(Astro.url);
+const s = tx.serie;
+const props = Astro.props as { universo: Universo; serie: string };
+const universo = universoLoc(props.universo, idioma);
+const temporadas: Titulo[] = (await titulosDe(universo.id, idioma))
+  .filter((t) => t.d.serie === props.serie)
+  .sort((a, b) => (a.d.temporada ?? 0) - (b.d.temporada ?? 0));
+const primera = temporadas[0];
+const nombre = primera.d.titulo;
+const lista = (v: string[]) => new Intl.ListFormat(LOCALE[idioma], { type: 'conjunction' }).format(v);
+
+// Una fila por temporada: los minutos suman la duración de cada capítulo (o la duración típica si falta)
+const filas = temporadas.map((t) => {
+  const caps = t.m.capitulos.length;
+  const minutos = caps ? t.m.capitulos.reduce((n, c) => n + (c.duracion ?? t.m.duracion ?? 0), 0) : 0;
+  return { t, caps, minutos, plataformas: plataformasIncluidas(t.id, paisDe(idioma)) };
+});
+const anioFin = Math.max(...temporadas.map((t) => t.d.anioFin ?? t.d.anio));
+const anios = anioFin > primera.d.anio ? `${primera.d.anio}–${anioFin}` : String(primera.d.anio);
+// Temporadas que tiene la serie según TMDB (puede que la colección no las tenga todas)
+const totalTemporadas = Math.max(temporadas.length, ...temporadas.map((t) => t.m.temporadas ?? 0));
+const completa = totalTemporadas === temporadas.length;
+const totalCaps = filas.reduce((n, f) => n + f.caps, 0);
+const totalMin = filas.reduce((n, f) => n + f.minutos, 0);
+const todasConDatos = filas.every((f) => f.caps > 0);
+const argumento = temporadas.map((t) => t.m.argumento).find(Boolean);
+
+// «Preguntas rápidas»: solo lo que los datos permiten responder bien
+type Parte = string | { texto: string; url: string };
+const preguntas: { p: string; r: Parte[] }[] = [];
+preguntas.push({ p: s.qTemporadas(nombre), r: [s.temporadasR(totalTemporadas, anios)] });
+if (completa && todasConDatos) {
+  preguntas.push({ p: s.qCapitulos(nombre), r: [s.capitulosR(totalCaps, temporadas.length)] });
+  if (totalMin) preguntas.push({ p: s.qMaraton(nombre), r: [s.maratonR(s.horas(totalMin), Math.ceil(totalMin / 120))] });
+}
+{
+  const conPlataforma = filas.filter((f) => f.plataformas.length);
+  const comunes = filas[0].plataformas.filter((p) => filas.every((f) => f.plataformas.includes(p)));
+  if (comunes.length) preguntas.push({ p: s.qDonde(nombre), r: [s.dondeTodas(lista(comunes.slice(0, 3)))] });
+  else if (conPlataforma.length) {
+    const todas = [...new Set(conPlataforma.flatMap((f) => f.plataformas))];
+    preguntas.push({ p: s.qDonde(nombre), r: [s.dondeAlgunas(conPlataforma.length, temporadas.length, lista(todas.slice(0, 3)))] });
+  }
+}
+preguntas.push({
+  p: s.qOrden(nombre),
+  r: [s.ordenR, ...temporadas.flatMap((t, i) => [{ texto: tx.general.temporada(t.d.temporada ?? i + 1), url: t.url }, i < temporadas.length - 1 ? ' → ' : '.'])],
+});
+const tmdbEs = datosTmdb(primera.universo, primera.id, 'es');
+if (tmdbEs?.nota && (tmdbEs.votos ?? 0) >= 50)
+  preguntas.push({ p: s.qNota(nombre), r: [tx.ficha.resumen.nota(tmdbEs.nota.toLocaleString(LOCALE[idioma], { minimumFractionDigits: 1 }))] });
+
+// Buscadores: descripción, imagen y datos estructurados (TVSeries con sus temporadas)
+const descripcion = s.descripcion(nombre, anios, temporadas.length, completa && todasConDatos ? totalCaps : 0);
+const imagenSocial = primera.portada
+  ? (await getImage({ src: primera.portada, width: 600, format: 'jpg' })).src
+  : primera.m.posterTmdb
+    ? imagenTmdb(primera.m.posterTmdb, 'w500')
+    : undefined;
+const absoluta = async (ruta: string) => new URL(await rutaEnIdioma(ruta, idioma), SITE.url).href;
+const datos = {
+  '@context': 'https://schema.org',
+  '@type': 'TVSeries',
+  name: nombre,
+  ...(primera.d.tituloOriginal && { alternateName: primera.d.tituloOriginal }),
+  url: await absoluta(`/${universo.id}/series/${props.serie}/`),
+  inLanguage: idioma,
+  startDate: primera.m.fecha ? primera.m.fecha.toISOString().slice(0, 10) : String(primera.d.anio),
+  numberOfSeasons: totalTemporadas,
+  ...(completa && todasConDatos && { numberOfEpisodes: totalCaps }),
+  ...(imagenSocial && { image: new URL(imagenSocial, SITE.url).href }),
+  ...(argumento && { description: argumento.replace(/\s+/g, ' ').slice(0, 500) }),
+  ...(primera.m.creadores.length && { creator: primera.m.creadores.map((n) => ({ '@type': 'Person', name: n })) }),
+  containsSeason: await Promise.all(
+    filas.map(async (f) => ({
+      '@type': 'TVSeason',
+      name: tx.general.temporada(f.t.d.temporada ?? 0),
+      seasonNumber: f.t.d.temporada,
+      url: await absoluta(f.t.url),
+      ...(f.caps && { numberOfEpisodes: f.caps }),
+      ...(f.t.m.fecha && { startDate: f.t.m.fecha.toISOString().slice(0, 10) }),
+    })),
+  ),
+};
+const seccion = universo.data.secciones.find((x) => x.id === primera.d.seccion);
+const urlPagina = `/${universo.id}/series/${props.serie}/`;
+---
+
+<Base
+  titulo={s.tituloSeo(nombre)}
+  descripcion={descripcion}
+  universo={universo}
+  imagen={imagenSocial}
+  tipoOg="video.tv_show"
+  datos={datos}
+  migas={[
+    { nombre: 'Heroteca', url: '/' },
+    { nombre: universo.data.nombre, url: `/${universo.id}/` },
+    ...(seccion ? [{ nombre: seccion.nombre, url: `/${universo.id}/${seccion.id}/` }] : []),
+    { nombre, url: urlPagina },
+  ]}
+>
+  <SubNav slot="subnav" universo={universo} activo={primera.d.seccion} />
+  <div class="contenedor serie">
+    <nav class="miga" aria-label={tx.general.estasEn}>
+      <a href={`/${universo.id}/`}>{universo.data.nombre}</a>
+      {seccion && <><span aria-hidden="true">›</span><a href={`/${universo.id}/${seccion.id}/`}>{seccion.nombre}</a></>}
+    </nav>
+    <div class="cabecera">
+      {(primera.portada || primera.m.posterTmdb) && <Caratula t={primera} ancho={180} cargaInmediata alt={tx.ficha.cartel(nombre)} class="cartel" />}
+      <div>
+        <h1>{s.h1(nombre)}</h1>
+        {primera.d.tituloOriginal && <p class="original">{primera.d.tituloOriginal}</p>}
+        <p>{s.intro(nombre, universo.data.nombre, anios)} {s.introColeccion(temporadas.length, totalTemporadas)}</p>
+        <ul class="chips">
+          {temporadas.map((t) => <li><a class="chip" href={t.url}>{tx.carpetas.temporadaCorta(t.d.temporada ?? 0)}</a></li>)}
+        </ul>
+      </div>
+    </div>
+
+    <section class="panel">
+      <h2 class="h-panel">{s.tablaTitulo}</h2>
+      <div class="tabla-envoltura">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">{s.temporada}</th>
+              <th scope="col">{s.anio}</th>
+              <th scope="col" class="num">{s.capitulos}</th>
+              <th scope="col" class="num">{s.duracion}</th>
+              <th scope="col">{s.dondeVer}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filas.map((f) => (
+              <tr>
+                <th scope="row"><a href={f.t.url}>{tx.general.temporada(f.t.d.temporada ?? 0)}</a></th>
+                <td>{f.t.d.anioFin && f.t.d.anioFin !== f.t.d.anio ? `${f.t.d.anio}–${f.t.d.anioFin}` : f.t.d.anio}</td>
+                <td class="num">{f.caps || s.sinDatos}</td>
+                <td class="num">{f.minutos ? s.horas(f.minutos) : s.sinDatos}</td>
+                <td>{f.plataformas.length ? lista(f.plataformas) : s.sinDatos}</td>
+              </tr>
+            ))}
+          </tbody>
+          {todasConDatos && (
+            <tfoot>
+              <tr>
+                <th scope="row">{s.total}</th>
+                <td>{anios}</td>
+                <td class="num">{totalCaps}</td>
+                <td class="num">{totalMin ? s.horas(totalMin) : s.sinDatos}</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          )}
+        </table>
+      </div>
+      <p class="fuente-tmdb">{s.notaTabla}</p>
+    </section>
+
+    <section class="panel faq" aria-labelledby="titulo-faq">
+      <h2 class="h-panel" id="titulo-faq">{tx.ficha.resumen.titulo}</h2>
+      {preguntas.map((x) => (
+        <>
+          <h3>{x.p}</h3>
+          <p>{x.r.map((parte) => (typeof parte === 'string' ? parte : <a href={parte.url}>{parte.texto}</a>))}</p>
+        </>
+      ))}
+    </section>
+
+    {argumento && (
+      <section class="panel">
+        <h2 class="h-panel">{s.deQueTrata}</h2>
+        {argumento.split(/\n\n+/).map((p) => <p>{p}</p>)}
+      </section>
+    )}
+  </div>
+</Base>
+
+<style>
+  .serie {
+    padding-top: clamp(18px, 3vw, 28px);
+    padding-bottom: 40px;
+  }
+  .miga {
+    display: flex;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--txt-2);
+    margin-bottom: 14px;
+  }
+  .cabecera {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(16px, 3vw, 28px);
+    align-items: start;
+    margin-bottom: 22px;
+  }
+  .cabecera :global(.cartel) {
+    width: clamp(110px, 22vw, 180px);
+    height: auto;
+    border-radius: 8px;
+  }
+  .cabecera h1 {
+    margin: 0 0 6px;
+  }
+  .original {
+    color: var(--txt-2);
+    margin: 0 0 10px;
+  }
+  .chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0;
+    margin: 12px 0 0;
+  }
+  .panel {
+    margin-top: 18px;
+  }
+  .tabla-envoltura {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    min-width: 42rem;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  th,
+  td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--borde, rgba(127, 127, 127, 0.25));
+    vertical-align: top;
+  }
+  thead th {
+    font-size: 0.85rem;
+    color: var(--txt-2);
+    font-weight: 600;
+  }
+  .num,
+  tbody th,
+  thead th {
+    white-space: nowrap;
+  }
+  .num {
+    text-align: right;
+  }
+    tfoot th,
+  tfoot td {
+    font-weight: 700;
+    border-bottom: 0;
+  }
+  .faq h3 {
+    font-size: 1rem;
+    margin: 14px 0 4px;
+  }
+  .faq p {
+    margin: 0;
+  }
+  .fuente-tmdb {
+    font-size: 0.8rem;
+    color: var(--txt-2);
+    margin: 10px 0 0;
+  }
+</style>

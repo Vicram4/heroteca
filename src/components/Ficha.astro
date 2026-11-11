@@ -264,6 +264,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
                     </a>
                   </li>
                 ))}
+                {d.serie && <li><a class="chip serie-completa" href={`/${universo.id}/series/${d.serie}/`}>{f.serieCompleta} →</a></li>}
               </ul>
             </nav>
           )

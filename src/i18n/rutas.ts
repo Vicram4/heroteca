@@ -17,7 +17,7 @@ import { JUEGOS } from '../config/juegos';
 import { todosLosEstrenos } from '../lib/proximamente';
 
 /** Palabras fijas de las direcciones. */
-export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon', miProgreso: 'my-progress', miAno: 'my-year',recomendaciones: 'recommendations', estadisticas: 'stats', actores: 'actors', noticias: 'news', pasatiempos: 'games', maraton: 'marathon', rankings: 'rankings', poscreditos: 'post-credits', wiki: 'wiki', dondeVer: 'where-to-watch', estrenos: 'releases', insertar: 'embed' } as const;
+export const SEGMENTOS = { personajes: 'characters', carpetas: 'folders', guias: 'guides', acerca: 'about', privacidad: 'privacy', proximamente: 'coming-soon', miProgreso: 'my-progress', miAno: 'my-year',recomendaciones: 'recommendations', estadisticas: 'stats', actores: 'actors', noticias: 'news', pasatiempos: 'games', maraton: 'marathon', rankings: 'rankings', poscreditos: 'post-credits', wiki: 'wiki', dondeVer: 'where-to-watch', estrenos: 'releases', insertar: 'embed', series: 'series' } as const;
 export type Segmento = keyof typeof SEGMENTOS;
 export const segmento = (s: Segmento, idioma: 'es' | 'en') => (idioma === 'en' ? SEGMENTOS[s] : s);
 
@@ -41,6 +41,8 @@ interface Tablas {
   wiki: Map<string, string>;
   sagas: Map<string, string>;
   guias: Map<string, string>;
+  /** "universo/serie" → slug inglés de la página de la serie completa */
+  series: Map<string, string>;
   /** Dirección española completa → inglesa, y al revés */
   aIngles: Map<string, string>;
   aEspanol: Map<string, string>;
@@ -108,6 +110,18 @@ async function calcular(): Promise<Tablas> {
     sagas.set(s.id, libre(usadosS, [base, `${base}-${s.data.universo.id}`, s.id]));
   }
   const guias = new Map(GUIAS.map((g) => [g.id, g.idEn ?? g.id]));
+  // Series con varias temporadas (/<universo>/series/<serie>/): título inglés de su primera temporada
+  const series = new Map<string, string>();
+  for (const u of activos) {
+    const usados = new Set<string>();
+    const deU = titulosEn.filter((x) => x.universo === u && x.d.serie).sort((a, b) => (a.d.temporada ?? 0) - (b.d.temporada ?? 0));
+    for (const id of [...new Set(deU.map((x) => x.d.serie!))].sort()) {
+      const temporadas = deU.filter((x) => x.d.serie === id);
+      if (temporadas.length < 2) continue;
+      const base = slug(temporadas[0].d.titulo);
+      series.set(`${u}/${id}`, libre(usados, [base || id, `${base}-${temporadas[0].d.anio}`, id]));
+    }
+  }
 
   // Direcciones completas
   const aIngles = new Map<string, string>([
@@ -155,9 +169,10 @@ async function calcular(): Promise<Tablas> {
   for (const s of await getCollection('sagas')) {
     if (activos.has(s.data.universo.id)) aIngles.set(`/${s.data.universo.id}/sagas/${s.id}/`, `/en/${s.data.universo.id}/sagas/${sagas.get(s.id)}/`);
   }
+  for (const [k, v] of series) { const [U, id] = k.split('/'); aIngles.set(`/${U}/series/${id}/`, `/en/${U}/${SEGMENTOS.series}/${v}/`); }
   for (const g of GUIAS) aIngles.set(`/${g.universo}/guias/${g.id}/`, `/en/${g.universo}/${SEGMENTOS.guias}/${guias.get(g.id)}/`);
   const aEspanol = new Map([...aIngles].map(([es, en]) => [en, es]));
-  return { fichas, secciones, personajes, wiki, sagas, guias, aIngles, aEspanol };
+  return { fichas, secciones, personajes, wiki, sagas, guias, series, aIngles, aEspanol };
 }
 
 /** Dirección inglesa de una dirección española (si no está en las tablas, se le pone /en delante). */

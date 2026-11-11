@@ -481,6 +481,26 @@ se estrene y entre en la colección, su página de Próximamente redirige a la f
 sigue en la lista de guías. La guía «Por dónde empezar» debe seguir siendo la primera de tipo `rutas` de cada universo
 (las preguntas frecuentes la buscan así).
 
+## Series completas (/<universo>/series/<serie>/)
+
+Una página por serie con **más de una temporada** en la colección (32 en noviembre de 2026: 21 de DC y 11 de Marvel),
+en `src/pages/[...idioma]/[universo]/[series]/[serie].astro`. Se agrupan por el campo `serie` de las fichas de temporada;
+no hay que configurar nada: una serie nueva con dos temporadas tiene página sola. Las de una temporada no la tienen
+(su ficha ya hace ese papel).
+
+- **Direcciones:** `/<universo>/series/<serie>/` con el id de `serie` (`/dc/series/lucifer/`). En inglés, el título inglés
+  de la primera temporada (`/en/marvel/series/agents-of-shield/`), calculado en `src/i18n/rutas.ts` (tabla `series`).
+  Van bajo `series/` porque algunos ids (`the-flash`, `supergirl`, `daredevil`, `agente-carter`) ya son fichas de
+  película. `series` está en `RUTAS_RESERVADAS`; en DC, `/dc/series/` sigue siendo la estantería de la sección.
+- **Contenido:** tabla de temporadas (año, capítulos, duración sumando cada capítulo de TMDB, plataformas de suscripción
+  de España o, en inglés, de Estados Unidos) con fila de totales, «Preguntas rápidas» (cuántas temporadas, cuántos
+  capítulos, cuánto se tarda en verla entera, dónde ver, en qué orden, nota de TMDB) y la sinopsis de la primera
+  temporada que la tenga. Datos estructurados `TVSeries` con `containsSeason`.
+- **Si a la colección le faltan temporadas** (TMDB dice más que las fichas): la página lo dice («tiene 3 de sus 5») y las
+  preguntas no dan el total de capítulos ni de horas, para no dar cifras falsas (la tabla suma solo las que hay).
+- **Enlace desde las fichas:** en la fila de temporadas de cada ficha, un chip «Toda la serie →».
+- Textos en `serie` de `src/i18n/textos.ts`.
+
 ## Películas por personaje («Todas las películas de X en orden»)
 
 Guías de tipo `personaje`, definidas aparte en `src/config/guiasPersonaje.ts` (se suman a `GUIAS`). Direcciones:
