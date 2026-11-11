@@ -2,6 +2,7 @@
 /** «Dónde ver en España»: plataformas de suscripción, gratis, alquiler y compra (datos de JustWatch). */
 import { dondeVer, fechaDondeVer } from '../lib/dondever';
 import { imagenTmdb } from '../lib/tmdb';
+import { plataformaDeNombre } from '../config/plataformas';
 import { textos, idiomaDe, LOCALE } from '../i18n';
 
 interface Props {
@@ -65,7 +66,14 @@ const fecha = fechaDondeVer(pais)?.toLocaleDateString(LOCALE[idioma], { day: 'nu
                     {p.nombre.slice(0, 1)}
                   </span>
                 )}
-                <span>{p.nombre}</span>
+                {/* Suscripción o gratis: enlace a la página de la plataforma, si la tiene */}
+                {(nombre === tx.dondeVer.suscripcion || nombre === tx.dondeVer.gratis) && plataformaDeNombre(p.nombre) ? (
+                  <a href={`/donde-ver/${plataformaDeNombre(p.nombre)!.id}/`} title={tx.dondeVer.verPlataforma(plataformaDeNombre(p.nombre)!.nombre)}>
+                    {p.nombre}
+                  </a>
+                ) : (
+                  <span>{p.nombre}</span>
+                )}
               </li>
             ))}
           </ul>

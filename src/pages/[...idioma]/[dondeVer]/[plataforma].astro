@@ -1,0 +1,180 @@
+---
+import { conIdiomas, idiomaDe, textos, LOCALE, nombreTipo } from '../../../i18n';
+import { PLATAFORMAS, type PlataformaPagina } from '../../../config/plataformas';
+export function getStaticPaths() {
+  return conIdiomas(
+    PLATAFORMAS.map((p) => ({ params: { dondeVer: 'donde-ver', plataforma: p.id }, props: { p } })),
+    () => ({ dondeVer: 'where-to-watch' }),
+  );
+}
+/**
+ * «Marvel y DC en <plataforma>»: títulos incluidos en la suscripción (o gratis) en España (versión en español) o en
+ * Estados Unidos (versión en inglés), por universo y año. Las series cuentan una vez, con sus temporadas.
+ * Datos de JustWatch vía TMDB (src/lib/dondever.ts), que GitHub Actions actualiza cada semana.
+ */
+import Base from '../../../layouts/Base.astro';
+import Caratula from '../../../components/Caratula.astro';
+import BotonVolver from '../../../components/BotonVolver.astro';
+import { titulosEnPlataforma, recuentoPlataformas } from '../../../lib/plataformas';
+import { fechaDondeVer, paisDe } from '../../../lib/dondever';
+import { rutaEnIdioma } from '../../../i18n/rutas';
+
+const { p } = Astro.props as { p: PlataformaPagina };
+const tx = textos(Astro.url);
+const x = tx.plataformas;
+const idioma = idiomaDe(Astro.url);
+const grupos = await titulosEnPlataforma(p, idioma);
+const entradas = grupos.flatMap((g) => g.entradas);
+const total = entradas.length;
+const pelis = entradas.filter((e) => !e.esSerie).length;
+const fecha = fechaDondeVer(paisDe(idioma))?.toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }) ?? '';
+// Direcciones de los datos estructurados en el idioma de la página (no pasan por la integración de enlaces)
+const urls = await Promise.all(entradas.slice(0, 100).map((e) => rutaEnIdioma(`/${e.t.universo}/${e.t.id}/`, idioma)));
+const otras = (await recuentoPlataformas(idioma)).filter((o) => o.p.id !== p.id && o.total > 0);
+
+/** «1–3» si son seguidas; si no, «1, 2, 4». */
+function textoTemporadas(l: number[]) {
+  if (!l.length) return '';
+  const seguidas = l.every((n, i) => i === 0 || n === l[i - 1] + 1);
+  const lista = l.length === 1 ? String(l[0]) : seguidas ? `${l[0]}–${l[l.length - 1]}` : l.join(', ');
+  return l.length === 1 ? x.temporada(lista) : x.temporadas(lista);
+}
+---
+
+<Base
+  titulo={x.tituloSeoP(p.nombre)}
+  descripcion={x.descripcionP(p.nombre, total)}
+  migas={[
+    { nombre: 'Heroteca', url: '/' },
+    { nombre: x.titulo, url: '/donde-ver/' },
+    { nombre: p.nombre, url: `/donde-ver/${p.id}/` },
+  ]}
+  datos={{
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: x.h1(p.nombre),
+    numberOfItems: total,
+    itemListElement: entradas.slice(0, 100).map((e, i) => ({ '@type': 'ListItem', position: i + 1, name: e.nombre, url: new URL(urls[i], Astro.site).href })),
+  }}
+>
+  <div class="contenedor">
+    <BotonVolver href="/donde-ver/">
+      <nav class="miga" aria-label={tx.general.estasEn}><a href="/donde-ver/">{x.titulo}</a></nav>
+    </BotonVolver>
+    <h1>{x.h1(p.nombre)}</h1>
+    <p class="intro">{x.introP(p.nombre, total, fecha)}</p>
+    <p class="resumen">{x.resumenP(pelis, total - pelis)}</p>
+
+    {
+      grupos.map((g) => (
+        <section class="bloque" aria-labelledby={`h-${g.universo}`}>
+          <h2 id={`h-${g.universo}`}>
+            {g.nombre} <span class="cuenta">· {x.titulos(g.entradas.length)}</span>
+          </h2>
+          <ul class="rejilla">
+            {g.entradas.map((e) => (
+              <li data-titulo={e.t.id}>
+                <a href={e.t.url}>
+                  <span class="tapa">{e.t.portada || e.t.m.posterTmdb ? <Caratula t={e.t} ancho={120} /> : null}</span>
+                  <span class="nombre">{e.nombre}</span>
+                  <span class="meta">{[e.anio, e.t.d.animada ? tx.general.animado(nombreTipo(e.t.tipo, idioma)) : nombreTipo(e.t.tipo, idioma)].join(' · ')}</span>
+                  {e.temporadas.length > 0 && <span class="meta">{textoTemporadas(e.temporadas)}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    <p class="nota">{x.aviso}</p>
+
+    {
+      otras.length > 0 && (
+        <nav class="panel otras" aria-labelledby="h-otras">
+          <h2 class="h-panel" id="h-otras">{x.otras}</h2>
+          <ul>
+            {otras.map((o) => (
+              <li>
+                <a href={`/donde-ver/${o.p.id}/`}>{x.h1(o.p.nombre)}</a> <span class="cuenta">· {x.titulos(o.total)}</span>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+  </div>
+</Base>
+
+<style>
+  h1 {
+    margin: 8px 0 10px;
+  }
+  .intro {
+    max-width: 70ch;
+    color: var(--txt-2);
+  }
+  .resumen {
+    font-weight: 700;
+  }
+  .bloque {
+    margin-top: 32px;
+  }
+  .cuenta {
+    color: var(--txt-2);
+    font-weight: 600;
+    font-size: 0.85em;
+  }
+  .rejilla {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(46%, 140px), 1fr));
+    gap: 22px 16px;
+  }
+  .rejilla a {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .tapa {
+    display: block;
+    aspect-ratio: 2 / 3;
+    border-radius: var(--radio-s, 8px);
+    overflow: hidden;
+    background: var(--sup);
+    transition: transform var(--transicion);
+  }
+  .rejilla a:hover .tapa,
+  .rejilla a:focus-visible .tapa {
+    transform: translateY(-3px);
+  }
+  .tapa :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .nombre {
+    margin-top: 6px;
+    font: 700 1rem / 1.2 var(--f-titulo);
+  }
+  .meta {
+    font-size: 0.82rem;
+    color: var(--txt-2);
+  }
+  .nota {
+    margin-top: 32px;
+    font-size: 0.9rem;
+    color: var(--txt-2);
+  }
+  .otras {
+    margin-top: 24px;
+  }
+  .otras ul {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+</style>

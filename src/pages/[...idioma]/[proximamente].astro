@@ -14,6 +14,10 @@ import CuentaAtras from '../../components/CuentaAtras.astro';
 import { universosActivos } from '../../lib/datos';
 import { proximosEstrenos, enEmision, fechaProximamente, textosEstreno, fechaDe } from '../../lib/proximamente';
 import { paisDe } from '../../lib/dondever';
+import { mesesConEstrenos, rutaMes, nombreMes } from '../../lib/estrenosMes';
+// Meses desde el actual (los pasados siguen existiendo, pero aquí solo se enlaza lo que viene)
+const mesActual = new Date().toISOString().slice(0, 7);
+const meses = mesesConEstrenos().filter((m) => m >= mesActual);
 
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
@@ -91,6 +95,21 @@ const actualizado = fechaProximamente().toLocaleDateString(LOCALE[idioma], { day
       }
       <p class="nada" data-nada hidden={estrenos.length > 0}>{tx.proximos.nada}</p>
     </section>
+
+    {
+      meses.length > 0 && (
+        <nav class="por-meses" aria-labelledby="t-meses">
+          <h2 id="t-meses">{tx.estrenosMes.porMeses}</h2>
+          <ul>
+            {meses.map((m) => (
+              <li>
+                <a href={`/estrenos/${rutaMes(m, 'es')}/`}>{nombreMes(m, idioma)}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
   </div>
 </Base>
 
@@ -115,6 +134,18 @@ const actualizado = fechaProximamente().toLocaleDateString(LOCALE[idioma], { day
 </script>
 
 <style>
+  .por-meses {
+    margin-top: 36px;
+  }
+  .por-meses ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: 8px 0 0;
+    padding: 0;
+    font-weight: 700;
+  }
   .proximos {
     padding-block: clamp(20px, 4vw, 36px) 48px;
   }

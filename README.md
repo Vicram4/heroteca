@@ -32,7 +32,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Fichas completas**: datos del archivo original, completados con sinopsis, reparto, carteles y tráileres de TMDB. Cada dato de TMDB queda marcado. La imagen principal es el cartel oficial y cada ficha muestra también la carátula de la edición de la colección.
 - **Banda sonora**: compositor en la ficha técnica, álbum de la banda sonora (y de la partitura) para escuchar en la propia ficha con Apple Music o abrir en Spotify y YouTube Music, y las canciones conocidas que suenan en títulos como Guardianes de la Galaxia o Deadpool.
 - **Dónde ver**: plataformas de suscripción, alquiler y compra de cada título (España en la versión española,
-  EE. UU. en la inglesa), con datos de JustWatch que se **actualizan solos cada semana**.
+  EE. UU. en la inglesa), con datos de JustWatch que se **actualizan solos cada semana**. Además, una página por
+  plataforma (Disney+, HBO Max, Netflix y Prime Video) con todo lo que incluye su suscripción (`/donde-ver/`).
 - **Pasatiempos**: once juegos hechos con los datos de la colección, entre ellos Heroedle (un personaje al día), trivia
   diaria, conecta a los actores, bingo de maratón, cartel pixelado y ¿qué héroe eres? Seis de ellos tienen botón «Compartir
   resultado» (en el móvil abre el menú de compartir del teléfono; en el ordenador copia el texto).
@@ -42,6 +43,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
   colección o cambios en plataformas, GitHub Actions publica un resumen como issue y llega por correo.
 - **Próximamente**: calendario con página propia para cada estreno (cuenta atrás, sinopsis y tráiler oficial) de los próximos títulos de Marvel y DC (películas, series y temporadas nuevas) y de las
   series en emisión, con cuenta atrás y filtro por universo. Datos de TMDB que se **actualizan solos cada semana**.
+  Las películas responden a «cuándo se estrena», «cuánto dura» y «¿tiene escenas poscréditos?», y hay una página de
+  estrenos por mes (`/estrenos/diciembre-2026/`).
 - **¿Qué veo?**: encuesta de 7 preguntas (universo, tiempo, tono, imagen real o animación, plataformas, personaje
   favorito y nivel) que recomienda títulos con la nota de TMDB, la calificación por edades y lo que ya has visto.
   Funciona entera en el navegador.

@@ -7,8 +7,10 @@ import { textos } from '../i18n';
 
 interface Props {
   etiqueta?: string;
+  /** No ocultar lo ya estrenado (páginas de estrenos por mes, que también cubren meses pasados) */
+  conPasados?: boolean;
 }
-const { etiqueta } = Astro.props;
+const { etiqueta, conPasados = false } = Astro.props;
 const tx = textos(Astro.url);
 ---
 
@@ -21,6 +23,7 @@ const tx = textos(Astro.url);
   data-faltan={tx.proximos.faltan(999)}
   data-dia1={tx.proximos.dia1}
   data-dias={tx.proximos.diasCorto}
+  data-con-pasados={conPasados ? '' : undefined}
 >
   <slot />
 </ul>
@@ -34,6 +37,7 @@ const tx = textos(Astro.url);
     lista.querySelectorAll<HTMLElement>('.estreno').forEach((li) => {
       const dias = Math.round((Date.parse(`${li.dataset.fecha}T00:00:00Z`) - hoyUtc) / DIA);
       if (dias < 0) {
+        if (lista.dataset.conPasados !== undefined) return;
         li.hidden = true;
         li.dataset.pasado = '';
         return;

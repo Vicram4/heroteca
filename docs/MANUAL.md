@@ -315,6 +315,29 @@ Página `/noticias/` (`/en/news/`), con filtro por universo, y una por universo 
   `datos/noticias.json` y hace que Vercel vuelva a publicar la web. Se guardan los últimos 30 días (máximo 200 por
   idioma). Si una fuente falla, las demás siguen. Para lanzarlo a mano: Actions → «Actualizar «Noticias»» → Run workflow.
 
+## Dónde ver por plataforma
+
+Páginas `/donde-ver/` (índice con cuántos títulos tiene cada plataforma) y `/donde-ver/<plataforma>/` (en inglés
+`/en/where-to-watch/…`): «Marvel y DC en Netflix», con los títulos incluidos en la suscripción o gratis, por universo y
+año. La versión española usa los datos de España y la inglesa los de EE. UU. (los mismos de «Dónde ver» de cada
+ficha). Las temporadas de una serie se juntan en una tarjeta («Temporadas 1–3»).
+
+- Las plataformas se configuran en `src/config/plataformas.ts` (`nombres`: cómo salen en los datos, por si cambian de
+  nombre). Solo van las que existen en los dos países, para que cada página tenga su pareja en el otro idioma.
+- En el «Dónde ver» de cada ficha, el nombre de la plataforma (suscripción o gratis) enlaza a su página.
+- Enlace en el pie: «Dónde ver por plataforma». Cálculo en `src/lib/plataformas.ts`.
+
+## Estrenos por mes
+
+Páginas `/estrenos/<mes>-<año>/` (`/estrenos/diciembre-2026/`, en inglés `/en/releases/december-2026/`): películas y
+series o temporadas nuevas del mes, con las mismas tarjetas de Próximamente (incluidas las ya estrenadas del mes), y
+enlaces al mes anterior y al siguiente. Salen solas de `datos/proximamente.json` (`src/lib/estrenosMes.ts`):
+
+- Hay página para cada mes con algún estreno en España o en EE. UU.; los meses pasados siguen mientras sus estrenos
+  estén en el archivo. Un mes sin estrenos en el país del idioma muestra un aviso y no se indexa.
+- No entran los episodios sueltos de series en emisión ni lo archivado con fecha futura.
+- Próximamente enlaza al final a los meses que vienen («Estrenos por mes»).
+
 ## Próximamente (próximos estrenos)
 
 Página `/proximamente/` (en inglés, `/en/coming-soon/`), enlazada desde el pie y con una franja de los 4 próximos
