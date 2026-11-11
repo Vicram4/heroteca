@@ -45,7 +45,7 @@ const enWiki = (await entradasDePersonaje(p.id, idioma)).map((e) => entradaWikiL
 
 <Base
   titulo={tx.personajes.fichaSeo(`${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}`, universo.data.nombre)}
-  descripcion={p.data.resumen ?? tx.personajes.fichaDescripcion(`${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}`, universo.data.nombre)}
+  descripcion={p.data.resumen ? `${tx.personajes.fichaDescripcionSeo(p.data.nombre, titulos.length, Math.min(...anios), Math.max(...anios))} ${p.data.resumen}` : tx.personajes.fichaDescripcion(`${p.data.nombre}${p.data.identidad ? ` (${p.data.identidad})` : ''}`, universo.data.nombre)}
   universo={universo}
   migas={[
     { nombre: 'Heroteca', url: '/' },

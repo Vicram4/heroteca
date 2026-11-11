@@ -264,6 +264,9 @@ export const ES = {
     sinAparicionesTexto: 'Están en la lista, pero ninguna ficha los nombra todavía en el reparto. Se completarán con los datos de TMDB.',
     fichaSeo: (n: string, u: string) => `${n}: películas y series de ${u}`,
     fichaDescripcion: (n: string, u: string) => `Todas las películas y series de ${u} en las que aparece ${n}, en orden.`,
+    /** Inicio de la descripción para buscadores: qué ofrece la página (va antes del resumen del personaje) */
+    fichaDescripcionSeo: (n: string, total: number, desde: number, hasta: number) =>
+      `${n}: ${total === 1 ? 'su película o serie' : `${total} películas y series en orden`}${Number.isFinite(desde) && Number.isFinite(hasta) && desde !== hasta ? ` (${desde}–${hasta})` : ''}, con sus intérpretes en cada una.`,
     titulos: 'Títulos',
     desde: 'Desde',
     interpretes: 'Intérpretes',
@@ -1077,6 +1080,8 @@ export const EN: Textos = {
     sinAparicionesTexto: 'They are on the list, but no sheet mentions them in the cast yet. TMDB data will fill them in.',
     fichaSeo: (n, u) => `${n}: ${u} films and series`,
     fichaDescripcion: (n, u) => `Every ${u} film and series featuring ${n}, in order.`,
+    fichaDescripcionSeo: (n, total, desde, hasta) =>
+      `${n}: ${total === 1 ? 'their film or series' : `${total} films and series in order`}${Number.isFinite(desde) && Number.isFinite(hasta) && desde !== hasta ? ` (${desde}–${hasta})` : ''}, with the actors who play them.`,
     titulos: 'Titles',
     desde: 'Since',
     interpretes: 'Actors',

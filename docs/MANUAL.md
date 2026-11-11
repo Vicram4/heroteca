@@ -678,6 +678,10 @@ elemento a esa lista.
   ficha tiene texto único además de la sinopsis de TMDB (que comparten muchas webs). Se genera en `Ficha.astro`.
 - **Preguntas frecuentes** al final de las guías con orden de la historia (UMC, DCEU): cuántos títulos hay, el primero,
   el más reciente, cuánto se tarda y por dónde empezar. Las respuestas se calculan con los datos.
+- **Descripción de las páginas de personaje:** empieza por lo que ofrece la página («Deadpool: 8 películas y series en
+  orden (2009–2024), con sus intérpretes en cada una.») y sigue con el resumen del personaje. Se cambió en noviembre de
+  2026 porque Search Console mostraba muchas impresiones y ningún clic en estas páginas. Texto `fichaDescripcionSeo` del
+  apartado `personajes` de `src/i18n/textos.ts`.
 - **Guías en la portada:** bloque «Guías para empezar» con todas las guías salvo las de carpetas.
 - No se usa `lastmod` en el mapa del sitio: solo podría poner la fecha de cada publicación en todas las páginas, y Google
   ignora las fechas que no son fiables.
