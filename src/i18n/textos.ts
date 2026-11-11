@@ -399,8 +399,8 @@ export const ES = {
   },
   juegos: {
     titulo: 'Pasatiempos',
-    tituloSeo: 'Pasatiempos de Marvel y DC: juegos, tests y retos',
-    descripcion: 'Juegos de Marvel y DC: adivina el personaje, descubre qué héroe eres y demuestra cuánto sabes de estrenos.',
+    tituloSeo: 'Juegos de Marvel y DC: Heroedle, trivia diaria y tests',
+    descripcion: 'Juegos gratis de Marvel y DC: Heroedle (el superhéroe del día, tipo Wordle), trivia diaria, carteles pixelados, test de qué héroe eres y más. Sin registro.',
     intro: 'Pon a prueba lo que sabes de Marvel y DC con juegos hechos con los datos de la colección. Se juega en el navegador, sin registrarse.',
     jugar: 'Jugar',
     otrosJuegos: 'Más pasatiempos',
@@ -438,6 +438,7 @@ export const ES = {
     portada: '¿Jugamos?',
     portadaTexto: 'Un reto nuevo cada día y juegos para demostrar cuánto sabes de Marvel y DC.',
     verTodos: 'Ver todos los juegos',
+    comoSeJuega: 'Cómo se juega',
     comprobar: 'Comprobar',
     // Heroedle
     heroedle: 'Heroedle',
@@ -1283,8 +1284,8 @@ export const EN: Textos = {
   },
   juegos: {
     titulo: 'Games',
-    tituloSeo: 'Marvel and DC games: quizzes and challenges',
-    descripcion: 'Marvel and DC games: guess the character, find out which hero you are and prove what you know about release dates.',
+    tituloSeo: 'Marvel and DC games: daily Heroedle, trivia and quizzes',
+    descripcion: 'Free Marvel and DC games: Heroedle (a Wordle-style daily superhero game), daily trivia, pixelated posters, a which-hero-are-you quiz and more. No sign-up.',
     intro: 'Test what you know about Marvel and DC with games built from the collection data. Play in your browser, no sign-up.',
     jugar: 'Play',
     otrosJuegos: 'More games',
@@ -1319,6 +1320,7 @@ export const EN: Textos = {
     portada: 'Fancy a game?',
     portadaTexto: 'A new challenge every day and games to prove what you know about Marvel and DC.',
     verTodos: 'See all games',
+    comoSeJuega: 'How to play',
     comprobar: 'Check',
     heroedle: 'Heroedle',
     heroedleTexto: 'The character of the day, the same for everyone. You get 6 tries and each one gives you clues.',

@@ -37,7 +37,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
   plataforma (Disney+, HBO Max, Netflix y Prime Video) con todo lo que incluye su suscripción (`/donde-ver/`).
 - **Pasatiempos**: once juegos hechos con los datos de la colección, entre ellos Heroedle (un personaje al día), trivia
   diaria, conecta a los actores, bingo de maratón, cartel pixelado y ¿qué héroe eres? Seis de ellos tienen botón «Compartir
-  resultado» (en el móvil abre el menú de compartir del teléfono; en el ordenador copia el texto).
+  resultado» (en el móvil abre el menú de compartir del teléfono; en el ordenador copia el texto). Cada juego explica
+  «Cómo se juega» y enlaza a otros cuatro, con títulos pensados para buscadores.
 - **Noticias** de Marvel y DC recogidas cada día de medios especializados (RSS), clasificadas por universo y con
   enlace a la fuente original.
 - **Aviso semanal**: cada lunes, si hay estrenos anunciados, cambios de fecha, títulos estrenados que faltan en la

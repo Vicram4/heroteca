@@ -563,6 +563,12 @@ la web, sin cuentas:
 
 La lista de juegos y su orden están en `src/config/juegos.ts`.
 
+Cada juego tiene en `SEO_JUEGOS` (mismo archivo) su título para buscadores, su descripción y los pasos de **«Cómo se
+juega»**, en español y en inglés. Debajo de cada juego salen esos pasos y **«Más pasatiempos»**: los cuatro juegos siguientes de
+la lista, dando la vuelta al final, para que quien llega desde Google a un juego descubra los demás. Si cambian las reglas de
+un juego (intentos, puntos, número de rondas), repasa sus pasos. Las descripciones deben tener como mucho 160 caracteres, porque
+`Base.astro` corta las más largas.
+
 ## Rankings
 
 Página `/rankings/` (`/en/rankings/`, enlazada en el pie).
