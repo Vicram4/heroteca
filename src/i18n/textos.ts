@@ -2,6 +2,12 @@
  * Textos fijos de la web en español e inglés. Las dos versiones deben tener las mismas claves
  * (TypeScript avisa si falta alguna en inglés).
  */
+/** «3 películas y 2 series, temporadas o especiales», sin las partes a cero (páginas de estrenos por año). */
+const cuantasObras = (pelis: number, series: number) =>
+  [pelis && `${pelis} ${pelis === 1 ? 'película' : 'películas'}`, series && `${series} ${series === 1 ? 'serie, temporada o especial' : 'series, temporadas y especiales'}`].filter(Boolean).join(' y ');
+const cuantasObrasEn = (pelis: number, series: number) =>
+  [pelis && `${pelis} ${pelis === 1 ? 'movie' : 'movies'}`, series && `${series} ${series === 1 ? 'show, season or special' : 'shows, seasons and specials'}`].filter(Boolean).join(' and ');
+
 export const ES = {
   idioma: 'es' as 'es' | 'en',
   lema: 'Todo el multiverso, en un solo lugar',
@@ -806,6 +812,19 @@ export const ES = {
     anterior: 'Mes anterior',
     siguiente: 'Mes siguiente',
     porMeses: 'Estrenos por mes',
+    // Páginas por año (/estrenos/2027/)
+    porAnios: 'Estrenos por año',
+    todoElAnio: (a: string) => `Todo ${a}`,
+    anioH1: (a: string, futuro: boolean) => (futuro ? `Estrenos de Marvel y DC en ${a}` : `Películas y series de Marvel y DC de ${a}`),
+    anioSeo: (a: string) => `Estrenos de Marvel y DC en ${a}: películas y series, mes a mes`,
+    anioSeoPasado: (a: string) => `Películas y series de Marvel y DC de ${a}, mes a mes`,
+    anioDescripcion: (a: string, pelis: number, series: number, futuro: boolean) =>
+      `${futuro ? 'Todos los estrenos' : 'Todo lo que se estrenó'} de Marvel y DC en ${a}: ${cuantasObras(pelis, series)}, mes a mes y con fecha en España.`,
+    anioIntro: (a: string, pelis: number, series: number, futuro: boolean) =>
+      `${futuro ? `En ${a} llegan` : `En ${a} se estrenaron`} ${cuantasObras(pelis, series)} de Marvel y DC. Fechas de España, ordenadas por mes.`,
+    anioSinMes: 'Sin fecha exacta',
+    anioProximo: 'próximamente',
+    anioNota: 'Lo ya estrenado sale de las fichas de la colección; lo que viene, de TMDB, y sus fechas pueden cambiar. Las fechas son las de España cuando se conocen.',
   },
   proximos: {
     titulo: 'Próximamente',
@@ -1693,6 +1712,18 @@ export const EN: Textos = {
     anterior: 'Previous month',
     siguiente: 'Next month',
     porMeses: 'Releases by month',
+    porAnios: 'Releases by year',
+    todoElAnio: (a) => `All of ${a}`,
+    anioH1: (a, futuro) => (futuro ? `Marvel and DC releases in ${a}` : `Marvel and DC movies and shows of ${a}`),
+    anioSeo: (a) => `Marvel and DC releases in ${a}: movies and shows, month by month`,
+    anioSeoPasado: (a) => `Marvel and DC movies and shows of ${a}, month by month`,
+    anioDescripcion: (a, pelis, series, futuro) =>
+      `${futuro ? 'Every Marvel and DC release' : 'Everything Marvel and DC released'} in ${a}: ${cuantasObrasEn(pelis, series)}, month by month with US dates.`,
+    anioIntro: (a, pelis, series, futuro) =>
+      `${futuro ? `${a} brings` : `${a} saw`} ${cuantasObrasEn(pelis, series)} from Marvel and DC. US dates, grouped by month.`,
+    anioSinMes: 'No exact date',
+    anioProximo: 'coming soon',
+    anioNota: 'Past releases come from the collection’s entries; upcoming ones come from TMDB, and their dates may change.',
   },
   proximos: {
     titulo: 'Coming soon',

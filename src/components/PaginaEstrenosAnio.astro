@@ -1,0 +1,172 @@
+---
+/**
+ * «Marvel y DC en <año>»: todo lo que se estrena o se estrenó ese año, agrupado por meses, con enlace a cada ficha o
+ * página de estreno y a la página de cada mes. Datos en src/lib/estrenosAnio.ts.
+ */
+import Base from '../layouts/Base.astro';
+import BotonVolver from './BotonVolver.astro';
+import { universosActivos, estiloUniverso } from '../lib/datos';
+import { estrenosDelAnio, aniosConEstrenos, type EntradaAnio } from '../lib/estrenosAnio';
+import { mesesConEstrenos, rutaMes } from '../lib/estrenosMes';
+import { idiomaDe, textos, nombreTipo, LOCALE } from '../i18n';
+import { rutaEnIdioma } from '../i18n/rutas';
+
+interface Props {
+  anio: string;
+}
+const { anio } = Astro.props;
+const tx = textos(Astro.url);
+const x = tx.estrenosMes;
+const idioma = idiomaDe(Astro.url);
+const universos = await universosActivos();
+const uDe = (id: string) => universos.find((u) => u.id === id);
+const lista = await estrenosDelAnio(anio, idioma);
+const pelis = lista.filter((e) => e.tipo === 'pelicula').length;
+// Año en curso o futuro: «Estrenos de…»; pasado: «Películas y series de…»
+const futuro = Number(anio) >= new Date().getUTCFullYear();
+const anios = await aniosConEstrenos();
+const i = anios.indexOf(anio);
+const anterior = anios[i - 1];
+const siguiente = anios[i + 1];
+const conPaginaMes = new Set(mesesConEstrenos());
+// Grupos por mes («AAAA-MM»); los que solo tienen año van en un grupo final sin mes
+const grupos = new Map<string, EntradaAnio[]>();
+for (const e of lista) {
+  const k = e.dia.length > 4 ? e.dia.slice(0, 7) : '';
+  grupos.set(k, [...(grupos.get(k) ?? []), e]);
+}
+const nombreDeMes = (mes: string) => {
+  const n = new Date(`${mes}-01T00:00:00Z`).toLocaleDateString(LOCALE[idioma], { month: 'long', timeZone: 'UTC' });
+  return n.charAt(0).toUpperCase() + n.slice(1);
+};
+const fecha = (dia: string) =>
+  dia.length > 4 ? new Date(`${dia}T00:00:00Z`).toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', timeZone: 'UTC' }) : anio;
+const queEs = (e: EntradaAnio) => (e.temporada ? tx.proximos.temporadaNueva(e.temporada) : nombreTipo(e.tipo, idioma));
+// Direcciones de los datos estructurados ya en el idioma de la página (no pasan por la integración de enlaces)
+const urls = await Promise.all(lista.map((e) => rutaEnIdioma(e.url, idioma)));
+---
+
+<Base
+  titulo={futuro ? x.anioSeo(anio) : x.anioSeoPasado(anio)}
+  descripcion={x.anioDescripcion(anio, pelis, lista.length - pelis, futuro)}
+  migas={[
+    { nombre: 'Heroteca', url: '/' },
+    { nombre: tx.proximos.titulo, url: '/proximamente/' },
+    { nombre: x.anioH1(anio, futuro), url: `/estrenos/${anio}/` },
+  ]}
+  datos={{
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: x.anioH1(anio, futuro),
+    itemListElement: lista.map((e, n) => ({ '@type': 'ListItem', position: n + 1, name: e.titulo, url: new URL(urls[n], Astro.site).href })),
+  }}
+>
+  <div class="contenedor">
+    <BotonVolver href="/proximamente/">
+      <nav class="miga" aria-label={tx.general.estasEn}><a href="/proximamente/">{tx.proximos.titulo}</a></nav>
+    </BotonVolver>
+    <h1>{x.anioH1(anio, futuro)}</h1>
+    <p class="intro">{x.anioIntro(anio, pelis, lista.length - pelis, futuro)}</p>
+
+    {
+      [...grupos].map(([mes, del]) => (
+        <section class="mes" aria-labelledby={`m-${mes || 'sin'}`}>
+          <h2 id={`m-${mes || 'sin'}`}>
+            {mes && conPaginaMes.has(mes) ? <a href={`/estrenos/${rutaMes(mes, 'es')}/`}>{nombreDeMes(mes)}</a> : mes ? nombreDeMes(mes) : x.anioSinMes}
+          </h2>
+          <ul>
+            {del.map((e) => (
+              <li style={estiloUniverso(uDe(e.universo))}>
+                {e.poster ? <img src={e.poster} alt="" width="46" height="69" loading="lazy" decoding="async" /> : <span class="sin-cartel" aria-hidden="true" />}
+                <div>
+                  <a href={e.url}>{e.titulo}</a>
+                  <span class="meta">
+                    {queEs(e)} · {uDe(e.universo)?.data.nombre}
+                    {e.dia.length > 4 && <> · <time datetime={e.dia}>{fecha(e.dia)}</time></>}
+                    {e.proximo && <> · <span class="proximo">{x.anioProximo}</span></>}
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    <p class="nota">{x.anioNota}</p>
+
+    <nav class="anios" aria-label={x.porAnios}>
+      {anterior ? <a href={`/estrenos/${anterior}/`}>← {anterior}</a> : <span />}
+      <a href="/proximamente/">{tx.proximos.verTodos}</a>
+      {siguiente ? <a href={`/estrenos/${siguiente}/`}>{siguiente} →</a> : <span />}
+    </nav>
+  </div>
+</Base>
+
+<style>
+  h1 {
+    margin: 8px 0 10px;
+  }
+  .intro {
+    max-width: 70ch;
+    color: var(--txt-2);
+    margin-bottom: 8px;
+  }
+  .mes h2 {
+    margin: 26px 0 10px;
+    font-size: 1.25rem;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 10px;
+  }
+  li {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 8px;
+    border-radius: var(--radio-s);
+    background: var(--sup);
+    border: 1px solid var(--borde);
+    border-left: 3px solid var(--acento);
+  }
+  li img,
+  .sin-cartel {
+    width: 46px;
+    height: 69px;
+    border-radius: 6px;
+    object-fit: cover;
+    flex: none;
+    background: var(--borde);
+  }
+  li a {
+    font-weight: 700;
+  }
+  .meta {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--txt-2);
+    margin-top: 2px;
+  }
+  .proximo {
+    color: var(--acento-txt);
+    font-weight: 700;
+  }
+  .nota {
+    margin-top: 28px;
+    font-size: 0.9rem;
+    color: var(--txt-2);
+  }
+  .anios {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+    font-weight: 700;
+  }
+</style>

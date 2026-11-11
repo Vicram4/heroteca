@@ -10,6 +10,7 @@ import { getCollection } from 'astro:content';
 import { GUIAS } from '../config/guias';
 import { PLATAFORMAS } from '../config/plataformas';
 import { mesesConEstrenos, rutaMes } from '../lib/estrenosMes';
+import { aniosConEstrenos } from '../lib/estrenosAnio';
 import { todosLosTitulos, universosActivos } from '../lib/datos';
 import { actores } from '../lib/actores';
 import { JUEGOS } from '../config/juegos';
@@ -127,6 +128,7 @@ async function calcular(): Promise<Tablas> {
     ['/donde-ver/', `/en/${SEGMENTOS.dondeVer}/`],
   ]);
   for (const m of mesesConEstrenos()) aIngles.set(`/estrenos/${rutaMes(m, 'es')}/`, `/en/${SEGMENTOS.estrenos}/${rutaMes(m, 'en')}/`);
+  for (const a of await aniosConEstrenos()) aIngles.set(`/estrenos/${a}/`, `/en/${SEGMENTOS.estrenos}/${a}/`);
   for (const p of PLATAFORMAS) aIngles.set(`/donde-ver/${p.id}/`, `/en/${SEGMENTOS.dondeVer}/${p.id}/`);
   for (const e of todosLosEstrenos()) aIngles.set(`/proximamente/${e.ruta.es}/`, `/en/${SEGMENTOS.proximamente}/${e.ruta.en}/`);
   for (const a of await actores()) aIngles.set(`/actores/${a.id}/`, `/en/${SEGMENTOS.actores}/${a.id}/`);

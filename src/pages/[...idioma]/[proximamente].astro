@@ -16,9 +16,12 @@ import { universosActivos } from '../../lib/datos';
 import { proximosEstrenos, enEmision, fechaProximamente, textosEstreno, fechaDe } from '../../lib/proximamente';
 import { paisDe } from '../../lib/dondever';
 import { mesesConEstrenos, rutaMes, nombreMes } from '../../lib/estrenosMes';
+import { aniosConEstrenos } from '../../lib/estrenosAnio';
 // Meses desde el actual (los pasados siguen existiendo, pero aquí solo se enlaza lo que viene)
 const mesActual = new Date().toISOString().slice(0, 7);
 const meses = mesesConEstrenos().filter((m) => m >= mesActual);
+// Años con página: los recientes y los que vienen (los antiguos se enlazan entre sí desde cada página de año)
+const aniosPagina = (await aniosConEstrenos()).filter((a) => Number(a) >= Number(mesActual.slice(0, 4)) - 3).reverse();
 
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
@@ -83,7 +86,7 @@ const actualizado = fechaProximamente().toLocaleDateString(LOCALE[idioma], { day
       {
         anios.map((a) => (
           <section data-bloque aria-labelledby={`t-${a}`}>
-            <h3 id={`t-${a}`} class="anio">{a}</h3>
+            <h3 id={`t-${a}`} class="anio">{aniosPagina.includes(a) ? <a href={`/estrenos/${a}/`}>{a}</a> : a}</h3>
             <ListaEstrenos>
               {estrenos
                 .filter((e) => fechaDe(e, pais).startsWith(a))
@@ -113,6 +116,17 @@ const actualizado = fechaProximamente().toLocaleDateString(LOCALE[idioma], { day
         </nav>
       )
     }
+
+    <nav class="por-meses" aria-labelledby="t-anios">
+      <h2 id="t-anios">{tx.estrenosMes.porAnios}</h2>
+      <ul>
+        {aniosPagina.map((a) => (
+          <li>
+            <a href={`/estrenos/${a}/`}>{a}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   </div>
 </Base>
 

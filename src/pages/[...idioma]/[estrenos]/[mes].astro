@@ -1,107 +1,26 @@
 ---
-import { conIdiomas, idiomaDe, textos } from '../../../i18n';
-import { mesesConEstrenos, rutaMes } from '../../../lib/estrenosMes';
-export function getStaticPaths() {
-  return conIdiomas(
-    mesesConEstrenos().map((m) => ({ params: { estrenos: 'estrenos', mes: rutaMes(m, 'es') }, props: { m } })),
-    (r) => ({ estrenos: 'releases', mes: rutaMes((r.props as { m: string }).m, 'en') }),
-  );
-}
 /**
- * «Estrenos de Marvel y DC en <mes>»: películas en cines y series o temporadas nuevas del mes, en España (versión en
- * español) o en EE. UU. (versión en inglés). Sale de datos/proximamente.json (ver src/lib/estrenosMes.ts).
+ * /estrenos/<mes>-<año>/ (PaginaEstrenosMes) y /estrenos/<año>/ (PaginaEstrenosAnio) comparten esta ruta:
+ * los parámetros no se pisan («diciembre-2026» frente a «2027»).
  */
-import Base from '../../../layouts/Base.astro';
-import TarjetaEstreno from '../../../components/TarjetaEstreno.astro';
-import ListaEstrenos from '../../../components/ListaEstrenos.astro';
-import BotonVolver from '../../../components/BotonVolver.astro';
-import { universosActivos } from '../../../lib/datos';
-import { estrenosDelMes, nombreMes } from '../../../lib/estrenosMes';
-// Enlaces internos en español: la integración heroteca-enlaces-ingles los pasa a /en/ en las páginas inglesas
-const urlMes = (mes: string) => `/estrenos/${rutaMes(mes, 'es')}/`;
-import { textosEstreno, enlaceEstreno } from '../../../lib/proximamente';
-import { rutaEnIdioma } from '../../../i18n/rutas';
+import { conIdiomas } from '../../../i18n';
+import { mesesConEstrenos, rutaMes } from '../../../lib/estrenosMes';
+import { aniosConEstrenos } from '../../../lib/estrenosAnio';
+import PaginaEstrenosMes from '../../../components/PaginaEstrenosMes.astro';
+import PaginaEstrenosAnio from '../../../components/PaginaEstrenosAnio.astro';
 
-const { m } = Astro.props as { m: string };
-const tx = textos(Astro.url);
-const x = tx.estrenosMes;
-const idioma = idiomaDe(Astro.url);
-const universos = await universosActivos();
-const uDe = (id: string) => universos.find((u) => u.id === id);
-const lista = estrenosDelMes(m, idioma).filter((e) => uDe(e.universo));
-const pelis = lista.filter((e) => e.tipo === 'pelicula').length;
-const nombre = nombreMes(m, idioma);
-const meses = mesesConEstrenos();
-const i = meses.indexOf(m);
-const anterior = meses[i - 1];
-const siguiente = meses[i + 1];
-// Direcciones de los datos estructurados ya en el idioma de la página (no pasan por la integración de enlaces)
-const urls = await Promise.all(lista.map((e) => rutaEnIdioma(enlaceEstreno(e), idioma)));
+type Props = { m: string; anio?: undefined } | { anio: string; m?: undefined };
+
+export async function getStaticPaths() {
+  const meses = mesesConEstrenos().map((m) => ({ params: { estrenos: 'estrenos', mes: rutaMes(m, 'es') }, props: { m } as Props }));
+  const anios = (await aniosConEstrenos()).map((anio) => ({ params: { estrenos: 'estrenos', mes: anio }, props: { anio } as Props }));
+  return conIdiomas([...meses, ...anios], (r) => {
+    const p = r.props as Props;
+    return { estrenos: 'releases', mes: p.m ? rutaMes(p.m, 'en') : p.anio };
+  });
+}
+
+const p = Astro.props as Props;
 ---
 
-<Base
-  titulo={x.tituloSeo(nombre)}
-  descripcion={x.descripcion(nombre, lista.length)}
-  noIndexar={lista.length === 0}
-  migas={[
-    { nombre: 'Heroteca', url: '/' },
-    { nombre: tx.proximos.titulo, url: '/proximamente/' },
-    { nombre: x.h1(nombre), url: urlMes(m) },
-  ]}
-  datos={{
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: x.h1(nombre),
-    itemListElement: lista.map((e, n) => ({ '@type': 'ListItem', position: n + 1, name: textosEstreno(e, idioma).titulo, url: new URL(urls[n], Astro.site).href })),
-  }}
->
-  <div class="contenedor">
-    <BotonVolver href="/proximamente/">
-      <nav class="miga" aria-label={tx.general.estasEn}><a href="/proximamente/">{tx.proximos.titulo}</a></nav>
-    </BotonVolver>
-    <h1>{x.h1(nombre)}</h1>
-    <p class="intro">{lista.length ? x.intro(nombre, pelis, lista.length - pelis) : x.nada}</p>
-
-    {
-      lista.length > 0 && (
-        <ListaEstrenos conPasados>
-          {lista.map((e) => (
-            <TarjetaEstreno e={e} u={uDe(e.universo)} conSinopsis />
-          ))}
-        </ListaEstrenos>
-      )
-    }
-
-    <p class="nota">{x.nota}</p>
-
-    <nav class="meses" aria-label={x.porMeses}>
-      {anterior ? <a href={urlMes(anterior)}>← {nombreMes(anterior, idioma)}</a> : <span />}
-      <a href="/proximamente/">{tx.proximos.verTodos}</a>
-      {siguiente ? <a href={urlMes(siguiente)}>{nombreMes(siguiente, idioma)} →</a> : <span />}
-    </nav>
-  </div>
-</Base>
-
-<style>
-  h1 {
-    margin: 8px 0 10px;
-  }
-  .intro {
-    max-width: 70ch;
-    color: var(--txt-2);
-    margin-bottom: 22px;
-  }
-  .nota {
-    margin-top: 28px;
-    font-size: 0.9rem;
-    color: var(--txt-2);
-  }
-  .meses {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 20px;
-    font-weight: 700;
-  }
-</style>
+{p.m ? <PaginaEstrenosMes m={p.m} /> : <PaginaEstrenosAnio anio={p.anio!} />}

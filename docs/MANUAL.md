@@ -337,6 +337,24 @@ enlaces al mes anterior y al siguiente. Salen solas de `datos/proximamente.json`
   estén en el archivo. Un mes sin estrenos en el país del idioma muestra un aviso y no se indexa.
 - No entran los episodios sueltos de series en emisión ni lo archivado con fecha futura.
 - Próximamente enlaza al final a los meses que vienen («Estrenos por mes»).
+- Cada página de mes enlaza en el centro a la página de su año («Todo 2027»), si existe.
+
+## Estrenos por año
+
+Páginas `/estrenos/<año>/` (`/estrenos/2027/`, en inglés `/en/releases/2027/`): todo lo de Marvel y DC de ese año,
+agrupado por meses, con cartel, tipo, universo y fecha. El nombre del mes enlaza a su página mensual si la tiene. Título
+para buscadores: «Estrenos de Marvel y DC en 2027…» para el año en curso y los siguientes; «Películas y series de Marvel y
+DC de 2019…» para los pasados. Se calculan en `src/lib/estrenosAnio.ts` y se pintan en
+`src/components/PaginaEstrenosAnio.astro` (comparten ruta con los meses en `[estrenos]/[mes].astro`, que reparte entre
+`PaginaEstrenosMes` y `PaginaEstrenosAnio`):
+
+- **Dos fuentes:** las fichas de la colección (fecha de TMDB; en español, la de España si la hay) y, para lo que aún no
+  tiene ficha, `datos/proximamente.json` (marcado «próximamente»). Una temporada nueva que Próximamente enlaza a la ficha
+  de la serie sí entra si esa temporada todavía no tiene ficha propia.
+- **Qué años:** los que tienen al menos `MIN_TITULOS` (3) títulos en algún idioma; ahora van de 1966 a 2028. Las fichas
+  sin fecha exacta salen al final, en «Sin fecha exacta».
+- **Enlaces:** año anterior y siguiente en cada página; Próximamente enlaza los títulos de año de su lista y, al final,
+  «Estrenos por año» (desde hace tres años hasta el último con página).
 
 ## Próximamente (próximos estrenos)
 

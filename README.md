@@ -47,7 +47,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Próximamente**: calendario con página propia para cada estreno (cuenta atrás, sinopsis, tráiler oficial una cuenta atrás que otras webs pueden insertar con un `<iframe>` y un **calendario .ics** al que suscribirse para recibir los avisos de estreno) de los próximos títulos de Marvel y DC (películas, series y temporadas nuevas) y de las
   series en emisión, con cuenta atrás y filtro por universo. Datos de TMDB que se **actualizan solos cada semana**.
   Las películas responden a «cuándo se estrena», «cuánto dura» y «¿tiene escenas poscréditos?», y hay una página de
-  estrenos por mes (`/estrenos/diciembre-2026/`).
+  estrenos por mes (`/estrenos/diciembre-2026/`) y otra por año (`/estrenos/2027/`, de 1966 a 2028), que junta lo ya
+  estrenado de la colección con lo que viene.
 - **¿Qué veo?**: encuesta de 7 preguntas (universo, tiempo, tono, imagen real o animación, plataformas, personaje
   favorito y nivel) que recomienda títulos con la nota de TMDB, la calificación por edades y lo que ya has visto.
   Funciona entera en el navegador.
