@@ -657,6 +657,16 @@ elemento a esa lista.
 - **Nombre del sitio:** la portada lleva datos `WebSite` con `name: Heroteca` y nada más como nombre. No se usa
   `alternateName`: Google lo reserva para siglas o formas cortas del nombre, no para el lema. Aun así, el nombre que
   muestra Google lo decide él, y en un subdominio compartido (`*.vercel.app`) puede seguir mostrando «Vercel».
+- **Bing:** el sitio está dado de alta en Bing Webmaster Tools (importado desde Search Console). Bing también da
+  resultados a DuckDuckGo, Ecosia y las búsquedas de ChatGPT y Copilot. Para pedir el rastreo de una página concreta:
+  «URL Submission» (admite muchas más al día que Google).
+- **IndexNow (aviso automático a Bing, Yandex y otros):** cada día a las 08:17 UTC, `.github/workflows/indexnow.yml`
+  ejecuta `scripts/indexnow.mjs`, que lee el mapa del sitio publicado y envía las páginas nuevas desde la última vez,
+  más la portada, Noticias y Próximamente (en los dos idiomas). La lista anterior se guarda en la caché de Actions, sin
+  subir nada al repositorio; si la caché se pierde, se envían todas una vez. La clave es pública a propósito: el
+  archivo `public/6b6c45e94d442eb6926b1ec2264b97b4.txt` demuestra que el sitio es nuestro (no borrarlo). Prueba sin
+  enviar: `node scripts/indexnow.mjs lista.txt --prueba`. A mano: Actions → «Avisar a los buscadores (IndexNow)» →
+  Run workflow. Google no usa IndexNow.
 
 
 ### Textos generados para buscadores

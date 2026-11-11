@@ -1,0 +1,35 @@
+# Avisa cada día a Bing y a los demás buscadores de IndexNow de las páginas nuevas (scripts/indexnow.mjs).
+# Va después de «Noticias» (06:43 UTC) para que Vercel ya haya publicado los cambios. No necesita ninguna clave
+# secreta: la de IndexNow es pública y está en public/<clave>.txt. La lista de páginas de la vez anterior se guarda
+# en la caché de GitHub Actions, sin subir nada al repositorio.
+name: Avisar a los buscadores (IndexNow)
+
+on:
+  schedule:
+    - cron: '17 8 * * *' # cada día a las 08:17 UTC (evitar minutos :00 y :30)
+  workflow_dispatch: # también se puede lanzar a mano desde la pestaña Actions
+
+permissions:
+  contents: read
+
+jobs:
+  avisar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Recuperar la lista de la vez anterior
+        uses: actions/cache/restore@v4
+        with:
+          path: indexnow-urls.txt
+          key: indexnow-${{ github.run_id }}
+          restore-keys: indexnow-
+      - name: Enviar las páginas nuevas
+        run: node scripts/indexnow.mjs indexnow-urls.txt
+      - name: Guardar la lista para la próxima vez
+        uses: actions/cache/save@v4
+        with:
+          path: indexnow-urls.txt
+          key: indexnow-${{ github.run_id }}

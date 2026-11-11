@@ -111,7 +111,7 @@ en español y una integración de Astro los traduce al compilar las páginas ing
 - **Los documentos mandan.** TMDB solo rellena lo que falta y nunca sobrescribe. Las erratas evidentes se corrigen dejando una nota con el texto original.
 - **Web 100 % estática** (Astro, sin framework de cliente). Unas pocas islas de JavaScript sin dependencias: buscador, filtros, tema, spoilers y las fachadas del tráiler y del reproductor de la banda sonora. El tráiler usa `youtube-nocookie` y, como el reproductor de Apple Music, solo se carga al pulsar.
 - **Preparada para crecer.** Añadir un universo nuevo es crear un archivo YAML; las rutas, la navegación y la portada se generan solas.
-- **Coste cero.** Vercel (plan gratuito), TMDB (API gratuita), GitHub Actions, Cloudflare Web Analytics (estadísticas sin cookies), tipografías autoalojadas con Fontsource.
+- **Coste cero.** Vercel (plan gratuito), TMDB (API gratuita), GitHub Actions, Cloudflare Web Analytics (estadísticas sin cookies), IndexNow (aviso diario de páginas nuevas a Bing y otros buscadores), tipografías autoalojadas con Fontsource.
 
 ### Tecnología
 
