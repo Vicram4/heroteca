@@ -343,6 +343,14 @@ lo que ya se haya estrenado desde la última actualización.
   - Si tiene ficha en la colección, la página redirige a la ficha.
   - Lo que deja de salir en TMDB pasa a `archivo` y su página sigue existiendo. Si la fecha ya pasó, avisa de que está
     estrenado; si era futura, de que puede haberse retrasado o cancelado.
+  - **Películas: «Preguntas rápidas»** (título para buscadores «…: estreno, duración y escenas poscréditos»): cuándo se
+    estrena, cuánto dura (campo `duracion` de TMDB; antes del estreno se presenta como duración prevista), si tiene
+    escenas poscréditos y, si hay guía con `antesDe`, qué ver antes. La duración va también en los datos estructurados
+    (`duration`).
+  - **Escenas poscréditos, a mano, el día del estreno:** en `src/config/estrenos.ts`, con el id de TMDB de la película,
+    `postCreditos: { escenas: n, es: [...], en: [...] }` (un texto por escena; salen ocultos tras aviso de spoiler).
+    `escenas: 0` dice que no tiene. Sin escribir, antes del estreno dice «Se sabrá el día del estreno» y después «Todavía
+    no hay datos confirmados». Para Doomsday (id 1003596) la entrada ya está preparada.
   - No se indexan en buscadores las que no tienen sinopsis en ese idioma ni las que redirigen a una ficha.
 - **Se actualiza sola cada lunes** con la misma tarea de GitHub Actions que «Dónde ver».
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_proximamente.py`

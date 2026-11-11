@@ -1,39 +1,5 @@
 {
- "archivo": [],
- "estrenos": [
-  {
-   "cines": {
-    "ES": "2026-10-23",
-    "US": "2026-10-23"
-   },
-   "clave": "movie-1400940",
-   "en": {
-    "fondo": "/uL4cIrNi2uaUnWIOQQ28EVnkETG.jpg",
-    "poster": "/9l1NuFjel2j89hiuiJbsxfblqjy.jpg",
-    "sinopsis": "Matt Hagen's meteoric rise from Gotham street kid to Hollywood leading man is tragically cut short when a local crime boss's actions leave him horribly disfigured. Abandoned by his team and with nothing left, Matt seeks out a cutting edge treatment that miraculously returns him to his former self… but also unexpectedly affects his grip on reality, spiraling him down a destructive path of all-consuming revenge.",
-    "titulo": "Clayface",
-    "trailer": "OGO4Mqvo3jI"
-   },
-   "es": {
-    "fondo": "/uL4cIrNi2uaUnWIOQQ28EVnkETG.jpg",
-    "poster": "/6ihSDJlBNcvoTWzSA0jonZyOXTs.jpg",
-    "sinopsis": "Una criatura cambiante hecha de arcilla mágica acecha Ciudad Gótica, alternando entre villano y aliado de Batman. Varias figuras trágicas han asumido el manto de Cara de Barro a lo largo de los años.",
-    "titulo": "Clayface",
-    "trailer": "WGOv9Pzh9cE"
-   },
-   "fecha": "2026-10-19",
-   "ficha": null,
-   "ruta": {
-    "en": "clayface",
-    "es": "clayface"
-   },
-   "tipo": "pelicula",
-   "tmdb": {
-    "id": 1400940,
-    "tipo": "movie"
-   },
-   "universo": "dc"
-  },
+ "archivo": [
   {
    "clave": "tv-213375-t1",
    "en": {
@@ -64,6 +30,42 @@
     "tipo": "tv"
    },
    "universo": "marvel"
+  }
+ ],
+ "estrenos": [
+  {
+   "cines": {
+    "ES": "2026-10-23",
+    "US": "2026-10-23"
+   },
+   "clave": "movie-1400940",
+   "duracion": 109,
+   "en": {
+    "fondo": "/VnT9D7NogVWrmN2UuT30exIYPh.jpg",
+    "poster": "/9l1NuFjel2j89hiuiJbsxfblqjy.jpg",
+    "sinopsis": "Matt Hagen's meteoric rise from Gotham street kid to Hollywood leading man is tragically cut short when a local crime boss's actions leave him horribly disfigured. Abandoned by his team and with nothing left, Matt seeks out a cutting edge treatment that miraculously returns him to his former self… but also unexpectedly affects his grip on reality, spiraling him down a destructive path of all-consuming revenge.",
+    "titulo": "Clayface",
+    "trailer": "OGO4Mqvo3jI"
+   },
+   "es": {
+    "fondo": "/VnT9D7NogVWrmN2UuT30exIYPh.jpg",
+    "poster": "/6ihSDJlBNcvoTWzSA0jonZyOXTs.jpg",
+    "sinopsis": "Una criatura cambiante hecha de arcilla mágica acecha Ciudad Gótica, alternando entre villano y aliado de Batman. Varias figuras trágicas han asumido el manto de Cara de Barro a lo largo de los años.",
+    "titulo": "Clayface",
+    "trailer": "WGOv9Pzh9cE"
+   },
+   "fecha": "2026-10-19",
+   "ficha": null,
+   "ruta": {
+    "en": "clayface",
+    "es": "clayface"
+   },
+   "tipo": "pelicula",
+   "tmdb": {
+    "id": 1400940,
+    "tipo": "movie"
+   },
+   "universo": "dc"
   },
   {
    "clave": "tv-332379-t1",
@@ -160,6 +162,7 @@
   },
   {
    "clave": "movie-1389765",
+   "duracion": 76,
    "en": {
     "fondo": "/jOvZD4VpU4Wx4XmNG2uTDNjUdDT.jpg",
     "poster": "/9jGwTCEYaOg3xxnKFaL5ukVexLp.jpg",
@@ -193,9 +196,10 @@
     "US": "2026-12-18"
    },
    "clave": "movie-1003596",
+   "duracion": 165,
    "en": {
     "fondo": "/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
-    "poster": "/9jlZ59UALLLOE279HMT19rP9XQs.jpg",
+    "poster": "/jzPwsojjFStf5lR5Nm07w2hH56G.jpg",
     "sinopsis": "Beloved heroes from three distinct universes are set on a deadly collision course and face an existential threat unlike anything they've ever encountered.",
     "titulo": "Avengers: Doomsday",
     "trailer": "irVNGjRFZGk"
@@ -511,6 +515,6 @@
    "universo": "marvel"
   }
  ],
- "fecha": "2026-11-09",
+ "fecha": "2026-11-11",
  "fuente": "TMDB"
 }

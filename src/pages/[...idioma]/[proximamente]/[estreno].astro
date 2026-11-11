@@ -24,6 +24,8 @@ import { imagenTmdb } from '../../../lib/tmdb';
 import { rutaEnIdioma } from '../../../i18n/rutas';
 import { universoLoc } from '../../../i18n/datos';
 import { GUIAS, guiaLoc } from '../../../config/guias';
+import { EXTRAS_ESTRENOS } from '../../../config/estrenos';
+import Spoiler from '../../../components/Spoiler.astro';
 
 const { e } = Astro.props as { e: Estreno };
 const idioma = idiomaDe(Astro.url);
@@ -46,11 +48,20 @@ const masEstrenos = proximosEstrenos(pais, e.universo)
 // Guía «Qué ver antes de…» asociada a este estreno, si la hay (campo antesDe en config/guias.ts)
 const guiaBase = e.tmdb ? GUIAS.find((g) => g.antesDe === e.tmdb.id) : undefined;
 const guiaAntes = guiaBase && guiaLoc(guiaBase, idioma);
+// Preguntas rápidas (solo películas): fecha, duración, escenas poscréditos (config/estrenos.ts) y qué ver antes
+const esPeli = e.tipo === 'pelicula';
+const extra = EXTRAS_ESTRENOS[e.tmdb.id] ?? {};
+const pos = extra.postCreditos;
+const escenasPos = pos ? (idioma === 'en' ? pos.en : pos.es) ?? [] : [];
+const respuestaPos = pos ? (pos.escenas === 0 ? p.faqPosNo : p.faqPosSi(pos.escenas)) : estado === 'proximo' ? p.faqPosAntes : p.faqPosSinDatos;
+const cuando = p.faqCuandoR(e.cines?.ES ? larga(e.cines.ES) : '', e.cines?.US ? larga(e.cines.US) : '') ;
+const respuestaCuando = e.cines?.ES || e.cines?.US ? cuando : p.faqCuandoR(larga(dia), '');
+const respuestaDura = e.duracion ? p.faqDuraR(Math.floor(e.duracion / 60), e.duracion % 60, e.duracion, estado === 'proximo') : p.faqDuraNo;
 const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
 ---
 
 <Base
-  titulo={p.tituloEstreno(x.titulo)}
+  titulo={esPeli ? p.tituloEstrenoPeli(x.titulo) : p.tituloEstreno(x.titulo)}
   descripcion={x.sinopsis || p.descEstreno(x.titulo, larga(dia))}
   universo={uBase}
   imagen={x.poster ? imagenTmdb(x.poster, 'w780') : undefined}
@@ -64,6 +75,7 @@ const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
     ...(x.sinopsis ? { description: x.sinopsis } : {}),
     ...(x.poster ? { image: imagenTmdb(x.poster, 'w780') } : {}),
     ...(estado === 'sinFecha' ? {} : { datePublished: dia }),
+    ...(e.duracion ? { duration: `PT${Math.floor(e.duracion / 60)}H${e.duracion % 60}M` } : {}),
   }}
 >
   <div class="contenedor estreno-pagina" style={estiloUniverso(uBase)}>
@@ -126,6 +138,35 @@ const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
     </section>
 
     {
+      esPeli && estado !== 'sinFecha' && (
+        <section class="panel faq">
+          <h2 class="h-panel">{p.faq}</h2>
+          <h3>{p.faqCuando(x.titulo)}</h3>
+          <p>{respuestaCuando}</p>
+          <h3>{p.faqDura(x.titulo)}</h3>
+          <p>{respuestaDura}</p>
+          <h3>{p.faqPos(x.titulo)}</h3>
+          <p>{respuestaPos}</p>
+          {escenasPos.map((texto, i) => (
+            <Spoiler que={p.faqPosEscena(i + 1)}>
+              <p>{texto}</p>
+            </Spoiler>
+          ))}
+          {
+            guiaAntes && (
+              <>
+                <h3>{p.faqAntes(x.titulo)}</h3>
+                <p>
+                  {p.faqAntesR} <a href={`/${guiaAntes.universo}/guias/${guiaAntes.id}/`}>{guiaAntes.titulo}</a>.
+                </p>
+              </>
+            )
+          }
+        </section>
+      )
+    }
+
+    {
       masEstrenos.length > 0 && (
         <section class="mas" data-bloque>
           <h2>{u ? p.masDe(u.data.nombre) : p.estrenos}</h2>
@@ -166,6 +207,16 @@ const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
   }
   .panel p {
     max-width: 70ch;
+  }
+  .faq h3 {
+    margin: 18px 0 4px;
+    font: 700 1.05rem var(--f-titulo);
+  }
+  .faq h3:first-of-type {
+    margin-top: 6px;
+  }
+  .faq p {
+    margin: 0;
   }
   .datos {
     display: grid;

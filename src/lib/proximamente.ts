@@ -26,6 +26,8 @@ export interface Estreno {
   fecha: string;
   /** Películas: estreno en cines por país (AAAA-MM-DD) */
   cines?: Partial<Record<'ES' | 'US', string>>;
+  /** Películas: duración en minutos, cuando TMDB ya la conoce */
+  duracion?: number;
   temporada?: number | null;
   episodio?: number | null;
   /** «universo/ficha» si ya está en la colección */

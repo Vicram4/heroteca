@@ -163,6 +163,9 @@ def main():
         if fecha < hoy and not cines:
             return
         vistos.add(clave)
+        textos = textos_de(tipo, id_, temporada)
+        # Películas: duración en minutos, en cuanto TMDB la conoce (sale de la misma petición de textos_de, ya en caché)
+        duracion = (tmdb.get(f'/movie/{id_}', language=IDIOMAS['es']) or {}).get('runtime') if tipo == 'movie' else None
         lista.append({
             'clave': clave,
             'universo': universo,
@@ -171,10 +174,11 @@ def main():
             'fecha': fecha,
             # Películas: estreno en cines en España y en Estados Unidos (puede diferir de la fecha mundial)
             **({'cines': cines} if cines else {}),
+            **({'duracion': duracion} if duracion else {}),
             # Series: estreno de temporada (episodio 1) o en emisión (próximo episodio)
             **({'temporada': temporada, 'episodio': episodio} if tipo == 'tv' else {}),
             'ficha': ficha_de(fichas, tipo, id_, temporada),
-            **textos_de(tipo, id_, temporada),
+            **textos,
         })
 
     def serie(universo, id_):
