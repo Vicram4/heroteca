@@ -16,6 +16,7 @@ import { datosTmdb } from '../lib/tmdb';
 import { GUIAS } from '../config/guias';
 import { universoLoc, sagaLoc, entradaWikiLoc } from '../i18n/datos';
 import { entradasDeTitulo } from '../lib/wiki';
+import { parecidosDe } from '../lib/parecidos';
 import { textos, idiomaDe, nombreTipo, LOCALE } from '../i18n';
 
 interface Props {
@@ -129,6 +130,18 @@ const conexiones = [
   [f.verDespues, automaticas ? vecinos.despues : verDespues],
   [f.relacionados, refs(d.conexiones.relacionados)],
 ].filter(([, lista]) => (lista as Titulo[]).length > 0) as [string, Titulo[]][];
+// «Si te gustó…»: fichas parecidas del mismo universo (src/lib/parecidos.ts), sin repetir las de «Conexiones»
+const yaEnlazados = new Set([...conexiones.flatMap(([, l]) => l.map((o) => o.id)), anterior?.id, siguiente?.id].filter((x): x is string => Boolean(x)));
+const { personajes: fichasPj } = await apariciones();
+const nombrePj = (id: string) => { const p = fichasPj.find((x) => x.id === id); return p ? (idioma === 'en' ? (p.data.nombreEn ?? p.data.nombre) : p.data.nombre) : undefined; };
+const parecidas = (await parecidosDe(t.id, yaEnlazados)).flatMap((p) => {
+  const o = buscarTitulo(p.id);
+  if (!o) return [];
+  const pjs = p.personajes.slice(0, 2).map(nombrePj).filter((x): x is string => Boolean(x));
+  const saga = p.sagas.map((id) => sagas.find((s) => s.id === id)?.data.nombre).find(Boolean);
+  const motivo = pjs.length ? new Intl.ListFormat(LOCALE[idioma], { type: 'conjunction' }).format(pjs) : saga ?? (p.direccion.length ? `${f.direccion}: ${lista(p.direccion)}` : undefined);
+  return [{ o, motivo }];
+});
 // Escenas de los créditos: si no has escrito la tuya, el aviso de TMDB (sin contar nada)
 const avisoCreditos =
   d.conexiones.postCreditos.length === 0 && m.escenasCreditos.length > 0
@@ -375,6 +388,26 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
       }
 
       {
+        parecidas.length > 0 && (
+          <section class="panel" aria-labelledby="titulo-parecidas">
+            <h2 class="h-panel" id="titulo-parecidas">{f.parecidas}</h2>
+            <p class="fuente-tmdb">{f.parecidasAyuda}</p>
+            <ul class="parecidas">
+              {parecidas.map(({ o, motivo }) => (
+                <li>
+                  <a href={o.url}>
+                    {o.portada || o.m.posterTmdb ? <Caratula t={o} ancho={110} alt="" /> : <span class="sin-cartel" aria-hidden="true" />}
+                    <strong>{o.corto}</strong>
+                    {motivo && <small>{motivo}</small>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
         enWiki.length > 0 && (
           <section class="panel">
             <h2 class="h-panel">{tx.wiki.relacionadas}</h2>
@@ -612,6 +645,44 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
   }
   .panel p:last-child {
     margin-bottom: 0;
+  }
+  .parecidas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 14px;
+  }
+  .parecidas a {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--txt);
+    text-decoration: none;
+  }
+  .parecidas a:hover strong,
+  .parecidas a:focus-visible strong {
+    color: var(--acento-txt);
+    text-decoration: underline;
+  }
+  .parecidas :global(img),
+  .parecidas .sin-cartel {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--borde);
+    background: var(--sup);
+  }
+  .parecidas strong {
+    font-size: 0.88rem;
+    line-height: 1.25;
+  }
+  .parecidas small {
+    color: var(--txt-2);
+    font-size: 0.78rem;
+    line-height: 1.25;
   }
   .dos {
     display: grid;

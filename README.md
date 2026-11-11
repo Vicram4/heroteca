@@ -30,6 +30,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Cuatro órdenes** en cada estantería: el de la colección (historia o carpetas), estreno, más recientes y mejor valoradas.
 - **Filtros** por tipo, década, personaje y saga; **búsqueda instantánea** (atajo `/`) que también encuentra títulos originales y alternativos.
 - **Fichas completas**: datos del archivo original, completados con sinopsis, reparto, carteles y tráileres de TMDB. Cada dato de TMDB queda marcado. La imagen principal es el cartel oficial y cada ficha muestra también la carátula de la edición de la colección.
+- **«Si te gustó…»**: cada ficha propone hasta 6 títulos parecidos del mismo universo, puntuados por personajes en común (pesados por rareza), saga, dirección, formato y géneros, con el motivo a la vista.
 - **Banda sonora**: compositor en la ficha técnica, álbum de la banda sonora (y de la partitura) para escuchar en la propia ficha con Apple Music o abrir en Spotify y YouTube Music, y las canciones conocidas que suenan en títulos como Guardianes de la Galaxia o Deadpool.
 - **Dónde ver**: plataformas de suscripción, alquiler y compra de cada título (España en la versión española,
   EE. UU. en la inglesa), con datos de JustWatch que se **actualizan solos cada semana**. Además, una página por

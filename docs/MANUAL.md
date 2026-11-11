@@ -709,6 +709,11 @@ elemento a esa lista.
 - **«En resumen»** en cada ficha: un párrafo propio con el puesto en el orden, el año en que transcurre, los títulos de
   antes y después (enlazados), la duración o los capítulos, si tiene poscréditos, dónde verla y la nota de TMDB. Así cada
   ficha tiene texto único además de la sinopsis de TMDB (que comparten muchas webs). Se genera en `Ficha.astro`.
+- **«Si te gustó, también te puede gustar»** en cada ficha: hasta 6 títulos del mismo universo con cartel y el motivo
+  (personajes, saga o dirección en común). Enlaza fichas cercanas entre sí para el visitante y para los buscadores. No
+  repite lo que ya sale en «Conexiones» ni otras temporadas de la misma serie. La puntuación (personajes pesados por
+  rareza, saga, dirección, formato, técnica, géneros y años) está explicada al principio de `src/lib/parecidos.ts`;
+  ahí se cambian `CUANTOS`, `MINIMO` y `GRUPO`.
 - **Preguntas frecuentes** al final de las guías con orden de la historia (UMC, DCEU): cuántos títulos hay, el primero,
   el más reciente, cuánto se tarda y por dónde empezar. Las respuestas se calculan con los datos.
 - **Descripción de las páginas de personaje:** empieza por lo que ofrece la página («Deadpool: 8 películas y series en
