@@ -1,0 +1,264 @@
+---
+import { conIdiomas, idiomaDe, textos, LOCALE } from '../../../i18n';
+import { todosLosEstrenos, type Estreno } from '../../../lib/proximamente';
+export function getStaticPaths() {
+  // Solo los estrenos sin ficha (los que tienen ficha redirigen a ella en Próximamente)
+  return conIdiomas(
+    todosLosEstrenos()
+      .filter((e) => !e.ficha)
+      .map((e) => ({ params: { insertar: 'insertar', estreno: e.ruta.es }, props: { e } })),
+    (r) => ({ insertar: 'embed', estreno: (r.props as { e: Estreno }).e.ruta.en }),
+  );
+}
+/**
+ * Cuenta atrás para insertar en otras webs con un <iframe> (el código se copia desde la página del estreno).
+ * Página suelta, sin la cabecera de Heroteca, pensada para un recuadro de unos 560 × 190 px. Todos los enlaces
+ * son absolutos y se abren en otra pestaña: llevan a la guía «Qué ver antes» si existe y a la página del estreno.
+ * No se indexa ni sale en el mapa del sitio. La dirección no cambia aunque el título se estrene: entonces muestra
+ * «Ya en cines», así nunca queda un recuadro roto en una web ajena.
+ */
+import condensada800 from '@fontsource/barlow-condensed/files/barlow-condensed-latin-800-normal.woff2?url';
+import { SITE } from '../../../config/site';
+import { GUIAS, guiaLoc } from '../../../config/guias';
+import { fechaDe, enEmision, textosEstreno } from '../../../lib/proximamente';
+import { paisDe } from '../../../lib/dondever';
+import { imagenTmdb } from '../../../lib/tmdb';
+import { rutaEnIdioma } from '../../../i18n/rutas';
+
+const { e } = Astro.props as { e: Estreno };
+const idioma = idiomaDe(Astro.url);
+const tx = textos(Astro.url);
+const p = tx.proximos;
+const x = textosEstreno(e, idioma);
+const dia = fechaDe(e, paisDe(idioma));
+const fecha = new Date(`${dia}T00:00:00Z`).toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const absoluta = async (ruta: string) => new URL(await rutaEnIdioma(ruta, idioma), SITE.url).href;
+const guiaBase = GUIAS.find((g) => g.antesDe === e.tmdb.id);
+const guia = guiaBase && guiaLoc(guiaBase, idioma);
+const enlaceGuia = guia ? await absoluta(`/${guia.universo}/guias/${guiaBase!.id}/`) : undefined;
+const enlaceEstreno = await absoluta(`/proximamente/${e.ruta.es}/`);
+const rotulo = e.tipo === 'pelicula' ? p.enCines : enEmision(e) ? p.proximoEpisodio(e.temporada ?? 1, e.episodio ?? 1) : p.seEstrena;
+const diasAlPublicar = Math.max(0, Math.ceil((Date.parse(`${dia}T00:00:00Z`) - Date.now()) / 86400000));
+const yaRotulo = e.tipo === 'pelicula' ? p.insertarEnCines : p.insertarEstrenada;
+---
+
+<!doctype html>
+<html lang={idioma}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{p.insertarIframe(x.titulo)} · {SITE.nombre}</title>
+    <link rel="preload" href={condensada800} as="font" type="font/woff2" crossorigin />
+    <style define:vars={{ fuente: `url(${condensada800})` }}>
+      @font-face {
+        font-family: 'Barlow Condensed';
+        font-weight: 800;
+        font-display: swap;
+        src: var(--fuente) format('woff2');
+      }
+    </style>
+  </head>
+  <body>
+    <div class="caja" data-objetivo={dia}>
+      {x.poster && <img class="fondo" src={imagenTmdb(x.poster, 'w342')} alt="" />}
+      {x.poster && <img class="cartel" src={imagenTmdb(x.poster, 'w185')} alt="" width="185" height="278" />}
+      <div class="texto">
+        <p class="titulo"><a href={enlaceEstreno} target="_blank" rel="noopener">{x.titulo}</a></p>
+        <p class="fecha">{rotulo} {fecha}</p>
+        <ol class="cifras" data-cifras aria-label={p.faltan(diasAlPublicar)}>
+          <li><b data-u="d">{diasAlPublicar}</b><span>{p.unidades.dias}</span></li>
+          <li><b data-u="h">00</b><span>{p.unidades.horas}</span></li>
+          <li><b data-u="m">00</b><span>{p.unidades.minutos}</span></li>
+          <li><b data-u="s">00</b><span>{p.unidades.segundos}</span></li>
+        </ol>
+        <p class="ya" data-ya hidden>{yaRotulo}</p>
+        <p class="enlaces">
+          {enlaceGuia && <a class="boton" href={enlaceGuia} target="_blank" rel="noopener">{p.insertarGuia} →</a>}
+          <a class="marca" href={enlaceEstreno} target="_blank" rel="noopener">{p.insertarMas} <strong>{SITE.nombre}</strong></a>
+        </p>
+      </div>
+    </div>
+    <script is:inline>
+      (() => {
+        const caja = document.querySelector('[data-objetivo]');
+        const [a, m, d] = caja.dataset.objetivo.split('-').map(Number);
+        const objetivo = new Date(a, m - 1, d).getTime();
+        const celda = (u) => caja.querySelector(`[data-u="${u}"]`);
+        const dos = (n) => String(n).padStart(2, '0');
+        const paso = () => {
+          const resto = objetivo - Date.now();
+          if (resto <= 0) {
+            caja.querySelector('[data-cifras]').hidden = true;
+            caja.querySelector('[data-ya]').hidden = false;
+            return false;
+          }
+          const s = Math.floor(resto / 1000);
+          celda('d').textContent = Math.floor(s / 86400);
+          celda('h').textContent = dos(Math.floor((s % 86400) / 3600));
+          celda('m').textContent = dos(Math.floor((s % 3600) / 60));
+          celda('s').textContent = dos(s % 60);
+          return true;
+        };
+        if (paso()) {
+          const reloj = setInterval(() => paso() || clearInterval(reloj), 1000);
+        }
+      })();
+    </script>
+    {
+      SITE.cloudflareAnalytics && (
+        <script is:inline define:vars={{ host: new URL(SITE.url).hostname, token: SITE.cloudflareAnalytics }}>
+          if (location.hostname === host) {
+            const s = document.createElement('script');
+            s.type = 'module';
+            s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+            s.dataset.cfBeacon = JSON.stringify({ token });
+            document.body.append(s);
+          }
+        </script>
+      )
+    }
+  </body>
+</html>
+
+<style is:global>
+  html,
+  body {
+    margin: 0;
+    height: 100%;
+    background: transparent;
+  }
+  body {
+    font: 15px/1.35 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    color: #fff;
+  }
+  .caja {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 170px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: #0b0d12;
+  }
+  .fondo {
+    position: absolute;
+    inset: -20%;
+    z-index: -2;
+    width: 140%;
+    height: 140%;
+    object-fit: cover;
+    filter: blur(24px) saturate(1.3);
+    opacity: 0.5;
+  }
+  .caja::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(100deg, rgb(5 7 12 / 0.92) 35%, rgb(5 7 12 / 0.6));
+  }
+  .cartel {
+    flex: none;
+    width: 92px;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 0 0 2px #e23636, 0 10px 24px -8px rgb(0 0 0 / 0.8);
+  }
+  .texto {
+    min-width: 0;
+  }
+  p {
+    margin: 0;
+  }
+  .titulo {
+    font: 800 1.55rem/1.05 'Barlow Condensed', system-ui, sans-serif;
+    text-transform: uppercase;
+  }
+  .titulo a {
+    color: #fff;
+    text-decoration: none;
+  }
+  .titulo a:hover {
+    text-decoration: underline;
+  }
+  .fecha {
+    color: #c9cfdb;
+    font-size: 0.85rem;
+    margin: 2px 0 8px;
+  }
+  .cifras {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 8px;
+  }
+  .cifras li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 50px;
+    padding: 4px 6px;
+    border-radius: 8px;
+    background: rgb(255 255 255 / 0.1);
+  }
+  .cifras b {
+    font: 800 1.6rem/1 'Barlow Condensed', system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+  .cifras span {
+    font-size: 0.7rem;
+    color: #c9cfdb;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .ya {
+    font: 800 1.4rem 'Barlow Condensed', system-ui, sans-serif;
+    color: #ffd166;
+  }
+  .enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 14px;
+    margin-top: 10px;
+    font-size: 0.82rem;
+  }
+  .boton {
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #ffd166;
+    color: #111;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .boton:hover {
+    background: #ffe29a;
+  }
+  .marca {
+    color: #c9cfdb;
+    text-decoration: none;
+  }
+  .marca:hover {
+    text-decoration: underline;
+  }
+  .marca strong {
+    color: #fff;
+  }
+  @media (max-width: 380px) {
+    .cartel {
+      display: none;
+    }
+    .cifras li {
+      min-width: 42px;
+    }
+  }
+</style>

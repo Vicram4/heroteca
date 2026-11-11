@@ -375,6 +375,12 @@ lo que ya se haya estrenado desde la última actualización.
     `escenas: 0` dice que no tiene. Sin escribir, antes del estreno dice «Se sabrá el día del estreno» y después «Todavía
     no hay datos confirmados». Para Doomsday (id 1003596) la entrada ya está preparada.
   - No se indexan en buscadores las que no tienen sinopsis en ese idioma ni las que redirigen a una ficha.
+  - **«Ponlo en tu web»:** cada estreno por llegar ofrece un código `<iframe>` para que blogs y foros pongan su cuenta
+    atrás (vista previa y botón «Copiar código» en la propia página). La cuenta atrás está en `/insertar/<ruta>/` (inglés:
+    `/en/embed/<ruta>/`, `src/pages/[...idioma]/[insertar]/[estreno].astro`): página suelta de unos 560 × 200 px, con
+    enlaces absolutos que se abren en otra pestaña (guía «Qué ver antes» si la hay y página del estreno). No se indexa ni
+    sale en el mapa del sitio. Su dirección no cambia al estrenarse: entonces dice «Ya en cines». Sirve para conseguir
+    enlaces desde otras webs; las visitas desde los recuadros cuentan en Cloudflare Web Analytics.
 - **Se actualiza sola cada lunes** con la misma tarea de GitHub Actions que «Dónde ver».
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_proximamente.py`
 - Textos de la página: apartado `proximos` de `src/i18n/textos.ts`.

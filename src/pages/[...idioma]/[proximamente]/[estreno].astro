@@ -26,6 +26,7 @@ import { universoLoc } from '../../../i18n/datos';
 import { GUIAS, guiaLoc } from '../../../config/guias';
 import { EXTRAS_ESTRENOS } from '../../../config/estrenos';
 import Spoiler from '../../../components/Spoiler.astro';
+import { SITE } from '../../../config/site';
 
 const { e } = Astro.props as { e: Estreno };
 const idioma = idiomaDe(Astro.url);
@@ -57,6 +58,9 @@ const respuestaPos = pos ? (pos.escenas === 0 ? p.faqPosNo : p.faqPosSi(pos.esce
 const cuando = p.faqCuandoR(e.cines?.ES ? larga(e.cines.ES) : '', e.cines?.US ? larga(e.cines.US) : '') ;
 const respuestaCuando = e.cines?.ES || e.cines?.US ? cuando : p.faqCuandoR(larga(dia), '');
 const respuestaDura = e.duracion ? p.faqDuraR(Math.floor(e.duracion / 60), e.duracion % 60, e.duracion, estado === 'proximo') : p.faqDuraNo;
+// «Ponlo en tu web»: código <iframe> de la cuenta atrás insertable ([insertar]/[estreno].astro)
+const rutaInsertar = idioma === 'en' ? `/en/embed/${e.ruta.en}/` : `/insertar/${e.ruta.es}/`;
+const codigoInsertar = `<iframe src="${new URL(rutaInsertar, SITE.url).href}" title="${p.insertarIframe(x.titulo).replace(/"/g, '&quot;')}" width="100%" height="200" style="border:0;max-width:560px;border-radius:14px" loading="lazy"></iframe>`;
 const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
 ---
 
@@ -167,6 +171,18 @@ const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
     }
 
     {
+      estado === 'proximo' && (
+        <section class="panel insertar" aria-labelledby="t-insertar">
+          <h2 class="h-panel" id="t-insertar">{p.insertarTitulo}</h2>
+          <p class="nota">{p.insertarAyuda}</p>
+          <iframe src={rutaInsertar} title={p.insertarIframe(x.titulo)} width="100%" height="200" loading="lazy"></iframe>
+          <textarea readonly rows="3" aria-label={p.insertarTitulo} data-codigo>{codigoInsertar}</textarea>
+          <button type="button" class="pastilla" data-copiar data-hecho={p.insertarCopiado}>{p.insertarCopiar}</button>
+        </section>
+      )
+    }
+
+    {
       masEstrenos.length > 0 && (
         <section class="mas" data-bloque>
           <h2>{u ? p.masDe(u.data.nombre) : p.estrenos}</h2>
@@ -180,7 +196,44 @@ const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
   </div>
 </Base>
 
+<script>
+  // Copiar el código de «Ponlo en tu web»
+  document.querySelectorAll<HTMLButtonElement>("[data-copiar]").forEach((b) => {
+    const area = b.parentElement!.querySelector<HTMLTextAreaElement>("[data-codigo]")!;
+    const texto = b.textContent;
+    b.addEventListener("click", async () => {
+      area.select();
+      try {
+        await navigator.clipboard.writeText(area.value);
+      } catch {
+        document.execCommand("copy");
+      }
+      b.textContent = b.dataset.hecho ?? texto;
+      setTimeout(() => (b.textContent = texto), 2000);
+    });
+  });
+</script>
+
 <style>
+  .insertar iframe {
+    display: block;
+    max-width: 560px;
+    border: 0;
+    border-radius: 14px;
+    margin: 10px 0;
+  }
+  .insertar textarea {
+    box-sizing: border-box;
+    width: 100%;
+    font: 0.8rem/1.4 ui-monospace, Consolas, monospace;
+    padding: 8px 10px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    background: var(--sup);
+    color: var(--txt);
+    resize: vertical;
+    margin-bottom: 8px;
+  }
   .estreno-pagina {
     display: grid;
     gap: 20px;

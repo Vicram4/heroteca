@@ -71,11 +71,11 @@ const estrenosSinIndexar = (() => {
 export default defineConfig({
   site: SITE.url,
   integrations: [
-    // Mapa del sitio para buscadores (sitemap-index.xml): sin la página de error ni «Mi progreso» (personal, se rellena
+    // Mapa del sitio para buscadores (sitemap-index.xml): sin la página de error, las cuentas atrás para insertar en otras webs ni «Mi progreso» (personal, se rellena
     // en el navegador) y, hasta publicarla, sin la versión inglesa.
     // La correspondencia entre idiomas la indican las etiquetas hreflang de cada página.
     sitemap({
-      filter: (pagina) => !estrenosSinIndexar.has(new URL(pagina).pathname) && !/\/(404|mi-progreso|my-progress|mi-ano|my-year)(\/|\.html|$)/.test(new URL(pagina).pathname) && (SITE.inglesPublicado || !new URL(pagina).pathname.startsWith('/en/')),
+      filter: (pagina) => !estrenosSinIndexar.has(new URL(pagina).pathname) && !/^\/(en\/embed|insertar)\//.test(new URL(pagina).pathname) && !/\/(404|mi-progreso|my-progress|mi-ano|my-year)(\/|\.html|$)/.test(new URL(pagina).pathname) && (SITE.inglesPublicado || !new URL(pagina).pathname.startsWith('/en/')),
     }),
     enlacesEnIngles(),
   ],
