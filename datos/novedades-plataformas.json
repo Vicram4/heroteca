@@ -144,6 +144,84 @@
     "id": "superman-returns",
     "modo": "plataforma",
     "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "batman-1989",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "batman-vuelve",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "batman-y-robin",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "el-caballero-oscuro",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "el-caballero-oscuro-la-leyenda-renace",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "spider-man-un-nuevo-universo",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "plataforma",
+    "plataforma": "HBO Max"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "plataforma",
+    "plataforma": "Movistar Plus+ Ficción Total"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "plataforma",
+    "plataforma": "Netflix"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "digital",
+    "plataforma": "Amazon Video"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "digital",
+    "plataforma": "Apple TV"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "digital",
+    "plataforma": "Rakuten TV"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "venom-el-ultimo-baile",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
    }
   ],
   "salidas": [
@@ -254,6 +332,36 @@
     "id": "ghost-rider-espiritu-de-venganza",
     "modo": "plataforma",
     "plataforma": "Movistar Plus+ Ficción Total"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "batman-1989",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "constantine",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "el-increible-hulk-2008",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "iron-man-2008",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "the-amazing-spider-man-2-el-poder-de-electro",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
    }
   ]
  },
@@ -564,6 +672,66 @@
     "id": "x-men-fenix-oscura",
     "modo": "plataforma",
     "plataforma": "FXNow"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "big-hero-6",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "escudo-humano",
+    "modo": "plataforma",
+    "plataforma": "Tubi TV"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "punisher-war-zone",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "plataforma",
+    "plataforma": "HBO Max"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "digital",
+    "plataforma": "Amazon Video"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "digital",
+    "plataforma": "Apple TV"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "digital",
+    "plataforma": "Fandango At Home"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "digital",
+    "plataforma": "Google Play Movies"
+   },
+   {
+    "fecha": "2026-11-11",
+    "id": "superman-2025",
+    "modo": "digital",
+    "plataforma": "YouTube"
    }
   ],
   "salidas": [

@@ -24,7 +24,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 
 ## Características
 
-- **494 fichas** (247 de Marvel, 247 de DC), **180 personajes**, **42 sagas y agrupaciones**.
+- **495 fichas** (247 de Marvel, 248 de DC), **180 personajes**, **42 sagas y agrupaciones**.
 - **Estanterías** con la numeración original y orden alternable (historia o estreno), leyenda de colores y **vista de lista** compacta; en móvil, los filtros se agrupan en un botón.
 - **Orden por carpetas** para las series de DC (Pre-Crossover, Crossover…), con páginas que muestran el orden de visionado capítulo a capítulo entre varias series.
 - **Cuatro órdenes** en cada estantería: el de la colección (historia o carpetas), estreno, más recientes y mejor valoradas.
@@ -75,7 +75,9 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
   personaje más visto, calculado en el navegador con las fechas guardadas, sin enviar nada a ningún servidor.
 - **Línea temporal del UMC**: cada título en el año en que transcurre (cronología oficial), con el dato en cada ficha.
 - **Guías de visionado**: «Por dónde empezar» (rutas para quien no ha visto nada, en Marvel y en DC), «Qué ver antes de Vengadores: Doomsday» (enlazada desde su página de Próximamente), orden del UMC (cronológico y de estreno, con un gráfico que compara cuánto cambia cada
-  título entre los dos órdenes), películas de DC y Arrowverso capítulo a capítulo.
+  título entre los dos órdenes), películas de DC y Arrowverso capítulo a capítulo. Además, **«Todas las películas de X en orden»**
+  para Spider-Man, X-Men, Hulk, Venom (universo Spider-Man de Sony), Batman, Superman, Wonder Woman y el Joker: orden de
+  estreno, orden cronológico versión a versión, la animación aparte, dónde ver cada película y preguntas rápidas.
 - **Bilingüe (español e inglés)**: interfaz, datos (títulos, sinopsis, capítulos y carteles en inglés) y direcciones
   traducidas (`/en/marvel/captain-america-the-first-avenger/`), con `hreflang` para los buscadores.
 - **Spoilers ocultos** hasta pulsarlos, aviso de escenas post-créditos y "ver antes / ver después".

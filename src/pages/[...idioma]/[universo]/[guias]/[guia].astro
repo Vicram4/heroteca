@@ -28,7 +28,10 @@ import {
 } from '../../../../lib/datos';
 import { textos, idiomaDe, LOCALE, nombreTipo } from '../../../../i18n';
 import { rutaEnIdioma } from '../../../../i18n/rutas';
-import { universoLoc, sagaLoc } from '../../../../i18n/datos';
+import { universoLoc, sagaLoc, personajeLoc } from '../../../../i18n/datos';
+import { dondeVer, plataformasIncluidas, paisDe } from '../../../../lib/dondever';
+import { plataformaDeNombre } from '../../../../config/plataformas';
+import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
   const en = await tablasEn();
@@ -202,6 +205,89 @@ const notaDe = (t: Titulo) => {
   return d?.nota && (d.votos ?? 0) >= 20 ? d.nota.toLocaleString(LOCALE[idioma], { minimumFractionDigits: 1 }) : undefined;
 };
 
+// «Todas las películas de X en orden» (tipo 'personaje'): versiones elegidas a mano; estreno y «dónde ver», calculados
+const tp = tx.guias.personaje;
+const pais = paisDe(idioma);
+const fichaDe = (id: string) => {
+  const t = porIdTitulo.get(id);
+  if (!t) throw new Error(`Guía «${guia.id}»: no existe la ficha «${id}» en ${universo.id}`);
+  return t;
+};
+const versiones = (guia.versiones ?? []).map((v, i) => ({
+  id: `version-${i + 1}`,
+  titulo: v.titulo,
+  texto: v.texto,
+  animacion: !!v.animacion,
+  pelis: v.ids.map((id) => {
+    const t = fichaDe(id);
+    return { t, epoca: v.epocas?.[id] ?? leerEpoca(t.d.epoca)?.texto };
+  }),
+}));
+const versionDe = new Map<string, string>();
+for (const v of versiones) for (const { t } of v.pelis) if (!versionDe.has(t.id)) versionDe.set(t.id, v.titulo);
+const msEstreno = (t: Titulo) => t.m.fecha?.getTime() ?? Date.UTC(t.d.anio, 0, 1);
+const deEstreno = [...new Map(versiones.filter((v) => !v.animacion).flatMap((v) => v.pelis.map(({ t }) => [t.id, t] as const))).values()].sort(
+  (a, b) => msEstreno(a) - msEstreno(b),
+);
+const animadas = versiones.filter((v) => v.animacion);
+const nAnimadas = new Set(animadas.flatMap((v) => v.pelis.map(({ t }) => t.id))).size;
+/** Plataformas de suscripción (o gratis) de una película, con su página de «Dónde ver» si la tiene. */
+const plataformasDe = (t: Titulo) =>
+  plataformasIncluidas(t.id, pais).map((nombre) => {
+    const p = plataformaDeNombre(nombre);
+    return { nombre: p?.nombre ?? nombre, url: p ? `/donde-ver/${p.id}/` : undefined };
+  });
+const soloPago = (t: Titulo) => {
+  const d = dondeVer(t.id, pais);
+  return !plataformasIncluidas(t.id, pais).length && !!(d?.alquiler?.length || d?.compra?.length);
+};
+const minutosPelis = deEstreno.reduce((n, t) => n + minutosDe(t), 0);
+const horasPelis = Math.round(minutosPelis / 60);
+const personajesGuia =
+  guia.tipo === 'personaje'
+    ? (await getCollection('personajes'))
+        .filter((p) => p.data.universo.id === universo.id && guia.personajes?.includes(p.id))
+        .sort((a, b) => guia.personajes!.indexOf(a.id) - guia.personajes!.indexOf(b.id))
+        .map((p) => personajeLoc(p, idioma))
+    : [];
+const otrasGuias = guia.tipo === 'personaje' ? GUIAS.filter((g) => g.tipo === 'personaje' && g.id !== guia.id).map((g) => guiaLoc(g, idioma)) : [];
+type GrupoPelis = { id?: string; titulo?: string; texto?: string; pelis: { t: Titulo; epoca?: string; version?: string }[] };
+const listasPersonaje: { id: string; titulo: string; texto: string; grupos: GrupoPelis[]; progreso?: string[] }[] = deEstreno.length
+  ? [
+      {
+        id: 'estreno',
+        titulo: tp.estreno,
+        texto: tp.estrenoTexto(animadas.length > 0),
+        progreso: deEstreno.map((t) => t.id),
+        grupos: [{ pelis: deEstreno.map((t) => ({ t, version: versionDe.get(t.id) })) }],
+      },
+      { id: 'cronologico', titulo: tp.crono, texto: tp.cronoTexto, grupos: versiones.filter((v) => !v.animacion) },
+      ...(animadas.length ? [{ id: 'animacion', titulo: tp.animacion, texto: '', grupos: animadas }] : []),
+    ]
+  : [];
+if (guia.tipo === 'personaje' && deEstreno.length) {
+  const fq = tp.faq;
+  const d = guia.peliculasDe ?? guia.titulo;
+  const lista = new Intl.ListFormat(LOCALE[idioma], { type: 'conjunction' });
+  preguntas.push({ pregunta: fq.cuantas(d), respuesta: [fq.cuantasR(deEstreno.length, nAnimadas)] });
+  const primeraPeli = deEstreno[0];
+  const [a1, d1] = fq.primeraR('§', primeraPeli.d.anio).split('§');
+  preguntas.push({ pregunta: fq.primera(d), respuesta: [a1, { texto: primeraPeli.corto, url: primeraPeli.url }, d1] });
+  const ultima = deEstreno.at(-1)!;
+  const [a2, d2] = fq.recienteR('§', ultima.d.anio).split('§');
+  preguntas.push({ pregunta: fq.reciente(d), respuesta: [a2, { texto: ultima.corto, url: ultima.url }, d2] });
+  preguntas.push({ pregunta: fq.orden(d), respuesta: [fq.ordenR] });
+  const cuenta = new Map<string, number>();
+  for (const t of deEstreno) for (const p of plataformasDe(t)) cuenta.set(p.nombre, (cuenta.get(p.nombre) ?? 0) + 1);
+  const top = [...cuenta].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 4);
+  preguntas.push({
+    pregunta: fq.donde(d),
+    respuesta: [top.length ? fq.dondeR(lista.format(top.map(([p, n]) => fq.dondePlat(p, n))), deEstreno.length) : fq.dondeNada],
+  });
+  if (horasPelis) preguntas.push({ pregunta: fq.horas(d), respuesta: [fq.horasR(horasPelis, nAnimadas > 0)] });
+  if (guia.consejo) preguntas.push({ pregunta: fq.todas, respuesta: [guia.consejo] });
+}
+
 // Línea temporal (tipo 'linea'): títulos agrupados por el año en que empiezan, en el orden de la colección
 const linea: { anio: number; titulos: { t: Titulo; texto: string; varios: boolean }[] }[] = [];
 const sinFecha: Titulo[] = [];
@@ -221,7 +307,7 @@ if (guia.tipo === 'linea') {
 }
 
 // Datos estructurados: la primera lista como ItemList
-const primera = linea.length ? linea.flatMap((g) => g.titulos.map(({ t }) => ({ t }))) : bloques[0]?.filas ?? (rutas.length ? rutas[0].titulos.map((t) => ({ t })) : carpetas.flatMap((c) => c.filas));
+const primera = deEstreno.length ? deEstreno.map((t) => ({ t })) : linea.length ? linea.flatMap((g) => g.titulos.map(({ t }) => ({ t }))) : bloques[0]?.filas ?? (rutas.length ? rutas[0].titulos.map((t) => ({ t })) : carpetas.flatMap((c) => c.filas));
 const urlsLista = await Promise.all(primera.map((f) => rutaEnIdioma(f.t.url, idioma)));
 const datos = {
   '@context': 'https://schema.org',
@@ -231,7 +317,10 @@ const datos = {
   numberOfItems: primera.length,
   itemListElement: primera.map((f, i) => ({ '@type': 'ListItem', position: i + 1, name: f.t.corto, url: new URL(urlsLista[i], SITE.url).href })),
 };
-const indice = [...rutas.map((r) => ({ id: r.id, texto: r.titulo })), ...bloques.map((b) => ({ id: b.id, texto: b.titulo })), ...comparaciones.map((c) => ({ id: c.id, texto: c.titulo })), ...(preguntas.length ? [{ id: 'preguntas', texto: tx.guias.faq.titulo }] : []), ...carpetas.map((c) => ({ id: c.id, texto: `${tx.general.carpeta(c.numero)} · ${c.etapa}` }))];
+const indice = [
+  ...(deEstreno.length ? [{ id: 'estreno', texto: tp.estreno }, { id: 'cronologico', texto: tp.crono }] : []),
+  ...(animadas.length ? [{ id: 'animacion', texto: tp.animacion }] : []),
+  ...rutas.map((r) => ({ id: r.id, texto: r.titulo })), ...bloques.map((b) => ({ id: b.id, texto: b.titulo })), ...comparaciones.map((c) => ({ id: c.id, texto: c.titulo })), ...(preguntas.length ? [{ id: 'preguntas', texto: tx.guias.faq.titulo }] : []), ...carpetas.map((c) => ({ id: c.id, texto: `${tx.general.carpeta(c.numero)} · ${c.etapa}` }))];
 const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t?.id))];
 ---
 
@@ -352,6 +441,76 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
     }
 
     {
+      deEstreno.length > 0 && (
+        <p class="resumen-personaje">
+          <strong>{tp.peliculas(deEstreno.length)}</strong>
+          {horasPelis > 0 && <span> · {tp.horas(horasPelis)}</span>}
+          <span> · {deEstreno[0].d.anio}–{deEstreno.at(-1)!.d.anio}</span>
+        </p>
+      )
+    }
+
+    {
+      listasPersonaje.map((l) => (
+        <section id={l.id} class="bloque" aria-labelledby={`h-${l.id}`}>
+          <h2 id={`h-${l.id}`}>{l.titulo}</h2>
+          {l.texto && <p class="texto">{l.texto}</p>}
+          {l.progreso && <Progreso ids={l.progreso} conEnlace />}
+          {l.grupos.map((g) => (
+            <div class="grupo-pelis" id={g.id}>
+              {g.titulo && <h3>{g.titulo}</h3>}
+              {g.texto && <p class="texto">{g.texto}</p>}
+              <ol class="ruta">
+                {g.pelis.map(({ t, epoca, version }, i) => (
+                  <li class={`t-${t.tipo}`} data-titulo={t.id}>
+                    <a href={t.url}>
+                      <span class="tapa">
+                        {t.portada || t.m.posterTmdb ? <Caratula t={t} ancho={120} /> : null}
+                        <span class="paso" aria-hidden="true">{i + 1}</span>
+                        <span class="marca-visto">
+                          <span aria-hidden="true">✓</span>
+                          <span class="solo-lectores">{tx.progreso.visto}</span>
+                        </span>
+                      </span>
+                      <span class="nombre">{t.corto}</span>
+                      <span class="meta">{[t.d.anio, duracion(t)].filter(Boolean).join(' · ')}</span>
+                      {epoca && <span class="meta">{tp.transcurre(epoca)}</span>}
+                      {version && <span class="meta version">{version}</span>}
+                    </a>
+                    <p class="donde">
+                      <span class="solo-lectores">{tp.dondeVer(tp.pais)}: </span>
+                      {plataformasDe(t).length
+                        ? plataformasDe(t).slice(0, 3).map((p) => (p.url ? <a href={p.url} class="plat">{p.nombre}</a> : <span class="plat">{p.nombre}</span>))
+                        : soloPago(t) && <span class="plat pago">{tp.alquiler}</span>}
+                    </p>
+                    <button type="button" class="boton-visto-ruta" data-alternar-visto={t.id} aria-pressed="false" aria-label={`${tx.progreso.marcar}: ${t.corto}`}>
+                      <span class="no-visto">{tx.progreso.marcar}</span>
+                      <span class="si-visto">✓ {tx.progreso.visto}</span>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
+        </section>
+      ))
+    }
+
+    {
+      personajesGuia.length > 0 && (
+        <nav class="panel enlaces-personaje" aria-label={tx.personajes.titulo}>
+          <ul>
+            {personajesGuia.map((p) => (
+              <li>
+                <a href={`/${universo.id}/personajes/${p.id}/`}>{tp.verPersonaje(p.data.nombre)} →</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+
+    {
       rutas.map((r) => (
         <section id={r.id} class="bloque" aria-labelledby={`h-${r.id}`}>
           <h2 id={`h-${r.id}`}>{r.titulo}</h2>
@@ -422,6 +581,21 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
             </>
           ))}
         </section>
+      )
+    }
+
+    {
+      otrasGuias.length > 0 && (
+        <nav class="bloque otras-guias" aria-labelledby="h-otras">
+          <h2 id="h-otras">{tp.otras}</h2>
+          <ul>
+            {otrasGuias.map((g) => (
+              <li>
+                <a href={`/${g.universo}/guias/${g.id}/`} class="chip">{(g.peliculasDe ?? g.titulo).replace(/^del? /, '').replace(/ (y|and) .*$/, '')}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       )
     }
 
@@ -743,6 +917,57 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
     background: var(--txt);
     color: var(--fondo);
     border-color: var(--txt);
+  }
+  .resumen-personaje {
+    margin: 4px 0 0;
+    color: var(--txt-2);
+  }
+  .grupo-pelis {
+    scroll-margin-top: 90px;
+  }
+  .grupo-pelis h3 {
+    margin: 28px 0 4px;
+    font-size: 1.2rem;
+  }
+  .ruta .version {
+    font-style: italic;
+  }
+  .donde {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 6px 0 0;
+    min-height: 1.4em;
+  }
+  .plat {
+    padding: 1px 8px;
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    color: var(--txt-2);
+    text-decoration: none;
+  }
+  a.plat:hover {
+    border-color: var(--acento);
+    color: var(--txt);
+  }
+  .enlaces-personaje {
+    margin-top: 36px;
+  }
+  .enlaces-personaje ul,
+  .otras-guias ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+  }
+  .enlaces-personaje a {
+    font-weight: 600;
+  }
+  .otras-guias ul {
+    gap: 8px;
   }
   .bloque {
     margin-top: 40px;

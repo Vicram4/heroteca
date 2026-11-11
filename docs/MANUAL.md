@@ -481,6 +481,33 @@ se estrene y entre en la colección, su página de Próximamente redirige a la f
 sigue en la lista de guías. La guía «Por dónde empezar» debe seguir siendo la primera de tipo `rutas` de cada universo
 (las preguntas frecuentes la buscan así).
 
+## Películas por personaje («Todas las películas de X en orden»)
+
+Guías de tipo `personaje`, definidas aparte en `src/config/guiasPersonaje.ts` (se suman a `GUIAS`). Direcciones:
+`/<universo>/guias/peliculas-de-<personaje>-en-orden/` (en inglés `/en/<universo>/guides/<personaje>-movies-in-order/`).
+Hay ocho: Spider-Man, X-Men, Hulk y Venom/universo Spider-Man de Sony en Marvel; Batman, Superman, Wonder Woman y el Joker
+en DC. Iron Man, Capitán América y Thor no tienen guía porque casi todas sus películas son del UMC y ya están en la guía
+del orden del UMC.
+
+- **`versiones`**: cada continuidad (o actor) con sus películas, por id de ficha, **en el orden de la historia**. Solo
+  películas donde el personaje es protagonista o pieza clave; los cameos se nombran en el `texto`. Un id que no exista
+  detiene la compilación.
+- **`epocas`**: año de la historia para fichas sin `epoca` (las del UMC ya lo traen y se usa solo). Se muestra como
+  «transcurre en…».
+- **`animacion: true`**: la versión va en «También en animación», al final, y no cuenta en el orden de estreno.
+- **`peliculasDe`** («de Spider-Man», «del Joker»; en inglés «Spider-Man») para las preguntas, y **`consejo`** para
+  «¿Hace falta verlas todas?».
+- `personajes`: páginas de personaje que se enlazan desde la guía y que, a su vez, muestran un botón hacia ella.
+
+Lo que se calcula solo: el **orden de estreno** (por fecha de estreno de cada ficha, sin repetir), la duración total,
+**dónde ver** cada película (plataformas de suscripción de España o, en inglés, de Estados Unidos; si no hay ninguna,
+«Alquiler o compra»), el `ItemList` de datos estructurados y las preguntas frecuentes (cuántas hay, la primera, la
+última, en qué orden verlas, en qué plataformas hay más y cuántas horas suman). Diferencia con la página de personaje:
+esa lista es automática e incluye todo (series, cameos); la guía es una selección hecha a mano con los dos órdenes.
+
+Para añadir otra guía basta con copiar una entrada de `GUIAS_PERSONAJE` con sus textos en los dos idiomas. Superman (2025)
+se añadió como ficha para su guía (sección UDC, sin número de la colección).
+
 ## Línea temporal del UMC (años de la historia)
 
 Guía `/marvel/guias/linea-temporal/` (`/en/marvel/guides/mcu-timeline/`), de tipo `linea` en `src/config/guias.ts`:

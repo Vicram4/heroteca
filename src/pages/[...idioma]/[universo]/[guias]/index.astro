@@ -31,9 +31,13 @@ const guias = guiasDe(universo.id).map((g) => guiaLoc(g, idiomaDe(Astro.url)));
       <h1>{tx.guias.de(universo.data.nombre)}</h1>
       <p>{tx.guias.intro(universo.data.nombre)}</p>
     </header>
+    {
+      [guias.filter((g) => g.tipo !== 'personaje'), guias.filter((g) => g.tipo === 'personaje')].filter((l) => l.length).map((lista, n) => (
+        <>
+          {n > 0 && <h2 class="sub">{tx.guias.personaje.porPersonaje}</h2>}
     <ul class="guias">
       {
-        guias.map((g) => (
+        lista.map((g) => (
           <li class="panel">
             <h2>
               <a href={`/${universo.id}/guias/${g.id}/`}>{g.titulo}</a>
@@ -43,6 +47,9 @@ const guias = guiasDe(universo.id).map((g) => guiaLoc(g, idiomaDe(Astro.url)));
         ))
       }
     </ul>
+        </>
+      ))
+    }
   </div>
 </Base>
 
@@ -52,6 +59,9 @@ const guias = guiasDe(universo.id).map((g) => guiaLoc(g, idiomaDe(Astro.url)));
   }
   .cab p {
     color: var(--txt-2);
+  }
+  .sub {
+    margin: 36px 0 14px;
   }
   .guias {
     list-style: none;

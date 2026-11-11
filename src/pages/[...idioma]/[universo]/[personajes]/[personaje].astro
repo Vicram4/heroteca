@@ -13,6 +13,7 @@ import { evolucionDe } from '../../../../lib/evolucion';
 import TextoWiki from '../../../../components/TextoWiki.astro';
 import FuentesWiki from '../../../../components/FuentesWiki.astro';
 import { textoWikiDe, entradasDePersonaje } from '../../../../lib/wiki';
+import { guiasDePersonaje, guiaLoc } from '../../../../config/guias';
 
 export async function getStaticPaths() {
   const en = await tablasEn();
@@ -40,6 +41,7 @@ const huecos = huecosDeSeccion(titulos, { id: p.id, nombre: p.data.nombre, orden
 const evolucion = evolucionDe(apariciones);
 const anios = titulos.map((t) => t.d.anio);
 const texto = await textoWikiDe('personajes', Astro.props.p, idioma);
+const guiasOrden = guiasDePersonaje(universo.id, p.id).map((g) => guiaLoc(g, idioma));
 const enWiki = (await entradasDePersonaje(p.id, idioma)).map((e) => entradaWikiLoc(e, idioma));
 ---
 
@@ -79,6 +81,18 @@ const enWiki = (await entradasDePersonaje(p.id, idioma)).map((e) => entradaWikiL
           <span>{tx.wiki.relacionadas}:</span>
           {enWiki.map((e) => <a href={`/${universo.id}/wiki/${e.id}/`}>{e.data.nombre}</a>)}
         </nav>
+      )
+    }
+
+    {
+      guiasOrden.length > 0 && (
+        <p class="guia-orden">
+          {guiasOrden.map((g) => (
+            <a href={`/${universo.id}/guias/${g.id}/`} class="pastilla">
+              {g.titulo} →
+            </a>
+          ))}
+        </p>
       )
     }
 
@@ -144,6 +158,12 @@ const enWiki = (await entradasDePersonaje(p.id, idioma)).map((e) => entradaWikiL
     margin-top: 14px;
     color: var(--txt-2);
     font-size: 0.95rem;
+  }
+  .guia-orden {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0 0;
   }
   .titulos h2 {
     font-size: 1.5rem;

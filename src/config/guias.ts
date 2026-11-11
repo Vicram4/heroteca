@@ -7,7 +7,12 @@
  *  - 'carpetas':  carpetas de visionado de series, con el orden capítulo a capítulo si existe
  *  - 'linea':     línea temporal por años de la sección (campo `epoca`; ver src/lib/lineaTemporal.ts)
  *  - 'rutas':     selecciones para empezar («Por dónde empezar»): bloques de títulos elegidos a mano, por id de ficha
+ *  - 'personaje': «Todas las películas de X en orden»: versiones (continuidades) elegidas a mano, cada una en el orden
+ *                 de la historia; el orden de estreno y «dónde ver» se calculan solos. Solo películas con el
+ *                 personaje como protagonista o pieza clave (la página del personaje ya lista todas sus apariciones).
  */
+import { GUIAS_PERSONAJE } from './guiasPersonaje';
+
 export interface Guia {
   universo: string;
   /** Final de la URL: /<universo>/guias/<id>/ */
@@ -21,7 +26,7 @@ export interface Guia {
   descripcion: string;
   /** Párrafos de introducción */
   intro: string[];
-  tipo: 'secciones' | 'carpetas' | 'rutas' | 'linea';
+  tipo: 'secciones' | 'carpetas' | 'rutas' | 'linea' | 'personaje';
   /** Ids de las secciones que muestra, en orden */
   secciones: string[];
   /** Solo para tipo 'carpetas': qué carpetas incluye */
@@ -32,8 +37,27 @@ export interface Guia {
   antesDe?: number;
   /** Mostrar la fase (sagas de tipo «fase») de cada título */
   conFases?: boolean;
+  /** Solo para tipo 'personaje': páginas de personaje enlazadas (y que enlazan a la guía); el primero es el principal */
+  personajes?: string[];
+  /** Solo para tipo 'personaje': cada versión con sus películas (ids de ficha) en el orden de la historia */
+  versiones?: Version[];
+  /** Solo para tipo 'personaje': respuesta a «¿Hay que verlas todas?» */
+  consejo?: string;
+  /** Solo para tipo 'personaje': para las preguntas («¿Cuántas películas de Spider-Man hay?»; en inglés, «Spider-Man») */
+  peliculasDe?: string;
   /** Versión inglesa de los textos */
-  en?: { titulo: string; tituloSeo: string; descripcion: string; intro: string[] };
+  en?: { titulo: string; tituloSeo: string; descripcion: string; intro: string[]; consejo?: string; peliculasDe?: string };
+}
+
+export interface Version {
+  titulo: string;
+  texto: string;
+  ids: string[];
+  /** Cuándo transcurre, para los títulos sin `epoca` en su ficha (las del UMC ya la tienen) */
+  epocas?: Record<string, string>;
+  /** Animación: va aparte y no cuenta en el orden de estreno principal */
+  animacion?: boolean;
+  en?: { titulo: string; texto: string; epocas?: Record<string, string> };
 }
 
 export interface Ruta {
@@ -326,10 +350,17 @@ export const GUIAS: Guia[] = [
       ],
     },
   },
+  ...GUIAS_PERSONAJE,
 ];
 
 export const guiasDe = (universo: string) => GUIAS.filter((g) => g.universo === universo);
 
 /** La guía con sus textos en el idioma pedido (si falta la traducción, en español). */
 export const guiaLoc = (g: Guia, idioma: 'es' | 'en'): Guia =>
-  idioma === 'en' && g.en ? { ...g, ...g.en, rutas: g.rutas?.map((r) => ({ ...r, ...r.en })) } : g;
+  idioma === 'en' && g.en
+    ? { ...g, ...g.en, rutas: g.rutas?.map((r) => ({ ...r, ...r.en })), versiones: g.versiones?.map((v) => ({ ...v, ...v.en })) }
+    : g;
+
+/** Guías por personaje que enlazan a la página de un personaje. */
+export const guiasDePersonaje = (universo: string, personaje: string) =>
+  GUIAS.filter((g) => g.universo === universo && g.tipo === 'personaje' && g.personajes?.includes(personaje));
