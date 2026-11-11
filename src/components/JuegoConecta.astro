@@ -28,6 +28,8 @@ const textosCliente = {
   ganado: j.conectaGanado('{n}', '{m}'),
   perfecto: j.conectaPerfecto('{n}'),
   volver: j.conectaVolver,
+  nombre: j.conecta,
+  copiado: j.copiado,
 };
 ---
 
@@ -40,6 +42,8 @@ const textosCliente = {
     <p class="resultado" data-resultado></p>
     <p class="camino-titulo">{j.conectaCamino}</p>
     <ol class="cadena" data-camino></ol>
+    <button type="button" class="pastilla" data-compartir hidden>{j.compartir}</button>
+    <p class="aviso" data-aviso role="status"></p>
   </div>
   <div class="botones">
     <button type="button" class="pastilla" data-deshacer>{j.conectaDeshacer}</button>
@@ -52,6 +56,7 @@ const textosCliente = {
 
 <script>
   import type { DatosConecta } from './JuegoConecta.astro';
+  import { compartirResultado } from '../lib/compartir';
   type Paso = { o: number; a: number };
   document.querySelectorAll<HTMLElement>('[data-conecta]').forEach((caja) => {
     const { a: actores, o: obras, c: conocidos }: DatosConecta = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '{}');
@@ -179,6 +184,9 @@ const textosCliente = {
       terminado = true;
       $('[data-resultado]').textContent = !ganado ? '' : ruta.length === optimo ? t.perfecto.replace('{n}', ruta.length) : t.ganado.replace('{n}', ruta.length).replace('{m}', optimo);
       pintarCadena($('[data-camino]'), caminoMasCorto());
+      // Solo se comparte una partida ganada
+      $<HTMLButtonElement>('[data-compartir]').hidden = !ganado;
+      $('[data-aviso]').textContent = '';
       $('[data-final]').hidden = false;
       pintar();
     }
@@ -197,6 +205,10 @@ const textosCliente = {
     });
     $('[data-rendirse]').addEventListener('click', () => acabar(false));
     $('[data-otra]').addEventListener('click', nuevaPartida);
+    $('[data-compartir]').addEventListener('click', async () => {
+      const texto = [`Heroteca · ${t.nombre}`, $('[data-reto]').textContent, $('[data-resultado]').textContent, location.href].join('\n');
+      if ((await compartirResultado(texto)) === 'copiado') $('[data-aviso]').textContent = t.copiado;
+    });
     nuevaPartida();
   });
 </script>
@@ -271,6 +283,11 @@ const textosCliente = {
   }
   .camino-titulo {
     margin: 0 0 4px;
+    color: var(--txt-2);
+  }
+  .aviso {
+    min-height: 1.3em;
+    margin: 8px 0 0;
     color: var(--txt-2);
   }
   .botones {

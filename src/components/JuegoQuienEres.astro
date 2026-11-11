@@ -16,7 +16,7 @@ const resultados = await Promise.all(
 );
 ---
 
-<div class="juego panel" data-quien data-plantilla={j.pregunta(91, 92)}>
+<div class="juego panel" data-quien data-plantilla={j.pregunta(91, 92)} data-compartir-txt={j.compartirQuien('{x}')} data-copiado={j.copiado}>
   <div data-preguntas>
     <p class="numero" data-numero></p>
     <h2 tabindex="-1" data-texto-pregunta></h2>
@@ -29,12 +29,15 @@ const resultados = await Promise.all(
     <div class="acciones">
       <a data-enlace>{j.verFicha} →</a>
       <button type="button" class="pastilla principal" data-otra-vez>{j.otraVez}</button>
+      <button type="button" class="pastilla" data-compartir>{j.compartir}</button>
     </div>
+    <p class="aviso" data-aviso role="status"></p>
   </div>
   <script type="application/json" data-datos set:html={JSON.stringify({ preguntas, resultados })} />
 </div>
 
 <script>
+  import { compartirResultado } from '../lib/compartir';
   document.querySelectorAll<HTMLElement>('[data-quien]').forEach((caja) => {
     const { preguntas, resultados } = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '{}') as {
       preguntas: { texto: string; respuestas: { texto: string; puntos: Record<string, number> }[] }[];
@@ -43,6 +46,7 @@ const resultados = await Promise.all(
     const $ = <T extends HTMLElement>(s: string) => caja.querySelector<T>(s)!;
     let paso = 0;
     let puntos: Record<string, number> = {};
+    let ganadorNombre = '';
     function pintar(enfocar: boolean) {
       const p = preguntas[paso];
       $('[data-numero]').textContent = (caja.dataset.plantilla ?? '').replace('91', String(paso + 1)).replace('92', String(preguntas.length));
@@ -69,7 +73,9 @@ const resultados = await Promise.all(
       const ganador = resultados.reduce((mejor, r) => ((puntos[r.id] ?? 0) > (puntos[mejor.id] ?? 0) ? r : mejor), resultados[0]);
       $('[data-preguntas]').hidden = true;
       $('[data-resultado]').hidden = false;
+      ganadorNombre = ganador.nombre;
       $('[data-nombre]').textContent = ganador.nombre;
+      $('[data-aviso]').textContent = '';
       $('[data-descripcion]').textContent = ganador.texto;
       $<HTMLAnchorElement>('[data-enlace]').href = ganador.url;
       $('[data-nombre]').focus();
@@ -80,6 +86,10 @@ const resultados = await Promise.all(
       $('[data-preguntas]').hidden = false;
       $('[data-resultado]').hidden = true;
       pintar(true);
+    });
+    $('[data-compartir]').addEventListener('click', async () => {
+      const texto = [(caja.dataset.compartirTxt ?? '').replace('{x}', ganadorNombre), location.href].join('\n');
+      if ((await compartirResultado(texto)) === 'copiado') $('[data-aviso]').textContent = caja.dataset.copiado ?? '';
     });
     pintar(false);
   });
@@ -134,6 +144,11 @@ const resultados = await Promise.all(
     align-items: center;
     gap: 12px 20px;
     margin-top: 14px;
+  }
+  .aviso {
+    min-height: 1.3em;
+    margin: 8px 0 0;
+    color: var(--txt-2);
   }
   .principal {
     background: var(--txt);

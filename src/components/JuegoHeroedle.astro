@@ -76,6 +76,7 @@ const textosCliente = {
 
 <script>
   import type { PersonajeHeroedle } from './JuegoHeroedle.astro';
+  import { compartirResultado } from '../lib/compartir';
   const MAX = 6;
   document.querySelectorAll<HTMLElement>('[data-heroedle]').forEach((caja) => {
     const lista: PersonajeHeroedle[] = JSON.parse(caja.querySelector('[data-datos]')!.textContent ?? '[]');
@@ -169,10 +170,7 @@ const textosCliente = {
         ...filas.map((p) => [p.u === secreto.u, p.a === secreto.a, p.t === secreto.t, p.i === secreto.i].map(cuadro).join('')),
         location.href,
       ].join('\n');
-      try {
-        await navigator.clipboard.writeText(texto);
-        $('[data-aviso]').textContent = t.copiado;
-      } catch {}
+      if ((await compartirResultado(texto)) === 'copiado') $('[data-aviso]').textContent = t.copiado;
     });
     pintar();
   });

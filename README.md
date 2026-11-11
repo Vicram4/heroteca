@@ -34,7 +34,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Dónde ver**: plataformas de suscripción, alquiler y compra de cada título (España en la versión española,
   EE. UU. en la inglesa), con datos de JustWatch que se **actualizan solos cada semana**.
 - **Pasatiempos**: once juegos hechos con los datos de la colección, entre ellos Heroedle (un personaje al día), trivia
-  diaria, conecta a los actores, bingo de maratón, cartel pixelado y ¿qué héroe eres?
+  diaria, conecta a los actores, bingo de maratón, cartel pixelado y ¿qué héroe eres? Seis de ellos tienen botón «Compartir
+  resultado» (en el móvil abre el menú de compartir del teléfono; en el ordenador copia el texto).
 - **Noticias** de Marvel y DC recogidas cada día de medios especializados (RSS), clasificadas por universo y con
   enlace a la fuente original.
 - **Aviso semanal**: cada lunes, si hay estrenos anunciados, cambios de fecha, títulos estrenados que faltan en la
@@ -65,7 +66,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 - **Mi año en Heroteca**: resumen anual al estilo Wrapped (`/mi-ano/`): títulos, horas, mes más intenso, racha y
   personaje más visto, calculado en el navegador con las fechas guardadas, sin enviar nada a ningún servidor.
 - **Línea temporal del UMC**: cada título en el año en que transcurre (cronología oficial), con el dato en cada ficha.
-- **Guías de visionado**: «Por dónde empezar» (rutas para quien no ha visto nada, en Marvel y en DC), orden del UMC (cronológico y de estreno, con un gráfico que compara cuánto cambia cada
+- **Guías de visionado**: «Por dónde empezar» (rutas para quien no ha visto nada, en Marvel y en DC), «Qué ver antes de Vengadores: Doomsday» (enlazada desde su página de Próximamente), orden del UMC (cronológico y de estreno, con un gráfico que compara cuánto cambia cada
   título entre los dos órdenes), películas de DC y Arrowverso capítulo a capítulo.
 - **Bilingüe (español e inglés)**: interfaz, datos (títulos, sinopsis, capítulos y carteles en inglés) y direcciones
   traducidas (`/en/marvel/captain-america-the-first-avenger/`), con `hreflang` para los buscadores.

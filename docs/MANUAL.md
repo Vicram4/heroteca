@@ -402,6 +402,14 @@ cada ruta tiene título, texto (con su versión `en`) y los **ids de las fichas*
 - Si un id está mal escrito, **la compilación falla** con un mensaje que dice qué ficha no existe.
 - Para cambiar una selección basta con editar la lista `ids` de la ruta.
 
+**Guías «Qué ver antes de…»** para un gran estreno: también son de tipo `rutas`, con el campo `antesDe` (id de TMDB del
+estreno). La página de Próximamente de ese estreno muestra entonces el apartado «Para llegar preparado» con el enlace a la
+guía. La primera es `/marvel/guias/que-ver-antes-de-vengadores-doomsday/` (`antesDe: 1003596`): rutas «Lo imprescindible»,
+«El multiverso», «Los héroes que vuelven» y «Los X-Men de siempre», elegidas según el reparto anunciado. Cuando la película
+se estrene y entre en la colección, su página de Próximamente redirige a la ficha y el enlace deja de verse allí; la guía
+sigue en la lista de guías. La guía «Por dónde empezar» debe seguir siendo la primera de tipo `rutas` de cada universo
+(las preguntas frecuentes la buscan así).
+
 ## Línea temporal del UMC (años de la historia)
 
 Guía `/marvel/guias/linea-temporal/` (`/en/marvel/guides/mcu-timeline/`), de tipo `linea` en `src/config/guias.ts`:
@@ -467,6 +475,12 @@ Página `/estadisticas/` (`/en/stats/`), enlazada en el pie. Todo se calcula al 
   500 votos) y título más antiguo.
 
 ## Pasatiempos
+
+**Compartir resultado:** Heroedle, Trivia diaria, Cartel pixelado, Adivina el personaje, Conecta a los actores (solo al
+ganar) y ¿Qué héroe eres? tienen el botón «Compartir resultado». Usa `src/lib/compartir.ts`: en pantallas táctiles abre
+el menú de compartir del sistema (WhatsApp, Telegram…) y, si no lo hay o en el ordenador, copia el texto y muestra
+«Resultado copiado.». El texto lleva el nombre del juego, la puntuación, cuadraditos por ronda (🟩 acierto con 4-5
+puntos, 🟨 acierto con menos, ⬛ fallo) y el enlace.
 
 Página `/pasatiempos/` (`/en/games/`), siempre a la vista: botón **«Juegos»** en la cabecera (en el móvil, solo el icono) y
 bloque **«¿Jugamos?»** en la portada con los cuatro primeros. Once juegos que funcionan en el navegador con los datos de

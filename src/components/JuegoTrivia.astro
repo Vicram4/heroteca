@@ -64,6 +64,7 @@ const textosCliente = {
 
 <script>
   import type { PeliculaTrivia } from './JuegoTrivia.astro';
+  import { compartirResultado } from '../lib/compartir';
   const CLAVE = 'heroteca:trivia';
   interface Pregunta {
     texto: string;
@@ -217,10 +218,7 @@ const textosCliente = {
     }
     $('[data-compartir]').addEventListener('click', async () => {
       const texto = [`Heroteca Trivia ${fecha} · ${aciertos()}/${preguntas.length}`, cuadros(), location.href].join('\n');
-      try {
-        await navigator.clipboard.writeText(texto);
-        $('[data-aviso]').textContent = t.copiado;
-      } catch {}
+      if ((await compartirResultado(texto)) === 'copiado') $('[data-aviso]').textContent = t.copiado;
     });
     mostrar();
   });

@@ -23,6 +23,7 @@ import { paisDe } from '../../../lib/dondever';
 import { imagenTmdb } from '../../../lib/tmdb';
 import { rutaEnIdioma } from '../../../i18n/rutas';
 import { universoLoc } from '../../../i18n/datos';
+import { GUIAS, guiaLoc } from '../../../config/guias';
 
 const { e } = Astro.props as { e: Estreno };
 const idioma = idiomaDe(Astro.url);
@@ -42,6 +43,9 @@ const tipoTexto = e.tipo === 'pelicula' ? nombreTipo('pelicula', idioma) : enEmi
 const masEstrenos = proximosEstrenos(pais, e.universo)
   .filter((o) => o.clave !== e.clave)
   .slice(0, 4);
+// Guía «Qué ver antes de…» asociada a este estreno, si la hay (campo antesDe en config/guias.ts)
+const guiaBase = e.tmdb ? GUIAS.find((g) => g.antesDe === e.tmdb.id) : undefined;
+const guiaAntes = guiaBase && guiaLoc(guiaBase, idioma);
 const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
 ---
 
@@ -81,6 +85,16 @@ const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
       <h2 class="h-panel">{p.sinopsis}</h2>
       <p>{x.sinopsis || p.sinSinopsis}</p>
     </section>
+
+    {
+      guiaAntes && (
+        <section class="panel">
+          <h2 class="h-panel">{p.antesDeVerla}</h2>
+          <p><a href={`/${guiaAntes.universo}/guias/${guiaAntes.id}/`}>{guiaAntes.titulo} →</a></p>
+          <p class="nota">{guiaAntes.descripcion}</p>
+        </section>
+      )
+    }
 
     {
       x.trailer && (

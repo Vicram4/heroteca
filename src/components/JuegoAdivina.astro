@@ -41,6 +41,8 @@ const plantillas = {
   identidad: j.pistaIdentidad('{x}'),
   ronda: j.ronda(95, 96),
   final: j.final(97, 98),
+  nombre: j.adivina,
+  copiado: j.copiado,
   correcto: j.correcto,
   incorrecto: j.incorrecto('{x}'),
 };
@@ -64,7 +66,11 @@ const plantillas = {
   </div>
   <div class="final" data-final hidden>
     <p class="nota-final" data-nota-final></p>
-    <button type="button" class="pastilla principal" data-otra-vez>{j.otraVez}</button>
+    <div class="acciones">
+      <button type="button" class="pastilla principal" data-otra-vez>{j.otraVez}</button>
+      <button type="button" class="pastilla" data-compartir>{j.compartir}</button>
+    </div>
+    <p class="aviso" data-aviso role="status"></p>
   </div>
   <script type="application/json" data-datos set:html={JSON.stringify(personajes)} />
   <script type="application/json" data-plantillas set:html={JSON.stringify(plantillas)} />
@@ -72,6 +78,7 @@ const plantillas = {
 
 <script>
   import type { PersonajeJuego } from './JuegoAdivina.astro';
+  import { compartirResultado } from '../lib/compartir';
   const RONDAS = 5;
   const PISTAS = 5;
   document.querySelectorAll<HTMLElement>('[data-adivina]').forEach((caja) => {
@@ -82,6 +89,8 @@ const plantillas = {
     const mezclar = <T,>(l: T[]) => [...l].sort(() => Math.random() - 0.5);
     let ronda = 0;
     let puntos = 0;
+    // Puntos de cada ronda, para compartir el resultado
+    let porRonda: number[] = [];
     let pistas = 1;
     let usados = new Set<string>();
     let actual: PersonajeJuego;
@@ -137,7 +146,9 @@ const plantillas = {
         if (o.dataset.id === actual.id) o.classList.add('buena');
         else if (o === b) o.classList.add('mala');
       });
-      if (bien) puntos += Math.max(1, PISTAS - (pistas - 1));
+      const ganados = bien ? Math.max(1, PISTAS - (pistas - 1)) : 0;
+      porRonda.push(ganados);
+      puntos += ganados;
       $('[data-puntos]').textContent = String(puntos);
       const r = $('[data-resultado]');
       r.textContent = bien ? t.correcto : t.incorrecto.replace('{x}', actual.n);
@@ -154,7 +165,9 @@ const plantillas = {
     function empezar() {
       ronda = 0;
       puntos = 0;
+      porRonda = [];
       usados = new Set();
+      $('[data-aviso]').textContent = '';
       $('[data-puntos]').textContent = '0';
       $('[data-final]').hidden = true;
       $('[data-zona-juego]').hidden = false;
@@ -172,6 +185,12 @@ const plantillas = {
       $<HTMLButtonElement>('[data-otra-vez]').focus();
     });
     $('[data-otra-vez]').addEventListener('click', empezar);
+    // Compartir: un cuadrado por personaje (verde = con pocas pistas, amarillo = con muchas, negro = fallo)
+    $('[data-compartir]').addEventListener('click', async () => {
+      const cuadro = (n: number) => (n >= 4 ? '🟩' : n > 0 ? '🟨' : '⬛');
+      const texto = [`Heroteca · ${t.nombre} · ${puntos}/${RONDAS * PISTAS}`, porRonda.map(cuadro).join(''), location.href].join('\n');
+      if ((await compartirResultado(texto)) === 'copiado') $('[data-aviso]').textContent = t.copiado;
+    });
     empezar();
   });
 </script>
@@ -241,6 +260,11 @@ const plantillas = {
   }
   .resultado.mal {
     color: var(--acento-txt);
+  }
+  .aviso {
+    min-height: 1.3em;
+    margin: 8px 0 0;
+    color: var(--txt-2);
   }
   .acciones {
     display: flex;

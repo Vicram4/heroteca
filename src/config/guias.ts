@@ -28,6 +28,8 @@ export interface Guia {
   carpetas?: number[];
   /** Solo para tipo 'rutas': cada ruta con sus títulos (ids de ficha) en el orden en que se recomiendan */
   rutas?: Ruta[];
+  /** Id de TMDB de un próximo estreno: su página de Próximamente enlaza a esta guía («Qué ver antes de…») */
+  antesDe?: number;
   /** Mostrar la fase (sagas de tipo «fase») de cada título */
   conFases?: boolean;
   /** Versión inglesa de los textos */
@@ -90,6 +92,70 @@ export const GUIAS: Guia[] = [
       intro: [
         'With more than 240 films and series, Marvel can feel daunting. You don’t need to watch it all: these routes are entry points that work on their own, ordered to watch one after another.',
         'If you’re short on time, start with the first route: ten films that tell the essentials of the Marvel Cinematic Universe up to Avengers: Endgame. When you want more, the full watch order guide has everything else.',
+      ],
+    },
+  },
+  {
+    universo: 'marvel',
+    id: 'que-ver-antes-de-vengadores-doomsday',
+    idEn: 'what-to-watch-before-avengers-doomsday',
+    titulo: 'Qué ver antes de Vengadores: Doomsday',
+    tituloSeo: 'Películas y series que ver antes de Vengadores: Doomsday (guía)',
+    descripcion:
+      'Las películas y series que conviene ver antes de Vengadores: Doomsday (diciembre de 2026): lo imprescindible, el multiverso, los héroes que vuelven y los X-Men de siempre.',
+    intro: [
+      'Vengadores: Doomsday llega a los cines en diciembre de 2026 y junta a medio Universo Marvel: los Vengadores que quedan, los Thunderbolts*, los Cuatro Fantásticos, Wakanda y, por primera vez, los X-Men de las películas de Fox. Delante de todos, Robert Downey Jr. como Doctor Doom.',
+      'No hace falta verlo todo. La primera ruta es lo imprescindible para llegar con la historia clara; las demás amplían según el personaje que más te interese. La selección sigue el reparto anunciado por Marvel Studios y las guías de visionado más citadas; hasta el estreno no se sabrá qué pesa de verdad en la trama.',
+    ],
+    tipo: 'rutas',
+    secciones: [],
+    antesDe: 1003596,
+    rutas: [
+      {
+        titulo: 'Lo imprescindible',
+        texto: 'El final de la saga del Infinito, el multiverso de Loki y las tres películas que dejan el tablero listo para Doomsday.',
+        ids: ['vengadores-endgame', 'loki-t1', 'loki-t2', 'deadpool-y-wolverine', 'thunderbolts', 'los-cuatro-fantasticos-primeros-pasos'],
+        en: {
+          titulo: 'The essentials',
+          texto: 'The end of the Infinity Saga, Loki’s multiverse and the three films that set the board for Doomsday.',
+        },
+      },
+      {
+        titulo: 'El multiverso',
+        texto: 'Cómo se abrieron y se mezclaron las realidades, de la llegada de Kang a los villanos de otros Spider-Man.',
+        ids: ['spider-man-no-way-home', 'doctor-strange-en-el-multiverso-de-la-locura', 'ant-man-y-la-avispa-quantumania', 'spider-man-brand-new-day'],
+        en: {
+          titulo: 'The multiverse',
+          texto: 'How realities were opened and mixed, from Kang’s arrival to villains from other Spider-Men.',
+        },
+      },
+      {
+        titulo: 'Los héroes que vuelven',
+        texto: 'De dónde vienen Sam Wilson, Bucky, Yelena, Shuri, Namor y Shang-Chi, todos en el reparto anunciado.',
+        ids: ['the-falcon-and-the-winter-soldier-t1', 'capitan-america-brave-new-world', 'viuda-negra', 'black-panther-wakanda-forever', 'shang-chi-y-la-leyenda-de-los-diez-anillos'],
+        en: {
+          titulo: 'The returning heroes',
+          texto: 'Where Sam Wilson, Bucky, Yelena, Shuri, Namor and Shang-Chi come from, all in the announced cast.',
+        },
+      },
+      {
+        titulo: 'Los X-Men de siempre',
+        texto: 'Patrick Stewart, Ian McKellen, James Marsden, Rebecca Romijn y Alan Cumming vuelven a sus papeles. Días del futuro pasado cambia el final de la trilogía original, así que conviene verla al final.',
+        ids: ['x-men', 'x-men-2', 'x-men-la-decision-final', 'x-men-dias-del-futuro-pasado'],
+        en: {
+          titulo: 'The original X-Men',
+          texto: 'Patrick Stewart, Ian McKellen, James Marsden, Rebecca Romijn and Alan Cumming return to their roles. Days of Future Past changes the original trilogy’s ending, so it’s best watched last.',
+        },
+      },
+    ],
+    en: {
+      titulo: 'What to watch before Avengers: Doomsday',
+      tituloSeo: 'Films and series to watch before Avengers: Doomsday (guide)',
+      descripcion:
+        'The films and series worth watching before Avengers: Doomsday (December 2026): the essentials, the multiverse, the returning heroes and the original X-Men.',
+      intro: [
+        'Avengers: Doomsday hits cinemas in December 2026 and brings together half the Marvel Universe: the remaining Avengers, the Thunderbolts*, the Fantastic Four, Wakanda and, for the first time, the X-Men from the Fox films. Facing them all, Robert Downey Jr. as Doctor Doom.',
+        'You don’t need to watch everything. The first route is the essentials to arrive with the story clear; the others go further depending on the characters you care about most. The selection follows the cast announced by Marvel Studios and the most cited watch guides; until release, nobody knows what will really matter to the plot.',
       ],
     },
   },
