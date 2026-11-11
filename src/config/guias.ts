@@ -122,11 +122,11 @@ export const GUIAS: Guia[] = [
       },
       {
         titulo: 'El multiverso',
-        texto: 'Cómo se abrieron y se mezclaron las realidades, de la llegada de Kang a los villanos de otros Spider-Man.',
-        ids: ['spider-man-no-way-home', 'doctor-strange-en-el-multiverso-de-la-locura', 'ant-man-y-la-avispa-quantumania', 'spider-man-brand-new-day'],
+        texto: 'Cómo se abrieron y se mezclaron las realidades: los villanos de otros Spider-Man, el viaje de Doctor Strange y América Chávez por el multiverso y la llegada de Kang.',
+        ids: ['spider-man-no-way-home', 'doctor-strange-en-el-multiverso-de-la-locura', 'ant-man-y-la-avispa-quantumania'],
         en: {
           titulo: 'The multiverse',
-          texto: 'How realities were opened and mixed, from Kang’s arrival to villains from other Spider-Men.',
+          texto: 'How realities were opened and mixed: villains from other Spider-Men, Doctor Strange and America Chavez’s trip across the multiverse, and Kang’s arrival.',
         },
       },
       {

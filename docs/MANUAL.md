@@ -398,6 +398,8 @@ cada ruta tiene título, texto (con su versión `en`) y los **ids de las fichas*
 
 - Las tarjetas muestran carátula, número de paso, año, tipo, duración y nota de TMDB, y se marcan con la ✓ de
   «Mi progreso»; cada ruta tiene su barra «Has visto 3 de 10».
+- Cada tarjeta tiene su botón «Marcar como visto» para marcar sin entrar en la ficha (usa `data-alternar-visto`, como
+  el botón de la ficha; la barra de la ruta se actualiza al momento).
 - Al final, la llamada al test «¿Qué veo?».
 - Si un id está mal escrito, **la compilación falla** con un mensaje que dice qué ficha no existe.
 - Para cambiar una selección basta con editar la lista `ids` de la ruta.

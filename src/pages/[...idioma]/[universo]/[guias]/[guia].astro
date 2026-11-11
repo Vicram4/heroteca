@@ -375,6 +375,11 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
                   </span>
                   {notaDe(t) && <span class="meta">★ {notaDe(t)}<span class="solo-lectores"> ({tx.recomendar.nota})</span></span>}
                 </a>
+                {/* Marcar sin entrar en la ficha (el clic lo gestiona iniciarVistos, en lib/vistos.ts) */}
+                <button type="button" class="boton-visto-ruta" data-alternar-visto={t.id} aria-pressed="false" aria-label={`${tx.progreso.marcar}: ${t.corto}`}>
+                  <span class="no-visto">{tx.progreso.marcar}</span>
+                  <span class="si-visto">✓ {tx.progreso.visto}</span>
+                </button>
               </li>
             ))}
           </ol>
@@ -691,6 +696,29 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
   .ruta .meta {
     font-size: 0.82rem;
     color: var(--txt-2);
+  }
+  .boton-visto-ruta {
+    margin-top: 8px;
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--txt);
+    font: 600 0.8rem var(--f-texto, inherit);
+    cursor: pointer;
+  }
+  .boton-visto-ruta:hover {
+    border-color: var(--txt-2);
+  }
+  .boton-visto-ruta[aria-pressed='true'] {
+    border-color: #1a7f45;
+    background: #1a7f45;
+    color: #fff;
+  }
+  .boton-visto-ruta[aria-pressed='true'] .no-visto,
+  .boton-visto-ruta:not([aria-pressed='true']) .si-visto {
+    display: none;
   }
   .bloque :global(.progreso) {
     margin-top: 6px;
