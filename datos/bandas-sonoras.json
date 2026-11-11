@@ -231,6 +231,15 @@
    "spotify": "4NLYPWzYd1ujwgONgN8wyY"
   }
  ],
+ "dc/clayface": [
+  {
+   "album": "Clayface (Original Motion Picture Soundtrack)",
+   "artista": "Volker Bertelmann",
+   "anio": 2026,
+   "apple": "https://music.apple.com/es/album/clayface-original-motion-picture-soundtrack/6816285972",
+   "spotify": "3bz8ZlzTN77QCgjjDopO3M"
+  }
+ ],
  "dc/constantine": [
   {
    "album": "Constantine (Original Motion Picture Score)",
@@ -1897,6 +1906,15 @@
    "anio": 2021,
    "apple": "https://music.apple.com/es/album/venom-let-there-be-carnage-original-motion-picture/1585826119",
    "spotify": "5uhuNTf3blfaSexmqLJlZB"
+  }
+ ],
+ "marvel/visionquest-t1": [
+  {
+   "album": "VisionQuest - Vol. 1 (Episodes 1-4) [Original Soundtrack]",
+   "artista": "Mick Giacchino",
+   "anio": 2026,
+   "apple": "https://music.apple.com/es/album/visionquest-vol-1-episodes-1-4-original-soundtrack/6824675056",
+   "spotify": "5jzkR32BnSSskRPBUtNC0R"
   }
  ],
  "marvel/viuda-negra": [

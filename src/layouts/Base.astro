@@ -57,7 +57,10 @@ const datosMigas = migas?.length
   : undefined;
 // Fecha de la última actualización: la de la compilación
 const actualizado = new Date().toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' });
-const tituloPagina = titulo ? `${titulo} · ${SITE.nombre}` : `${SITE.nombre} · ${tx.lema}`;
+// Google corta los títulos de más de unos 70 caracteres: en los largos se quita « · Heroteca» para que se lea lo importante
+const MAX_TITULO = 70;
+const conMarca = titulo ? `${titulo} · ${SITE.nombre}` : `${SITE.nombre} · ${tx.lema}`;
+const tituloPagina = titulo && conMarca.length > MAX_TITULO ? titulo : conMarca;
 const universos = await universosActivos();
 const canonica = new URL(Astro.url.pathname, Astro.site);
 // La misma página en los dos idiomas (direcciones completas: no las toca la reescritura de enlaces)

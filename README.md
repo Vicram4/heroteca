@@ -24,7 +24,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
 
 ## Características
 
-- **495 fichas** (247 de Marvel, 248 de DC), **180 personajes**, **42 sagas y agrupaciones**.
+- **497 fichas** (248 de Marvel, 249 de DC), **180 personajes**, **42 sagas y agrupaciones**.
 - **Estanterías** con la numeración original y orden alternable (historia o estreno), leyenda de colores y **vista de lista** compacta; en móvil, los filtros se agrupan en un botón.
 - **Orden por carpetas** para las series de DC (Pre-Crossover, Crossover…), con páginas que muestran el orden de visionado capítulo a capítulo entre varias series.
 - **Cuatro órdenes** en cada estantería: el de la colección (historia o carpetas), estreno, más recientes y mejor valoradas.

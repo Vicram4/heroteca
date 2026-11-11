@@ -800,6 +800,8 @@ elemento a esa lista.
 
 - **Título de las fichas:** «Capitana Marvel (2019): dónde ver, reparto y orden» (temporadas: «…: dónde ver, capítulos y
   reparto»), para encajar con lo que la gente busca. Textos `tituloSeo` en el apartado `ficha` de `src/i18n/textos.ts`.
+- **Largo del título:** todas las páginas terminan en « · Heroteca», salvo si así pasan de 70 caracteres (Google corta a partir
+  de ahí): entonces se quita la marca para que se lea lo importante (`MAX_TITULO` en `src/layouts/Base.astro`).
 - **«Preguntas rápidas»** en cada ficha (sustituye al antiguo «En resumen», con los mismos datos): las dudas que la gente
   escribe en los buscadores, como subtítulos con su respuesta. Por ejemplo: «¿Dónde ver X en España?», «¿Cuánto dura X?» (o
   «¿Cuántos capítulos tiene…?» en series), «¿Tiene X escena poscréditos?», «¿En qué orden se ve X?», «¿Qué ver antes de
