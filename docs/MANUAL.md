@@ -638,7 +638,11 @@ elemento a esa lista.
 - Los grupos de la página «Relacionadas y sagas» se definen en `gruposSagas` del mismo archivo.
 - **Favicon:** el dibujo está en `public/favicon.svg`. Si se cambia, `node scripts/generar_favicon.mjs` rehace
   `favicon.ico` y `apple-touch-icon.png`. Google lo actualiza por su cuenta, y puede tardar días o semanas; se puede
-  acelerar pidiendo la indexación de la portada en Search Console.
+  acelerar pidiendo la indexación de la portada en Search Console (tiene un límite; si salta, basta con volver a
+  enviar el mapa del sitio en «Sitemaps» y esperar).
+- **Nombre del sitio:** la portada lleva datos `WebSite` con `name: Heroteca` y nada más como nombre. No se usa
+  `alternateName`: Google lo reserva para siglas o formas cortas del nombre, no para el lema. Aun así, el nombre que
+  muestra Google lo decide él, y en un subdominio compartido (`*.vercel.app`) puede seguir mostrando «Vercel».
 
 
 ### Textos generados para buscadores

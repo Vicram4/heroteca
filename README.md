@@ -126,7 +126,7 @@ en español y una integración de Astro los traduce al compilar las páginas ing
 | Rendimiento | 90–99 |
 
 - Contraste AA en ambos modos, navegación por teclado y foco visible, respeto a `prefers-reduced-motion`.
-- Datos estructurados schema.org (`Movie`, `TVSeries`, `TVSeason`, `ItemList`, `BreadcrumbList`), mapa del sitio y `hreflang`.
+- Datos estructurados schema.org (`WebSite`, `Movie`, `TVSeries`, `TVSeason`, `ItemList`, `BreadcrumbList`), mapa del sitio y `hreflang`.
 - Comprobación de los ~47.000 enlaces internos y de las 1.340 parejas de idioma en cada cambio importante.
 
 ## Estructura
