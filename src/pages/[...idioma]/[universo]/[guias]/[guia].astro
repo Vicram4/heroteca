@@ -262,7 +262,12 @@ const listasPersonaje: { id: string; titulo: string; texto: string; grupos: Grup
         grupos: [{ pelis: deEstreno.map((t) => ({ t, version: versionDe.get(t.id) })) }],
       },
       { id: 'cronologico', titulo: tp.crono, texto: tp.cronoTexto, grupos: versiones.filter((v) => !v.animacion) },
-      ...(animadas.length ? [{ id: 'animacion', titulo: tp.animacion, texto: '', grupos: animadas }] : []),
+      // Con un solo grupo animado, su subtítulo repetiría el de la sección: se omite y su texto pasa a la sección
+      ...(animadas.length === 1
+        ? [{ id: 'animacion', titulo: tp.animacion, texto: animadas[0].texto ?? '', grupos: [{ ...animadas[0], titulo: '', texto: '' }] }]
+        : animadas.length
+          ? [{ id: 'animacion', titulo: tp.animacion, texto: '', grupos: animadas }]
+          : []),
     ]
   : [];
 if (guia.tipo === 'personaje' && deEstreno.length) {
@@ -806,6 +811,14 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
     grid-template-columns: repeat(auto-fill, minmax(min(46%, 150px), 1fr));
     gap: 22px 16px;
   }
+  /* Columna flexible: el botón «Marcar como visto» queda al pie y alineado en toda la fila */
+  .ruta li {
+    display: flex;
+    flex-direction: column;
+  }
+  .ruta li > :nth-last-child(2) {
+    margin-bottom: 8px;
+  }
   .ruta a {
     display: flex;
     flex-direction: column;
@@ -872,7 +885,7 @@ const colores = (c: BloqueCarpeta) => [...new Set((c.orden ?? []).map((o) => o.t
     color: var(--txt-2);
   }
   .boton-visto-ruta {
-    margin-top: 8px;
+    margin-top: auto;
     width: 100%;
     padding: 6px 8px;
     border: 1px solid var(--borde);
