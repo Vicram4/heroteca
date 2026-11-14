@@ -1,6 +1,167 @@
 {
- "fecha": "2026-11-13T14:53+00:00",
+ "fecha": "2026-11-14T13:46+00:00",
  "es": [
+  {
+   "titulo": "Marvel quiere al director de Predator para su próxima gran película",
+   "enlace": "https://www.cinemascomics.com/marvel-quiere-director-predator-pelicula/",
+   "fuente": "CinemasComics",
+   "fecha": "2026-11-14T12:00+00:00",
+   "resumen": "Marvel Studios estaría negociando con Dan Trachtenberg, director de Predator: Badlands, para una nueva película del UCM Esta noticia ha sido publicada por Cinemascomics.com",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "David Corenswet podría tener asegurado su futuro como Superman",
+   "enlace": "https://www.cinemascomics.com/david-corenswet-asegurado-futuro-superman/",
+   "fuente": "CinemasComics",
+   "fecha": "2026-11-14T10:30+00:00",
+   "resumen": "David Corenswet podría seguir siendo Superman tras Man of Tomorrow, mientras los cambios en DC amenazan la continuidad de otros personajes Esta noticia ha sido publicada por Cinemascomics.com",
+   "universos": [
+    "dc"
+   ]
+  },
+  {
+   "titulo": "Doomsday: proyecciones plantean arranque histórico para Marvel",
+   "enlace": "https://www.cinemascomics.com/doomsday-proyecciones-exito-taquilla-ucm/",
+   "fuente": "CinemasComics",
+   "fecha": "2026-11-14T06:00+00:00",
+   "resumen": "Avengers: Doomsday está muy cerca de estrenarse en cines y las primeras proyecciones indican que será un auténtico éxito en la taquilla. Esta noticia ha sido publicada por Cinemascomics.com",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "DC Comics recupera el origen de sus primeros superhéroes y reescribe el nacimiento de un equipo legendario",
+   "enlace": "https://www.cinemascomics.com/jsa-ano-uno-origen-sociedad-justicia-resena/",
+   "fuente": "CinemasComics",
+   "fecha": "2026-11-14T04:00+00:00",
+   "resumen": "Jeff Lemire reconstruye el nacimiento de la Sociedad de la Justicia de América en JSA: Año Uno, una historia que recupera el espíritu de los primeros superhéroes de DC y establece un nuevo punto de partida para sus…",
+   "universos": [
+    "dc"
+   ]
+  },
+  {
+   "titulo": "Doomsday: Pedro Pascal reveló detalles de Los Cuatro Fantásticos en la trama",
+   "enlace": "https://www.cinemascomics.com/doomsday-pedro-pascal-explico-detalles-trama/",
+   "fuente": "CinemasComics",
+   "fecha": "2026-11-14T03:00+00:00",
+   "resumen": "El actor Pedro Pascal reveló cómo será el vínculo entre el Doctor Doom y Reed Richards en Avengers: Doomsday. Te explicamos. Esta noticia ha sido publicada por Cinemascomics.com",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "VisionQuest: Paul Bettany explicó por qué la Bruja Escarlata no salió antes",
+   "enlace": "https://www.cinemascomics.com/visionquest-actor-ausencia-bruja-escarlata/",
+   "fuente": "CinemasComics",
+   "fecha": "2026-11-14T02:01+00:00",
+   "resumen": "Aunque el episodio final de VisionQuest trajo una sorpresa después de los créditos, Paul Bettany explicó por qué Wanda no fue protagonista. Esta noticia ha sido publicada por Cinemascomics.com",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Marvel busca a Dan Trachtenberg para dirigir una película centrada en un personaje del UCM",
+   "enlace": "https://www.lacasadeel.net/2026/11/marvel-dan-trachtenberg-rumor.html",
+   "fuente": "La Casa de EL",
+   "fecha": "2026-11-13T23:52+00:00",
+   "resumen": "El director de Predator: Badlands estaría negociando su incorporación a Marvel Studios para desarrollar una película que no formaría parte de una historia coral",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Chris Pratt quiere recuperar a James Gunn para Guardianes de la Galaxia 4",
+   "enlace": "https://www.cinemascomics.com/chris-pratt-james-gunn-guardianes-galaxia-4/",
+   "fuente": "CinemasComics",
+   "fecha": "2026-11-13T23:30+00:00",
+   "resumen": "Chris Pratt quiere volver a trabajar con James Gunn en Guardianes de la Galaxia 4 tras su salida de DC Studios. ¿Podría regresar a Marvel? Esta noticia ha sido publicada por Cinemascomics.com",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Vengadores: Doomsday revela las alianzas más sorprendentes entre sus superhéroes",
+   "enlace": "https://www.lacasadeel.net/2026/11/vengadores-doomsday-alianzas.html",
+   "fuente": "La Casa de EL",
+   "fecha": "2026-11-13T22:45+00:00",
+   "resumen": "Una nueva publicación de Marvel ofrece detalles sobre la amenaza que afrontarán cinco grupos de superhéroes en Vengadores: Doomsday",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Hace 23 años, Stan Lee y Pamela Anderson crearon una serie sobre una stripper superheroica. Ahora es la prueba definitiva de que el creador de Marvel no era infalible",
+   "enlace": "https://www.espinof.com/animacion/hace-23-anos-stan-lee-pamela-anderson-crearon-serie-stripper-superheroica-ahora-prueba-definitiva-que-creador-marvel-no-era-infalible",
+   "fuente": "Espinof",
+   "fecha": "2026-11-13T22:31+00:00",
+   "resumen": "Las creaciones de Stan Lee son conocidas por millones de personas. Spider-man, Los Cuatro Fantásticos , Hulk, Daredevil... Prácticamente todos los héroes de los primeros años de Marvel tenían su sello, aunque muchos de…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Milly Alcock podría ser la primera víctima de la nueva era de DC",
+   "enlace": "https://www.cinemascomics.com/milly-alcock-podria-primera-victima-nueva-dc/",
+   "fuente": "CinemasComics",
+   "fecha": "2026-11-13T22:00+00:00",
+   "resumen": "El futuro de Milly Alcock como Supergirl vuelve a estar en duda tras la salida de James Gunn y la llegada de nuevos responsables a DC Studios Esta noticia ha sido publicada por Cinemascomics.com",
+   "universos": [
+    "dc"
+   ]
+  },
+  {
+   "titulo": "Matar al talento para premiar la rutina. El despido de James Gunn y Peter Safran es la peor noticia posible para el cine de superhéroes",
+   "enlace": "https://www.espinof.com/divulgacion/matar-al-talento-para-premiar-rutina-despido-james-gunn-peter-safran-peor-noticia-posible-para-cine-superheroes",
+   "fuente": "Espinof",
+   "fecha": "2026-11-13T21:31+00:00",
+   "resumen": "Hace cosa de un mes, 81.000 millones de dólares sirvieron para cerrar una operación destinada a cambiar para siempre la industria del entretenimiento . Fue esta suma la que permitió a Paramount oficializar su compra de…",
+   "universos": [
+    "marvel",
+    "dc"
+   ]
+  },
+  {
+   "titulo": "Vengadores: Doomsday revela la tragedia que marcó a Doctor Doom",
+   "enlace": "https://www.cinemascomics.com/vengadores-doomsday-tragedia-doctor-doom/",
+   "fuente": "CinemasComics",
+   "fecha": "2026-11-13T19:00+00:00",
+   "resumen": "Los hermanos Russo revelan el doloroso pasado de Doctor Doom en Vengadores: Doomsday y Kevin Feige aclara su relación con Tony Stark Esta noticia ha sido publicada por Cinemascomics.com",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "DC Studios podría perder a varios superhéroes en Man of Tomorrow, DC prepara cambios que amenazan el futuro de su universo",
+   "enlace": "https://www.lacasadeel.net/2026/11/dc-studios-perder-superheroes.html",
+   "fuente": "La Casa de EL",
+   "fecha": "2026-11-13T18:58+00:00",
+   "resumen": "La nueva dirección de DC Studios estaría revisando la película de Superman y algunos personajes podrían desaparecer del montaje final",
+   "universos": [
+    "dc"
+   ]
+  },
+  {
+   "titulo": "Superman se salva del nuevo terremoto de DC, pero otros superhéroes podrían tener los días contados",
+   "enlace": "https://www.lacasadeel.net/2026/11/superman-se-salva.html",
+   "fuente": "La Casa de EL",
+   "fecha": "2026-11-13T18:43+00:00",
+   "resumen": "David Corenswet seguiría siendo Superman, mientras la nueva dirección estudia cambios que podrían afectar a varios personajes",
+   "universos": [
+    "dc"
+   ]
+  },
+  {
+   "titulo": "La versión extendida de Spider-Man: Brand New Day ya tiene fecha de estreno en cines",
+   "enlace": "https://www.cinemascomics.com/version-ext-spider-man-brand-new-day-cine/",
+   "fuente": "CinemasComics",
+   "fecha": "2026-11-13T17:00+00:00",
+   "resumen": "Spider-Man: Brand New Day volverá a los cines en diciembre con una versión extendida, nuevas escenas y un cameo eliminado Esta noticia ha sido publicada por Cinemascomics.com",
+   "universos": [
+    "marvel"
+   ]
+  },
   {
    "titulo": "Una actriz de Marvel revela que dejó de recibir ofertas de trabajo tras unirse al MCU",
    "enlace": "https://www.cinemascomics.com/actriz-de-marvel-no-ofertas-tras-mcu/",
@@ -1848,169 +2009,290 @@
    "universos": [
     "marvel"
    ]
-  },
-  {
-   "titulo": "Marvel también sabe dar miedo: 7 películas y series perfectas para Halloween",
-   "enlace": "https://www.cinemascomics.com/marvel-halloween/",
-   "fuente": "CinemasComics",
-   "fecha": "2026-10-31T14:20+00:00",
-   "resumen": "Marvel también tiene un lado oscuro. Repasamos siete películas, series y especiales del UCM que exploran los monstruos clásicos, la brujería, las posesiones…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Kevin Feige impone una nueva regla en Marvel que cambiará su futuro",
-   "enlace": "https://www.cinemascomics.com/kevin-feige-regla-marvel-cambia-futuro/",
-   "fuente": "CinemasComics",
-   "fecha": "2026-10-31T12:31+00:00",
-   "resumen": "Kevin Feige establece una nueva directriz para Marvel Comics: adelantarse 15 años al UCM y recuperar su papel como motor creativo de Marvel Esta noticia ha…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Descubre el sorprendente cameo en Clayface que encantará a los fans de Breaking Bad",
-   "enlace": "https://www.lacasadeel.net/2026/10/cameo-clayface-fans-breaking-bad.html",
-   "fuente": "La Casa de EL",
-   "fecha": "2026-10-31T11:38+00:00",
-   "resumen": "El actor se ha colado en el universo DC con una aparición de apenas unos segundos en Clayface que esconde mucho más de lo que parece",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "Los héroes frente a Doctor Doom en un espectacular póster de Vengadores: Doomsday",
-   "enlace": "https://www.cinemascomics.com/heroes-vs-doom-poster-vengadores-doomsday/",
-   "fuente": "CinemasComics",
-   "fecha": "2026-10-31T10:30+00:00",
-   "resumen": "Vengadores: Doomsday reúne a los Vengadores, los X-Men y los Cuatro Fantásticos frente a Doctor Doom en un espectacular póster internacional Esta noticia ha…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "DC: James Gunn da malas noticias de Superman 2 y explica continuidad",
-   "enlace": "https://www.cinemascomics.com/dc-james-gunn-da-una-mala-noticia-superman-2/",
-   "fuente": "CinemasComics",
-   "fecha": "2026-10-31T01:00+00:00",
-   "resumen": "James Gunn, uno de los co CEO de DC Studios, se refirió a la continuidad de esta franquicia con la anterior y habló de Superman 2. Esta noticia ha sido…",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "Patrick Stewart recibe sentido homenaje del director de X-Men",
-   "enlace": "https://www.cinemascomics.com/patrick-stewart-homenaje-director-de-x-men/",
-   "fuente": "CinemasComics",
-   "fecha": "2026-10-31T00:00+00:00",
-   "resumen": "Bryan Singer, director de las primeras películas de los X-Men, recordó a Patrick Stewart, actor con el que trabajó en toda la franquicia. Esta noticia ha…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Beyond the Spider-Verse busca una nueva forma de animar a Spider-Man",
-   "enlace": "https://www.lacasadeel.net/2026/10/spider-verse-spider-man-detalles.html",
-   "fuente": "La Casa de EL",
-   "fecha": "2026-10-30T22:17+00:00",
-   "resumen": "Phil Lord y Chris Miller adelantan que la última entrega de la trilogía animada de Spider-Man experimentará con técnicas inspiradas en el dibujo tradicional y el rodaje de acción real",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Vengadores: Doomsday juega al despiste con Doctor Doom y Cíclope",
-   "enlace": "https://www.cinemascomics.com/vengadores-doomsday-doctor-doom-ciclope/",
-   "fuente": "CinemasComics",
-   "fecha": "2026-10-30T22:01+00:00",
-   "resumen": "Marvel modifica tres detalles de Doctor Doom y Cíclope en Vengadores: Doomsday. Los cambios del tráiler despiertan nuevas sospechas. Esta noticia ha sido…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Patrick Stewart, actor: \"Es posible no cometer errores y aun así perder. Eso no es una debilidad; eso es la vida\"",
-   "enlace": "https://www.espinof.com/actores-y-actrices/consejo-sabio-que-nos-dio-patrick-stewart-posible-no-cometer-errores-asi-perder-eso-no-debilidad-eso-vida",
-   "fuente": "Espinof",
-   "fecha": "2026-10-30T22:00+00:00",
-   "resumen": "La triste noticia de la muerte de Patrick Stewart ha dejado a los amantes del cine huérfanos de una de las grandes figuras del cine y la televisión de ciencia modernas. Algunos quizá piensen solamente en él por haber…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Neuromante contra Blade Runner 2099: el streaming decide quién es el rey del ciberpunk",
-   "enlace": "https://www.cinemascomics.com/neuromante-blade-runner-2099-rey-ciberpunk/",
-   "fuente": "CinemasComics",
-   "fecha": "2026-10-30T20:30+00:00",
-   "resumen": "Blade Runner 2099 y Neuromancer enfrentan a Prime Video y Apple TV en un duelo ciberpunk que revive el legado de Dick y Gibson Esta noticia ha sido publicada…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Los 9 mejores estrenos de cine en casa de octubre de 2026. Una sensacional película de aventuras, la nueva y entretenidísima secuela de una saga mítica y más",
-   "enlace": "https://www.espinof.com/listas/9-mejores-estrenos-cine-casa-octubre-2026-sensacional-pelicula-aventuras-nueva-entretenidisima-secuela-saga-mitica",
-   "fuente": "Espinof",
-   "fecha": "2026-10-30T20:01+00:00",
-   "resumen": "En Espinof no podíamos dejar que el mes llegase a su final sin nuestro ya tradicional a los 9 mejores estrenos de cine en casa de octubre de 2026 , incluyendo títulos para todos los gustos -fuera se queda 'Un loco a…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "James Gunn confirma que El Escuadrón Suicida es canon del DCU y vuelve a complicar la continuidad de DC",
-   "enlace": "https://www.lacasadeel.net/2026/10/james-gunn-escuadron-suicida-canon.html",
-   "fuente": "La Casa de EL",
-   "fecha": "2026-10-30T19:09+00:00",
-   "resumen": "James Gunn cambia las reglas de su universo cinematográfico y deja una importante incógnita sobre el futuro de Harley Quinn",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "James Gunn da nuevas pistas sobre el Batman del DCU y sorprende con su edad y su elección de actor",
-   "enlace": "https://www.lacasadeel.net/2026/10/james-gunn-pistas-sobre-batman.html",
-   "fuente": "La Casa de EL",
-   "fecha": "2026-10-30T19:08+00:00",
-   "resumen": "El responsable de DC Studios, James Gunn, aclara cuándo podría llegar el nuevo Caballero Oscuro y qué busca en su protagonista",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "5 Vengadores de Doomsday demasiado poderosos para los Centinelas",
-   "enlace": "https://www.cinemascomics.com/5-vengadores-doomsday-contra-centinelas/",
-   "fuente": "CinemasComics",
-   "fecha": "2026-10-30T19:02+00:00",
-   "resumen": "5 grandes héroes del MCU podrían destrozar a los Centinelas de Vengadores: Doomsday. Analizamos sus poderes y posibilidades Esta noticia ha sido publicada…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Ha fallecido Patrick Stewart, pero siempre lo recordaremos por estas 3 inolvidables películas entre la ciencia ficción y el horror",
-   "enlace": "https://www.espinof.com/listas/ha-fallecido-patrick-stewart-siempre-recordaremos-estas-3-inolvidables-peliculas-ciencia-ficcion-horror",
-   "fuente": "Espinof",
-   "fecha": "2026-10-30T18:01+00:00",
-   "resumen": "Difícil no quedarse impactado al perder a un actor tan presente en la cultura popular y que se volvió sinónimo de presencia y respeto gracias a los papeles que interpretaba (y como los interpretaba). Patrick Stewart …",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Margot Robbie quizá no quiere volver como Harley Quinn, pero James Gunn \"haría todo lo posible\" por devolverla al Universo DC",
-   "enlace": "https://www.sensacine.com/noticias/cine/noticia-1000229922/",
-   "fuente": "SensaCine",
-   "fecha": "2026-10-30T17:30+00:00",
-   "resumen": "El cineasta ha reconcido que traerla de vuelta \"es una de las cosas más difíciles de justificar como canon en el Universo DC\" porque El Joker no está todavía establecido",
-   "universos": [
-    "dc"
-   ]
   }
  ],
  "en": [
+  {
+   "titulo": "Avengers: Doomsday Fans Aren't Ready For How Hard Doctor Doom Schools Wolverine",
+   "enlace": "https://screenrant.com/doctor-doom-vs-wolverine-skeleton/",
+   "fuente": "Screen Rant",
+   "fecha": "2026-11-14T13:30+00:00",
+   "resumen": "As rumors swirl about Wolverine appearing in Avengers: Doomsday, it's worth highlighting a brutal defeat he once suffered at the hands of Doctor Doom.",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "The Penguin Season 2 Is Now Looking A Lot More Likely",
+   "enlace": "https://screenrant.com/the-penguin-season-2-more-likely-dc/",
+   "fuente": "Screen Rant",
+   "fecha": "2026-11-14T13:30+00:00",
+   "resumen": "The Penguin is one of DC's most critically acclaimed shows of all time, and the prospects of a second season just received a major boost.",
+   "universos": [
+    "dc"
+   ]
+  },
+  {
+   "titulo": "Nicolas Cage Officially Confirms Why He’s Happy His Marvel Series Was Cancelled",
+   "enlace": "https://collider.com/spider-noir-nicolas-cage-reaction-prime-video-cancellation/",
+   "fuente": "Collider",
+   "fecha": "2026-11-14T13:00+00:00",
+   "resumen": "Nicolas Cage explains why he was happy Prime Video cancelled Spider-Noir after one season and why he didn’t want to keep playing Ben Reilly.",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Villains Keep Trying to Become Captain America, and It Says Everything About His Place in Marvel",
+   "enlace": "https://comicbook.com/comics/feature/villains-keep-trying-to-become-captain-america-and-it-says-everything-about-his-place-in-marvel/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-14T12:30+00:00",
+   "resumen": "Image Courtesy of Marvel Comics If there’s one thing nearly everyone in Marvel seems to agree on, it’s that Captain America is the best of them. Steve Rogers worked his way up from nothing, fighting to protect innocents…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "New Doomsday Video Reveals A Major 20th Century Fox X-Men Hero Missing from Cast Announcements",
+   "enlace": "https://comicbook.com/movies/news/new-doomsday-video-reveals-a-major-20th-century-fox-x-men-hero-missing-from-cast-announcements/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-14T05:42+00:00",
+   "resumen": "A new teaser has just dropped for Avengers: Doomsday, continuing to build the hype around this epic film that will surely change the MCU landscape permanently. The film (which has tested well with audiences ahead of its…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "5 X-Men The Animated Series Heroes Who Deserve to Be in the MCU, And One Has Never Been in Live-Action",
+   "enlace": "https://comicbook.com/movies/list/5-x-men-the-animated-series-heroes-who-deserve-to-be-in-the-mcu-and-one-has-never-been-in-live-action/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-14T04:39+00:00",
+   "resumen": "The Marvel Cinematic Universe made the Avengers — a team that had its eras but was hardly ever as popular as the Fantastic Four or the X-Men — into stars. Clint Barton was suddenly just as well known as the Hulk, and…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "I’m Worried This DC Superhero Will Never Get the Movie He Deserves After James Gunn’s Exit",
+   "enlace": "https://comicbook.com/movies/feature/im-worried-this-dc-superhero-will-never-get-the-movie-he-deserves-after-james-gunns-exit/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-14T03:52+00:00",
+   "resumen": "When James Gunn and Peter Safran became the heads of DC Studios, their newly announced expansive slate of DCU projects was exciting. It featured a fantastic mix of iconic characters like Batman and Superman, while also…",
+   "universos": [
+    "dc"
+   ]
+  },
+  {
+   "titulo": "Long Before Green Goblin, Willem Dafoe’s Most Terrifying Villain Reveals He Held Back With Marvel",
+   "enlace": "https://comicbook.com/movies/feature/long-before-green-goblin-willem-dafoes-most-terrifying-villain-reveals-he-held-back-with-marvel/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-14T03:17+00:00",
+   "resumen": "Willem Dafoe is one of the most beloved actors working today, and the actor’s legendary status came in large part with the release of 2002’s Spider-Man. While Dafoe had been in tons of incredible projects before, the…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Between Star Trek & X-Men, Patrick Stewart Delivered a Unique Action Movie, And It’s Taking Over Streaming",
+   "enlace": "https://comicbook.com/movies/news/between-star-trek-x-men-patrick-stewart-delivered-a-unique-action-movie-and-its-taking-over-streaming/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-14T02:36+00:00",
+   "resumen": "There is no debate that the late Sir Patrick Stewart is a legendary performer. The actor left an incredible impact not just on entertainment, but on popular culture thanks to his beloved roles as Captain Jean-Luc Picard…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "James Gunn Responds to DCU Reports Claiming Massive Man of Tomorrow Changes",
+   "enlace": "https://comicbook.com/movies/news/james-gunn-responds-to-dcu-reports-claiming-massive-man-of-tomorrow-changes/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-14T01:43+00:00",
+   "resumen": "DC Studios It’s been a wild week for DC fans with the exit of James Gunn and Peter Safran from DC Studios leaving big questions about the future of the DCU. Recent days have seen a lot of speculation, rumors, and…",
+   "universos": [
+    "dc"
+   ]
+  },
+  {
+   "titulo": "5 Marvel Heroes Who Deserve Bigger Things in the Comics and One Is the MCU’s Most Underrated Star",
+   "enlace": "https://comicbook.com/comics/list/5-marvel-heroes-who-deserve-bigger-things-in-the-comics-and-one-is-the-mcus-most-underrated-star/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-13T23:47+00:00",
+   "resumen": "Marvel Comics followed the example of DC in the Golden Age in a lot of ways, even creating sidekicks in the people of Bucky and Toro. However, back then, they couldn’t beat DC at its own game and went in other…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Major Spider-Man: Brand New Day Record Already in Trouble Thanks to Doomsday",
+   "enlace": "https://comicbook.com/movies/news/major-spider-man-brand-new-day-record-already-in-trouble-thanks-to-doomsday/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-13T22:58+00:00",
+   "resumen": "Spider-Man: Brand New Day absolutely dominated the box office this summer, becoming the highest grossing movie of all time domestically after beating out Star Wars: The Force Awakens, but Avengers: Doomsday already…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Kevin Feige Confirms That Avengers: Doomsday Will End One of the MCU’s Most Hated Arcs Since Endgame",
+   "enlace": "https://comicbook.com/movies/news/kevin-feige-confirms-that-avengers-doomsday-will-end-one-of-the-mcus-most-hated-arcs-since-endgame/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-13T22:12+00:00",
+   "resumen": "Marvel Studios Avengers: Doomsday is almost upon us, but there are still so many questions surrounding this massive Marvel movie crossover event. Aside from needing to know more about Doctor Doom (Robert Downey Jr.) and…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Avengers: Doomsday Cast Officially Adds One of MCU’s Oldest & Most Beloved Heroes",
+   "enlace": "https://www.superherohype.com/news/706192-avengers-doomsday-cast-officially-adds-mcu-oldest-most-beloved-heroes",
+   "fuente": "SuperHeroHype",
+   "fecha": "2026-11-13T22:01+00:00",
+   "resumen": "Avengers: Doomsday is finally bringing back one of the most beloved superheroes.",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Avengers: Doomsday Fans Are Convinced Jean Grey Is in MCU Movie Following New Video",
+   "enlace": "https://www.superherohype.com/movies/706191-famke-janssen-eyes-jean-grey-speculation-avengers-doomsday-teaser",
+   "fuente": "SuperHeroHype",
+   "fecha": "2026-11-13T21:57+00:00",
+   "resumen": "A new Avengers: Doomsday promo has caught fans’ attention for featuring an unexpected character. While Jean Grey appears in the 60-second video, it isn’t Sadie Sink’s version. Instead, it features archival footage of…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Original Fantastic Four Actor’s Marvel Return Would Make Perfect Sense Based on This Comic Book Storyline",
+   "enlace": "https://comicbook.com/movies/feature/original-fantastic-four-actors-marvel-return-would-make-perfect-sense-based-on-this-comic-book-storyline/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-13T21:13+00:00",
+   "resumen": "Pedro Pascal’s Mister Fantastic seems to be one of the most important heroes in Avengers: Doomsday, which isn’t surprising considering that he has become one of the faces of the MCU since his introduction in The…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Anthony Mackie Addresses Captain America Future in the MCU After Avengers: Doomsday",
+   "enlace": "https://comicbook.com/movies/news/anthony-mackie-addresses-captain-america-future-in-the-mcu-after-avengers-doomsday/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-13T20:52+00:00",
+   "resumen": "Anthony Mackie‘s Sam Wilson is Captain America in the MCU when Avengers: Doomsday arrives, but will he still hold the shield when the universe resets? Complete with a six-episode Disney+ series and his own movie…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Spider-Man Joins the Death Star Assault in Marvel & Star Wars’ Biggest Crossover Ever",
+   "enlace": "https://www.superherohype.com/comics/706113-spider-man-star-wars-death-star-marvel-variant-cover",
+   "fuente": "SuperHeroHype",
+   "fecha": "2026-11-13T20:38+00:00",
+   "resumen": "Marvel is bringing together two iconic franchises in an unexpected comic book article, placing Spider-Man in the Star Wars universe. The newly revealed cover offers a fresh take on the Death Star assault while paying…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "I Used to Hate DC’s Doomsday Clock, but Now I Think It Could Be the DCU’s Biggest Movie Yet",
+   "enlace": "https://comicbook.com/comics/feature/i-used-to-hate-dcs-doomsday-clock-but-now-i-think-it-could-be-the-dcus-biggest-movie-yet/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-13T20:09+00:00",
+   "resumen": "Image Courtesy of DC Comics DC Comics is hitting new levels of popularity, both in general pop culture and in the comic industry. The DCU has been putting out quality work that has been getting praised from critics and…",
+   "universos": [
+    "marvel",
+    "dc"
+   ]
+  },
+  {
+   "titulo": "Kevin Feige Reveals Why He Brought the Original X-Men Back for Avengers: Doomsday",
+   "enlace": "https://www.superherohype.com/movies/706130-kevin-feige-original-x-men-avengers-doomsday-return",
+   "fuente": "SuperHeroHype",
+   "fecha": "2026-11-13T19:42+00:00",
+   "resumen": "Kevin Feige opens up about why Avengers: Doomsday needed to bring back the original X-Men.",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Marvel’s Kevin Feige Reveals Doomsday Will Explore an MCU Story Not Seen Since Phase 1",
+   "enlace": "https://comicbook.com/movies/news/marvels-kevin-feige-reveals-doomsday-will-explore-an-mcu-story-not-seen-since-phase-1/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-13T19:32+00:00",
+   "resumen": "Marvel’s Avengers assembling together was a promise that the MCU made to the audience in its first-ever post-credit scene, all the way back in Iron Man in 2008. As fans know, the early Phase 1 movies put the pieces…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Avengers: Doomsday’s Kevin Feige Reveals What Else Has Changed for Gambit Besides His Accent",
+   "enlace": "https://www.superherohype.com/movies/706104-avengers-doomsday-kevin-feige-else-changed-gambit-accent",
+   "fuente": "SuperHeroHype",
+   "fecha": "2026-11-13T19:21+00:00",
+   "resumen": "Marvel Studios president Kevin Feige has offered a new insight about Channing Tatum's return as Gambit in Avengers: Doomsday",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "X-Men’s Inde Navarrette Reveals the Surprising Truth Behind Her Blonde Hair Makeover",
+   "enlace": "https://www.superherohype.com/movies/706078-inde-navarrette-blonde-makeover-x-men-wig-reveal",
+   "fuente": "SuperHeroHype",
+   "fecha": "2026-11-13T18:32+00:00",
+   "resumen": "Inde Navarrette has finally revealed the actual reason behind her recent blonde hair look. The Obsession star will soon appear as Rogue in the MCU’s awaited X-Men reboot movie. Speaking to ET at the GQ Men of the Year…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "One Avengers: Doomsday Theory Will Change How You Watch Endgame, But We May Not Get Answers for a Year",
+   "enlace": "https://comicbook.com/movies/feature/one-avengers-doomsday-theory-will-change-how-you-watch-endgame-but-we-may-not-get-answers-for-a-year/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-13T18:07+00:00",
+   "resumen": "Spoilers for Avengers: Endgame Encore follow. While the main hook of Avengers: Doomsday is seeing Robert Downey Jr. return to the Marvel Cinematic Universe as villain Victor von Doom/Doctor Doom instead of Tony…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "5 Marvel Nations That Prove You Don’t Need to Be Real to Rule the World",
+   "enlace": "https://comicbook.com/comics/list/5-marvel-nations-that-prove-you-dont-need-to-be-real-to-rule-the-world/",
+   "fuente": "ComicBook.com",
+   "fecha": "2026-11-13T17:56+00:00",
+   "resumen": "Image Courtesy of Marvel Comics Marvel Comics offers a vast and fantastical universe brimming with iconic characters, races, and countries. This is a universe where magic, aliens, gods, and mutants have existed on Earth…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Marvel’s New Doomsday Trailer Highlights Surprising X-Men Hero & Introduces Huge Villain",
+   "enlace": "https://www.superherohype.com/video-games/706031-avengers-doomsday-trailer-two-worlds-collide-incursion",
+   "fuente": "SuperHeroHype",
+   "fecha": "2026-11-13T17:55+00:00",
+   "resumen": "Doomsday appears inevitable in the latest Marvel trailer featuring an iconic X-Men hero. The trailer also teases the arrival of a classic Marvel supervillain. The new trailer for Marvel Rivals Season 11 shows…",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Avengers: Doomsday Officially Reveals Captain America’s Surprising MCU Team Roster",
+   "enlace": "https://www.superherohype.com/movies/706042-avengers-doomsday-reveals-captain-america-team-roster-mcu",
+   "fuente": "SuperHeroHype",
+   "fecha": "2026-11-13T17:39+00:00",
+   "resumen": "In a brand-new update, the entire roster for Captain America's team has been revealed for Avengers: Doomsday",
+   "universos": [
+    "marvel"
+   ]
+  },
+  {
+   "titulo": "Avengers: Doomsday Takes Spider-Verse Star Inside Avengers Tower in a Wild Crossover",
+   "enlace": "https://www.superherohype.com/movies/706015-avengers-doomsday-spider-verse-star-avengers-tower-crossover",
+   "fuente": "SuperHeroHype",
+   "fecha": "2026-11-13T17:23+00:00",
+   "resumen": "Avengers: Doomsday features a Spider-Verse star entering the Avengers Tower, bringing an unexpected crossover moment to the MCU.",
+   "universos": [
+    "marvel"
+   ]
+  },
   {
    "titulo": "Avengers: Endgame's Ending Explained (Including Encore's New Scenes)",
    "enlace": "https://screenrant.com/avengers-endgame-ending-explained-marvel-movie-future/",
@@ -3737,287 +4019,6 @@
    "resumen": "Image Courtesy of DC Comics DC Comics has developed a reputation with readers, one that started decades ago in the 1950s. The publisher created the first superheroes in the late ’30s and ’40s, but things would take a…",
    "universos": [
     "dc"
-   ]
-  },
-  {
-   "titulo": "5 Members of the Gotham Cast Who Should Reprise Their Roles in the DCU",
-   "enlace": "https://comicbook.com/tv-shows/list/5-members-of-the-gotham-cast-who-should-reprise-their-roles-in-the-dcu/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-08T03:18+00:00",
-   "resumen": "Premiering on Fox in September 2014 and running until April 2019, Gotham was a five-season, 100-episode superhero crime drama. The series put a unique spin on the classic Batman mythos. Instead of following an adult…",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "Before Into the Spider-Verse, Marvel’s Best Animated Movie Beat Out Pixar For an Oscar",
-   "enlace": "https://comicbook.com/movies/feature/before-into-the-spider-verse-marvels-best-animated-movie-beat-out-pixar-for-an-oscar/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-08T02:14+00:00",
-   "resumen": "Image Courtesy of Sony When people talk about the successful Marvel animated theatrical releases, everyone praises Spider-Man: Into the Spider-Verse and its sequel, and for good reason. These are not only great movies…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "A Famous Musician Wrote a “Weird” Elf 2 Script Before Creating Spider-Man’s Most Notorious Adaptation",
-   "enlace": "https://comicbook.com/movies/news/a-famous-musician-wrote-a-weird-elf-2-script-before-creating-spider-mans-most-notorious-adaptation/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-08T01:38+00:00",
-   "resumen": "U2 guitarist The Edge wrote a screenplay for Elf 2, adding an unlikely Christmas comedy to a resume that includes dozens of Hollywood soundtracks and one of Broadway’s most notorious disasters. The sequel never got…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "DC Just Killed Bruce Wayne, and It Harkens Back to an Underrated Batman Classic",
-   "enlace": "https://comicbook.com/comics/feature/dc-just-killed-bruce-wayne-and-it-harkens-back-to-an-underrated-batman-classic/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-08T01:19+00:00",
-   "resumen": "Image Courtesy of DC Comics There’s a common argument among Batman fans that questions which of his identities is the mask and which is his true self. A common assertion, especially from new fans, is that Batman is his…",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "Tim Burton’s Batman Ended Early Thanks to a McDonald’s Happy Meal Controversy",
-   "enlace": "https://comicbook.com/movies/feature/tim-burtons-batman-ended-early-thanks-to-a-mcdonalds-happy-meal-controversy/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-08T00:41+00:00",
-   "resumen": "McDonald’s probably wasn’t expecting Batman to cause a parenting crisis. The restaurant had a pretty simple plan. Put some Batman toys in Happy Meals and let millions of kids drag their parents through the drive-thru…",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "Rare High-Grade Copy of Brainiac’s First Appearance Heads to Auction Ahead of His Big Screen Debut",
-   "enlace": "https://comicbook.com/collectibles/news/rare-high-grade-copy-of-brainiacs-first-appearance-heads-to-auction-ahead-of-his-big-screen-debut/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T23:26+00:00",
-   "resumen": "Despite first appearing sixty-eight years ago in Action Comics #242 and immediately distinguishing himself as one of Superman’s arch foes, Brainiac has yet to make the leap to the big screen. While fans wait for James…",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "5 DC Villains Who Defied Their Evil Natures, Including Pop Culture’s Most Famous Villainous Ex-Girlfriend",
-   "enlace": "https://comicbook.com/comics/list/5-dc-villains-who-defied-their-evil-natures-including-pop-cultures-most-famous-villainous-ex-girlfriend/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T19:57+00:00",
-   "resumen": "Image Courtesy of DC Comics DC Comics has created some amazing villains over the decades. Bad guys like Lex Luthor, the Ultra-Humanite, the Joker, Vandal Savage, Per Degaton, Two-Face, Cheetah, and loads more first…",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "Marvel’s Strangest Vampire Fought Both Howard the Duck and Deadpool, But Could Never Work in the MCU",
-   "enlace": "https://comicbook.com/comics/feature/marvels-strangest-vampire-fought-both-howard-the-duck-and-deadpool-but-could-never-work-in-the-mcu/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T19:07+00:00",
-   "resumen": "Image Courtesy of Marvel Comics One of the strangest Marvel Comics vampires made her debut in 1975 in the pages of Giant-Size Man-Thing, and she has popped back up in some very interesting places since that time. This…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "5 Writers Who Made the Incredible Hulk One of Marvel’s Biggest Heroes",
-   "enlace": "https://comicbook.com/comics/list/5-writers-who-made-the-incredible-hulk-one-of-marvels-biggest-heroes/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T18:47+00:00",
-   "resumen": "Image Courtesy of Marvel Comics In 1962, the Marvel Universe’s most powerful and dangerous superhero was introduced: the Hulk. When mild-mannered scientist Bruce Banner was exposed to a gamma-bomb explosion, he…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "30 Years Ago, A Snack Food Saved the Marvel Universe (Yes, Really)",
-   "enlace": "https://comicbook.com/comics/feature/30-years-ago-a-snack-food-saved-the-marvel-universe-yes-really/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T17:00+00:00",
-   "resumen": "Image Courtesy of Marvel Comics Comic books, at the end of the day, are a product trying to get sold. There wouldn’t be a comic book industry if fans didn’t purchase them, after all, but while these stories tell of…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Netflix Set To Spoil Dunesday’s Party With Its Scarlett Johansson Sci-Fi Flick",
-   "enlace": "https://www.superherohype.com/news/703941-scarlett-johansson-dunesday-ray-gunn-netflix-release-date",
-   "fuente": "SuperHeroHype",
-   "fecha": "2026-11-07T16:00+00:00",
-   "resumen": "Scarlett Johansson‘s sci-fi movie, Ray Gunn, is set to crash the Dunesday party when it arrives on Netflix on December 18, 2026. The upcoming animated movie, directed by Brad Bird, features a star-studded cast. December…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Record-Breaking Mego Green Goblin Has Already Blown Past Hakes Price Estimates (And There’s Still Weeks Left to Bid)",
-   "enlace": "https://comicbook.com/collectibles/news/record-breaking-mego-green-goblin-has-already-blown-past-hakes-price-estimates-and-theres-still-weeks-left-to-bid/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T13:06+00:00",
-   "resumen": "Image Courtesy of Marvel Comics While Hakes was being conservative when they quoted a $30-50k finish for this graded Mego Green Goblin, no one could have expected by just how much. The figure is one of just two graded…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "X-Men Finally Meet Marvel's Most Powerful Mutant For First Time",
-   "enlace": "https://screenrant.com/x-men-meet-superior-first/",
-   "fuente": "Screen Rant",
-   "fecha": "2026-11-07T13:00+00:00",
-   "resumen": "The X-Men's most powerful villain has waited decades to unveil their existence and casually overpower the team's strongest mutant heroes.",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "5 Marvel Heroes Doom Needs to Target First In Order to Win in Avengers: Doomsday",
-   "enlace": "https://comicbook.com/movies/list/5-marvel-heroes-doom-needs-to-target-first-in-order-to-win-in-avengers-doomsday/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T12:29+00:00",
-   "resumen": "Image Courtesy of Marvel Spoilers for Avengers: Endgame Encore follow. Rumors and select scenes from the trailers released so far suggest that Victor von Doom/Doctor Doom (Robert Downey Jr.) will pose as an ally to some…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "This Forgotten Superman Spinoff Movie Might Be DC’s Weirdest in History, But It’s Virtually Unwatchable",
-   "enlace": "https://comicbook.com/movies/feature/this-forgotten-superman-spinoff-movie-might-be-dcs-weirdest-in-history-but-its-virtually-unwatchable/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T10:51+00:00",
-   "resumen": "DC has seen some weird and arguably bad movies over its numerous attempts at a cinematic universe. Wonder Woman 1984 inexplicably complicated, rather than clarified, the hero’s public image, given her numerous public…",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "5 X-Men Stories That New Marvel Fans Probably Won’t Find Very Mutant-Friendly",
-   "enlace": "https://comicbook.com/comics/list/5-x-men-stories-that-new-marvel-fans-probably-wont-find-very-mutant-friendly/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T08:27+00:00",
-   "resumen": "Image Courtesy of Marvel Comics The X-Men are about to go back to being the most popular superteam in comics. You’re going to see your friend who got into the MCU and started telling you how much better the Avengers…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "21 Years Ago, DC Clearly Had the Best Year Ever in Comic Book Movie History, And It Can’t Be Repeated",
-   "enlace": "https://comicbook.com/movies/feature/21-years-ago-dc-clearly-had-the-best-year-ever-in-comic-book-movie-history-and-it-cant-be-repeated/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T03:57+00:00",
-   "resumen": "The comic book and superhero movie arms race has been fueling Hollywood for almost three decades at this point. Not only did the runaway success of Blade and then X-Men in 1999 and 2000 trigger a massive response in…",
-   "universos": [
-    "marvel",
-    "dc"
-   ]
-  },
-  {
-   "titulo": "Marvel Comics Just Brought Back a Long-Dead Villain and He’s Making The Punisher Look Soft",
-   "enlace": "https://comicbook.com/comics/feature/marvel-comics-just-brought-back-a-long-dead-villain-and-hes-making-the-punisher-look-soft/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T02:33+00:00",
-   "resumen": "Image Courtesy of Marvel Comics The Punisher might be the most famous lethal vigilante targeting New York City’s criminal underbelly, but Marvel Comics just brought back another self-appointed judge, jury, and…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "James Bond Casting Update Adds Robert Pattinson & Nicholas Hoult, Upending 007 Shortlist",
-   "enlace": "https://comicbook.com/movies/news/james-bond-casting-update-adds-robert-pattinson-nicholas-hoult-upending-007-shortlist/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T02:18+00:00",
-   "resumen": "Image Courtesy of Warner Bros. Two new names have been added to the James Bond shortlist, and these are not what anyone could have expected. Robert Pattinson is currently playing Batman in Matt Reeves DC Comics movies…",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "New Cyberpunk Game Is Officially One of the Best-Selling Steam Games",
-   "enlace": "https://comicbook.com/gaming/news/steam-cyberpunk-game-pc-new-best-selling/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T02:14+00:00",
-   "resumen": "The best-selling and second-best-selling Steam games last week were always going to be Phantom Blade Zero and Call of Duty: Modern Warfare 4. This was obvious and predictable. It was just a matter of which would finish…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Marvel’s Zaniest Earth Was a Game-Changer in Comics, And It Made a Wild Comeback in the Spider-Verse Movies",
-   "enlace": "https://comicbook.com/comics/feature/marvels-zaniest-earth-was-a-game-changer-in-comics-and-it-made-a-wild-comeback-in-the-spider-verse-movies/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-07T01:07+00:00",
-   "resumen": "Image Courtesy of Marvel Comics It has been 43 years since Marvel Comics introduced one of the strangest Spider-Man variants and the wild Earth that he lived on. In 1981, DC Comics introduced a character named Captain…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Don’t Read This Vintage Comic If You’re Worried About Avengers: Doomsday Spoilers, Or How Spider-Man Got His Black Suit",
-   "enlace": "https://comicbook.com/collectibles/news/dont-read-this-vintage-comic-if-youre-worried-about-avengers-doomsday-spoilers-or-how-spider-man-got-his-black-suit/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-06T23:46+00:00",
-   "resumen": "If the trailers for Avengers: Doomsday are to be believed, things aren’t looking too great for the heroes. Doctor Doom is already enacting his sinister plans, and the Avengers, or whatever is left of them, still have no…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Nicholas Hoult Teases “Very Different” Lex Luthor in 2027’s Man of Tomorrow",
-   "enlace": "https://comicbook.com/movies/news/nicholas-hoult-teases-very-different-lex-luthor-in-2027s-man-of-tomorrow/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-06T23:27+00:00",
-   "resumen": "Image courtesy of DC Studios With the DCU’s Clayface now a few weeks into its theatrical run, DC fans’ eyes can turn fully to the franchise’s upcoming blockbuster release Man of Tomorrow, a sequel to 2025’s Superman…",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "Marvel Is Already Deviating From X-Men Movie Tradition, And That’s a Good Thing for the MCU",
-   "enlace": "https://comicbook.com/movies/feature/marvel-is-already-deviating-from-x-men-movie-tradition-and-thats-a-good-thing-for-the-mcu/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-06T23:23+00:00",
-   "resumen": "Across cartoons and live-action, one thing has stayed consistent for the X-Men — The O5 are never together. The O5, made up of Jean Grey, Cyclops, Beast, Iceman, and Warren Worthington III’s Angel, may have been the…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "Constantine: Bill Skarsgård Has a Great Idea for New Movie Following DCU Announcement",
-   "enlace": "https://www.superherohype.com/news/704741-constantine-bill-skarsgard-great-idea-movie-dcu-announcement",
-   "fuente": "SuperHeroHype",
-   "fecha": "2026-11-06T22:20+00:00",
-   "resumen": "Bill Skarsgård is interested in making a Constantine sequel.",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "Gambit & Rogue Stars Officially Returning for 2027 Marvel Project & It’s Not X-Men ’97 Season 3",
-   "enlace": "https://www.superherohype.com/movies/704733-gambit-rogue-stars-returning-2027-marvel-project-x-men-97-season-3",
-   "fuente": "SuperHeroHype",
-   "fecha": "2026-11-06T21:47+00:00",
-   "resumen": "Marvel is bringing two familiar voices back for a new project centered on one of the X-Men’s most beloved couples. The upcoming project will give fans another opportunity to spend time with the characters in a brand new…",
-   "universos": [
-    "marvel"
-   ]
-  },
-  {
-   "titulo": "5 Justice League Unlimited Heroes Who Deserve to Be in the DCU, and Batman Needs One as a Partner",
-   "enlace": "https://comicbook.com/tv-shows/list/5-justice-league-unlimited-heroes-who-deserve-to-be-in-the-dcu-and-batman-needs-one-as-a-partner/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-06T21:42+00:00",
-   "resumen": "Widely regarded as one of the best DC animated shows and set in the iconic DC Animated Universe (DCAU), Justice League Unlimited (JLU) served as a direct sequel to the hit series Justice League (2001). The series…",
-   "universos": [
-    "dc"
-   ]
-  },
-  {
-   "titulo": "Latest Avengers: Doomsday Promo Art Is More Evidence That A Fan-Favorite Romance Is Coming to the MCU",
-   "enlace": "https://comicbook.com/movies/news/latest-avengers-doomsday-promo-art-is-more-evidence-that-a-fan-favorite-romance-is-coming-to-the-mcu/",
-   "fuente": "ComicBook.com",
-   "fecha": "2026-11-06T21:23+00:00",
-   "resumen": "Avengers: Doomsday‘s marketing and promotional campaign is kicking into high gear as we enter the final countdown to release day. There’s been so much secrecy around Doomsday that, at this point, it feels like most…",
-   "universos": [
-    "marvel"
    ]
   }
  ]
