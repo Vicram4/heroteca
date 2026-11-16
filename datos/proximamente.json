@@ -41,16 +41,16 @@
    "clave": "movie-1400940",
    "duracion": 109,
    "en": {
-    "fondo": "/VnT9D7NogVWrmN2UuT30exIYPh.jpg",
+    "fondo": "/xSDoxv4pHvs4xZjvTb0Iqg1A6ro.jpg",
     "poster": "/9l1NuFjel2j89hiuiJbsxfblqjy.jpg",
     "sinopsis": "Matt Hagen's meteoric rise from Gotham street kid to Hollywood leading man is tragically cut short when a local crime boss's actions leave him horribly disfigured. Abandoned by his team and with nothing left, Matt seeks out a cutting edge treatment that miraculously returns him to his former self… but also unexpectedly affects his grip on reality, spiraling him down a destructive path of all-consuming revenge.",
     "titulo": "Clayface",
     "trailer": "OGO4Mqvo3jI"
    },
    "es": {
-    "fondo": "/VnT9D7NogVWrmN2UuT30exIYPh.jpg",
+    "fondo": "/xSDoxv4pHvs4xZjvTb0Iqg1A6ro.jpg",
     "poster": "/6ihSDJlBNcvoTWzSA0jonZyOXTs.jpg",
-    "sinopsis": "Una criatura cambiante hecha de arcilla mágica acecha Ciudad Gótica, alternando entre villano y aliado de Batman. Varias figuras trágicas han asumido el manto de Cara de Barro a lo largo de los años.",
+    "sinopsis": "El meteórico ascenso de Matt Hagen, desde chico de la calle en Gotham hasta promesa de Hollywood, se ve trágicamente truncado cuando las acciones de un jefe del crimen local lo dejan horriblemente desfigurado. Abandonado por su equipo y sin nada que perder, Matt busca un tratamiento celular vanguardista que, milagrosamente, le devuelve su aspecto anterior… pero que también afecta inesperadamente a su percepción de la realidad, sumiéndolo en una espiral destructiva de venganza que lo consume por completo.",
     "titulo": "Clayface",
     "trailer": "WGOv9Pzh9cE"
    },
@@ -76,7 +76,7 @@
     "titulo": "Countdown to Avengers: Doomsday Official Podcast",
     "trailer": null
    },
-   "episodio": 7,
+   "episodio": 8,
    "es": {
     "fondo": "/kuS2wdKyXBc5kdgDdHx02Yi3zDF.jpg",
     "poster": "/jQKt9R0LRWGXYF4TfhyrIrqqvv3.jpg",
@@ -84,7 +84,7 @@
     "titulo": "Countdown to Avengers: Doomsday Official Podcast",
     "trailer": null
    },
-   "fecha": "2026-11-12",
+   "fecha": "2026-11-19",
    "ficha": null,
    "ruta": {
     "en": "countdown-to-avengers-doomsday-official-podcast",
@@ -99,37 +99,6 @@
    "universo": "marvel"
   },
   {
-   "clave": "tv-274388-t1",
-   "en": {
-    "fondo": "/tHWW3xDD49UZuoirqzUQT046dWi.jpg",
-    "poster": "/3NlFaIdOkBg2VC3Imi1kbeeGynw.jpg",
-    "sinopsis": "Follow the adventures (and misadventures) of best friends and super geniuses, Tony Stark, Riri Williams and Amadeus Cho as they work together to solve problems both big and small and protect their city.",
-    "titulo": "Iron Man and His Awesome Friends",
-    "trailer": null
-   },
-   "episodio": 71,
-   "es": {
-    "fondo": "/tHWW3xDD49UZuoirqzUQT046dWi.jpg",
-    "poster": "/wSioGvQrx3L410VTSVivwCNhxdm.jpg",
-    "sinopsis": "La primera temporada sigue a un joven Iron Man que, junto a Ironheart y Iron Hulk, forma un superequipo para proteger la ciudad mientras aprenden a usar sus habilidades. Cada aventura mezcla tecnología, humor y pequeños momentos de aprendizaje.\n\nEntre inventos que salen mal, villanos curiosos y misiones sencillas, el trío demuestra que la amistad y el trabajo en equipo son su verdadera fuerza, siempre con un tono ligero y pensado para los más pequeños.",
-    "titulo": "Iron Man y su superequipo",
-    "trailer": null
-   },
-   "fecha": "2026-11-13",
-   "ficha": null,
-   "ruta": {
-    "en": "iron-man-and-his-awesome-friends",
-    "es": "iron-man-y-su-superequipo"
-   },
-   "temporada": 1,
-   "tipo": "serie",
-   "tmdb": {
-    "id": 274388,
-    "tipo": "tv"
-   },
-   "universo": "marvel"
-  },
-  {
    "clave": "tv-231801-t1",
    "en": {
     "fondo": "/xe6wbOPKuSMOze4rl48NFWy8PNe.jpg",
@@ -138,7 +107,7 @@
     "titulo": "GET JIRO",
     "trailer": null
    },
-   "episodio": 8,
+   "episodio": 9,
    "es": {
     "fondo": "/xe6wbOPKuSMOze4rl48NFWy8PNe.jpg",
     "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
@@ -146,7 +115,7 @@
     "titulo": "¡A por Jiro!",
     "trailer": null
    },
-   "fecha": "2026-11-15",
+   "fecha": "2026-11-22",
    "ficha": "dc/a-por-jiro",
    "ruta": {
     "en": "get-jiro",
@@ -159,6 +128,37 @@
     "tipo": "tv"
    },
    "universo": "dc"
+  },
+  {
+   "clave": "tv-274388-t1",
+   "en": {
+    "fondo": "/tHWW3xDD49UZuoirqzUQT046dWi.jpg",
+    "poster": "/3NlFaIdOkBg2VC3Imi1kbeeGynw.jpg",
+    "sinopsis": "Follow the adventures (and misadventures) of best friends and super geniuses, Tony Stark, Riri Williams and Amadeus Cho as they work together to solve problems both big and small and protect their city.",
+    "titulo": "Iron Man and His Awesome Friends",
+    "trailer": null
+   },
+   "episodio": 73,
+   "es": {
+    "fondo": "/tHWW3xDD49UZuoirqzUQT046dWi.jpg",
+    "poster": "/wSioGvQrx3L410VTSVivwCNhxdm.jpg",
+    "sinopsis": "La primera temporada sigue a un joven Iron Man que, junto a Ironheart y Iron Hulk, forma un superequipo para proteger la ciudad mientras aprenden a usar sus habilidades. Cada aventura mezcla tecnología, humor y pequeños momentos de aprendizaje.\n\nEntre inventos que salen mal, villanos curiosos y misiones sencillas, el trío demuestra que la amistad y el trabajo en equipo son su verdadera fuerza, siempre con un tono ligero y pensado para los más pequeños.",
+    "titulo": "Iron Man y su superequipo",
+    "trailer": null
+   },
+   "fecha": "2026-11-30",
+   "ficha": null,
+   "ruta": {
+    "en": "iron-man-and-his-awesome-friends",
+    "es": "iron-man-y-su-superequipo"
+   },
+   "temporada": 1,
+   "tipo": "serie",
+   "tmdb": {
+    "id": 274388,
+    "tipo": "tv"
+   },
+   "universo": "marvel"
   },
   {
    "clave": "movie-1389765",
@@ -199,7 +199,7 @@
    "duracion": 165,
    "en": {
     "fondo": "/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
-    "poster": "/jzPwsojjFStf5lR5Nm07w2hH56G.jpg",
+    "poster": "/1zqWkLwC1zLBBBtIWzmkmWeMWnT.jpg",
     "sinopsis": "Beloved heroes from three distinct universes are set on a deadly collision course and face an existential threat unlike anything they've ever encountered.",
     "titulo": "Avengers: Doomsday",
     "trailer": "irVNGjRFZGk"
@@ -515,6 +515,6 @@
    "universo": "marvel"
   }
  ],
- "fecha": "2026-11-11",
+ "fecha": "2026-11-16",
  "fuente": "TMDB"
 }
