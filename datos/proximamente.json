@@ -41,14 +41,14 @@
    "clave": "movie-1400940",
    "duracion": 109,
    "en": {
-    "fondo": "/xSDoxv4pHvs4xZjvTb0Iqg1A6ro.jpg",
+    "fondo": "/f1TVhqJJdxMvUsUDuKHS0ekgYkk.jpg",
     "poster": "/9l1NuFjel2j89hiuiJbsxfblqjy.jpg",
     "sinopsis": "Matt Hagen's meteoric rise from Gotham street kid to Hollywood leading man is tragically cut short when a local crime boss's actions leave him horribly disfigured. Abandoned by his team and with nothing left, Matt seeks out a cutting edge treatment that miraculously returns him to his former self… but also unexpectedly affects his grip on reality, spiraling him down a destructive path of all-consuming revenge.",
     "titulo": "Clayface",
     "trailer": "OGO4Mqvo3jI"
    },
    "es": {
-    "fondo": "/xSDoxv4pHvs4xZjvTb0Iqg1A6ro.jpg",
+    "fondo": "/f1TVhqJJdxMvUsUDuKHS0ekgYkk.jpg",
     "poster": "/6ihSDJlBNcvoTWzSA0jonZyOXTs.jpg",
     "sinopsis": "El meteórico ascenso de Matt Hagen, desde chico de la calle en Gotham hasta promesa de Hollywood, se ve trágicamente truncado cuando las acciones de un jefe del crimen local lo dejan horriblemente desfigurado. Abandonado por su equipo y sin nada que perder, Matt busca un tratamiento celular vanguardista que, milagrosamente, le devuelve su aspecto anterior… pero que también afecta inesperadamente a su percepción de la realidad, sumiéndolo en una espiral destructiva de venganza que lo consume por completo.",
     "titulo": "Clayface",
@@ -76,7 +76,7 @@
     "titulo": "Countdown to Avengers: Doomsday Official Podcast",
     "trailer": null
    },
-   "episodio": 8,
+   "episodio": 9,
    "es": {
     "fondo": "/kuS2wdKyXBc5kdgDdHx02Yi3zDF.jpg",
     "poster": "/jQKt9R0LRWGXYF4TfhyrIrqqvv3.jpg",
@@ -84,7 +84,7 @@
     "titulo": "Countdown to Avengers: Doomsday Official Podcast",
     "trailer": null
    },
-   "fecha": "2026-11-19",
+   "fecha": "2026-11-26",
    "ficha": null,
    "ruta": {
     "en": "countdown-to-avengers-doomsday-official-podcast",
@@ -107,7 +107,7 @@
     "titulo": "GET JIRO",
     "trailer": null
    },
-   "episodio": 9,
+   "episodio": 10,
    "es": {
     "fondo": "/xe6wbOPKuSMOze4rl48NFWy8PNe.jpg",
     "poster": "/li3TH09EF6JyHPVoTvub4nPOfwU.jpg",
@@ -115,7 +115,7 @@
     "titulo": "¡A por Jiro!",
     "trailer": null
    },
-   "fecha": "2026-11-22",
+   "fecha": "2026-11-29",
    "ficha": "dc/a-por-jiro",
    "ruta": {
     "en": "get-jiro",
@@ -199,7 +199,7 @@
    "duracion": 165,
    "en": {
     "fondo": "/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
-    "poster": "/1zqWkLwC1zLBBBtIWzmkmWeMWnT.jpg",
+    "poster": "/tTMmREfhVd51CCg7GN73wL8cIoT.jpg",
     "sinopsis": "Beloved heroes from three distinct universes are set on a deadly collision course and face an existential threat unlike anything they've ever encountered.",
     "titulo": "Avengers: Doomsday",
     "trailer": "irVNGjRFZGk"
@@ -207,7 +207,7 @@
    "es": {
     "fondo": "/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
     "poster": "/7bQczUMnjz8iwxNP9YrmLkfI8od.jpg",
-    "sinopsis": "Quinta entrega de la saga 'Vengadores' incluida en el Universo Cinematográfico Marvel (UCM).",
+    "sinopsis": "Los héroes más queridos de tres universos distintos son abocados a una colisión catastrófica donde tendrán que hacer frente a la mayor amenaza a su existencia hasta la fecha.",
     "titulo": "Vengadores: Doomsday",
     "trailer": "kZ2Nhqkx3-I"
    },
@@ -515,6 +515,6 @@
    "universo": "marvel"
   }
  ],
- "fecha": "2026-11-16",
+ "fecha": "2026-11-23",
  "fuente": "TMDB"
 }
