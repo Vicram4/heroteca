@@ -20,6 +20,8 @@ import { JUEGOS, textoJuego } from '../../config/juegos';
 import ListaNoticias from '../../components/ListaNoticias.astro';
 import { noticiasDe } from '../../lib/noticias';
 import { paisDe } from '../../lib/dondever';
+import { cambiosPorSemana } from '../../lib/novedades';
+import { imagenTmdb } from '../../lib/tmdb';
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
 
@@ -38,6 +40,13 @@ const tarjetas = await Promise.all(
 );
 // Próximos estrenos (sin las series en emisión): los 4 primeros de los universos activos
 const activos = universos.filter((u) => u.data.activo);
+// Novedades: lo último que ha llegado a una plataforma (src/lib/novedades.ts); primero las grandes (las de «Dónde ver»)
+const novedadesPortada = (await cambiosPorSemana(idioma))
+  .flatMap((s) => s.cambios.filter((c) => c.tipo === 'llega'))
+  .map((c, i) => ({ c, i, grande: c.claves.some((k) => k !== 'otras') }))
+  .sort((x, y) => Number(y.grande) - Number(x.grande) || x.i - y.i)
+  .slice(0, 6)
+  .map((x) => x.c);
 const proximos = proximosEstrenos(paisDe(idioma))
   .filter((e) => !enEmision(e) && activos.some((u) => u.id === e.universo))
   .slice(0, 4);
@@ -168,6 +177,32 @@ const guiasPortada = activos.flatMap((u) => guiasDe(u.id).filter((g) => g.tipo !
   }
 
   {
+    novedadesPortada.length > 0 && (
+      <section class="contenedor proximos" aria-labelledby="t-novedades">
+        <div class="cabecera-proximos">
+          <h2 id="t-novedades">{tx.novedades.titulo}</h2>
+          <a href="/novedades/" class="ver-todos">
+            {tx.novedades.verTodo} →
+          </a>
+        </div>
+        <ul class="novedades-portada">
+          {novedadesPortada.map((c) => (
+            <li style={estiloUniverso(activos.find((u) => u.id === c.t.universo))}>
+              <a href={c.t.url}>
+                <span class="cartel-nov">{c.t.m.posterTmdb && <img src={imagenTmdb(c.t.m.posterTmdb, 'w92')} alt="" width="92" height="138" loading="lazy" decoding="async" />}</span>
+                <span class="nombre-nov">{c.nombre}</span>
+                <span class="que-nov">
+                  {tx.novedades.llega} {c.plataformas.join(', ')}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
     noticiasDe(idioma).length > 0 && (
       <section class="contenedor proximos" aria-labelledby="t-noticias">
         <div class="cabecera-proximos">
@@ -183,6 +218,49 @@ const guiasPortada = activos.flatMap((u) => guiasDe(u.id).filter((g) => g.tipo !
 </Base>
 
 <style>
+  .novedades-portada {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 10px;
+  }
+  .novedades-portada a {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 12px;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid var(--borde);
+    border-left: 4px solid var(--acento, var(--borde));
+    border-radius: var(--radio);
+    background: var(--sup);
+    color: inherit;
+    text-decoration: none;
+  }
+  .cartel-nov {
+    grid-row: span 2;
+    aspect-ratio: 2 / 3;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--borde);
+  }
+  .cartel-nov img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .nombre-nov {
+    font: 700 0.98rem / 1.2 var(--f-titulo);
+    align-self: end;
+  }
+  .que-nov {
+    font-size: 0.82rem;
+    color: var(--txt-2);
+    align-self: start;
+  }
   .portada {
     padding-top: clamp(24px, 5vw, 48px);
   }

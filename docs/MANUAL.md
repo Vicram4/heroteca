@@ -356,6 +356,22 @@ DC de 2019…» para los pasados. Se calculan en `src/lib/estrenosAnio.ts` y se 
 - **Enlaces:** año anterior y siguiente en cada página; Próximamente enlaza los títulos de año de su lista y, al final,
   «Estrenos por año» (desde hace tres años hasta el último con página).
 
+## Novedades
+
+Página `/novedades/` (en inglés `/en/whats-new/`), con la lógica en `src/lib/novedades.ts`. La española usa los datos
+de España y la inglesa los de EE. UU.
+
+- **Recién estrenado:** películas estrenadas en cines del país y series o temporadas nuevas de los últimos 60 días
+  (`DIAS_ESTRENO`), de `datos/proximamente.json`. Las series en emisión (próximo episodio) no salen: ya están en Próximamente.
+- **Cambios en plataformas:** cada lunes `scripts/sincronizar_donde_ver.py` apunta en `datos/novedades-plataformas.json` lo
+  que llega y lo que se va de cada plataforma (suscripción o gratis, y aparte el alquiler o la compra en digital). La
+  página lo agrupa por semanas de lunes a domingo, con tarjetas «Llega a», «En digital en» y «Se va de».
+- **Solo lo vigente:** si un título llega a una plataforma y luego se va (o al revés), no sale ninguno de los dos
+  movimientos. JustWatch tiene muchas idas y venidas, y así la página no se llena de ruido.
+- **Filtros** en el navegador: tipo de cambio, plataforma (las cuatro de «Dónde ver» y «Otras») y universo.
+- **Portada:** bloque «Novedades» con 6 llegadas, primero las de Disney+, HBO Max, Netflix y Prime Video.
+- Enlazada en el pie, junto a Próximamente. Lleva datos `ItemList` con lo que acaba de llegar.
+
 ## Próximamente (próximos estrenos)
 
 Página `/proximamente/` (en inglés, `/en/coming-soon/`), enlazada desde el pie y con una franja de los 4 próximos

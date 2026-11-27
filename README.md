@@ -44,6 +44,7 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
   enlace a la fuente original.
 - **Aviso semanal**: cada lunes, si hay estrenos anunciados, cambios de fecha, títulos estrenados que faltan en la
   colección o cambios en plataformas, GitHub Actions publica un resumen como issue y llega por correo.
+- **Novedades**: lo recién estrenado en cines y lo que llega a cada plataforma (o se va de ella) semana a semana, en España y en EE. UU., con filtros por plataforma y universo, y un bloque en la portada.
 - **Próximamente**: calendario con página propia para cada estreno (cuenta atrás, sinopsis, tráiler oficial una cuenta atrás que otras webs pueden insertar con un `<iframe>` y un **calendario .ics** al que suscribirse para recibir los avisos de estreno) de los próximos títulos de Marvel y DC (películas, series y temporadas nuevas) y de las
   series en emisión, con cuenta atrás y filtro por universo. Datos de TMDB que se **actualizan solos cada semana**.
   Las películas responden a «cuándo se estrena», «cuánto dura» y «¿tiene escenas poscréditos?», y hay una página de

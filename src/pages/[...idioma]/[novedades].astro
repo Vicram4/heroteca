@@ -1,0 +1,241 @@
+---
+import { conIdiomas, idiomaDe, textos, LOCALE } from '../../i18n';
+export function getStaticPaths() {
+  return conIdiomas([{ params: { novedades: 'novedades' } }], () => ({ novedades: 'whats-new' }));
+}
+/**
+ * «Novedades»: lo recién estrenado (cines, series y temporadas nuevas) y los cambios en plataformas semana a semana
+ * (llega, en digital, se va), en España en español y en EE. UU. en inglés. Cálculo en src/lib/novedades.ts.
+ * Todo va en el HTML; los filtros (tipo de cambio, plataforma y universo) actúan en el navegador.
+ */
+import Base from '../../layouts/Base.astro';
+import TarjetaEstreno from '../../components/TarjetaEstreno.astro';
+import ListaEstrenos from '../../components/ListaEstrenos.astro';
+import { universosActivos, estiloUniverso } from '../../lib/datos';
+import { cambiosPorSemana, recienEstrenados, DIAS_ESTRENO } from '../../lib/novedades';
+import { fechaDondeVer, paisDe } from '../../lib/dondever';
+import { PLATAFORMAS } from '../../config/plataformas';
+import { imagenTmdb } from '../../lib/tmdb';
+import { SITE } from '../../config/site';
+import { rutaEnIdioma } from '../../i18n/rutas';
+
+const tx = textos(Astro.url);
+const n = tx.novedades;
+const idioma = idiomaDe(Astro.url);
+const universos = await universosActivos();
+const uDe = (id: string) => universos.find((u) => u.id === id);
+const semanas = await cambiosPorSemana(idioma);
+const recien = recienEstrenados(idioma);
+const fecha = (iso: string, conAnio = true) =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', ...(conAnio && { year: 'numeric' }), timeZone: 'UTC' });
+const todos = semanas.flatMap((s) => s.cambios);
+const llegan = todos.filter((c) => c.tipo !== 'sale').length;
+const salen = todos.filter((c) => c.tipo === 'sale').length;
+const comprobado = fechaDondeVer(paisDe(idioma));
+const etiqueta = { llega: n.llega, digital: n.digital, sale: n.sale };
+// Datos para buscadores: lo que acaba de llegar (sin las salidas)
+const datos = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: n.titulo,
+  itemListElement: await Promise.all(
+    todos
+      .filter((c) => c.tipo !== 'sale')
+      .slice(0, 30)
+      .map(async (c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.nombre, url: new URL(await rutaEnIdioma(c.t.url, idioma), SITE.url).href })),
+  ),
+};
+---
+
+<Base titulo={n.tituloSeo} descripcion={n.descripcion} datos={datos} migas={[{ nombre: 'Heroteca', url: '/' }, { nombre: n.titulo, url: '/novedades/' }]}>
+  <div class="contenedor novedades">
+    <h1>{n.titulo}</h1>
+    <p class="entradilla">{n.intro}</p>
+
+    {
+      recien.length > 0 && (
+        <section aria-labelledby="t-recien" class="bloque">
+          <h2 id="t-recien">{n.recien}</h2>
+          <p class="explica">{n.recienIntro(DIAS_ESTRENO)}</p>
+          <ListaEstrenos conPasados>
+            {recien.map((e) => (
+              <TarjetaEstreno e={e} u={uDe(e.universo)} />
+            ))}
+          </ListaEstrenos>
+        </section>
+      )
+    }
+
+    <section aria-labelledby="t-cambios" class="bloque" data-novedades>
+      <h2 id="t-cambios">{n.cambios}</h2>
+      <p class="explica">{n.cambiosIntro} {n.resumen(llegan, salen)}</p>
+      <form class="filtros panel">
+        <label>
+          {n.mostrar}
+          <select data-filtro="tipo">
+            <option value="">{n.todo}</option>
+            <option value="llega">{n.llegadas}</option>
+            <option value="digital">{n.enDigital}</option>
+            <option value="sale">{n.salidas}</option>
+          </select>
+        </label>
+        <label>
+          {n.plataforma}
+          <select data-filtro="plataforma">
+            <option value="">{n.todas}</option>
+            {PLATAFORMAS.map((p) => <option value={p.id}>{p.nombre}</option>)}
+            <option value="otras">{n.otras}</option>
+          </select>
+        </label>
+        <label>
+          {n.universo}
+          <select data-filtro="universo">
+            <option value="">{n.todo}</option>
+            {universos.map((u) => <option value={u.id}>{u.data.nombre}</option>)}
+          </select>
+        </label>
+      </form>
+      {
+        semanas.map((s) => (
+          <section class="semana" aria-labelledby={`s-${s.fecha}`} data-semana>
+            <h3 id={`s-${s.fecha}`}>{n.semana(fecha(s.fecha))}</h3>
+            <ul class="cambios">
+              {s.cambios.map((c) => (
+                <li class={`cambio ${c.tipo}`} data-tipo={c.tipo} data-plataformas={c.claves.join(' ')} data-universo={c.t.universo} style={estiloUniverso(uDe(c.t.universo))}>
+                  <span class="cartel">{c.t.m.posterTmdb && <img src={imagenTmdb(c.t.m.posterTmdb, 'w92')} alt="" width="92" height="138" loading="lazy" decoding="async" />}</span>
+                  <span class="texto">
+                    <a href={c.t.url} class="nombre">
+                      {c.nombre}
+                    </a>
+                    <span class="meta">
+                      {c.t.d.anio} · {uDe(c.t.universo)?.data.nombre}
+                    </span>
+                    <span class="que">
+                      <span class="etiqueta">{etiqueta[c.tipo]}</span> {c.plataformas.join(', ')}
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+      <p class="vacio" hidden data-vacio>{n.vacio}</p>
+      {comprobado && <p class="fuente">{n.fuente(fecha(comprobado.toISOString().slice(0, 10)))}</p>}
+    </section>
+  </div>
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-novedades]').forEach((caja) => {
+    const filtros = [...caja.querySelectorAll<HTMLSelectElement>('[data-filtro]')];
+    const aplicar = () => {
+      const v = Object.fromEntries(filtros.map((f) => [f.dataset.filtro!, f.value]));
+      let visibles = 0;
+      caja.querySelectorAll<HTMLElement>('[data-semana]').forEach((s) => {
+        let enSemana = 0;
+        s.querySelectorAll<HTMLElement>('[data-tipo]').forEach((li) => {
+          const ok =
+            (!v.tipo || li.dataset.tipo === v.tipo) &&
+            (!v.plataforma || (li.dataset.plataformas ?? '').split(' ').includes(v.plataforma)) &&
+            (!v.universo || li.dataset.universo === v.universo);
+          li.hidden = !ok;
+          if (ok) enSemana++;
+        });
+        s.hidden = enSemana === 0;
+        visibles += enSemana;
+      });
+      caja.querySelector<HTMLElement>('[data-vacio]')!.hidden = visibles > 0;
+    };
+    filtros.forEach((f) => f.addEventListener('change', aplicar));
+  });
+</script>
+
+<style>
+  .novedades {
+    padding-block: clamp(20px, 4vw, 36px) 48px;
+  }
+  .entradilla {
+    max-width: 70ch;
+  }
+  .bloque {
+    margin-top: 32px;
+  }
+  .explica,
+  .fuente {
+    color: var(--txt-2);
+    font-size: 0.9rem;
+  }
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    padding: 12px 14px;
+    margin-block: 14px 8px;
+  }
+  .filtros label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .semana h3 {
+    margin: 26px 0 10px;
+  }
+  .cambios {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 10px;
+  }
+  .cambio {
+    display: grid;
+    grid-template-columns: 46px 1fr;
+    gap: 12px;
+    padding: 10px;
+    border: 1px solid var(--borde);
+    border-left: 4px solid var(--acento, var(--borde));
+    border-radius: var(--radio);
+    background: var(--sup);
+  }
+  .cambio[hidden],
+  .semana[hidden] {
+    display: none;
+  }
+  .cartel {
+    aspect-ratio: 2 / 3;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--borde);
+  }
+  .cartel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .texto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .nombre {
+    font: 700 1rem / 1.2 var(--f-titulo);
+    color: inherit;
+  }
+  .meta,
+  .que {
+    font-size: 0.85rem;
+    color: var(--txt-2);
+  }
+  .etiqueta {
+    font-weight: 700;
+    color: var(--txt);
+  }
+  .sale .etiqueta {
+    color: var(--txt-2);
+  }
+</style>
