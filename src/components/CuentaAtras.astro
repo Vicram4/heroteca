@@ -3,7 +3,8 @@
  * Contador grande del próximo estreno de cine: cartel de fondo, título, fecha y cuenta atrás en directo
  * (días, horas, minutos y segundos) con una animación al cambiar cada cifra. Sin JavaScript se ven los días
  * calculados al publicar la web. Respeta «reducir movimiento». En la página del propio estreno (`propia`) el título
- * es el encabezado principal y no enlaza a ningún sitio.
+ * es el encabezado principal y no enlaza a ningún sitio. Fuera de ella, si hay guía «Qué ver antes de…» del estreno
+ * (campo antesDe en config/guias.ts), se enlaza debajo de la cuenta atrás.
  */
 import { type Estreno, enEmision, textosEstreno, fechaDe, enlaceEstreno } from '../lib/proximamente';
 import type { Universo } from '../lib/datos';
@@ -11,6 +12,7 @@ import { estiloUniverso } from '../lib/datos';
 import { paisDe } from '../lib/dondever';
 import { imagenTmdb } from '../lib/tmdb';
 import { textos, idiomaDe, LOCALE } from '../i18n';
+import { GUIAS, guiaLoc } from '../config/guias';
 
 interface Props {
   e: Estreno;
@@ -35,6 +37,8 @@ const antetitulo = !propia
       ? p.temporadaNueva(e.temporada ?? 1)
       : p.serieNueva;
 const rotuloFecha = e.tipo === 'pelicula' ? p.enCines : enEmision(e) ? p.proximoEpisodio(e.temporada ?? 1, e.episodio ?? 1) : p.seEstrena;
+const guiaBase = !propia ? GUIAS.find((g) => g.antesDe === e.tmdb?.id) : undefined;
+const guiaAntes = guiaBase && guiaLoc(guiaBase, idioma);
 const unidades = [
   ['dias', p.unidades.dias, String(diasAlPublicar)],
   ['horas', p.unidades.horas, '00'],
@@ -76,6 +80,11 @@ const unidades = [
       </ol>
       </div>
       <p class="hoy" data-es-hoy hidden>{p.hoyEstreno}</p>
+      {guiaAntes && (
+        <p class="guia-antes">
+          <a href={`/${guiaAntes.universo}/guias/${guiaAntes.id}/`}>{guiaAntes.titulo} →</a>
+        </p>
+      )}
     </div>
   </div>
 </section>
@@ -120,6 +129,16 @@ const unidades = [
 </script>
 
 <style>
+  .guia-antes {
+    margin: 14px 0 0;
+    font-weight: 700;
+  }
+  .guia-antes a {
+    color: inherit;
+    text-decoration-color: var(--acento);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
   .cuenta-atras {
     position: relative;
     isolation: isolate;

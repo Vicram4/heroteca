@@ -425,6 +425,28 @@ lo que ya se haya estrenado desde la última actualización.
 - En local: `.venv/Scripts/python.exe scripts/sincronizar_proximamente.py`
 - Textos de la página: apartado `proximos` de `src/i18n/textos.ts`.
 
+- **Guía «Qué ver antes de…» en la portada:** si un estreno con guía (`antesDe` en `src/config/guias.ts`) llega en
+  menos de 60 días, la portada muestra encima de la cuenta atrás «Faltan N días para X» con el enlace a la guía (los días
+  se calculan al compilar; la web se compila a diario). La cuenta atrás grande también enlaza la guía cuando el estreno
+  destacado la tiene (`CuentaAtras.astro`).
+
+### Día del estreno de Vengadores: Doomsday (18 de diciembre de 2026)
+
+La ficha está preparada como borrador en `docs/borradores/vengadores-doomsday/index.md` (número 102 del UMC, fase 6,
+`verAntes` con lo imprescindible de su guía). Fuera de `contenido/` no se publica, así que la página de cuenta atrás
+`/proximamente/vengadores-doomsday/`, que ya recibe visitas, sigue igual hasta el estreno. Pasos:
+
+1. **El mismo día 18:** escenas poscréditos en `src/config/estrenos.ts` (id 1003596) a partir de críticas fiables. La
+   página de Próximamente las muestra enseguida. Publicar.
+2. **Cuando TMDB tenga reparto y datos (uno o dos días después):** mover el borrador a
+   `contenido/titulos/marvel/vengadores-doomsday/index.md` y borrar sus dos líneas de aviso; copiar las escenas en
+   `conexiones.postCreditos` (con `momento`, `texto` y `textoEn`); buscar su `epoca` (la compilación avisa si falta).
+3. Sincronizar: `.venv/Scripts/python.exe scripts/sincronizar_tmdb.py marvel` y lo mismo con `--ingles` (sin los datos
+   ingleses la ficha inglesa sale en `/en/marvel/vengadores-doomsday/` en lugar de `/en/marvel/avengers-doomsday/`), luego
+   `node scripts/fechas_trailers.mjs` y, si hay actores nuevos con página, `scripts/sincronizar_actores.py` tras compilar.
+4. Al compilar, la página de Próximamente pasa a redirigir a la ficha (la marca `ficha` la pone la sincronización semanal
+   de Próximamente; también se puede esperar al lunes).
+
 ## Instalar como aplicación
 
 Heroteca se puede instalar en el móvil o el ordenador («Añadir a pantalla de inicio» o el icono de instalar del

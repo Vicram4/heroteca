@@ -14,8 +14,8 @@ import { seccionLoc } from '../../i18n/datos';
 import TarjetaEstreno from '../../components/TarjetaEstreno.astro';
 import ListaEstrenos from '../../components/ListaEstrenos.astro';
 import CuentaAtras from '../../components/CuentaAtras.astro';
-import { proximosEstrenos, enEmision } from '../../lib/proximamente';
-import { guiasDe, guiaLoc } from '../../config/guias';
+import { proximosEstrenos, enEmision, textosEstreno, fechaDe } from '../../lib/proximamente';
+import { guiasDe, guiaLoc, GUIAS } from '../../config/guias';
 import { JUEGOS, textoJuego } from '../../config/juegos';
 import ListaNoticias from '../../components/ListaNoticias.astro';
 import { noticiasDe } from '../../lib/noticias';
@@ -47,6 +47,16 @@ const novedadesPortada = (await cambiosPorSemana(idioma))
   .sort((x, y) => Number(y.grande) - Number(x.grande) || x.i - y.i)
   .slice(0, 6)
   .map((x) => x.c);
+// Aviso de la guía «Qué ver antes de…» de un estreno que llega en menos de 60 días (campo antesDe en config/guias.ts)
+const avisoGuia = proximosEstrenos(paisDe(idioma))
+  .map((e) => ({ e, g: GUIAS.find((g) => g.antesDe === e.tmdb?.id) }))
+  .find(({ e, g }) => g && Date.parse(`${fechaDe(e, paisDe(idioma))}T00:00:00Z`) - Date.now() < 60 * 864e5);
+const guiaAviso = avisoGuia && {
+  guia: guiaLoc(avisoGuia.g!, idioma),
+  titulo: textosEstreno(avisoGuia.e, idioma).titulo,
+  dias: Math.max(0, Math.ceil((Date.parse(`${fechaDe(avisoGuia.e, paisDe(idioma))}T00:00:00Z`) - Date.now()) / 864e5)),
+  u: avisoGuia.e.universo,
+};
 const proximos = proximosEstrenos(paisDe(idioma))
   .filter((e) => !enEmision(e) && activos.some((u) => u.id === e.universo))
   .slice(0, 4);
@@ -162,6 +172,12 @@ const guiasPortada = activos.flatMap((u) => guiasDe(u.id).filter((g) => g.tipo !
             {tx.proximos.verTodos} →
           </a>
         </div>
+        {guiaAviso && (
+          <p class="aviso-guia" style={estiloUniverso(activos.find((u) => u.id === guiaAviso.u))}>
+            <span>{tx.proximos.avisoGuia(guiaAviso.titulo, guiaAviso.dias)}</span>{' '}
+            <a href={`/${guiaAviso.guia.universo}/guias/${guiaAviso.guia.id}/`}>{guiaAviso.guia.titulo} →</a>
+          </p>
+        )}
         {proximos.find((e) => e.tipo === 'pelicula') && (
           <div class="destacado-portada">
             <CuentaAtras e={proximos.find((e) => e.tipo === 'pelicula')!} u={activos.find((u) => u.id === proximos.find((e) => e.tipo === 'pelicula')!.universo)} />
@@ -218,6 +234,21 @@ const guiasPortada = activos.flatMap((u) => guiasDe(u.id).filter((g) => g.tipo !
 </Base>
 
 <style>
+  .aviso-guia {
+    margin: 0 0 16px;
+    padding: 12px 16px;
+    border: 1px solid var(--borde);
+    border-left: 4px solid var(--acento, var(--borde));
+    border-radius: var(--radio);
+    background: var(--sup);
+  }
+  .aviso-guia a {
+    font-weight: 700;
+    color: inherit;
+    text-decoration-color: var(--acento);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
   .novedades-portada {
     list-style: none;
     margin: 0;
