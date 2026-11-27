@@ -369,6 +369,12 @@ de España y la inglesa los de EE. UU.
 - **Solo lo vigente:** si un título llega a una plataforma y luego se va (o al revés), no sale ninguno de los dos
   movimientos. JustWatch tiene muchas idas y venidas, y así la página no se llena de ruido.
 - **Filtros** en el navegador: tipo de cambio, plataforma (las cuatro de «Dónde ver» y «Otras») y universo.
+- **Nuevo en Heroteca:** las fichas añadidas en los últimos 30 días (`DIAS_NUEVA`) salen en su propio bloque y llevan
+  la etiqueta «Nuevo en Heroteca» en la ficha. La fecha de alta está en `datos/fichas-alta.json`, que genera
+  `node scripts/fechas_alta.mjs` a partir del historial de git (primer commit que creó la ficha; un renombrado conserva
+  la fecha original). No cuenta la carga inicial del catálogo (hasta el 2 de noviembre de 2026, `FIN_CARGA_INICIAL`).
+  La tarea diaria de IndexNow lo ejecuta con el historial completo y sube el archivo; Vercel compila con un historial
+  incompleto y por eso no se calcula al compilar.
 - **Portada:** bloque «Novedades» con 6 llegadas, primero las de Disney+, HBO Max, Netflix y Prime Video.
 - Enlazada en el pie, junto a Próximamente. Lleva datos `ItemList` con lo que acaba de llegar.
 

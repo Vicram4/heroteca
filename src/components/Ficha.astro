@@ -18,6 +18,7 @@ import { universoLoc, sagaLoc, entradaWikiLoc } from '../i18n/datos';
 import { entradasDeTitulo } from '../lib/wiki';
 import { parecidosDe } from '../lib/parecidos';
 import { antesDespues } from '../lib/antesDespues';
+import { esNueva } from '../lib/novedades';
 import { textos, idiomaDe, nombreTipo, LOCALE } from '../i18n';
 
 interface Props {
@@ -238,6 +239,7 @@ const acentoTipo = d.tipo === 'pelicula' ? 'oro' : d.tipo === 'serie' ? 'plata' 
           </p>
         )}
         <ul class="chips" aria-label={f.datosRapidos}>
+          {esNueva(t) && <li><a class="chip nueva" href="/novedades/#t-nuevas">{tx.novedades.nuevas}</a></li>}
           <li><span class="chip tipo">{tipoTexto}</span></li>
           <li><span class="chip">{d.anioFin ? `${d.anio}–${d.anioFin}` : d.anio}</span></li>
           {m.duracion && <li><span class="chip">{m.duracion} min</span></li>}

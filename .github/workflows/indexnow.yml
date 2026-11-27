@@ -1,5 +1,6 @@
-# Cada día: 1) compila la web para guardar en datos/fechas-paginas.json la fecha de cambio de cada página (la que sale
-# como <lastmod> en el mapa del sitio; ver fechasEnElMapa en astro.config.mjs) y la sube al repositorio si cambió;
+# Cada día: 1) apunta en datos/fichas-alta.json la fecha en que se añadió cada ficha (scripts/fechas_alta.mjs, con el
+# historial completo de git) y compila la web para guardar en datos/fechas-paginas.json la fecha de cambio de cada
+# página (la que sale como <lastmod> en el mapa del sitio; ver fechasEnElMapa en astro.config.mjs); sube los dos si cambian;
 # 2) avisa a Bing y a los demás buscadores de IndexNow de las páginas nuevas o modificadas (scripts/indexnow.mjs).
 # Va después de «Noticias» (06:43 UTC) para que Vercel ya haya publicado los cambios. No necesita ninguna clave
 # secreta: la de IndexNow es pública y está en public/<clave>.txt. La lista de páginas de la vez anterior se guarda
@@ -19,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # historial completo, para las fechas de alta de las fichas
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
@@ -26,16 +29,17 @@ jobs:
       - name: Compilar para actualizar las fechas de las páginas
         run: |
           npm ci
+          node scripts/fechas_alta.mjs
           npm run build
       - name: Subir las fechas
         run: |
-          if git diff --quiet -- datos/fechas-paginas.json; then
+          if git diff --quiet -- datos/fechas-paginas.json datos/fichas-alta.json; then
             echo "Sin cambios"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add datos/fechas-paginas.json
+          git add datos/fechas-paginas.json datos/fichas-alta.json
           git commit -m "Fechas de las páginas para el mapa del sitio ($(date -u +%Y-%m-%d))"
           git pull --rebase
           git push

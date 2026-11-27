@@ -12,7 +12,7 @@ import Base from '../../layouts/Base.astro';
 import TarjetaEstreno from '../../components/TarjetaEstreno.astro';
 import ListaEstrenos from '../../components/ListaEstrenos.astro';
 import { universosActivos, estiloUniverso } from '../../lib/datos';
-import { cambiosPorSemana, recienEstrenados, DIAS_ESTRENO } from '../../lib/novedades';
+import { cambiosPorSemana, recienEstrenados, fichasNuevas, altaDe, DIAS_ESTRENO, DIAS_NUEVA } from '../../lib/novedades';
 import { fechaDondeVer, paisDe } from '../../lib/dondever';
 import { PLATAFORMAS } from '../../config/plataformas';
 import { imagenTmdb } from '../../lib/tmdb';
@@ -26,6 +26,7 @@ const universos = await universosActivos();
 const uDe = (id: string) => universos.find((u) => u.id === id);
 const semanas = await cambiosPorSemana(idioma);
 const recien = recienEstrenados(idioma);
+const nuevas = await fichasNuevas(idioma);
 const fecha = (iso: string, conAnio = true) =>
   new Date(`${iso}T12:00:00Z`).toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', ...(conAnio && { year: 'numeric' }), timeZone: 'UTC' });
 const todos = semanas.flatMap((s) => s.cambios);
@@ -62,6 +63,31 @@ const datos = {
               <TarjetaEstreno e={e} u={uDe(e.universo)} />
             ))}
           </ListaEstrenos>
+        </section>
+      )
+    }
+
+    {
+      nuevas.length > 0 && (
+        <section aria-labelledby="t-nuevas" class="bloque">
+          <h2 id="t-nuevas">{n.nuevas}</h2>
+          <p class="explica">{n.nuevasIntro(DIAS_NUEVA)}</p>
+          <ul class="cambios">
+            {nuevas.map((t) => (
+              <li class="cambio" style={estiloUniverso(uDe(t.universo))}>
+                <span class="cartel">{t.m.posterTmdb && <img src={imagenTmdb(t.m.posterTmdb, 'w92')} alt="" width="92" height="138" loading="lazy" decoding="async" />}</span>
+                <span class="texto">
+                  <a href={t.url} class="nombre">
+                    {t.corto}
+                  </a>
+                  <span class="meta">
+                    {t.d.anio} · {uDe(t.universo)?.data.nombre}
+                  </span>
+                  <span class="que">{n.anadida(fecha(altaDe(t)))}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
         </section>
       )
     }

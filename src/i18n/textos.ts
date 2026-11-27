@@ -919,6 +919,9 @@ export const ES = {
     intro:
       'Lo que acaba de llegar, semana a semana: estrenos en cines y series nuevas, títulos que llegan a una plataforma o en digital, y los que se van. En España.',
     recien: 'Recién estrenado',
+    nuevas: 'Nuevo en Heroteca',
+    nuevasIntro: (n: number) => `Fichas añadidas en los últimos ${n} días.`,
+    anadida: (f: string) => `Añadida el ${f}`,
     recienIntro: (n: number) => `Películas en cines, series y temporadas nuevas de los últimos ${n} días.`,
     cambios: 'Cambios en plataformas',
     cambiosIntro: 'Cada lunes se comprueba en qué plataformas está cada título. Solo salen los cambios que siguen vigentes.',
@@ -1929,6 +1932,9 @@ export const EN: Textos = {
     intro:
       'What just arrived, week by week: theatrical releases and new series, titles arriving on a streaming service or on digital, and the ones leaving. In the US.',
     recien: 'Just released',
+    nuevas: 'New on Heroteca',
+    nuevasIntro: (n) => `Pages added in the last ${n} days.`,
+    anadida: (f) => `Added on ${f}`,
     recienIntro: (n) => `Films in theaters, new series and new seasons from the last ${n} days.`,
     cambios: 'Streaming changes',
     cambiosIntro: 'Every Monday we check where each title is available. Only changes that still hold are shown.',

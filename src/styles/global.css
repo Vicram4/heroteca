@@ -265,6 +265,14 @@ a.chip:hover {
   border: 1px solid var(--acento);
   color: var(--txt);
 }
+/* Ficha añadida hace poco («Nuevo en Heroteca», src/lib/novedades.ts) */
+.chip.nueva {
+  /* Tono oscuro del universo: el blanco contrasta más de 4,5:1 (con el acento de DC no llega) */
+  background: var(--u-txt-claro, #c8161d);
+  border-color: transparent;
+  color: #fff;
+  font-weight: 700;
+}
 .numero {
   font-family: var(--f-titulo);
   font-weight: 700;

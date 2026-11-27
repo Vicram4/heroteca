@@ -11,12 +11,35 @@
  * la página no se llena de ruido.
  */
 import historial from '../../datos/novedades-plataformas.json';
+import altas from '../../datos/fichas-alta.json';
 import { todosLosTitulos, localizar, type Titulo } from './datos';
 import { todosLosEstrenos, fechaDe, enEmision, type Estreno } from './proximamente';
 import { paisDe } from './dondever';
 import { plataformaDeNombre } from '../config/plataformas';
 
 export const DIAS_ESTRENO = 60;
+
+/**
+ * «Nuevo en Heroteca»: fichas añadidas hace menos de DIAS_NUEVA días (datos/fichas-alta.json, scripts/fechas_alta.mjs).
+ * No cuenta lo que se añadió mientras se montaba el catálogo (hasta FIN_CARGA_INICIAL): eran casi 500 fichas a la vez.
+ */
+export const DIAS_NUEVA = 30;
+const FIN_CARGA_INICIAL = '2026-11-02';
+const ALTAS = altas as Record<string, string>;
+export const altaDe = (t: Titulo) => ALTAS[`${t.universo}/${t.id}`];
+export function esNueva(t: Titulo) {
+  const f = altaDe(t);
+  if (!f || f <= FIN_CARGA_INICIAL) return false;
+  return Date.now() - Date.parse(`${f}T00:00:00Z`) < DIAS_NUEVA * 864e5;
+}
+
+/** Fichas nuevas, de la más reciente a la más antigua (ya en el idioma de la página). */
+export async function fichasNuevas(idioma: 'es' | 'en') {
+  return (await todosLosTitulos('es'))
+    .filter(esNueva)
+    .sort((a, b) => altaDe(b).localeCompare(altaDe(a)) || b.d.anio - a.d.anio)
+    .map((t) => localizar(t, idioma));
+}
 
 /** Lunes de la semana de una fecha AAAA-MM-DD (las comprobaciones extra de otro día van con su semana). */
 const lunesDe = (iso: string) => {
