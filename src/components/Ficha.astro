@@ -17,6 +17,7 @@ import { GUIAS, guiasDeTitulo, guiaLoc } from '../config/guias';
 import { universoLoc, sagaLoc, entradaWikiLoc } from '../i18n/datos';
 import { entradasDeTitulo } from '../lib/wiki';
 import { parecidosDe } from '../lib/parecidos';
+import { antesDespues } from '../lib/antesDespues';
 import { textos, idiomaDe, nombreTipo, LOCALE } from '../i18n';
 
 interface Props {
@@ -96,9 +97,13 @@ const enWiki = (await entradasDeTitulo(t.id, idioma)).map((e) => entradaWikiLoc(
 const verAntes = refs(d.conexiones.verAntes);
 const verDespues = refs(d.conexiones.verDespues);
 const automaticas = !verAntes.length && !verDespues.length && sagasVecinas.length > 0;
+// Sin conexiones propias ni trilogía: temporada contigua y entregas de sus protagonistas (src/lib/antesDespues.ts)
+const calculadas = !verAntes.length && !verDespues.length && !automaticas ? (await antesDespues()).get(t.id) : undefined;
+const listaAntes = automaticas ? vecinos.antes : calculadas ? refs(calculadas.antes.map((id) => ({ id }))) : verAntes;
+const listaDespues = automaticas ? vecinos.despues : calculadas ? refs(calculadas.despues.map((id) => ({ id }))) : verDespues;
 const conexiones = [
-  [f.verAntes, automaticas ? vecinos.antes : verAntes],
-  [f.verDespues, automaticas ? vecinos.despues : verDespues],
+  [f.verAntes, listaAntes],
+  [f.verDespues, listaDespues],
   [f.relacionados, refs(d.conexiones.relacionados)],
 ].filter(([, lista]) => (lista as Titulo[]).length > 0) as [string, Titulo[]][];
 // «Si te gustó…»: fichas parecidas del mismo universo (src/lib/parecidos.ts), sin repetir las de «Conexiones»
@@ -155,9 +160,9 @@ const preguntas: { p: string; r: Parte[] }[] = [];
   else if (anterior) orden.push(r.vaDespues, { texto: anterior.corto, url: anterior.url }, '.');
   else if (siguiente) orden.push(r.vaAntes, { texto: siguiente.corto, url: siguiente.url }, '.');
   if (orden.length) preguntas.push({ p: r.qOrden(q), r: orden });
-  // Qué ver antes (conexiones propias o, si no hay, la entrega anterior de su trilogía)
-  const antes = automaticas ? vecinos.antes : verAntes;
-  if (antes.length) preguntas.push({ p: r.qAntes(q), r: [r.antesR, ...conY(antes.slice(0, 4)), '.'] });
+  // Qué ver antes y después (conexiones propias; si no hay, la trilogía; si no, las calculadas)
+  if (listaAntes.length) preguntas.push({ p: r.qAntes(q), r: [r.antesR, ...conY(listaAntes.slice(0, 4)), '.'] });
+  if (listaDespues.length) preguntas.push({ p: r.qDespues(q), r: [r.despuesR, ...conY(listaDespues.slice(0, 4)), '.'] });
   // Cuándo transcurre (línea temporal)
   if (epoca)
     preguntas.push({

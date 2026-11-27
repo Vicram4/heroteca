@@ -913,6 +913,11 @@ encontrando los españoles). Los dos sirven para reconocer al personaje en el re
   de las estanterías sí muestran los cameos. La página «Acerca de» lo explica.
 - Si no has escrito la escena, la ficha avisa de que la hay (sin contar nada) cuando TMDB la marca.
 - «Ver antes / ver después»: si la ficha no los tiene, se ponen solos con sus vecinas en tus trilogías y dulogías.
+  Si tampoco hay trilogía, se calculan (`src/lib/antesDespues.ts`): la temporada anterior y la siguiente de la misma serie
+  y, solo en UMC y DCDU (una sola historia), la entrega anterior y la siguiente de cada protagonista (los 4 primeros del
+  reparto, comparados por actor, de modo que un cameo o el mismo personaje con otro actor no cuentan). Los documentales
+  como LEYENDAS de Marvel Studios se dejan fuera. Como mucho 3 por lado. Con esto salen también las preguntas rápidas
+  «¿Qué ver antes de X?» y «¿Qué ver después de X?» (en noviembre de 2026 pasaron de 25 a unas 175 fichas).
 
 ## Añadir una saga o "Relacionada"
 
