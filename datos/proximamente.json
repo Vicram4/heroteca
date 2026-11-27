@@ -68,35 +68,35 @@
    "universo": "dc"
   },
   {
-   "clave": "tv-332379-t1",
+   "clave": "tv-323378-t2",
    "en": {
-    "fondo": "/kuS2wdKyXBc5kdgDdHx02Yi3zDF.jpg",
-    "poster": "/jQKt9R0LRWGXYF4TfhyrIrqqvv3.jpg",
-    "sinopsis": "Iman Vellani and Frank Alvarez host a rewatch of films from Marvel Studios' The Infinity Saga, working their way to \"Avengers: Doomsday.\" Together, they revisit each film with a recap and a conversation about which themes and characters may continue to have future implications. Whether a longtime fan or new to the MCU, the show is the perfect opportunity to reminisce about the most iconic moments and characters from Marvel Studios' The Infinity Saga.",
-    "titulo": "Countdown to Avengers: Doomsday Official Podcast",
-    "trailer": null
+    "fondo": "/8AVRIbBxlsnul7kgirGCGY0YKbP.jpg",
+    "poster": "/nIrLpT0654SPwNXCXB89dPsF5fd.jpg",
+    "sinopsis": "Hosted by Frankey Smith and Tyler Coates, and joined by on-air comic correspondent Coy Jandreau, this biweekly podcast series takes a deep dive into the history of the iconic DC brand while charting the future of the DCU as DC Studios kicks off its ambitious cross-platform slate.",
+    "titulo": "DC Studios Showcase: The Official Podcast",
+    "trailer": "Gve-onKOZu4"
    },
-   "episodio": 9,
+   "episodio": 14,
    "es": {
-    "fondo": "/kuS2wdKyXBc5kdgDdHx02Yi3zDF.jpg",
-    "poster": "/jQKt9R0LRWGXYF4TfhyrIrqqvv3.jpg",
+    "fondo": "/8AVRIbBxlsnul7kgirGCGY0YKbP.jpg",
+    "poster": "/nIrLpT0654SPwNXCXB89dPsF5fd.jpg",
     "sinopsis": "",
-    "titulo": "Countdown to Avengers: Doomsday Official Podcast",
-    "trailer": null
+    "titulo": "DC Studios Showcase: The Official Podcast",
+    "trailer": "Gve-onKOZu4"
    },
-   "fecha": "2026-11-26",
+   "fecha": "2026-11-27",
    "ficha": null,
    "ruta": {
-    "en": "countdown-to-avengers-doomsday-official-podcast",
-    "es": "countdown-to-avengers-doomsday-official-podcast"
+    "en": "dc-studios-showcase-the-official-podcast-season-2",
+    "es": "dc-studios-showcase-the-official-podcast-temporada-2"
    },
-   "temporada": 1,
+   "temporada": 2,
    "tipo": "serie",
    "tmdb": {
-    "id": 332379,
+    "id": 323378,
     "tipo": "tv"
    },
-   "universo": "marvel"
+   "universo": "dc"
   },
   {
    "clave": "tv-231801-t1",
@@ -161,17 +161,48 @@
    "universo": "marvel"
   },
   {
+   "clave": "tv-332379-t1",
+   "en": {
+    "fondo": "/kuS2wdKyXBc5kdgDdHx02Yi3zDF.jpg",
+    "poster": "/jQKt9R0LRWGXYF4TfhyrIrqqvv3.jpg",
+    "sinopsis": "Iman Vellani and Frank Alvarez host a rewatch of films from Marvel Studios' The Infinity Saga, working their way to \"Avengers: Doomsday.\" Together, they revisit each film with a recap and a conversation about which themes and characters may continue to have future implications. Whether a longtime fan or new to the MCU, the show is the perfect opportunity to reminisce about the most iconic moments and characters from Marvel Studios' The Infinity Saga.",
+    "titulo": "Countdown to Avengers: Doomsday Official Podcast",
+    "trailer": null
+   },
+   "episodio": 10,
+   "es": {
+    "fondo": "/kuS2wdKyXBc5kdgDdHx02Yi3zDF.jpg",
+    "poster": "/jQKt9R0LRWGXYF4TfhyrIrqqvv3.jpg",
+    "sinopsis": "",
+    "titulo": "Countdown to Avengers: Doomsday Official Podcast",
+    "trailer": null
+   },
+   "fecha": "2026-12-03",
+   "ficha": null,
+   "ruta": {
+    "en": "countdown-to-avengers-doomsday-official-podcast",
+    "es": "countdown-to-avengers-doomsday-official-podcast"
+   },
+   "temporada": 1,
+   "tipo": "serie",
+   "tmdb": {
+    "id": 332379,
+    "tipo": "tv"
+   },
+   "universo": "marvel"
+  },
+  {
    "clave": "movie-1389765",
    "duracion": 76,
    "en": {
-    "fondo": "/jOvZD4VpU4Wx4XmNG2uTDNjUdDT.jpg",
+    "fondo": "/2Jcw1LQCReeSLB1TRodHqs2a0Cv.jpg",
     "poster": "/9jGwTCEYaOg3xxnKFaL5ukVexLp.jpg",
     "sinopsis": "Batman lies broken at the hands of the villainous mastermind Bane. With Bruce Wayne paralyzed from the waist down and unable to continue as Batman, a new successor must be chosen to defend Gotham City. Jean-Paul Valley, the man also known as Azrael, must take up the mantle of the Batman. But will his more violent methods be enough to stop Bane?",
     "titulo": "Batman: Knightfall Part 2: Knightquest",
     "trailer": "9NApbwwm4aU"
    },
    "es": {
-    "fondo": "/jOvZD4VpU4Wx4XmNG2uTDNjUdDT.jpg",
+    "fondo": "/2Jcw1LQCReeSLB1TRodHqs2a0Cv.jpg",
     "poster": "/9jGwTCEYaOg3xxnKFaL5ukVexLp.jpg",
     "sinopsis": "",
     "titulo": "Batman: Knightfall Part 2: Knightquest",
@@ -199,7 +230,7 @@
    "duracion": 165,
    "en": {
     "fondo": "/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
-    "poster": "/tTMmREfhVd51CCg7GN73wL8cIoT.jpg",
+    "poster": "/1zqWkLwC1zLBBBtIWzmkmWeMWnT.jpg",
     "sinopsis": "Beloved heroes from three distinct universes are set on a deadly collision course and face an existential threat unlike anything they've ever encountered.",
     "titulo": "Avengers: Doomsday",
     "trailer": "irVNGjRFZGk"
@@ -295,14 +326,14 @@
    "clave": "movie-1523140",
    "en": {
     "fondo": "/lX2TpAZxdIus6cnMCDBOrs96NBY.jpg",
-    "poster": "/tYLgfKk3cEk7LskgxWyW37Nty01.jpg",
+    "poster": "/ddGvmGaA2HSIEL9uqVCKcTMBQBE.jpg",
     "sinopsis": "Superman and Lex Luthor find themselves forced to work together—to a certain degree—against a much, much bigger threat when Brainiac sets his sights on Earth.",
     "titulo": "Man of Tomorrow",
     "trailer": null
    },
    "es": {
     "fondo": "/lX2TpAZxdIus6cnMCDBOrs96NBY.jpg",
-    "poster": "/tYLgfKk3cEk7LskgxWyW37Nty01.jpg",
+    "poster": "/4YdKfBsvEpRSq3BxAJL46xlAVZe.jpg",
     "sinopsis": "Superman y Lex Luthor se ven obligados a trabajar juntos, hasta cierto punto, contra una amenaza mucho, mucho mayor cuando Brainiac pone sus ojos en la Tierra.",
     "titulo": "El Hombre del Mañana",
     "trailer": null
@@ -515,6 +546,6 @@
    "universo": "marvel"
   }
  ],
- "fecha": "2026-11-23",
+ "fecha": "2026-11-27",
  "fuente": "TMDB"
 }

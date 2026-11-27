@@ -294,6 +294,42 @@
     "id": "v-de-vendetta",
     "modo": "plataforma",
     "plataforma": "Filmin"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "blade-ii",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "blue-beetle",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "daredevil",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "el-increible-hulk-2008",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "iron-man-2008",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "watchmen",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
    }
   ],
   "salidas": [
@@ -620,6 +656,54 @@
     "id": "wonder-woman-2017",
     "modo": "plataforma",
     "plataforma": "Netflix"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "batman-y-robin",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "capitan-america-1990",
+    "modo": "plataforma",
+    "plataforma": "Filmin"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "catwoman",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "el-hombre-de-acero",
+    "modo": "plataforma",
+    "plataforma": "Atres Player"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "men-in-black-3",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "shazam-la-furia-de-los-dioses",
+    "modo": "plataforma",
+    "plataforma": "Movistar Plus+ Ficción Total"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "superman",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "superman-ii-la-aventura-continua",
+    "modo": "plataforma",
+    "plataforma": "Tivify"
    }
   ]
  },
@@ -1080,6 +1164,30 @@
     "id": "the-king-s-man-la-primera-mision",
     "modo": "plataforma",
     "plataforma": "fuboTV"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "batman",
+    "modo": "plataforma",
+    "plataforma": "Philo"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "kick-ass",
+    "modo": "plataforma",
+    "plataforma": "Prime Video"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "spider-man-brand-new-day",
+    "modo": "digital",
+    "plataforma": "FlixFling"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "spider-man-brand-new-day",
+    "modo": "digital",
+    "plataforma": "Plex"
    }
   ],
   "salidas": [
@@ -1454,6 +1562,66 @@
     "id": "wonder-woman-2017",
     "modo": "plataforma",
     "plataforma": "tru TV"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "batman-la-broma-asesina",
+    "modo": "plataforma",
+    "plataforma": "YouTube Free"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "el-escuadron-suicida",
+    "modo": "plataforma",
+    "plataforma": "TBS"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "el-escuadron-suicida",
+    "modo": "plataforma",
+    "plataforma": "TNT"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "la-cosa-del-pantano",
+    "modo": "plataforma",
+    "plataforma": "Philo"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "the-boys-t1",
+    "modo": "plataforma",
+    "plataforma": "The Roku Channel"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "the-boys-t2",
+    "modo": "plataforma",
+    "plataforma": "The Roku Channel"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "the-boys-t3",
+    "modo": "plataforma",
+    "plataforma": "The Roku Channel"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "the-boys-t4",
+    "modo": "plataforma",
+    "plataforma": "The Roku Channel"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "the-boys-t5",
+    "modo": "plataforma",
+    "plataforma": "The Roku Channel"
+   },
+   {
+    "fecha": "2026-11-27",
+    "id": "the-king-s-man-la-primera-mision",
+    "modo": "plataforma",
+    "plataforma": "fuboTV"
    }
   ]
  }
