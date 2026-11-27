@@ -57,8 +57,8 @@ const datosMigas = migas?.length
   : undefined;
 // Fecha de la última actualización: la de la compilación
 const actualizado = new Date().toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' });
-// Google corta los títulos de más de unos 70 caracteres: en los largos se quita « · Heroteca» para que se lea lo importante
-const MAX_TITULO = 70;
+// Google corta los títulos de más de unos 60 caracteres: en los largos se quita « · Heroteca» para que se lea lo importante
+const MAX_TITULO = 60;
 const conMarca = titulo ? `${titulo} · ${SITE.nombre}` : `${SITE.nombre} · ${tx.lema}`;
 const tituloPagina = titulo && conMarca.length > MAX_TITULO ? titulo : conMarca;
 const universos = await universosActivos();

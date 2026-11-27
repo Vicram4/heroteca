@@ -17,6 +17,7 @@ import CuentaAtras from '../../../components/CuentaAtras.astro';
 import ListaEstrenos from '../../../components/ListaEstrenos.astro';
 import TarjetaEstreno from '../../../components/TarjetaEstreno.astro';
 import Trailer from '../../../components/Trailer.astro';
+import { datosTrailer } from '../../../lib/video';
 import { universosActivos, estiloUniverso } from '../../../lib/datos';
 import { enEmision, estadoEstreno, enlaceEstreno, enlaceTmdb, fechaDe, fechaProximamente, proximosEstrenos, textosEstreno } from '../../../lib/proximamente';
 import { paisDe } from '../../../lib/dondever';
@@ -37,6 +38,7 @@ const tx = textos(Astro.url);
 const p = tx.proximos;
 const pais = paisDe(idioma);
 const x = textosEstreno(e, idioma);
+const video = datosTrailer(x.trailer, tx.trailer.iframe(x.titulo), x.sinopsis || tx.trailer.iframe(x.titulo));
 const universos = await universosActivos();
 const uBase = universos.find((u) => u.id === e.universo);
 const u = uBase && universoLoc(uBase, idioma);
@@ -81,6 +83,7 @@ const actualizado = larga(fechaProximamente().toISOString().slice(0, 10));
     ...(x.poster ? { image: imagenTmdb(x.poster, 'w780') } : {}),
     ...(estado === 'sinFecha' ? {} : { datePublished: dia }),
     ...(e.duracion ? { duration: `PT${Math.floor(e.duracion / 60)}H${e.duracion % 60}M` } : {}),
+    ...(video ? { trailer: video } : {}),
   }}
 >
   <div class="contenedor estreno-pagina" style={estiloUniverso(uBase)}>

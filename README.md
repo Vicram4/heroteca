@@ -125,7 +125,7 @@ en español y una integración de Astro los traduce al compilar las páginas ing
 - **Los documentos mandan.** TMDB solo rellena lo que falta y nunca sobrescribe. Las erratas evidentes se corrigen dejando una nota con el texto original.
 - **Web 100 % estática** (Astro, sin framework de cliente). Unas pocas islas de JavaScript sin dependencias: buscador, filtros, tema, spoilers y las fachadas del tráiler y del reproductor de la banda sonora. El tráiler usa `youtube-nocookie` y, como el reproductor de Apple Music, solo se carga al pulsar.
 - **Preparada para crecer.** Añadir un universo nuevo es crear un archivo YAML; las rutas, la navegación y la portada se generan solas.
-- **Coste cero.** Vercel (plan gratuito), TMDB (API gratuita), GitHub Actions, Cloudflare Web Analytics (estadísticas sin cookies), IndexNow (aviso diario de páginas nuevas a Bing y otros buscadores), tipografías autoalojadas con Fontsource.
+- **Coste cero.** Vercel (plan gratuito), TMDB (API gratuita), GitHub Actions, Cloudflare Web Analytics (estadísticas sin cookies), IndexNow (aviso diario de páginas nuevas o modificadas a Bing y otros buscadores), tipografías autoalojadas con Fontsource.
 
 ### Tecnología
 
@@ -141,7 +141,7 @@ en español y una integración de Astro los traduce al compilar las páginas ing
 | Rendimiento | 90–99 |
 
 - Contraste AA en ambos modos, navegación por teclado y foco visible, respeto a `prefers-reduced-motion`.
-- Datos estructurados schema.org (`WebSite`, `Movie`, `TVSeries`, `TVSeason`, `ItemList`, `BreadcrumbList`), mapa del sitio y `hreflang`.
+- Datos estructurados schema.org (`WebSite`, `Movie`, `TVSeries`, `TVSeason`, `VideoObject` de los tráileres, `ItemList`, `BreadcrumbList`), mapa del sitio con fecha real de modificación (`lastmod`) y `hreflang`.
 - Comprobación de los ~47.000 enlaces internos y de las 1.340 parejas de idioma en cada cambio importante.
 
 ## Estructura

@@ -37,15 +37,16 @@ jobs:
           cp datos/proximamente.json "$RUNNER_TEMP/proximamente-anterior.json"
           python scripts/sincronizar_donde_ver.py
           python scripts/sincronizar_proximamente.py
+          node scripts/fechas_trailers.mjs
       - name: Subir los cambios
         run: |
-          if git diff --quiet -- datos/donde-ver.json datos/donde-ver-us.json datos/proximamente.json datos/novedades-plataformas.json; then
+          if git diff --quiet -- datos/donde-ver.json datos/donde-ver-us.json datos/proximamente.json datos/novedades-plataformas.json datos/trailers-fechas.json; then
             echo "Sin cambios"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add datos/donde-ver.json datos/donde-ver-us.json datos/proximamente.json datos/novedades-plataformas.json
+          git add datos/donde-ver.json datos/donde-ver-us.json datos/proximamente.json datos/novedades-plataformas.json datos/trailers-fechas.json
           git commit -m "Dónde ver y Próximamente: datos actualizados ($(date -u +%Y-%m-%d))"
           git pull --rebase
           git push

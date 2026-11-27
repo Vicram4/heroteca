@@ -788,9 +788,10 @@ elemento a esa lista.
   resultados a DuckDuckGo, Ecosia y las búsquedas de ChatGPT y Copilot. Para pedir el rastreo de una página concreta:
   «URL Submission» (admite muchas más al día que Google).
 - **IndexNow (aviso automático a Bing, Yandex y otros):** cada día a las 08:17 UTC, `.github/workflows/indexnow.yml`
-  ejecuta `scripts/indexnow.mjs`, que lee el mapa del sitio publicado y envía las páginas nuevas desde la última vez,
-  más la portada, Noticias y Próximamente (en los dos idiomas). La lista anterior se guarda en la caché de Actions, sin
-  subir nada al repositorio; si la caché se pierde, se envían todas una vez. La clave es pública a propósito: el
+  primero compila la web (para guardar las fechas de `lastmod`, ver abajo) y después ejecuta `scripts/indexnow.mjs`,
+  que lee el mapa del sitio publicado y envía las páginas nuevas o con otra fecha de modificación desde la última vez,
+  más la portada, Noticias y Próximamente (en los dos idiomas). La lista anterior (dirección y fecha) se guarda en la
+  caché de Actions; si la caché se pierde, se envían todas una vez. La clave es pública a propósito: el
   archivo `public/6b6c45e94d442eb6926b1ec2264b97b4.txt` demuestra que el sitio es nuestro (no borrarlo). Prueba sin
   enviar: `node scripts/indexnow.mjs lista.txt --prueba`. A mano: Actions → «Avisar a los buscadores (IndexNow)» →
   Run workflow. Google no usa IndexNow.
@@ -800,8 +801,11 @@ elemento a esa lista.
 
 - **Título de las fichas:** «Capitana Marvel (2019): dónde ver, reparto y orden» (temporadas: «…: dónde ver, capítulos y
   reparto»), para encajar con lo que la gente busca. Textos `tituloSeo` en el apartado `ficha` de `src/i18n/textos.ts`.
-- **Largo del título:** todas las páginas terminan en « · Heroteca», salvo si así pasan de 70 caracteres (Google corta a partir
-  de ahí): entonces se quita la marca para que se lea lo importante (`MAX_TITULO` en `src/layouts/Base.astro`).
+- **Largo del título:** todas las páginas terminan en « · Heroteca», salvo si así pasan de 60 caracteres (Google corta a partir
+  de ahí): entonces se quita la marca para que se lea lo importante (`MAX_TITULO` en `src/layouts/Base.astro`). En fichas y
+  series completas el final se elige para caber: «dónde ver, reparto y orden», «dónde ver y reparto» o «dónde ver» según
+  lo largo que sea el nombre (función `cabe` al principio de `src/i18n/textos.ts`). Desde noviembre de 2026 solo pasan
+  de 60 unas 170 páginas, casi todas guías con título escrito a mano.
 - **«Preguntas rápidas»** en cada ficha (sustituye al antiguo «En resumen», con los mismos datos): las dudas que la gente
   escribe en los buscadores, como subtítulos con su respuesta. Por ejemplo: «¿Dónde ver X en España?», «¿Cuánto dura X?» (o
   «¿Cuántos capítulos tiene…?» en series), «¿Tiene X escena poscréditos?», «¿En qué orden se ve X?», «¿Qué ver antes de
@@ -822,8 +826,17 @@ elemento a esa lista.
   2026 porque Search Console mostraba muchas impresiones y ningún clic en estas páginas. Texto `fichaDescripcionSeo` del
   apartado `personajes` de `src/i18n/textos.ts`.
 - **Guías en la portada:** bloque «Guías para empezar» con todas las guías salvo las de carpetas.
-- No se usa `lastmod` en el mapa del sitio: solo podría poner la fecha de cada publicación en todas las páginas, y Google
-  ignora las fechas que no son fiables.
+- **Fecha de modificación (`lastmod`) en el mapa del sitio:** `fechasEnElMapa` en `astro.config.mjs` calcula al compilar una
+  huella del contenido principal (`<main>`) de cada página y la compara con `datos/fechas-paginas.json`. Si no ha cambiado se
+  mantiene la fecha guardada; si cambia (o la página es nueva), pasa a ser la de hoy. Así la fecha solo se mueve cuando la
+  página cambia de verdad (Google ignora las fechas que no son fiables). La tarea diaria de IndexNow sube el archivo al
+  repositorio; si se compila en local antes de un commit, conviene incluirlo. Compilar dos veces seguidas no cambia
+  ninguna huella (comprobado).
+- **Datos de vídeo de los tráileres:** las fichas y los estrenos con tráiler llevan `trailer` (`VideoObject`) dentro de sus
+  datos `Movie`/`TVSeries`/`TVSeason`, con miniatura de YouTube y fecha de subida (`src/lib/video.ts`). Google exige esa
+  fecha, que sale de `datos/trailers-fechas.json`: `node scripts/fechas_trailers.mjs` la busca en las respuestas de TMDB de
+  `cache/tmdb/` (sin pedir nada) y conserva las ya guardadas. Ejecutarlo después de `sincronizar_tmdb.py`; la tarea
+  semanal lo hace sola tras `sincronizar_proximamente.py`. Un tráiler sin fecha no lleva datos de vídeo.
 
 ## Wiki
 

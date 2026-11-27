@@ -16,6 +16,7 @@ import { imagenTmdb } from '../../../lib/tmdb';
 import { textos, idiomaDe, nombreTipo } from '../../../i18n';
 import { rutaEnIdioma } from '../../../i18n/rutas';
 import { universoLoc, seccionLoc } from '../../../i18n/datos';
+import { datosTrailer } from '../../../lib/video';
 const tx = textos(Astro.url);
 const idioma = idiomaDe(Astro.url);
 import {
@@ -108,6 +109,7 @@ if (p.tipo === 'ficha') {
       : undefined;
   const url = new URL(await rutaEnIdioma(t.url, idioma), SITE.url).href;
   const persona = (n: string) => ({ '@type': 'Person', name: n });
+  const video = datosTrailer(t.m.trailer, tx.trailer.iframe(nombre), t.m.argumento ? resumen(t.m.argumento, 300) : tx.trailer.iframe(nombre));
   const comun = {
     url,
     inLanguage: idioma,
@@ -115,6 +117,7 @@ if (p.tipo === 'ficha') {
     ...(t.m.argumento && { description: resumen(t.m.argumento, 500) }),
     ...(t.m.generos.length && { genre: t.m.generos }),
     ...(t.m.reparto.length && { actor: t.m.reparto.slice(0, 10).map((r) => persona(r.actor)) }),
+    ...(video && { trailer: video }),
   };
   const fecha = t.m.fecha ? t.m.fecha.toISOString().slice(0, 10) : String(d.anio);
   datosFicha =

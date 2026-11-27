@@ -1,7 +1,9 @@
-# Avisa cada día a Bing y a los demás buscadores de IndexNow de las páginas nuevas (scripts/indexnow.mjs).
+# Cada día: 1) compila la web para guardar en datos/fechas-paginas.json la fecha de cambio de cada página (la que sale
+# como <lastmod> en el mapa del sitio; ver fechasEnElMapa en astro.config.mjs) y la sube al repositorio si cambió;
+# 2) avisa a Bing y a los demás buscadores de IndexNow de las páginas nuevas o modificadas (scripts/indexnow.mjs).
 # Va después de «Noticias» (06:43 UTC) para que Vercel ya haya publicado los cambios. No necesita ninguna clave
 # secreta: la de IndexNow es pública y está en public/<clave>.txt. La lista de páginas de la vez anterior se guarda
-# en la caché de GitHub Actions, sin subir nada al repositorio.
+# en la caché de GitHub Actions.
 name: Avisar a los buscadores (IndexNow)
 
 on:
@@ -10,7 +12,7 @@ on:
   workflow_dispatch: # también se puede lanzar a mano desde la pestaña Actions
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   avisar:
@@ -20,13 +22,30 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
+          cache: npm
+      - name: Compilar para actualizar las fechas de las páginas
+        run: |
+          npm ci
+          npm run build
+      - name: Subir las fechas
+        run: |
+          if git diff --quiet -- datos/fechas-paginas.json; then
+            echo "Sin cambios"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add datos/fechas-paginas.json
+          git commit -m "Fechas de las páginas para el mapa del sitio ($(date -u +%Y-%m-%d))"
+          git pull --rebase
+          git push
       - name: Recuperar la lista de la vez anterior
         uses: actions/cache/restore@v4
         with:
           path: indexnow-urls.txt
           key: indexnow-${{ github.run_id }}
           restore-keys: indexnow-
-      - name: Enviar las páginas nuevas
+      - name: Enviar las páginas nuevas o modificadas
         run: node scripts/indexnow.mjs indexnow-urls.txt
       - name: Guardar la lista para la próxima vez
         uses: actions/cache/save@v4

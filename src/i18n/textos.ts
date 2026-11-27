@@ -8,6 +8,9 @@ const cuantasObras = (pelis: number, series: number) =>
 const cuantasObrasEn = (pelis: number, series: number) =>
   [pelis && `${pelis} ${pelis === 1 ? 'movie' : 'movies'}`, series && `${series} ${series === 1 ? 'show, season or special' : 'shows, seasons and specials'}`].filter(Boolean).join(' and ');
 
+/** Título para buscadores: el primer sufijo con el que cabe en ~60 caracteres junto a « · Heroteca» (Google corta los más largos). */
+const cabe = (t: string, ...sufijos: string[]) => t + (sufijos.find((x) => (t + x).length + 11 <= 60) ?? sufijos[sufijos.length - 1]);
+
 export const ES = {
   idioma: 'es' as 'es' | 'en',
   lema: 'Todo el multiverso, en un solo lugar',
@@ -173,8 +176,8 @@ export const ES = {
     paginaArchivo: (n: number) => `Página ${n} del archivo rojo`,
     descripcionBase: (sub: string, u: string, anios: string) => `${sub} de ${u}, ${anios}.`,
     // Con nombres largos, solo «dónde ver» (Google corta los títulos de más de ~60 caracteres)
-    tituloSeo: (t: string) => (t.length > 34 ? `${t}: dónde ver` : `${t}: dónde ver, reparto y orden`),
-    tituloSeoTemporada: (t: string) => (t.length > 34 ? `${t}: dónde ver` : `${t}: dónde ver, capítulos y reparto`),
+    tituloSeo: (t: string) => cabe(t, ': dónde ver, reparto y orden', ': dónde ver y reparto', ': dónde ver'),
+    tituloSeoTemporada: (t: string) => cabe(t, ': dónde ver, capítulos y reparto', ': dónde ver y capítulos', ': dónde ver'),
     serieAnio: (a: string) => `serie, ${a}`,
     descripcionExtra: 'Dónde verla, reparto y lugar en el orden de la colección.',
     resumen: {
@@ -213,7 +216,7 @@ export const ES = {
   // Página de una serie completa (/<universo>/series/<serie>/)
   serie: {
     h1: (s: string) => `${s}: todas las temporadas`,
-    tituloSeo: (s: string) => (s.length > 22 ? `${s}: todas las temporadas` : `${s}: todas las temporadas, capítulos y dónde ver`),
+    tituloSeo: (s: string) => cabe(s, ': todas las temporadas, capítulos y dónde ver', ': temporadas y dónde ver', ': todas las temporadas'),
     descripcion: (s: string, anios: string, temps: number, caps: number) =>
       `Las ${temps} temporadas de ${s} (${anios}) en orden${caps ? `: ${caps} capítulos` : ''}, cuánto dura cada una y dónde verla en España.`,
     intro: (s: string, u: string, anios: string) => `${s} es una serie de ${u} (${anios}).`,
@@ -1157,8 +1160,8 @@ export const EN: Textos = {
     carpetaDisco: (n) => `Drive folder ${n}`,
     paginaArchivo: (n) => `Page ${n} of the red binder`,
     descripcionBase: (sub, u, anios) => `${sub} from ${u}, ${anios}.`,
-    tituloSeo: (t) => (t.length > 30 ? `${t}: where to watch` : `${t}: where to watch, cast and watch order`),
-    tituloSeoTemporada: (t) => (t.length > 30 ? `${t}: where to watch` : `${t}: where to watch, episodes and cast`),
+    tituloSeo: (t) => cabe(t, ': where to watch, cast and watch order', ': where to watch and cast', ': where to watch'),
+    tituloSeoTemporada: (t) => cabe(t, ': where to watch, episodes and cast', ': where to watch and episodes', ': where to watch'),
     serieAnio: (a) => `series, ${a}`,
     descripcionExtra: 'Where to watch it, cast and its place in the collection order.',
     resumen: {
@@ -1195,7 +1198,7 @@ export const EN: Textos = {
   },
   serie: {
     h1: (s) => `${s}: all seasons`,
-    tituloSeo: (s) => (s.length > 22 ? `${s}: all seasons` : `${s}: all seasons, episodes and where to watch`),
+    tituloSeo: (s) => cabe(s, ': all seasons, episodes and where to watch', ': seasons and where to watch', ': all seasons'),
     descripcion: (s, anios, temps, caps) =>
       `All ${temps} seasons of ${s} (${anios}) in order${caps ? `: ${caps} episodes` : ''}, how long each one is and where to stream it in the US.`,
     intro: (s, u, anios) => `${s} is a ${u} series (${anios}).`,

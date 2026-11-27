@@ -1,4 +1,5 @@
 // @ts-check
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { readdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -56,6 +57,61 @@ function enlacesEnIngles() {
   };
 }
 
+
+/**
+ * Fecha de última modificación (<lastmod>) en el mapa del sitio, para que los buscadores vuelvan antes a lo que cambia.
+ * Se compara el contenido principal (<main>) de cada página con el de datos/fechas-paginas.json: si es igual se mantiene
+ * la fecha guardada, y si cambia (o la página es nueva) pasa a ser la de hoy. El archivo se actualiza en cada compilación
+ * y la tarea diaria de IndexNow lo sube al repositorio (así una página no «cambia» cada vez que Vercel compila).
+ */
+function fechasEnElMapa() {
+  return {
+    name: 'heroteca-fechas-mapa',
+    hooks: {
+      /** @param {{ dir: URL }} opciones */
+      'astro:build:done': async ({ dir }) => {
+        const raizDist = fileURLToPath(dir);
+        const archivo = new URL('./datos/fechas-paginas.json', import.meta.url);
+        /** @type {Record<string, { h: string, f: string }>} */
+        const anteriores = JSON.parse(await readFile(archivo, 'utf8').catch(() => '{}'));
+        const hoy = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Madrid' });
+        /** @type {Record<string, { h: string, f: string }>} */
+        const fechas = {};
+        const mapas = (await readdir(raizDist)).filter((n) => /^sitemap-\d+\.xml$/.test(n));
+        for (const mapa of mapas) {
+          const rutaMapa = path.join(raizDist, mapa);
+          const xml = await readFile(rutaMapa, 'utf8');
+          const nuevo = await reemplazarAsync(xml, /<loc>([^<]+)<\/loc>/g, async (/** @type {string} */ todo, /** @type {string} */ loc) => {
+            const ruta = new URL(loc).pathname;
+            const html = await readFile(path.join(raizDist, ruta, ruta.endsWith('/') ? 'index.html' : ''), 'utf8').catch(() => '');
+            const principal = html.match(/<main[\s\S]*<\/main>/)?.[0];
+            if (!principal) return todo;
+            const h = createHash('sha1').update(principal).digest('hex').slice(0, 16);
+            const f = anteriores[ruta]?.h === h ? anteriores[ruta].f : hoy;
+            fechas[ruta] = { h, f };
+            return `${todo}<lastmod>${f}</lastmod>`;
+          });
+          await writeFile(rutaMapa, nuevo);
+        }
+        const ordenadas = Object.fromEntries(Object.entries(fechas).sort(([a], [b]) => a.localeCompare(b)));
+        await writeFile(archivo, JSON.stringify(ordenadas, null, 0).replace(/},"/g, '},\n"') + '\n');
+      },
+    },
+  };
+}
+
+/**
+ * String.replace con una función asíncrona.
+ * @param {string} texto
+ * @param {RegExp} re
+ * @param {(...grupos: string[]) => Promise<string>} fn
+ */
+async function reemplazarAsync(texto, re, fn) {
+  const partes = await Promise.all([...texto.matchAll(re)].map((m) => fn(...m)));
+  let i = 0;
+  return texto.replace(re, () => partes[i++]);
+}
+
 // https://astro.build/config
 /** Páginas de estrenos que no se indexan (ver src/lib/proximamente.ts): redirigen a su ficha o no tienen sinopsis. */
 const estrenosSinIndexar = (() => {
@@ -78,6 +134,7 @@ export default defineConfig({
       filter: (pagina) => !estrenosSinIndexar.has(new URL(pagina).pathname) && !/^\/(en\/embed|insertar)\//.test(new URL(pagina).pathname) && !/\/(404|mi-progreso|my-progress|mi-ano|my-year)(\/|\.html|$)/.test(new URL(pagina).pathname) && (SITE.inglesPublicado || !new URL(pagina).pathname.startsWith('/en/')),
     }),
     enlacesEnIngles(),
+    fechasEnElMapa(),
   ],
   markdown: {
     // ||texto|| en las fichas → spoiler oculto
