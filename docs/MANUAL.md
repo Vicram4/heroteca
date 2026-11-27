@@ -578,6 +578,16 @@ Los tramos de una misma temporada cuentan una sola vez, en su primera aparición
   genéricos («Additional Voices», «Himself»). En inglés se usa el reparto inglés.
 - **Enlaces:** en cada ficha, el nombre del intérprete enlaza a su página si la tiene; también el gráfico de actores
   de las estadísticas.
+- **«Sobre…»:** un resumen calculado (cuántos títulos, en qué universos y años, su papel más repetido, la primera y la
+  última obra), la fecha y el lugar de nacimiento (y de fallecimiento) con la edad, y un extracto de la biografía de TMDB.
+  En español la biografía solo sale si TMDB la tiene en español (unas 170 de 332); no se traduce la inglesa. TMDB da el
+  lugar solo en inglés: los países y regiones más comunes se traducen con la tabla `PAISES` de la página. Los datos van
+  también en el `Person` de schema.org (`birthDate`, `deathDate`, `birthPlace`, `description`).
+- **«Con quién ha coincidido más»:** hasta 8 personas con página con las que comparte al menos 2 obras.
+- **Datos de TMDB de cada intérprete** (`datos/actores-tmdb.json`): `.venv/Scripts/python.exe scripts/sincronizar_actores.py`
+  después de compilar (lee qué actores tienen página en `dist/actores/`). Hay que volver a ejecutarlo cuando aparezcan
+  actores nuevos al añadir fichas; los que no estén en el archivo simplemente no muestran nacimiento ni biografía.
+  En noviembre de 2026 esto dejó las páginas de actor por encima de las 250 palabras (antes había 304 por debajo).
 - **Buscador:** los actores con página salen en la búsqueda (por nombre y, con menos prioridad, por sus personajes).
 
 ## Estadísticas

@@ -1,5 +1,5 @@
 ---
-import { conIdiomas, idiomaDe, textos, nombreTipo } from '../../../i18n';
+import { conIdiomas, idiomaDe, textos, nombreTipo, LOCALE } from '../../../i18n';
 import { actores, obraDe, claveActor, limpiarPersonaje, mismoPersonaje, type Actor, type Papel } from '../../../lib/actores';
 export async function getStaticPaths() {
   return conIdiomas(
@@ -9,7 +9,9 @@ export async function getStaticPaths() {
 }
 /**
  * Página de un actor o actriz: sus papeles en la colección, agrupados por obra (las temporadas de una serie juntas),
- * con el personaje que interpreta. Foto y enlace de TMDB si los hay.
+ * con el personaje que interpreta. Foto y enlace de TMDB si los hay. «Sobre…»: un resumen calculado de sus papeles,
+ * nacimiento y biografía de TMDB (datos/actores-tmdb.json, scripts/sincronizar_actores.py; en español solo si TMDB
+ * la tiene en español) y las personas con página con las que más obras comparte.
  */
 import Base from '../../../layouts/Base.astro';
 import BotonVolver from '../../../components/BotonVolver.astro';
@@ -18,6 +20,7 @@ import { SITE } from '../../../config/site';
 import { universosActivos, localizar, type Titulo } from '../../../lib/datos';
 import { imagenTmdb, datosTmdb } from '../../../lib/tmdb';
 import { rutaEnIdioma } from '../../../i18n/rutas';
+import fichasTmdb from '../../../../datos/actores-tmdb.json';
 
 const { a } = Astro.props as { a: Actor };
 const tx = textos(Astro.url);
@@ -71,6 +74,44 @@ const resumenUniversos = universos
   .filter((u) => a.porUniverso[u.id])
   .map((u) => `${u.data.nombre}: ${a.porUniverso[u.id]}`)
   .join(' · ');
+// «Sobre…»: datos de TMDB y resumen calculado
+const info = (fichasTmdb as Record<string, { nacimiento?: string; fallecimiento?: string; lugar?: string; bio?: { es?: string; en?: string } }>)[a.id];
+const fechaLarga = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const anios = (desde: string, hasta: Date) => {
+  const n = new Date(`${desde}T12:00:00Z`);
+  return hasta.getUTCFullYear() - n.getUTCFullYear() - (hasta.getUTCMonth() * 100 + hasta.getUTCDate() < n.getUTCMonth() * 100 + n.getUTCDate() ? 1 : 0);
+};
+// TMDB da el lugar solo en inglés: en español se traducen los países y regiones más comunes
+const PAISES: Record<string, string> = {
+  USA: 'EE. UU.', 'United States': 'EE. UU.', 'U.S.': 'EE. UU.', UK: 'Reino Unido', 'United Kingdom': 'Reino Unido', England: 'Inglaterra',
+  Wales: 'Gales', Scotland: 'Escocia', 'Northern Ireland': 'Irlanda del Norte', Ireland: 'Irlanda', Canada: 'Canadá', Mexico: 'México',
+  Germany: 'Alemania', France: 'Francia', Spain: 'España', Italy: 'Italia', Brazil: 'Brasil', Sweden: 'Suecia', Denmark: 'Dinamarca',
+  Norway: 'Noruega', Netherlands: 'Países Bajos', Belgium: 'Bélgica', Switzerland: 'Suiza', 'New Zealand': 'Nueva Zelanda',
+  'South Africa': 'Sudáfrica', Japan: 'Japón', 'South Korea': 'Corea del Sur', Russia: 'Rusia', Poland: 'Polonia', Israel: 'Israel',
+  Guatemala: 'Guatemala', Cuba: 'Cuba', Kenya: 'Kenia', Nigeria: 'Nigeria', Pennsylvania: 'Pensilvania', 'New York City': 'Nueva York',
+  'New York': 'Nueva York', 'New Mexico': 'Nuevo México', 'North Carolina': 'Carolina del Norte', 'South Carolina': 'Carolina del Sur',
+  London: 'Londres', Ontario: 'Ontario', Quebec: 'Quebec', 'British Columbia': 'Columbia Británica', 'Mexico City': 'Ciudad de México',
+};
+const lugar = info?.lugar && idioma === 'es' ? info.lugar.split(/\s*,\s*/).map((p) => PAISES[p] ?? p).join(', ') : info?.lugar;
+const vida = info?.nacimiento
+  ? ta.nacio(fechaLarga(info.nacimiento), lugar) +
+    (info.fallecimiento ? ta.murio(fechaLarga(info.fallecimiento), anios(info.nacimiento, new Date(`${info.fallecimiento}T12:00:00Z`))) : ta.edad(anios(info.nacimiento, new Date())))
+  : '';
+const bio = info?.bio?.[idioma];
+const porAnio = [...a.papeles].sort((x, y) => (x.t.m.fecha?.getTime() ?? Date.UTC(x.t.d.anio, 0)) - (y.t.m.fecha?.getTime() ?? Date.UTC(y.t.d.anio, 0)));
+const primera = porAnio[0] && localizar(porAnio[0].t, idioma);
+const ultima = porAnio.at(-1) && localizar(porAnio.at(-1)!.t, idioma);
+const universosTexto = universos.filter((u) => a.porUniverso[u.id]).map((u) => u.data.nombre).join(idioma === 'en' ? ' and ' : ' y ');
+const carrera = primera && ultima ? ta.carrera(a.nombre, a.papeles.length, universosTexto, primera.d.anio, ultima.d.anio) : '';
+const repetido = [...vecesPersonaje].sort((x, y) => y[1] - x[1])[0];
+// Con quién coincide más (solo personas con página, al menos 2 obras en común)
+const misObras = new Set(a.papeles.map((p) => obraDe(p.t)));
+const coincidencias = (await actores())
+  .filter((o) => o.id !== a.id)
+  .map((o) => ({ o, n: new Set(o.papeles.map((p) => obraDe(p.t)).filter((x) => misObras.has(x))).size }))
+  .filter((x) => x.n >= 2)
+  .sort((x, y) => y.n - x.n || x.o.nombre.localeCompare(y.o.nombre))
+  .slice(0, 8);
 const urlTmdb = a.idTmdb ? `https://www.themoviedb.org/person/${a.idTmdb}?language=${idioma === 'en' ? 'en-US' : 'es-ES'}` : undefined;
 const datos = {
   '@context': 'https://schema.org',
@@ -79,6 +120,10 @@ const datos = {
   url: new URL(await rutaEnIdioma(`/actores/${a.id}/`, idioma), SITE.url).href,
   ...(a.foto && { image: imagenTmdb(a.foto, 'w342') }),
   ...(urlTmdb && { sameAs: [`https://www.themoviedb.org/person/${a.idTmdb}`] }),
+  ...(info?.nacimiento && { birthDate: info.nacimiento }),
+  ...(info?.fallecimiento && { deathDate: info.fallecimiento }),
+  ...(info?.lugar && { birthPlace: { '@type': 'Place', name: info.lugar } }),
+  ...(bio && { description: bio.split('\n')[0] }),
 };
 ---
 
@@ -152,6 +197,41 @@ const datos = {
       </ul>
       <p class="fuente">{ta.fuente}</p>
     </section>
+
+    <section aria-labelledby="t-sobre" class="sobre">
+      <h2 id="t-sobre">{ta.sobre(a.nombre)}</h2>
+      <p>
+        {carrera}
+        {repetido && repetido[1] > 1 && ta.repetido(repetido[0], repetido[1])}
+        {primera && ultima && primera.id !== ultima.id && (
+          <>
+            {' '}{ta.primeroUltimo}<a href={primera.url}>{primera.corto}</a> ({primera.d.anio}){ta.yUltima}<a href={ultima.url}>{ultima.corto}</a> ({ultima.d.anio}).
+          </>
+        )}
+        {vida && ` ${vida}`}
+      </p>
+      {bio && (
+        <>
+          {bio.split('\n\n').map((parrafo) => <p>{parrafo}</p>)}
+          <p class="fuente">{ta.bioTmdb}</p>
+        </>
+      )}
+    </section>
+
+    {
+      coincidencias.length > 0 && (
+        <section aria-labelledby="t-coincide" class="coincide">
+          <h2 id="t-coincide">{ta.coincide}</h2>
+          <ul>
+            {coincidencias.map(({ o, n }) => (
+              <li>
+                <a href={`/actores/${o.id}/`}>{o.nombre}</a> <span class="meta">· {ta.coincideTexto(n)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
 
     {
       cameos.length > 0 && (
@@ -265,8 +345,21 @@ const datos = {
     flex-wrap: wrap;
     gap: 6px;
   }
-  .cameos {
+  .cameos,
+  .sobre,
+  .coincide {
     margin-top: 28px;
+  }
+  .sobre p {
+    max-width: 70ch;
+  }
+  .coincide ul {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+    gap: 6px 18px;
   }
   .cameos ul {
     margin: 8px 0 0;

@@ -54,7 +54,8 @@ La web convierte ese archivo en algo navegable y respeta **su propia organizaci�
   Funciona entera en el navegador.
 - **Wiki** de Marvel y DC: textos originales en los dos idiomas sobre personajes, equipos, lugares, objetos y conceptos, con cada versión de pantalla por separado y los giros ocultos como spoiler. Son 273 textos: los 180 personajes y 93 entradas más (47 de Marvel, 46 de DC), con filtro por tipo y por texto en su índice y enlaces desde cada ficha relacionada.
 - **Actores y actrices**: página para cada intérprete con al menos tres obras en la colección (287), con foto,
-  todos sus papeles agrupados por obra y sus personajes; los nombres del reparto de cada ficha enlazan a ella. Los
+  todos sus papeles agrupados por obra y sus personajes, un resumen de su carrera en la colección, nacimiento,
+  biografía de TMDB y con quién ha coincidido más; los nombres del reparto de cada ficha enlazan a ella. Los
   cameos van aparte, ocultos como spoiler, y no generan páginas nuevas.
 - **Evolución de cada personaje**: línea de tiempo con quién lo ha interpretado y cuándo, separando imagen real y
   animación, generada a partir del reparto de cada ficha y de los cameos filtrados de TMDB.
