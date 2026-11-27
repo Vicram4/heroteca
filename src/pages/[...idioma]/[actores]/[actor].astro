@@ -75,7 +75,7 @@ const resumenUniversos = universos
   .map((u) => `${u.data.nombre}: ${a.porUniverso[u.id]}`)
   .join(' · ');
 // «Sobre…»: datos de TMDB y resumen calculado
-const info = (fichasTmdb as Record<string, { nacimiento?: string; fallecimiento?: string; lugar?: string; bio?: { es?: string; en?: string } }>)[a.id];
+const info = (fichasTmdb as Record<string, { nacimiento?: string; fallecimiento?: string; lugar?: string; bio?: { es?: string | null; en?: string | null } }>)[a.id];
 const fechaLarga = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString(LOCALE[idioma], { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 const anios = (desde: string, hasta: Date) => {
   const n = new Date(`${desde}T12:00:00Z`);
